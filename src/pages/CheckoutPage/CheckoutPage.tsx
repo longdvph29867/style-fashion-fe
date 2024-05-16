@@ -1,6 +1,6 @@
-import OrderSummary from "../components/Checkout/OrderSummary"
-import PaymentMethod from "../components/Checkout/PaymentMethod"
-import ShippingAddress from "../components/Checkout/ShippingAddress"
+import OrderSummary from "../../components/Checkout/OrderSummary"
+import PaymentMethod from "../../components/Checkout/PaymentMethod"
+import ShippingAddress from "../../components/Checkout/ShippingAddress"
 
 const CheckoutPage = () => {
   return (
