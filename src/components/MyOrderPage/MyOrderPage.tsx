@@ -1,4 +1,3 @@
-import React from "react";
 import ItemMyOrder from "./ItemMyOrder";
 
 type Props = {};
@@ -10,7 +9,7 @@ const MyOrderPage = (props: Props) => {
         Lịch Sử Đơn Hàng
       </h2>
       <div className="mt-10 border-[1px] border-slate-200 rounded-t-[10px]">
-        <div className="p-[32px] flex justify-between bg-slate-50 border-b-[1px] border-slate-200">
+        <div className="p-8 flex justify-between bg-slate-50 border-b border-slate-200">
           <div className="">
             <div className="mb-1">
               <span className="text-lg font-semibold">#WU3746HGG12</span>

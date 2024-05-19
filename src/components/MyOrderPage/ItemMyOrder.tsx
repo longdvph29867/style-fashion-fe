@@ -4,12 +4,12 @@ type Props = {};
 
 const ItemMyOrder = (props: Props) => {
   return (
-    <div className="p-[32px]">
+    <div className="sm:p-8 p-4">
       <div className="flex justify-between items-center">
         <div className="flex gap-4">
           <div>
             <img
-              className="bg-gray-50 rounded-[10px]"
+              className="bg-gray-50 rounded-lg"
               src="https://ciseco-nextjs.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F17.fcfa959c.png&w=128&q=75"
               alt=""
             />
@@ -38,7 +38,7 @@ const ItemMyOrder = (props: Props) => {
           </span>
         </div>
       </div>
-      <hr className="mt-10 m-auto border-[1px] border-slate-200" />
+      <hr className="sm:mt-10 mt-4 m-auto border border-slate-200" />
     </div>
   );
 };
