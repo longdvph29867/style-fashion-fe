@@ -17,11 +17,11 @@ import BackgroundSection2 from "../components/BackgroundSection2";
 import SectionClientSay from "../components/SectionClientSay";
 const HomePage = () => {
   console.log(1);
-  
+
   return (
-    <div className=" " >
+    <div className=" ">
       <Banner />
-      <div className="p-[139px]">
+      <div className="container mx-auto">
         <DiscoverMoreSlider />
         <SectionSliderProductCard />
         <HowItWork />
