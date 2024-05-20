@@ -1,14 +1,16 @@
-const USER_INFO_SHOP = 'USER_INFO_SHOP';
+import { InforUserType } from "../types/login";
+
+const USER_INFO_FASHION = 'USER_INFO_FASHION';
 export const localUserService = {
-  get: (): ObjString | null => {
-    const jsonData = localStorage.getItem(USER_INFO_SHOP);
+  get: (): InforUserType | null => {
+    const jsonData = localStorage.getItem(USER_INFO_FASHION);
     return JSON.parse((jsonData as string));
   },
-  set: (userInfo: ObjString) => {
+  set: (userInfo: object) => {
     const jsonData = JSON.stringify(userInfo);
-    localStorage.setItem(USER_INFO_SHOP, jsonData);
+    localStorage.setItem(USER_INFO_FASHION, jsonData);
   },
   remove: () => {
-    localStorage.removeItem(USER_INFO_SHOP);
-  }
+    localStorage.removeItem(USER_INFO_FASHION);
+  },
 }

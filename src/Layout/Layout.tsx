@@ -1,19 +1,14 @@
-import { FC } from "react";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
+import Footer from "../components/Footer/Footer";
+import Header from "../components/Header/Header";
+import { Outlet } from "react-router-dom";
 
-type Props = {
-  Component: FC;
-};
-
-const Layout = ({ Component }: Props) => {
+const Layout = () => {
   return (
-    <div className="flex flex-col min-h-screen ">
+    <div className="flex flex-col min-h-screen">
       <Header />
       <div className="flex-grow">
-        <Component />
+        <Outlet />
       </div>
-      
       <Footer />
     </div>
   );

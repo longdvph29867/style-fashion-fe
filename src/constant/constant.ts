@@ -1,4 +1,2 @@
-export enum ApiUrls {
-    // API_URL = "http://localhost:8000",
-    API_URL = "https://asm-web-503.vercel.app",
-  }
+export const API_URL = "https://style-fashion-api.vercel.app/api/v1/";
+// export const API_URL = "http://localhost:8000/";
