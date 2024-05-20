@@ -1,10 +1,8 @@
 import ItemMyOrder from "./ItemMyOrder";
 
-type Props = {};
-
-const MyOrderPage = (props: Props) => {
+const MyOrderPage = () => {
   return (
-    <div className="">
+    <div className="max-w-4xl mx-auto pt-14 sm:pt-26 pb-24 lg:pb-32">
       <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold">
         Lịch Sử Đơn Hàng
       </h2>
