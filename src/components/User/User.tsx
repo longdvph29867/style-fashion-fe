@@ -38,15 +38,14 @@ const User = () => {
             {infoUser ? (
               <>
                 <li className="px-2">
-                  <a
+                  <Link
                     className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
-                    href="https://k4-typescript-theta.vercel.app/"
-                    target="_black"
+                    to="/account"
                   >
                     Thông tin
-                  </a>
+                  </Link>
                 </li>
-                {infoUser.role === "admin" ? (
+                {infoUser.user.role === "admin" ? (
                   <li className="px-2">
                     <Link
                       className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
@@ -72,7 +71,7 @@ const User = () => {
                 <li className="px-2">
                   <Link
                     className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
-                    to="/login"
+                    to="/auth/login"
                   >
                     Đăng nhập
                   </Link>
@@ -80,7 +79,7 @@ const User = () => {
                 <li className="px-2">
                   <Link
                     className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
-                    to="/singup"
+                    to="/auth/register"
                   >
                     Đăng ký
                   </Link>
@@ -101,7 +100,7 @@ const User = () => {
       {infoUser ? (
         <div className="text-xs text-slate-700">
           Hi,
-          {infoUser.fullName.split(" ")[0]}
+          {infoUser.user.name.split(" ")[0]}
         </div>
       ) : (
         <></>

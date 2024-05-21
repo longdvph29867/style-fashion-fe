@@ -2,11 +2,48 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
+import { LoginType } from "../../types/login";
+import { hiddenSpinner, showSpinner } from "../../util";
+import { https } from "../../config/axios";
+import { localUserService } from "../../services/localService";
 
 const Login: React.FC = () => {
-  const onFinish = (values: unknown) => {
+  const onFinish = (values: LoginType) => {
+    const data = {
+      email: values.email,
+      password: values.password,
+    };
     console.log(values);
+    const postProduct = async () => {
+      try {
+        showSpinner();
+        const res = await https.post("/auth/login", data);
+        console.log(res);
+        if (res) {
+          const infoUser = {
+            ...res.data.data,
+          };
+          localUserService.set(res.data);
+          hiddenSpinner();
+          message.success("Đăng nhập thành công!");
+          if (infoUser.role === "admin") {
+            setTimeout(() => {
+              window.location.href = "/admin/products";
+            }, 1200);
+          } else {
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 1200);
+          }
+        }
+      } catch (error) {
+        hiddenSpinner();
+        console.log(error);
+        message.error(error.response.data.message);
+      }
+    };
+    postProduct();
   };
 
   const onFinishFailed = (errorInfo: unknown) => {
