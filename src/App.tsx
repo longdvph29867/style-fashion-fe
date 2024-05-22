@@ -6,7 +6,7 @@ import AccountInfomation from "./components/Accout/AccountInfomation";
 import ChangePassword from "./components/Accout/ChangePassword";
 import MyOrderPage from "./components/MyOrderPage/MyOrderPage";
 import ProductListPage from "./components/ProductListPage/ProductListPage";
-import Layout from "antd/es/layout/layout";
+import Layout from "./Layout/Layout";
 import LoginLayout from "./Layout/LoginLayout";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
