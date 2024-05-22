@@ -14,6 +14,7 @@ import Spinner from "./components/Spinner";
 import { ToastContainer } from "react-toastify";
 import HomePage from "./pages/HomePage";
 import Layout from "./Layout/Layout";
+import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="myorder" element={<MyOrderPage />} />
           </Route>
           <Route path="detail" element={<DetailProduct />} />
+          <Route path="checkout" element={<CheckoutPage/>}/>
           <Route path="products" element={<ProductListPage />} />
         </Route>
         <Route path="/auth" element={<LoginLayout />}>
@@ -42,3 +44,6 @@ function App() {
 }
 
 export default App;
+
+
+
