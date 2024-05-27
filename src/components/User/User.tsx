@@ -1,12 +1,24 @@
 import { Link } from "react-router-dom";
 import { localUserService } from "../../services/localService";
+import { https } from "../../config/axios";
+import { hiddenSpinner, showSpinner } from "../../util";
+import { message } from "antd";
 
 const User = () => {
   const infoUser = localUserService.get();
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     localUserService.remove();
-    location.href = "/";
+    const data = {
+      refreshToken: infoUser?.tokens.refresh.token,
+    }
+    showSpinner();
+    await https.post('/auth/logout', data)
+    hiddenSpinner();
+    message.success("Đăng xuất thành công!");
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 400);
   };
 
   return (

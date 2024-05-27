@@ -14,12 +14,10 @@ const Login: React.FC = () => {
       email: values.email,
       password: values.password,
     };
-    console.log(values);
     const postProduct = async () => {
       try {
         showSpinner();
         const res = await https.post("/auth/login", data);
-        console.log(res);
         if (res) {
           const infoUser = {
             ...res.data.data,
@@ -88,7 +86,7 @@ const Login: React.FC = () => {
           <Input.Password />
         </Form.Item>
 
-        <div className="flex justify-between sm:items-end items-start gap-1 sm:flex-row flex-col pt-2">
+        <div className=" gap-1 pt-2">
           <Form.Item>
             <Button
               type="primary"
@@ -98,12 +96,20 @@ const Login: React.FC = () => {
               Login
             </Button>
           </Form.Item>
-          <Link
-            to="/auth/register"
-            className="text-xs text-slate-800 hover:text-slate-500 mb-3"
-          >
-            You don't have an account?
-          </Link>
+          <div className="flex justify-between sm:flex-row flex-col">
+            <Link
+              to="/auth/forgot-password"
+              className="text-xs text-slate-800 hover:text-slate-500 mb-3"
+            >
+              Forgot password
+            </Link>
+            <Link
+              to="/auth/register"
+              className="text-xs text-slate-800 hover:text-slate-500 mb-3"
+            >
+              You don't have an account?
+            </Link>
+          </div>
         </div>
       </Form>
     </div>
