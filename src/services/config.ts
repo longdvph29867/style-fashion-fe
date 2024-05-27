@@ -4,7 +4,7 @@ import { localUserService } from "./localService";
 // const API_URL = "http://localhost:8000"
 const API_URL = "https://asm-web-503.vercel.app"
 export const BASE_URL = API_URL;
-const accessToken = localUserService.get()?.accessToken
+const accessToken = localUserService.get()?.tokens.access.token
 const configHeadres  = {
   "Authorization": "Bearer " + (accessToken ? accessToken : ''),
 }

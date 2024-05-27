@@ -12,11 +12,11 @@ import { Navigation, Pagination } from "swiper/modules";
 const DiscoverMoreSlider = () => {
   return (
     <div className="slider-product">
-      <div className="pb-10 flex justify-between">
-        <h2 className=" text-3xl md:text-4xl font-semibold">
+      <div className="pb-5 flex justify-between">
+        <h2 className="text-2xl md:text-4xl font-semibold">
           Discover more
           <span className="">. </span>
-          <span className="text-neutral-500 dark:text-neutral-400">
+          <span className="text-neutral-500">
             Good things are waiting for you
           </span>
         </h2>
@@ -28,7 +28,6 @@ const DiscoverMoreSlider = () => {
             <FaArrowLeft />
           </div>
           <div className="swiper-button-next static arrow">
-            {" "}
             <FaArrowRight />
           </div>
         </div>
@@ -48,12 +47,12 @@ const DiscoverMoreSlider = () => {
         modules={[Pagination, Navigation]}
         className="mySwiper"
       >
-        <SwiperSlide className="bg-yellow-50 rounded-3xl	">
-          <div className=" flex  justify-around 	pt-10">
+        <SwiperSlide className="bg-yellow-50 rounded-3xl">
+          <div className="flex justify-around p-10">
             <div>
-              <div className=" inset-5 sm:inset-8 flex flex-col">
+              <div className="inset-5 sm:inset-8 flex flex-col">
                 <div className="max-w-xs">
-                  <span className="block mb-2 text-sm text-slate-700	">
+                  <span className="block mb-2 text-sm text-slate-700">
                     Explore new arrivals
                   </span>
                   <h2 className="text-xl mt-2 md:text-2xl text-slate-900 font-semibold">
@@ -79,11 +78,11 @@ const DiscoverMoreSlider = () => {
           </div>
         </SwiperSlide>
         <SwiperSlide className="bg-red-50 rounded-3xl	">
-          <div className=" flex  justify-around 	pt-10">
+          <div className="flex  justify-around 	pt-10">
             <div>
-              <div className=" inset-5 sm:inset-8 flex flex-col">
+              <div className="inset-5 sm:inset-8 flex flex-col">
                 <div className="max-w-xs">
-                  <span className="block mb-2 text-sm text-slate-700	">
+                  <span className="block mb-2 text-sm text-slate-700 text-left">
                     Explore new arrivals
                   </span>
                   <h2 className="text-xl mt-2 md:text-2xl text-slate-900 font-semibold">
@@ -109,9 +108,9 @@ const DiscoverMoreSlider = () => {
           </div>
         </SwiperSlide>
         <SwiperSlide className="bg-blue-50 rounded-3xl	">
-          <div className=" flex  justify-around 	pt-10">
+          <div className="flex  justify-around 	pt-10">
             <div>
-              <div className=" inset-5 sm:inset-8 flex flex-col">
+              <div className="inset-5 sm:inset-8 flex flex-col">
                 <div className="max-w-xs">
                   <span className="block mb-2 text-sm text-slate-700	">
                     Explore new arrivals
@@ -139,11 +138,11 @@ const DiscoverMoreSlider = () => {
           </div>
         </SwiperSlide>
         <SwiperSlide className="bg-green-50 rounded-3xl	">
-          <div className=" flex  justify-around 	pt-10">
+          <div className="flex justify-around pt-10">
             <div>
-              <div className=" inset-5 sm:inset-8 flex flex-col">
+              <div className="inset-5 sm:inset-8 flex flex-col">
                 <div className="max-w-xs">
-                  <span className="block mb-2 text-sm text-slate-700	">
+                  <span className="block mb-2 text-sm text-slate-700 text-left">
                     Explore new arrivals
                   </span>
                   <h2 className="text-xl mt-2 md:text-2xl text-slate-900 font-semibold">

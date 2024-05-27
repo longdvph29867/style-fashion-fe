@@ -12,8 +12,12 @@ import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Spinner from "./components/Spinner";
 import { ToastContainer } from "react-toastify";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/Home/HomePage";
 import Layout from "./Layout/Layout";
+import LayoutAdmin from "./Layout/LayoutAdmin";
+import ProductsList from "./pages/admin/Product/ProductsList";
+import AddProduct from "./pages/admin/Product/AddProduct";
+import UpdateProduct from "./pages/admin/Product/UpdateProduct";
 
 function App() {
   return (
@@ -23,10 +27,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="account" element={<AccountPage />} >
-          <Route index element={<AccountInfomation />} />
-          <Route path="updatepassword" element={<ChangePassword />} />
-          <Route path="myorder" element={<MyOrderPage />} />
+          <Route path="account" element={<AccountPage />}>
+            <Route index element={<AccountInfomation />} />
+            <Route path="updatepassword" element={<ChangePassword />} />
+            <Route path="myorder" element={<MyOrderPage />} />
           </Route>
           <Route path="detail" element={<DetailProduct />} />
           <Route path="products" element={<ProductListPage />} />
@@ -34,6 +38,11 @@ function App() {
         <Route path="/auth" element={<LoginLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+        </Route>
+        <Route path="/admin" element={<LayoutAdmin />}>
+          <Route path="products" element={<ProductsList />} />
+          <Route path="products/add" element={<AddProduct />} />
+          <Route path="products/update/:id" element={<UpdateProduct />} />
         </Route>
         {/* Các route khác nếu có */}
       </Routes>

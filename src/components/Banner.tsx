@@ -18,7 +18,7 @@ const Banner = () => {
     slidesToScroll: 1,
     fade: true,
     cssEase: "linear",
-    autoplay: true,
+    autoplay: false,
     autoplaySpeed: 2500,
     pauseOnHover: false,
     beforeChange: (current: number, next: number) => {
@@ -57,7 +57,6 @@ const Banner = () => {
   };
   return (
     <div className="">
-      
       <div className="bg-[#E3FFE6] relative">
         <img
           src={imgBannerBg}
