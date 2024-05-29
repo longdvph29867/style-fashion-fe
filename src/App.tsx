@@ -18,6 +18,9 @@ import LayoutAdmin from "./Layout/LayoutAdmin";
 import ProductsList from "./pages/admin/Product/ProductsList";
 import AddProduct from "./pages/admin/Product/AddProduct";
 import UpdateProduct from "./pages/admin/Product/UpdateProduct";
+import CategoryList from "./pages/admin/Category/CategoryList";
+import AddCategory from "./pages/admin/Category/AddCategory";
+import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 
 function App() {
   return (
@@ -43,6 +46,10 @@ function App() {
           <Route path="products" element={<ProductsList />} />
           <Route path="products/add" element={<AddProduct />} />
           <Route path="products/update/:id" element={<UpdateProduct />} />
+          <Route path="categories" element={<CategoryList />} />
+          <Route path="categories/add" element={<AddCategory />} />
+          <Route path="categories/update/:id" element={<UpdateCategory />} />
+
         </Route>
         {/* Các route khác nếu có */}
       </Routes>
