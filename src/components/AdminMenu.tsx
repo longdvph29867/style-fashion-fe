@@ -30,7 +30,7 @@ const listMenu: Menu[] = [
     active: true,
   },
   {
-    link: "/",
+    link: "/admin/users",
     title: "Users",
     icon: <FaUserAlt />,
     active: false,
@@ -55,17 +55,15 @@ const AdminMenu: React.FC = () => {
               return (
                 <li key={index} className="">
                   <a
-                    className={`text-sm flex items-center lg:px-4 py-2.5 rounded-lg ${
-                      active ? "lg:bg-white lg:shadow-xl" : ""
-                    } `}
+                    className={`text-sm flex items-center lg:px-4 py-2.5 rounded-lg ${active ? "lg:bg-white lg:shadow-xl" : ""
+                      } `}
                     href={link}
                   >
                     <div
-                      className={`lg:mr-2 flex h-8 w-8 items-center justify-center rounded-lg ${
-                        active
-                          ? "lg:bg-transparent lg:shadow-none bg-white shadow-lg"
-                          : ""
-                      } `}
+                      className={`lg:mr-2 flex h-8 w-8 items-center justify-center rounded-lg ${active
+                        ? "lg:bg-transparent lg:shadow-none bg-white shadow-lg"
+                        : ""
+                        } `}
                     >
                       {icon}
                     </div>

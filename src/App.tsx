@@ -18,6 +18,9 @@ import LayoutAdmin from "./Layout/LayoutAdmin";
 import ProductsList from "./pages/admin/Product/ProductsList";
 import AddProduct from "./pages/admin/Product/AddProduct";
 import UpdateProduct from "./pages/admin/Product/UpdateProduct";
+import UsersList from "./pages/admin/User/UsersList";
+import AddUser from "./pages/admin/User/AddUser";
+import UpdateUser from "./pages/admin/User/UpdateUser";
 
 function App() {
   return (
@@ -43,6 +46,9 @@ function App() {
           <Route path="products" element={<ProductsList />} />
           <Route path="products/add" element={<AddProduct />} />
           <Route path="products/update/:id" element={<UpdateProduct />} />
+          <Route path="users" element={<UsersList />} />
+          <Route path="users/add" element={<AddUser />} />
+          <Route path="users/update/:id" element={<UpdateUser />} />
         </Route>
         {/* Các route khác nếu có */}
       </Routes>
