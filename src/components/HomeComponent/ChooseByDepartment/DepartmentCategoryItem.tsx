@@ -15,6 +15,7 @@ const DepartmentCategoryItem: React.FC<Props> = ({ category }) => {
             sizes="400px"
             src="src/assets/img/department3.webp"
             alt=""
+            
           />
         </div>
         <div className="flex-1 mt-5 text-center">
