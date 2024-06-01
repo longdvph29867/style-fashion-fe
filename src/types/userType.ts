@@ -1,9 +1,11 @@
 export type IUser = {
+    id: string;
     name: string;
     email: string;
     image: string;
     phoneNumber: string;
     role: string;
+    shippingAddress: string[];
     isEmailVerified: boolean;
     isPhoneNumberVerified: boolean;
 }
