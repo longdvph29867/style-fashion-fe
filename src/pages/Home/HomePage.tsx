@@ -1,7 +1,7 @@
 // type Props = {}
 
 import Banner from "../../components/Banner";
-import DiscoverMoreSlider from "../../components/DiscoverMoreSlider";
+// import DiscoverMoreSlider from "../../components/DiscoverMoreSlider";
 import Banner2 from "../../components/Banner2";
 import HowItWork from "../../components/HowItWork";
 import ProductsList from "../../components/ProductsList";
@@ -15,6 +15,7 @@ import Banner4 from "../../components/banner4";
 import SectionGridFeatureItems from "../../components/SectionGridFeatureItems";
 import BackgroundSection2 from "../../components/BackgroundSection2";
 import SectionClientSay from "../../components/SectionClientSay";
+import DiscoverMoreSlider from "../../components/DiscoverMoreSlider/DiscoverMoreSlider";
 const HomePage = () => {
   console.log(1);
 
