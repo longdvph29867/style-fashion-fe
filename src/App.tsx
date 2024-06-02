@@ -49,7 +49,6 @@ function App() {
           <Route path="products/add" element={<AddProduct />} />
           <Route path="products/update/:id" element={<UpdateProduct />} />
         </Route>
-
         {/* Các route khác nếu có */}
       </Routes>
     </>
