@@ -18,6 +18,7 @@ import LayoutAdmin from "./Layout/LayoutAdmin";
 import ProductsList from "./pages/admin/Product/ProductsList";
 import AddProduct from "./pages/admin/Product/AddProduct";
 import UpdateProduct from "./pages/admin/Product/UpdateProduct";
+import ProductDetail from "./pages/admin/Product/ProductDetail";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         </Route>
         <Route path="/admin" element={<LayoutAdmin />}>
           <Route path="products" element={<ProductsList />} />
+          <Route path="products/:id" element={<ProductDetail />} />
           <Route path="products/add" element={<AddProduct />} />
           <Route path="products/update/:id" element={<UpdateProduct />} />
         </Route>

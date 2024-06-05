@@ -9,7 +9,7 @@ function LayoutAdmin() {
   //   window.location.href = "/";
   // }
   return (
-    <div className="flex min-h-screen w-full bg-[#f8f9fa]">
+    <div className="flex min-h-screen w-full bg-[#f8f9fa] ">
       <AdminMenu />
 
       <div className="flex-grow px-4 flex flex-col">

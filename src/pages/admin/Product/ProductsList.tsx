@@ -5,7 +5,7 @@ import {
   showSpinner,
 } from "../../../util/util";
 import { Link } from "react-router-dom";
-import { message } from "antd";
+import { Image, message } from "antd";
 import { https } from "../../../config/axios";
 import { IProduct } from "../../../types/productType";
 
@@ -53,25 +53,25 @@ const ProductsList: React.FC = () => {
           <span>Thêm mới</span>
         </Link>
       </div>
-      <div className="h-full overflow-x-auto">
+      <div className="h-full mt-4 overflow-x-auto">
         <div className="w-full border-gray-200 text-slate-500">
-          <div className="w-full grid lg:grid-cols-9 sm:grid-cols-5 grid-cols-2 gap-2">
-            <div className="pr-6 pl-4 py-3  text-left font-bold uppercase text-slate-800">
+          <div className="w-full grid lg:grid-cols-7 sm:grid-cols-5 grid-cols-2 gap-2">
+            <div className="lg:block hidden text-center pr-6 pl-4 py-3 font-bold uppercase text-slate-800">
               Ảnh
             </div>
-            <div className="sm:col-span-2 pr-6 pl-4 py-3  text-left font-bold uppercase text-slate-800">
+            <div className="lg:block hidden sm:col-span-2 pr-6 pl-4 py-3  text-left font-bold uppercase text-slate-800">
               Tên sản phẩm
             </div>
             <div className="lg:block hidden col-span-3 pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
               Mô tả
             </div>
-            <div className="sm:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
+            {/* <div className="sm:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
               Giá
             </div>
             <div className="lg:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
               Danh mục
-            </div>
-            <div className="sm:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
+            </div> */}
+            <div className="lg:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
               Thao tác
             </div>
           </div>
@@ -80,43 +80,42 @@ const ProductsList: React.FC = () => {
               return (
                 <div
                   key={index}
-                  className="grid lg:grid-cols-9 sm:grid-cols-5 grid-cols-2 gap-2 border-b sm:border-transparent border-slate-300"
+                  className="grid lg:grid-cols-7 sm:grid-cols-5 grid-cols-2 gap-2 border-b lg:border-transparent border-slate-300"
                 >
                   <div className="p-2">
-                    <div className="px-2 py-1 min-w-[110px]">
-                      <div>
-                        <img
-                          src={product.gallery?.[0]}
-                          className="mr-4 h-20 w-20 rounded"
-                        />
-                      </div>
+                    <div className="px-2 py-1 min-w-[110px] text-center">
+                      <Image
+                        src={product.thumbnail}
+                        width={100}
+                        height={100}
+                      />
                     </div>
                   </div>
                   <div className="p-2 sm:col-span-2">
                     <div className="flex flex-col justify-center">
-                      <h6 className="text-base">{product.name}</h6>
-                      <p className="text-sm text-slate-400">Nữ</p>
+                      <h6 className="text-base font-normal">{product.name}</h6>
+                      {/* <p className="text-sm text-slate-400">Nữ</p> */}
                     </div>
                   </div>
-                  <div className="lg:block hidden p-2 col-span-3">
+                  <div className="lg:block p-2 col-span-3">
                     <p className="text-sm ">
                       {product.description?.slice(0, 150)}...
                     </p>
                   </div>
-                  <div className="p-2">
+                  {/* <div className="p-2">
                     <span className="text-sm font-semibold text-slate-400">
                       {formartCurrency(100000)}
                     </span>
                   </div>
                   <div className="lg:block hidden p-2">
                     <p className="text-sm ">{`categories`}</p>
-                  </div>
+                  </div> */}
                   <div className="p-2 space-x-2">
                     <Link
-                      to={`/admin/products/update/${product.id}`}
+                      to={`/admin/products/${product.id}`}
                       className="text-sm font-semibold text-yellow-500"
                     >
-                      Sửa
+                      Chi tiết
                     </Link>
                     <button
                       onClick={() => handleDelete(product.id)}
