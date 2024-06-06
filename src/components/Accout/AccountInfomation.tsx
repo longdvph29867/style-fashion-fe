@@ -3,7 +3,12 @@ import { GoMail } from "react-icons/go";
 import { MdOutlineDateRange } from "react-icons/md";
 import { MdOutlineAddHome } from "react-icons/md";
 import { LuPhoneCall } from "react-icons/lu";
+import { useState } from "react";
 const AccountInfomation = () => {
+  const [onForm, setOnForm] = useState(null);
+  // const handleShowMenu = () => {
+  //   setOnForm(!onForm);
+  // };
   return (
     <div
       id="infomation"
@@ -19,6 +24,7 @@ const AccountInfomation = () => {
             <ChangeImage />
             {/* Form */}
             <div className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
+
               <div>
                 <label className="nc-Label text-base font-medium text-neutral-900">
                   Full name
@@ -118,6 +124,7 @@ const AccountInfomation = () => {
                   Update account
                 </button>
               </div>
+
             </div>
           </div>
         </div>
