@@ -1,16 +1,33 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Navigation, Pagination } from "swiper/modules";
+import { useEffect, useState } from "react";
+import { https } from "../../config/axios";
+
 
 const SectionClientSay = () => {
+  const [products, setProducts] = useState<any[]>([]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await https.get('/products'); 
+      setProducts(response.data.results); 
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
   const settings = {
-    dots: true, // Hiển thị chấm chuyển đổi
-    infinite: true, // Lặp vô hạn
-    speed: 500, // Tốc độ chuyển đổi (milliseconds)
-    slidesToShow: 1, // Số lượng slide hiển thị trên mỗi trang
-    slidesToScroll: 1, // Số lượng slide để chuyển đổi khi chuyển đến trang tiếp theo
-    // autoplay: true, // Tự động chạy Slider
-    autoplaySpeed: 2000, // Tốc độ tự động chạy (milliseconds)
+    dots: true, 
+    infinite: true, 
+    speed: 500, 
+    slidesToShow: 1, 
+    slidesToScroll: 1, 
+    autoplaySpeed: 2000, 
   };
 
   return (
@@ -26,9 +43,12 @@ const SectionClientSay = () => {
             </span>
           </div>
         </div>
+        
 
         <div className="relative max-w-2xl mx-auto md:mb-16">
-          <div className="hidden md:block">
+                  {products.map((product, index) => (
+          <div       key={index}
+          className="hidden md:block">
             <img
               alt=""
               loading="lazy"
@@ -39,7 +59,7 @@ const SectionClientSay = () => {
               className="absolute top-9 -left-20"
               style={{ color: "transparent" }}
               sizes="100px"
-              srcSet="src/assets/img/clientSay1e4d5.png"
+              srcSet={product.thumbnail}
             />
             <img
               alt=""
@@ -51,7 +71,7 @@ const SectionClientSay = () => {
               className="absolute bottom-[100px] right-full mr-40"
               style={{ color: "transparent" }}
               sizes="100px"
-              srcSet="src/assets/img/clientSay2dd5e.png"
+              srcSet={product.thumbnail}
             />
             <img
               alt=""
@@ -63,7 +83,7 @@ const SectionClientSay = () => {
               className="absolute top-full left-[140px]"
               style={{ color: "transparent" }}
               sizes="100px"
-              srcSet="src/assets/img/clientSay43bf4.png"
+              srcSet={product.thumbnail}
             />
             <img
               alt=""
@@ -75,7 +95,7 @@ const SectionClientSay = () => {
               className="absolute -bottom-10 right-[140px]"
               style={{ color: "transparent" }}
               sizes="100px"
-              srcSet="src/assets/img/clientSay68d98.png"
+              srcSet={product.thumbnail}
             />
             <img
               alt=""
@@ -87,7 +107,7 @@ const SectionClientSay = () => {
               className="absolute left-full ml-32 bottom-[80px]"
               style={{ color: "transparent" }}
               sizes="100px"
-              srcSet="src/assets/img/clientSay31777.png"
+              srcSet={product.thumbnail}
             />
             <img
               alt=""
@@ -99,9 +119,10 @@ const SectionClientSay = () => {
               className="absolute -right-10 top-10"
               style={{ color: "transparent" }}
               sizes="100px"
-              srcSet="src/assets/img/clientSay54865.png"
+              srcSet={product.thumbnail}
             />
-          </div>
+          </div>))}
+
 
           <img
             alt=""
@@ -384,6 +405,7 @@ const SectionClientSay = () => {
             </div>
           </div>
         </div>
+        
       </div>
     </>
   );

@@ -13,17 +13,18 @@ const SliderProductCard: React.FC<Props> = ({ gender }) => {
   const fetchData = async () => {
     try {
       showSpinner();
-      const API = `/products`;
+      const API = `/products`; 
       const { data } = await https.get(API);
       console.log(data.results);
       hiddenSpinner();
-      setProductsList(data.results);
+      const firstThreeProducts = data.results.slice(0, 4);
+      setProductsList(firstThreeProducts);
     } catch (error) {
       hiddenSpinner();
       console.log(error);
     }
   };
-  useEffect(() => {
+    useEffect(() => {
     fetchData();
   }, []);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
