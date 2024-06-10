@@ -57,26 +57,29 @@ const UsersList: React.FC = () => {
       </div>
       <div className="h-full overflow-x-auto">
         <div className="w-full border-gray-200 text-slate-500">
-          <div className="w-full hidden lg:grid lg:grid-cols-11  gap-2">
+          <div className="w-full hidden lg:grid lg:grid-cols-10  gap-2">
             <div className="pr-6 pl-4 py-3  text-left font-bold uppercase text-slate-800">
               Ảnh
             </div>
-            <div className="sm:col-span-2 pr-6 pl-4 py-3  text-left font-bold uppercase text-slate-800">
+            <div className="sm:col-span-2 pl-4 py-3  text-left font-bold uppercase text-slate-800">
               Tên người dùng
             </div>
             <div className="lg:block hidden col-span-2 pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
               Email
             </div>
-            <div className="sm:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
+            <div className="sm:block hidden  pl-2 py-3  text-left font-bold uppercase text-slate-800">
               SĐT
             </div>
-            <div className="sm:block hidden col-span-3 pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
-              Địa chỉ nhận hàng
+            <div className="sm:block hidden  pl-2 py-3  text-left font-bold uppercase text-slate-800">
+              Quận Huyện
             </div>
-            <div className="lg:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
+            <div className="sm:block hidden pl-2 py-3  text-left font-bold uppercase text-slate-800">
+              Thành Phố
+            </div>
+            <div className="lg:block hidden  pl-2 py-3  text-left font-bold uppercase text-slate-800">
               Role
             </div>
-            <div className="sm:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
+            <div className="sm:block hidden pl-2 py-3  text-left font-bold uppercase text-slate-800">
               Thao tác
             </div>
           </div>
@@ -85,7 +88,7 @@ const UsersList: React.FC = () => {
               return (
                 <div
                   key={index}
-                  className="relative grid lg:grid-cols-11 sm:grid-cols-5 grid-cols-2 gap-2 border-b lg:border-transparent border-slate-300"
+                  className="relative grid lg:grid-cols-10 sm:grid-cols-5 grid-cols-3 gap-2 border-b lg:border-transparent border-slate-300"
                 >
                   <div className="p-2">
                     <div className="px-2 py-1 min-w-[110px]">
@@ -127,9 +130,14 @@ const UsersList: React.FC = () => {
                     </div>}
 
                   </div>
-                  <div className="p-2 col-span-3">
+                  <div className="p-2">
                     <p className="text-sm ">
-                      {user.shippingAddress?.[0]?.slice(0, 150)}...
+                      {user.shippingAddress[0]?.district ? user.shippingAddress[0]?.district : "..."}
+                    </p>
+                  </div>
+                  <div className="p-2">
+                    <p className="text-sm ">
+                      {user.shippingAddress[0]?.cityProvince ? user.shippingAddress[0]?.cityProvince : "..."}
                     </p>
                   </div>
                   <div className="lg:block hidden p-2">
@@ -137,10 +145,10 @@ const UsersList: React.FC = () => {
                   </div>
                   <div className="absolute right-0 top-4 lg:block p-2 space-x-2 lg:static lg:top-auto lg:right-auto">
                     <Link
-                      to={`/admin/users/update/${user.id}`}
+                      to={`/admin/users/${user.id}`}
                       className="text-sm font-semibold text-yellow-500"
                     >
-                      Sửa
+                      Chi tiết
                     </Link>
                     <button
                       onClick={() => handleDelete(user.id)}

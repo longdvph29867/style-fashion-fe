@@ -1,3 +1,13 @@
+export type IShippingAddress = {
+    recipientName: string;
+    recipientPhoneNumber: string;
+    streetAddress: string;
+    wardCommune: string;
+    district: string;
+    cityProvince: string;
+    _id: string;
+};
+
 export type IUser = {
     id: string;
     name: string;
@@ -5,7 +15,7 @@ export type IUser = {
     image: string;
     phoneNumber: string;
     role: string;
-    shippingAddress: string[];
+    shippingAddress: IShippingAddress[];
     isEmailVerified: boolean;
     isPhoneNumberVerified: boolean;
 }

@@ -54,7 +54,16 @@ const UpdateUser: React.FC = () => {
   }, [id]);
 
   const onFinish = (values: AddUserType) => {
-    const data = {
+    let data = {}
+    if (!values.password) {
+      data = {
+        name: values.name,
+        phoneNumber: values.phoneNumber,
+        email: values.email,
+        role: values.role,
+      }
+    }
+    data = {
       name: values.name,
       password: values.password,
       phoneNumber: values.phoneNumber,
@@ -151,7 +160,7 @@ const UpdateUser: React.FC = () => {
           label="Mật khẩu"
           name="password"
           rules={[
-            { required: true, message: "Please fill in this field!" },
+            // { required: true, message: "Please fill in this field!" },
             {
               min: 6,
               max: 25,
@@ -170,7 +179,7 @@ const UpdateUser: React.FC = () => {
           label="Xác nhận mật khẩu"
           name="rePassword"
           rules={[
-            { required: true, message: "Please fill in this field!" },
+            // { required: true, message: "Please fill in this field!" },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (!value || getFieldValue("password") === value) {
