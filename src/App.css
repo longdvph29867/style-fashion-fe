@@ -1,6 +1,7 @@
 .container {
   padding: 0 16px;
 }
+
 header.show-mobile .menu-mobile {
   max-height: 500px !important;
   opacity: 1 !important;
@@ -135,7 +136,7 @@ header.show-mobile .menu-mobile {
 .slider-product .swiper-button-next:hover {
   border: 2px solid rgb(207, 209, 212);
   border-radius: 9999px;
-  
+
 }
 
 .slider-product .swiper {
@@ -160,3 +161,9 @@ header.show-mobile .menu-mobile {
   content: none !important;
 }
 
+.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-name {
+  white-space: normal !important;
+}
+
+/* width: 80vh;
+  max-width: 547px; */

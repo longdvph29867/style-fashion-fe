@@ -18,6 +18,7 @@ import TextArea from "antd/es/input/TextArea";
 import { Checkbox } from 'antd';
 import type { GetProp } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import "../../../App.css";
 
 const UpdateProduct: React.FC = () => {
   const { id } = useParams();
@@ -28,6 +29,7 @@ const UpdateProduct: React.FC = () => {
   let selectedCategories: any = [];
 
   const fetchProductDetail = async () => {
+    window.scrollTo(0, 0);
     showSpinner();
     try {
       const { data } = await https.get(`/products/${id}`);
@@ -42,10 +44,11 @@ const UpdateProduct: React.FC = () => {
 
       form.setFieldValue('thumbnail', [{
         uid: '-1',
-        name: product.thumbnail,
+        name: `thumbnail.${product?.thumbnail?.split('.')?.pop()}`,
         status: 'done',
         url: product.thumbnail,
-        type: `image/${product.thumbnail.split('.').pop()}`,
+        type: `image/${product?.thumbnail?.split('.')?.pop()}`,
+        // thumbUrl: product.thumbnail,
         // originFileObj: new File(
         //   [product.thumbnail],
         //   product.thumbnail,
@@ -54,10 +57,10 @@ const UpdateProduct: React.FC = () => {
       form.setFieldsValue({
         gallery: product.gallery.map((url: string, index: number) => ({
           uid: index,
-          name: url,
+          name: `image${index + 1}.${url?.split('.')?.pop()}`,
           status: 'done',
           url,
-          type: `image/${url.split('.').pop()}`
+          type: `image/${url?.split('.')?.pop()}`
         }))
       });
       form.setFieldsValue({
@@ -68,7 +71,7 @@ const UpdateProduct: React.FC = () => {
           discount: attribute.discount,
           image: [{
             uid: index,
-            name: attribute.image,
+            name: `image.${attribute.image.split('.').pop()}`,
             status: 'done',
             url: attribute.image,
             type: `image/${attribute.image.split('.').pop()}`
@@ -223,7 +226,7 @@ const UpdateProduct: React.FC = () => {
   };
 
   const onCategoryChange: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
-    console.log('checked = ', checkedValues);
+    // console.log('checked = ', checkedValues);
     selectedCategories = checkedValues;
     // console.log(selectedCategories, 'selectedCategories2')
   };
@@ -233,7 +236,7 @@ const UpdateProduct: React.FC = () => {
   };
 
   return (
-    <div className="sm:w-full px-5 pb-5 ">
+    <div className="w-full mx-auto px-5">
       <h3 className=" text-2xl text-slate-700 text-center mt-6 mb-3">
         Cập nhật
       </h3>
@@ -243,7 +246,7 @@ const UpdateProduct: React.FC = () => {
         name="basic"
         labelCol={{ span: 12 }}
         wrapperCol={{ span: 24 }}
-        style={{ maxWidth: "100%" }}
+        style={{}}
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
@@ -251,7 +254,7 @@ const UpdateProduct: React.FC = () => {
         requiredMark={false}
       >
         <div className="">
-          <div className="grid grid-cols-2 gap-10">
+          <div className="xl:grid xl:grid-cols-2 xl:gap-10">
             <div>
               <Form.Item
                 label="Tên sản phẩm"
@@ -278,7 +281,7 @@ const UpdateProduct: React.FC = () => {
                 {/* <Checkbox.Group className="grid grid-cols-2 gap-y-2 items-center" options={checkboxCategoriesList} onChange={onCategoryChange} /> */}
                 <Select
                   mode="multiple"
-                  style={{ width: '100%' }}
+                  style={{}}
                   placeholder="select one country"
                   onChange={onCategoryChange}
                   options={checkboxCategoriesList}
@@ -286,7 +289,7 @@ const UpdateProduct: React.FC = () => {
               </Form.Item>
             </div>
 
-            <div>
+            <div className="">
               {/* thumbnail */}
               <Form.Item
                 label="Ảnh thu nhỏ"
@@ -313,6 +316,7 @@ const UpdateProduct: React.FC = () => {
                 ]}
               >
                 <Upload.Dragger
+                  className="customSizedUpload"
                   listType="picture"
                   beforeUpload={() => false}
                   maxCount={1} // chỉ cho phép tải lên một file duy nhất
@@ -376,7 +380,7 @@ const UpdateProduct: React.FC = () => {
                     {fields.map((field, index) => (
                       <div key={field.key}>
                         <Divider>Thuộc tính {index + 1}</Divider>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid xl:grid-cols-2 xl:gap-4">
                           <div>
                             <Form.Item
                               name={[index, "name"]}
@@ -385,7 +389,7 @@ const UpdateProduct: React.FC = () => {
                             >
                               <Input placeholder="" />
                             </Form.Item>
-                            <div className="grid grid-cols-3 gap-2">
+                            <div className="grid grid-cols-3 sm:gap-2 gap-1">
                               <Form.Item
                                 name={[index, "price"]}
                                 label="Giá"

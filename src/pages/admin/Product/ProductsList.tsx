@@ -13,6 +13,7 @@ const ProductsList: React.FC = () => {
   const [porudctsList, setPorudctsList] = useState<IProduct[]>([]);
 
   const fetchData = async () => {
+    window.scrollTo(0, 0);
     showSpinner();
     try {
       const { data } = await https.get("/products?limit=100");

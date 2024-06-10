@@ -157,7 +157,7 @@ const AddProduct: React.FC = () => {
         requiredMark={false}
       >
         <div className="">
-          <div className="grid grid-cols-2 gap-10">
+          <div className="grid xl:grid-cols-2 xl:gap-10">
             <div>
               <Form.Item
                 label="Tên sản phẩm"
@@ -282,7 +282,7 @@ const AddProduct: React.FC = () => {
                       <div key={field.key}>
                         <Divider>Thuộc tính {index + 1}</Divider>
                         <div className="">
-                          <div className="grid grid-cols-2 gap-4">
+                          <div className="grid xl:grid-cols-2 xl:gap-4">
                             <div className="">
                               <Form.Item
                                 name={[index, "name"]}
