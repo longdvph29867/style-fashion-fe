@@ -1,7 +1,5 @@
 import React from 'react';
-import {Image } from 'antd';
-import { UploadOutlined  } from '@ant-design/icons';
-
+import { FiCamera } from "react-icons/fi";
 type Prop = {
   image?: string;
   handleUpload: (e: React.ChangeEvent<HTMLInputElement>)=> Promise<void>
@@ -14,14 +12,14 @@ const ChangeImage = ({image,handleUpload}: Prop) => {
 <div className="flex-shrink-0 flex items-start sm:justify-start justify-center ">
   <div className="overflow-hidden relative">
     <div className='sm:w-40 sm:h-40 w-32 h-32 relative rounded-full overflow-hidden mb-2'>
-      <Image
+      <img
+      className="w-full h-full rounded-full object-cover z-0"
         src={image}
       />
     </div>
-    <label htmlFor="upload-input" className="cursor-pointer sm:absolute sm:bottom-0 sm:left-0 flex justify-center">
-      <div className="flex justify-center items-center gap-1 border sm:w-16 sm:h-8 w-14 h-6 border-stone-400 rounded bg-slate-50">
-        <UploadOutlined className='sm:text-base  text-sx'/> 
-        <p className='sm:text-base text-sm'>Edit</p>
+    <label htmlFor="upload-input" className="cursor-pointer absolute bottom-2 right-2">
+      <div className="flex justify-center items-center rounded-full gap-1 w-10 h-10 border-stone-400 bg-slate-50">
+        <FiCamera className='text-lg text-slate-500'/> 
       </div>
       <input
         id="upload-input"
