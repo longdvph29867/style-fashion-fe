@@ -21,6 +21,7 @@ import LayoutAdmin from "./Layout/LayoutAdmin";
 import ProductsList from "./pages/admin/Product/ProductsList";
 import AddProduct from "./pages/admin/Product/AddProduct";
 import UpdateProduct from "./pages/admin/Product/UpdateProduct";
+import ListProductPage from "./pages/ListProductPage/ListProductPage";
 
 function App() {
   return (
@@ -36,7 +37,7 @@ function App() {
             <Route path="myorder" element={<MyOrderPage />} />
           </Route>
           <Route path="detail" element={<DetailProduct />} />
-          <Route path="products" element={<ProductListPage />} />
+          <Route path="products" element={<ListProductPage />} />
         </Route>
         <Route path="/auth" element={<LoginLayout />}>
           <Route path="verify-email/:token" element={<ResetPassword />} />

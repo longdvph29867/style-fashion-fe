@@ -1,34 +1,105 @@
 import React, { useEffect, useState } from "react";
 import { https } from "../../services/config";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ItemProduct from "../../components/ItemProduct";
 import { hiddenSpinner, showSpinner } from "../../util/util";
+import { Button, Checkbox, CheckboxProps, Divider, Form, Input, Select } from "antd";
+import { GoDash } from "react-icons/go";
 
 const ListProductPage: React.FC = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const slugCategory = queryParams.get("category");
 
   const [productsList, setProductsList] = useState<Product[]>([]);
+  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
+  const [filteredCategory, setFilteredCategory] = useState<any>([]);
 
   const fetchData = async () => {
     showSpinner();
     try {
-      const API = slugCategory
-        ? `/products?category=${slugCategory}`
-        : "/products";
-      const { data } = await https.get(API);
-
-      setProductsList(data.data);
+      // const API = slugCategory
+      //   ? `/products?category=${slugCategory}`
+      //   : "/products";
+      const { data } = await https.get('/products');
+      console.log(data)
+      setProductsList(data.results);
       hiddenSpinner();
     } catch (error) {
       console.log(error);
       hiddenSpinner();
     }
   };
+
+  const fetchCategories = async () => {
+    showSpinner();
+    try {
+      const { data } = await https.get("/categories");
+      setCategoriesList(data.results);
+      hiddenSpinner();
+    } catch (error) {
+      console.log(error);
+      hiddenSpinner();
+    }
+
+  }
   useEffect(() => {
     fetchData();
-  }, [slugCategory]);
+    fetchCategories();
+  }, []);
+
+  const callFilterApi = async () => {
+    const paramCategory = queryParams.get("categories");
+    let newUrl = `/products?sortBy=createdAt:asc&limit=18&page=1`;
+    if (paramCategory) {
+      newUrl += `&categories=${paramCategory}`;
+    }
+    return https.get(newUrl);
+  }
+
+  const onChange: CheckboxProps['onChange'] = (e) => {
+    console.log(`checked = ${e.target.value} ${e.target.checked}`);
+    if (e.target.checked) {
+      setFilteredCategory([...filteredCategory, e.target.value])
+    } else {
+      setFilteredCategory(filteredCategory.filter((slug: string) => slug !== e.target.value))
+    }
+  };
+
+  const onFilter = async () => {
+    showSpinner();
+    try {
+      if (filteredCategory.length !== 0) {
+        queryParams.set("categories", filteredCategory.join(','));
+      }
+      navigate(location.pathname + "?" + queryParams.toString());
+      // const { data } = await https.get(`/products?categories=${filteredCategory.join(',')}`);
+      const { data } = await callFilterApi();
+      setProductsList(data.results);
+      hiddenSpinner();
+    } catch (error) {
+      console.log(error);
+      hiddenSpinner();
+    }
+  }
+
+  useEffect(() => {
+    console.log(filteredCategory, 'filteredCategory')
+    if (filteredCategory.length === 0) {
+      queryParams.delete("categories");
+      onFilter()
+    } else {
+      onFilter()
+    }
+  }, [filteredCategory])
+
+  const onSubmitPriceRangeFilter = (values: any) => {
+
+  }
+  const onFinishFailed = (errorInfo: unknown) => {
+    console.log("Failed:", errorInfo);
+  };
 
   return (
     <div className="py-20">
@@ -43,226 +114,70 @@ const ListProductPage: React.FC = () => {
         <hr className="border-slate-200 my-14" />
         <div className="grid lg:grid-cols-4 md:grid-cols-3 gap-10">
           {/*  */}
+
           <div className="col-span-1 pr-4">
             <div>
               <div className="relative flex flex-col py-8 space-y-4 border-b border-slate-300">
                 <h3 className="font-semibold ">Danh mục</h3>
-                <div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="Hoodie"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="Hoodie" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        Áo Nỉ &amp; Hoodie
-                      </span>
-                    </label>
-                  </div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="Cardigan"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="Cardigan" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        Áo Len &amp; Áo Cardigan
-                      </span>
-                    </label>
-                  </div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="Thun"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="Thun" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        Áo Thun
-                      </span>
-                    </label>
-                  </div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="coats"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="coats" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        Áo Khoác
-                      </span>
-                    </label>
-                  </div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="Polo"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="Polo" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        Áo Polo
-                      </span>
-                    </label>
-                  </div>
+                <div className="grid grid-flow-row gap-1">
+                  {
+                    categoriesList.map((category: Category, index) => (
+                      <Checkbox value={category.slug} onChange={onChange}>{category.name}</Checkbox>
+                    ))
+                  }
                 </div>
               </div>
-              <div className="relative flex flex-col py-8 space-y-4 border-b border-slate-300">
-                <h3 className="font-semibold ">Size</h3>
-                <div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="sizeS"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="sizeS" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        S
-                      </span>
-                    </label>
+              <div>
+                <h3 className="font-semibold my-4">Khoảng Giá</h3>
+                <Form
+                  layout="vertical"
+                  name="basic"
+                  labelCol={{ span: 12 }}
+                  wrapperCol={{ span: 24 }}
+                  style={{}}
+                  initialValues={{ remember: true }}
+                  onFinish={onSubmitPriceRangeFilter}
+                  onFinishFailed={onFinishFailed}
+                  autoComplete="off"
+                  requiredMark={false}
+                >
+                  <div className="flex gap-2">
+                    <Form.Item
+                      label=""
+                      name="minPrice"
+                      rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
+                    >
+                      <Input placeholder="₫ Từ" />
+                    </Form.Item>
+                    <GoDash className="text-3xl text-slate-500 col-span-1" />
+                    <Form.Item
+                      label=""
+                      name="maxPrice"
+                      rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
+                    >
+                      <Input placeholder="₫ Đến" />
+                    </Form.Item>
                   </div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="sizeM"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="sizeM" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        M
-                      </span>
-                    </label>
-                  </div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="sizeL"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="sizeL" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        L
-                      </span>
-                    </label>
-                  </div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="sizeXL"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="sizeXL" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        XL
-                      </span>
-                    </label>
-                  </div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="size2XL"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="size2XL" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        2XL
-                      </span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div className="relative flex flex-col py-8 space-y-4 border-b border-transparent">
-                <h3 className="font-semibold ">Màu sắc</h3>
-                <div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="sizeS"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="sizeS" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        Trắng
-                      </span>
-                    </label>
-                  </div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="red"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="red" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        Đỏ
-                      </span>
-                    </label>
-                  </div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="blue"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="blue" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        Xanh dương
-                      </span>
-                    </label>
-                  </div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="yellow"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="yellow" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        Vàng
-                      </span>
-                    </label>
-                  </div>
-                  <div className="flex items-center text-sm sm:text-base mb-4">
-                    <input
-                      id="pink"
-                      className=" rounded w-5 h-5"
-                      type="checkbox"
-                      name=""
-                    />
-                    <label htmlFor="pink" className="pl-2.5 sm:pl-3.5">
-                      <span className="text-slate-900 text-sm font-normal">
-                        Hông
-                      </span>
-                    </label>
-                  </div>
-                </div>
+                </Form>
               </div>
             </div>
           </div>
-          {/* list */}
-          <div className="lg:col-span-3 md:col-span-2 grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10 ">
-            {/* item */}
-            {productsList.map((product, index) => (
-              <ItemProduct key={index} product={product} />
-            ))}
+          <div className="col-span-3">
+            <div className="mb-2 h-[62px] w-full bg-slate-50 flex items-center gap-4 pl-10">
+              <span className="font-normal">Sắp xếp theo
+              </span>
+              <Button className="w-[90px] h-[34px]" type="primary" danger>Phổ biến</Button>
+              <Button className="bg-white w-[90px] h-[34px]">Mới nhất</Button>
+              <Button className="bg-white w-[90px] h-[34px]">Bán chạy</Button>
+
+            </div>
+            {/* list */}
+            <div className="lg:col-span-3 md:col-span-2 grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10 ">
+              {/* item */}
+              {productsList.map((product, index) => (
+                <ItemProduct key={index} product={product} />
+              ))}
+            </div>
           </div>
         </div>
       </div>

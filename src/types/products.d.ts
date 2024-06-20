@@ -1,15 +1,18 @@
 type Product = {
-    _id: string,
-    name: string,
-    desc: string,
-    images: string[],
-    price: number,
-    slug: string,
-    id_category: {_id: string, categoryName: string},
-    createAt: string,
-    updateAt: string,
-    gender: string
-    rating:number
+    name: string;
+    slug: string;
+    thumbnail: string;
+    gallery: string[];
+    attributes: string[];
+    categories: string[];
+    description: string;
+    video: string;
+    active: boolean;
+    id: string;
+    scoreReview: number;
 }
-type FormProductData = Pick<Product, 'desc' | 'gender' | 'name' | 'price'> & {images: File[], id_category: string}
+
+
+
+type FormProductData = Pick<Product, 'desc' | 'gender' | 'name' | 'price'> & { images: File[], id_category: string }
 

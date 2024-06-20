@@ -6,16 +6,16 @@ type Props = {
 };
 
 const ItemProduct: React.FC<Props> = ({ product }) => {
-  const { name, desc, images, price, slug, rating } = product;
+  const { name, description, thumbnail, slug, scoreReview } = product;
   return (
     <Link to={`/products/${slug}`}>
       <div className="relative flex flex-col bg-transparent duration-200 hover:-translate-y-4 h-full justify-between">
         <div className="relative flex-shrink-0 bg-slate-50 rounded-3xl overflow-hidden z-1">
           <div className="flex w-full">
             <img
-              src={images[0]}
+              src={thumbnail}
               alt="product"
-              className="object-cover w-full h-full drop-shadow-xl"
+              className="object-cover w-full h-full  drop-shadow-xl"
             />
           </div>
           <div className="rounded-full flex items-center justify-center absolute top-3 left-3 px-2.5 py-1.5 text-xs bg-white text-slate-700 ">
@@ -55,12 +55,12 @@ const ItemProduct: React.FC<Props> = ({ product }) => {
               {name}
             </h2>
             <p className="text-sm text-slate-500 mt-1 ">
-              {desc.slice(0, 50)}...
+              {description.slice(0, 50)}...
             </p>
           </div>
           <div className="flex justify-between items-end ">
             <div className="flex items-center border-2 border-green-500 rounded-lg py-1 px-2  text-sm font-medium">
-              <span className="text-green-500">{formartCurrency(price)}</span>
+              <span className="text-green-500">{formartCurrency(100000)}</span>
             </div>
             <div className="flex items-center">
               <div className="relative w-20 h-6">
@@ -69,12 +69,12 @@ const ItemProduct: React.FC<Props> = ({ product }) => {
                 </div>
                 <div
                   className={`absolute text-[#fbbf24] left-0 bottom-0 h-full overflow-hidden`}
-                  style={{ width: `${formartRating(rating)}%` }}
+                  style={{ width: `${formartRating(scoreReview)}%` }}
                 >
                   ★★★★★
                 </div>
               </div>
-              <span className="text-sm ml-1 text-slate-500">({rating})</span>
+              <span className="text-sm ml-1 text-slate-500">({scoreReview})</span>
             </div>
           </div>
         </div>
