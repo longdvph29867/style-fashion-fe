@@ -21,6 +21,8 @@ import LayoutAdmin from "./Layout/LayoutAdmin";
 import ProductsList from "./pages/admin/Product/ProductsList";
 import AddProduct from "./pages/admin/Product/AddProduct";
 import UpdateProduct from "./pages/admin/Product/UpdateProduct";
+import ShippingAddress from "./components/Checkout/ShippingAddress";
+import MyShippingAddress from "./components/Accout/ShipingAddress/MyShippingAddress";
 
 function App() {
   return (
@@ -32,6 +34,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="account" element={<AccountPage />}>
             <Route index element={<AccountInfomation />} />
+            <Route path="shipping-address" element={<MyShippingAddress />} />
             <Route path="updatepassword" element={<ChangePassword />} />
             <Route path="myorder" element={<MyOrderPage />} />
           </Route>
