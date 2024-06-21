@@ -1,11 +1,24 @@
+export type Attribute={
+  
+    name: string;
+    price: number;
+    stock: number;
+    discount: number;
+    image: string;
+    id: string;
+}
 type Product = {
-    _id: string,
+    id: string,
     name: string,
-    desc: string,
+    scoreReview:number,
+    description: string,
+    attributes: Attribute[],
     images: string[],
+    thumbnail:string,
+    gallery:string[],
     price: number,
     slug: string,
-    id_category: {_id: string, categoryName: string},
+    categories: { id: string; name: string }[];
     createAt: string,
     updateAt: string,
     gender: string

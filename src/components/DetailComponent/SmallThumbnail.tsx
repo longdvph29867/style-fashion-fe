@@ -1,38 +1,33 @@
-const SmallThumbnail = () => {
+import React from "react";
+
+interface SmallThumbnailProps {
+  gallery: string[] | undefined;
+  onThumbnailClick: (image: string) => void;
+}
+
+export const SmallThumbnail: React.FC<SmallThumbnailProps> = ({
+  gallery,
+  onThumbnailClick,
+}) => {
+  if (!gallery) {
+    return null;
+  }
+
   return (
-    <>
-      <div className="grid grid-cols-4 gap-6 mt-6">
-        <div className="cursor-pointer relative pb-[100%] rounded-2xl overflow-hidden border-2 border-slate-400">
+    <div className="grid grid-cols-4 gap-6 mt-6">
+      {gallery.map((image, index) => (
+        <div
+          key={index}
+          className="cursor-pointer relative pb-[100%] rounded-2xl overflow-hidden border-2 border-transparent"
+        >
           <img
+            onClick={() => onThumbnailClick(image)}
+            src={image}
             alt=""
             className="absolute object-cover w-full h-full"
-            src="https://image.uniqlo.com/UQ/ST3/vn/imagesgoods/460324/item/vngoods_05_460324.jpg?width=750"
           />
         </div>
-        <div className="cursor-pointer relative pb-[100%] rounded-2xl overflow-hidden border-2 border-transparent">
-          <img
-            alt=""
-            className="absolute object-cover w-full h-full"
-            src="https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/450189/sub/goods_450189_sub14.jpg?width=750"
-          />
-        </div>
-        <div className="cursor-pointer relative pb-[100%] rounded-2xl overflow-hidden border-2 border-transparent">
-          <img
-            alt=""
-            className="absolute object-cover w-full h-full"
-            src="https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/450189/sub/goods_450189_sub20.jpg?width=750"
-          />
-        </div>
-        <div className="cursor-pointer relative pb-[100%] rounded-2xl overflow-hidden border-2 border-transparent">
-          <img
-            alt=""
-            className="absolute object-cover w-full h-full"
-            src="https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/450189/sub/goods_450189_sub26.jpg?width=750"
-          />
-        </div>
-      </div>
-    </>
+      ))}
+    </div>
   );
 };
-
-export default SmallThumbnail;

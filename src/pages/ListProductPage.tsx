@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { https } from "../services/config";
 import { useLocation } from "react-router-dom";
-import ItemProduct from "../components/HomeComponent/ItemProduct";
+import ItemProduct from "../components/DetailComponent/ItemProduct";
 import { hiddenSpinner, showSpinner } from "../util/util";
 
 const ListProductPage: React.FC = () => {

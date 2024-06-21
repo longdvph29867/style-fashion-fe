@@ -1,4 +1,10 @@
-const IntroduceProduct = () => {
+import { Product } from "../../types/products";
+
+type IntroduceProductProps = {
+  product: Product | null;
+};
+
+const IntroduceProduct = ({ product }: IntroduceProductProps) => {
   return (
     <>
       <div className="w-full rounded-2xl space-y-2.5">
@@ -7,9 +13,7 @@ const IntroduceProduct = () => {
             <span>Mô tả</span>
           </div>
           <div className="p-4 pt-3 text-sm leading-6 text-slate-600">
-            Fashion is a form of self-expression and autonomy at a particular
-            period and place and in a specific context, of clothing, footwear,
-            lifestyle, accessories, makeup, hairstyle, and body posture.
+            {product?.description}
           </div>
         </div>
         <div>
