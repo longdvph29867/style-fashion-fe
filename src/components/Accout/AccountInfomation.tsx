@@ -3,12 +3,7 @@ import { GoMail } from "react-icons/go";
 import { MdOutlineDateRange } from "react-icons/md";
 import { MdOutlineAddHome } from "react-icons/md";
 import { LuPhoneCall } from "react-icons/lu";
-import { useState } from "react";
 const AccountInfomation = () => {
-  const [onForm, setOnForm] = useState(null);
-  // const handleShowMenu = () => {
-  //   setOnForm(!onForm);
-  // };
   return (
     <div
       id="infomation"

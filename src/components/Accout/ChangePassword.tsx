@@ -1,18 +1,21 @@
 import { https } from "../../config/axios";
 import { Button, Form, Input, message } from "antd";
 import { hiddenSpinner, showSpinner } from "../../util/util";
+import { localUserService } from "../../services/localService";
 
 const ChangePassword: React.FC = () => {
-
+  const storedUserInfo = localUserService.get();
+  const userId = storedUserInfo ? storedUserInfo.user.id : null;
+  const useEmail = storedUserInfo ? storedUserInfo.user.email : null;  
   const onFinish = async (values: any) => {
     const { oldPassword, newPassword, confirmPassword } = values;
     console.log(newPassword, confirmPassword);
     const onPassword = async () => {
       showSpinner();
       try {
-        const checkPassword: any = await https.post('/auth/login', { password: oldPassword, email: 'hoanganh@gmail.com' });
+        const checkPassword: any = await https.post('/auth/login', { password: oldPassword, email: `${useEmail}` });
         if (checkPassword?.name !== 'Error') {
-          await https.put(`/users/666081d19cb12dbe9e822358`, { password: newPassword });
+          await https.put(`/users/${userId}`, { password: newPassword });
           message.success("Password updated successfully");
           hiddenSpinner();
         }
