@@ -5,6 +5,7 @@ import { hiddenSpinner, showSpinner } from "../../util/util";
 import { https } from "../../config/axios";
 import { useEffect, useState } from "react";
 import { AddUserType, UpdateUserTypeWithoutPassword, User } from "../../types/users";
+import { localUserService } from "../../services/localService";
 
 
 const AccountInfomation = () => {
@@ -12,10 +13,19 @@ const AccountInfomation = () => {
   const { id } = useParams();
   const [form] = Form.useForm();
 
+  const storedUserInfo = localUserService.get();
+  const userId = storedUserInfo ? storedUserInfo.user.id : null;
+
   const fetchUserDetail = async () => {
+    if (!userId) {
+      message.error("Không tìm thấy thông tin người dùng.");
+      return;
+    }
+
+
     showSpinner();
     try {
-      const { data } = await https.get<User>(`/users/6656f1d6518d4a3b415e761b`);
+      const { data } = await https.get<User>(`/users/${userId}`);
       console.log(data)
       setAvatar(data.image)
       const user: UpdateUserTypeWithoutPassword = data;
@@ -47,7 +57,7 @@ const AccountInfomation = () => {
     const postUser = async () => {
       showSpinner();
       try {
-         await https.put(`/users/6656f1d6518d4a3b415e761b`, data);
+         await https.put(`/users/${userId}`, data);
         message.success("Cập nhật thành công!");
         hiddenSpinner();
 
@@ -85,7 +95,7 @@ const AccountInfomation = () => {
       
         
         // Gửi yêu cầu PUT để cập nhật thông tin người dùng với khóa "image"
-        await https.put(`/users/6656f1d6518d4a3b415e761b`, { image: imageUrl });
+        await https.put(`/users/${userId}`, { image: imageUrl });
         message.success("Cập nhật thành công!");
       } catch (error) {
         message.error(error.response.data.message || "Có lỗi xảy ra.");
