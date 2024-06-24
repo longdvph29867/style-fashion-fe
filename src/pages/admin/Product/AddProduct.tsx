@@ -26,7 +26,7 @@ const AddProduct: React.FC = () => {
   const [checkboxCategoriesList, setCheckboxCategoriesList] = useState<any[]>([]);
   const [form] = Form.useForm();
 
-  let selectedCategories: any = [];
+  // let selectedCategories: any = [];
 
   const fetchCategoryes = async () => {
     const { data } = await https.get("/categories");
@@ -129,10 +129,10 @@ const AddProduct: React.FC = () => {
     console.log("Failed:", errorInfo);
   };
 
-  const onCategoryChange: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
-    console.log('checked = ', checkedValues);
-    selectedCategories = checkedValues;
-  };
+  // const onCategoryChange: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
+  //   console.log('checked = ', checkedValues);
+  //   selectedCategories = checkedValues;
+  // };
 
   const onReset = () => {
     form.resetFields();
@@ -186,7 +186,6 @@ const AddProduct: React.FC = () => {
                   mode="multiple"
                   style={{ width: '100%' }}
                   placeholder="select one country"
-                  onChange={onCategoryChange}
                   options={checkboxCategoriesList}
                 />
               </Form.Item>

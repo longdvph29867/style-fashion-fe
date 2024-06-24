@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  formartCurrency,
   hiddenSpinner,
   showSpinner,
 } from "../../../util/util";
@@ -56,7 +55,7 @@ const ProductsList: React.FC = () => {
       </div>
       <div className="h-full mt-4 overflow-x-auto">
         <div className="w-full border-gray-200 text-slate-500">
-          <div className="w-full grid lg:grid-cols-7 sm:grid-cols-5 grid-cols-2 gap-2">
+          <div className="w-full grid lg:grid-cols-8 sm:grid-cols-5 grid-cols-2 gap-2">
             <div className="lg:block hidden text-center pr-6 pl-4 py-3 font-bold uppercase text-slate-800">
               Ảnh
             </div>
@@ -66,12 +65,9 @@ const ProductsList: React.FC = () => {
             <div className="lg:block hidden col-span-3 pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
               Mô tả
             </div>
-            {/* <div className="sm:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
-              Giá
-            </div>
             <div className="lg:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
-              Danh mục
-            </div> */}
+              Đánh giá
+            </div>
             <div className="lg:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
               Thao tác
             </div>
@@ -81,8 +77,9 @@ const ProductsList: React.FC = () => {
               return (
                 <div
                   key={index}
-                  className="grid lg:grid-cols-7 sm:grid-cols-5 grid-cols-2 gap-2 border-b lg:border-transparent border-slate-300"
+                  className="relative grid lg:grid-cols-8 sm:grid-cols-5 grid-cols-2 gap-2 border-t border-slate-100"
                 >
+                  <span className='absolute top-0.5 left-1 text-slate-300'>{++index}</span>
                   <div className="p-2">
                     <div className="px-2 py-1 min-w-[110px] text-center">
                       <Image
@@ -111,6 +108,14 @@ const ProductsList: React.FC = () => {
                   <div className="lg:block hidden p-2">
                     <p className="text-sm ">{`categories`}</p>
                   </div> */}
+                  <div className="p-2 space-x-2">
+                    <Link
+                      to={`/admin/reviews/${product.id}`}
+                      className="text-sm font-semibold text-green-500"
+                    >
+                      Xem đánh giá
+                    </Link>
+                  </div>
                   <div className="p-2 space-x-2">
                     <Link
                       to={`/admin/products/${product.id}`}

@@ -165,5 +165,9 @@ header.show-mobile .menu-mobile {
   white-space: normal !important;
 }
 
+.ant-modal-footer .ant-btn-primary {
+  background-color: #1677ff !important;
+}
+
 /* width: 80vh;
   max-width: 547px; */

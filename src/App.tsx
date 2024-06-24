@@ -19,6 +19,7 @@ import ProductsList from "./pages/admin/Product/ProductsList";
 import AddProduct from "./pages/admin/Product/AddProduct";
 import UpdateProduct from "./pages/admin/Product/UpdateProduct";
 import ProductDetail from "./pages/admin/Product/ProductDetail";
+import ReviewList from "./pages/admin/Review/ReviewList";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           <Route path="products/:id" element={<ProductDetail />} />
           <Route path="products/add" element={<AddProduct />} />
           <Route path="products/update/:id" element={<UpdateProduct />} />
+          <Route path="reviews/:id" element={<ReviewList />} />
         </Route>
         {/* Các route khác nếu có */}
       </Routes>
