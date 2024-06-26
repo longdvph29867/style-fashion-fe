@@ -1,12 +1,13 @@
 import { Popconfirm, Button } from "antd";
 import {
-  FormActionShipping,
+  ShippingActionModal,
   ShippingAddress,
 } from "../../../types/shippingAddress";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import { memo } from "react";
 type Props = {
   shipping: ShippingAddress;
-  handleButtonShipping: (action: FormActionShipping) => void;
+  handleButtonShipping: (action: ShippingActionModal) => void;
   deleteShippingAddress: (id: string) => void;
   onSelected: (id: string) => void;
 };
@@ -17,6 +18,9 @@ const ShippingItem = ({
   deleteShippingAddress,
   onSelected,
 }: Props) => {
+  const onDelete = (id: string) => {
+    deleteShippingAddress(id);
+  };
   return (
     <div className="sm:flex justify-between items-center mt-5">
       <div className="flex justify-between sm:block">
@@ -53,7 +57,10 @@ const ShippingItem = ({
         <div>
           <Button
             onClick={() =>
-              handleButtonShipping({ type: "update", id: shipping._id })
+              handleButtonShipping({
+                type: "update",
+                shippingAddress: shipping,
+              })
             }
             type="link"
           >
@@ -61,7 +68,7 @@ const ShippingItem = ({
           </Button>
           <Popconfirm
             okType="danger"
-            onConfirm={() => deleteShippingAddress(shipping._id)}
+            onConfirm={() => onDelete(shipping._id)}
             title="Xóa địa chỉ giao hàng"
             description="Bạn chắc chắn muốn xóa địa chỉ này?"
             icon={<QuestionCircleOutlined style={{ color: "red" }} />}
@@ -86,4 +93,4 @@ const ShippingItem = ({
   );
 };
 
-export default ShippingItem;
+export default memo(ShippingItem);
