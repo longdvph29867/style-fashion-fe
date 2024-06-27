@@ -108,9 +108,6 @@ const AccountInfomation = () => {
     }
   };
   
-  
-
-
   return (
     <div
       id="infomation"
