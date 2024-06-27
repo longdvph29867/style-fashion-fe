@@ -6,14 +6,12 @@ import AccountInfomation from "./components/Accout/AccountInfomation";
 import ChangePassword from "./components/Accout/ChangePassword";
 import MyOrderPage from "./components/MyOrderPage/MyOrderPage";
 import ProductListPage from "./components/ProductListPage/ProductListPage";
-// import Layout from "antd/es/layout/layout";
 import LoginLayout from "./Layout/LoginLayout";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Spinner from "./components/Spinner/Spinner";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
-// import Spinner from "./components/Spinner";
 import { ToastContainer } from "react-toastify";
 import HomePage from "./pages/Home/HomePage";
 import Layout from "./Layout/Layout";
@@ -21,10 +19,18 @@ import LayoutAdmin from "./Layout/LayoutAdmin";
 import ProductsList from "./pages/admin/Product/ProductsList";
 import AddProduct from "./pages/admin/Product/AddProduct";
 import UpdateProduct from "./pages/admin/Product/UpdateProduct";
-import ShippingAddress from "./components/Checkout/ShippingAddress";
 import MyShippingAddress from "./components/Accout/ShipingAddress/MyShippingAddress";
+import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
+import { isAccessTokenValid, refreshToken } from "./util/token";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    if (!isAccessTokenValid()) {
+      refreshToken();
+    }
+  }, []);
+
   return (
     <>
       <Spinner />
@@ -40,6 +46,7 @@ function App() {
           </Route>
           <Route path="detail" element={<DetailProduct />} />
           <Route path="products" element={<ProductListPage />} />
+          <Route path="checkout" element={<CheckoutPage />} />
         </Route>
         <Route path="/auth" element={<LoginLayout />}>
           <Route path="verify-email/:token" element={<ResetPassword />} />

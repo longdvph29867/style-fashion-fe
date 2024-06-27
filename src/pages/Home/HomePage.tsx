@@ -17,8 +17,6 @@ import BackgroundSection2 from "../../components/BackgroundSection2";
 import SectionClientSay from "../../components/SectionClientSay";
 import DiscoverMoreSlider from "../../components/DiscoverMoreSlider/DiscoverMoreSlider";
 const HomePage = () => {
-  console.log(1);
-
   return (
     <div className=" ">
       <Banner />

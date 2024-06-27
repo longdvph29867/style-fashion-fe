@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
-import { localUserService } from "../../services/localService";
+import {
+  localTokenService,
+  localUserService,
+} from "../../services/localService";
 import { https } from "../../config/axios";
 import { hiddenSpinner, showSpinner } from "../../util";
 import { message } from "antd";
@@ -10,10 +13,11 @@ const User = () => {
   const handleLogOut = async () => {
     localUserService.remove();
     const data = {
-      refreshToken: infoUser?.tokens.refresh.token,
-    }
+      refreshToken: localTokenService.get()?.refresh.token,
+    };
+    localTokenService.remove();
     showSpinner();
-    await https.post('/auth/logout', data)
+    await https.post("/auth/logout", data);
     hiddenSpinner();
     message.success("Đăng xuất thành công!");
     setTimeout(() => {
@@ -57,7 +61,7 @@ const User = () => {
                     Thông tin
                   </Link>
                 </li>
-                {infoUser.user.role === "admin" ? (
+                {infoUser.role === "admin" ? (
                   <li className="px-2">
                     <Link
                       className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
@@ -112,7 +116,7 @@ const User = () => {
       {infoUser ? (
         <div className="text-xs text-slate-700">
           Hi,
-          {infoUser.user.name.split(" ")[0]}
+          {infoUser.name.split(" ")[0]}
         </div>
       ) : (
         <></>

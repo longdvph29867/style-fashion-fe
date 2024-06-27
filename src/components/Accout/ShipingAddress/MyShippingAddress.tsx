@@ -18,7 +18,7 @@ const MyShippingAddress = () => {
     type: "create",
   });
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const user = localUserService.get()?.user;
+  const user = localUserService.get();
   const fetchShippingAddress = async (id: string) => {
     try {
       showSpinner();
