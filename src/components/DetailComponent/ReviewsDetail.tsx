@@ -8,6 +8,8 @@ type ReviewDetailProps = {
 };
 
 const ReviewsDetail = ({ product }: ReviewDetailProps) => {
+  console.log(product);
+
   const [reviews, setReviews] = useState<Review[]>([]);
   const [totalReview, setTotalReview] = useState([]);
   console.log(reviews);
@@ -43,7 +45,7 @@ const ReviewsDetail = ({ product }: ReviewDetailProps) => {
         >
           <path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" />
         </svg>
-        <span className="ml-1.5"> 4,87 · {totalReview} Reviews</span>
+        <span className="ml-1.5"> {product?.finalScoreReview} Reviews</span>
       </h2>
       <div className="grid grid-cols-1 mt-10 md:grid-cols-2 gap-y-11 gap-x-28">
         {reviews?.map((item, index) => (
@@ -129,9 +131,11 @@ const ReviewsDetail = ({ product }: ReviewDetailProps) => {
           </div>
         ))}
       </div>
-      <button className="mb-16 nc-Button relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6  ttnc-ButtonSecondary bg-white text-slate-700 dark:bg-slate-900 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 mt-10 border border-slate-300 dark:border-slate-700  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000 dark:focus:ring-offset-0">
-        Show me all {totalReview} views
-      </button>
+      {reviews.length <= 10 && (
+        <button className="mb-16 nc-Button relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6  ttnc-ButtonSecondary bg-white text-slate-700 dark:bg-slate-900 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 mt-10 border border-slate-300 dark:border-slate-700  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000 dark:focus:ring-offset-0">
+          Show me all {totalReview} reviews
+        </button>
+      )}
     </>
   );
 };

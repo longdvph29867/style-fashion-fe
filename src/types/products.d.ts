@@ -18,9 +18,10 @@ type Product = {
     gallery:string[],
     price: number,
     slug: string,
+    finalScoreReview:number,
     categories: { id: string; name: string }[];
     createAt: string,
-    updateAt: string,
+    updateAt: string
     gender: string
     rating:number
 }

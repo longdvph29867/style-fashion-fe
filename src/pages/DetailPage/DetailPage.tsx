@@ -12,7 +12,6 @@ import { https } from "../../config/axios";
 import CustomerServices from "../../components/DetailComponent/CustomerServices";
 import IntroduceProduct from "../../components/DetailComponent/IntroduceProduct";
 import ProductsSame from "../../components/DetailComponent/ProductsSame";
-// import ReviewsDetail from "../../components/DetailComponent/ReviewsDetail";
 import DescriptionDetail from "../../components/DetailComponent/DescriptionDetail";
 import BtnToCart from "../../components/DetailComponent/BtnToCart";
 import BigThumbnail from "../../components/DetailComponent/BigThumbnail";
@@ -27,7 +26,6 @@ const DetailPage = () => {
   const [productsSame, setProductsSame] = useState<Product[]>([]);
   const [currentImage, setCurrentImage] = useState<string>("default-image.jpg");
   const [attribute, setAttribute] = useState<Attribute | null>(null);
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const handleIncrement = () => {
     if (!attribute?.stock) {
@@ -54,7 +52,6 @@ const DetailPage = () => {
       hiddenSpinner();
       setProduct(productDetail.data);
       setCurrentImage(productDetail.data.gallery[0]);
-      setSelectedColor(productDetail.data.attributes[0]?.image);
       const dataSameProductFilter = dataSameProduct.data.results.filter(
         (item: Product) => item.slug !== slug
       );
@@ -72,11 +69,9 @@ const DetailPage = () => {
     setCurrentImage(image);
   };
 
-  const handleColorSelect = (image: string | null) => {
-    if (typeof image === "string") {
-      setCurrentImage(image);
-      setSelectedColor(image);
-    }
+  const handleColorSelect = (atrr: Attribute) => {
+    setCurrentImage(atrr.image);
+    setAttribute(atrr);
   };
   return (
     <>
@@ -150,29 +145,6 @@ const DetailPage = () => {
                     </div>
                   </div>
                 </div>
-                {/* SELECT COLOR THEO gallery */}
-                <div className="flex mt-3">
-                  {product?.attributes.map((attr, index) => (
-                    <div
-                      key={index}
-                      className={`relative flex-1 max-w-[75px] h-10 sm:h-11 rounded-full border-2 cursor-pointer ${
-                        selectedColor === attr.image
-                          ? "border-primary-6000 dark:border-primary-500"
-                          : "border-transparent"
-                      }`}
-                      onClick={() => handleColorSelect(attr.image)}
-                    >
-                      <div
-                        className="absolute inset-0.5 rounded-full overflow-hidden z-0 object-cover bg-cover"
-                        style={{
-                          backgroundImage: `url(${attr.image})`,
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                {/* SELECT SIZE FROM ATTRIBUTES */}
                 {/* SELECT SIZE FROM ATTRIBUTES */}
                 <div className="my-8">
                   <div>
@@ -191,7 +163,7 @@ const DetailPage = () => {
                               ? "border-primary-6000 dark:border-primary-500"
                               : "border-slate-300"
                           } text-slate-900 hover:bg-neutral-50`}
-                          onClick={() => setAttribute(attr)}
+                          onClick={() => handleColorSelect(attr)}
                         >
                           {attr.name}
                         </div>
@@ -220,10 +192,10 @@ const DetailPage = () => {
         <DescriptionDetail product={product} />
         <div className="container mx-auto mt-12">
           <hr />
-          
+
           <div className="">
-            <ReviewsDetail product={product}/> 
-           
+            <ReviewsDetail product={product} />
+
             <hr />
           </div>
         </div>
