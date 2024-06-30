@@ -92,13 +92,12 @@ const ReviewList: React.FC = () => {
 
     return (
         <div className="p-4">
-            <div className="flex items-center gap-5 z-10">
-                <Image className="" height={40} width={40} src={product?.thumbnail} />
-                <span className="">{product?.name}</span>
-            </div>
-            <div className="">
+            <div className="relative">
+                <div className="lg:absolute lg:right-0 flex items-center justify-end gap-5 z-10">
+                    <Image className="" height={40} width={40} src={product?.thumbnail} />
+                    <span className="">{product?.name}</span>
+                </div>
                 <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-
             </div>
 
         </div>

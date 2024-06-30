@@ -13,6 +13,7 @@ const ChildrenTab = ({ reviewsList, fetchData }: Props) => {
     // const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
+    const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false);
     const [selectedReviewId, setSelectedReviewId] = useState(null);
 
     const handleApprove = async () => {
@@ -53,6 +54,25 @@ const ChildrenTab = ({ reviewsList, fetchData }: Props) => {
         setSelectedReviewId(null);
     };
 
+    const handleRestore = async () => {
+        console.log('Restore review with id:', selectedReviewId);
+        setIsRestoreModalOpen(false);
+        try {
+            showSpinner()
+            const data = await https.post(`/reviews/restore?reviewId=${selectedReviewId}`);
+            if (data) {
+                message.success('Khôi phục thành công');
+                fetchData();
+                hiddenSpinner();
+            }
+        } catch (error) {
+            hiddenSpinner();
+            console.log(error);
+            message.error(error.response.data.message);
+        }
+        setSelectedReviewId(null);
+    };
+
     const showDeleteModal = (id: any) => {
         setIsDeleteModalOpen(true);
         setSelectedReviewId(id);
@@ -60,6 +80,11 @@ const ChildrenTab = ({ reviewsList, fetchData }: Props) => {
 
     const showApproveModal = (id: any) => {
         setIsApproveModalOpen(true);
+        setSelectedReviewId(id);
+    };
+
+    const showRestoreModal = (id: any) => {
+        setIsRestoreModalOpen(true);
         setSelectedReviewId(id);
 
     };
@@ -73,6 +98,7 @@ const ChildrenTab = ({ reviewsList, fetchData }: Props) => {
     const handleCancel = () => {
         setIsDeleteModalOpen(false);
         setIsApproveModalOpen(false);
+        setIsRestoreModalOpen(false);
         setSelectedReviewId(null);
     };
 
@@ -95,7 +121,7 @@ const ChildrenTab = ({ reviewsList, fetchData }: Props) => {
                     <div className="md:block hidden col-span-1 pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
                         Trạng thái
                     </div>
-                    <div className="md:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
+                    <div className="md:block hidden col-span-2 pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
                         Thao tác
                     </div>
                 </div>
@@ -137,8 +163,16 @@ const ChildrenTab = ({ reviewsList, fetchData }: Props) => {
                                     {review.status === "offline" &&
                                         <>
                                             <Button onClick={() => showApproveModal(review.id)} className="text-white text-base font-semibold sm:w-20 w-20 h-10 bg-green-500 rounded">Duyệt</Button>
-                                            <Modal title="Xác nhận" open={isApproveModalOpen} onOk={handleApprove} onCancel={handleCancel}>
+                                            <Modal title="Xác nhận duyệt" open={isApproveModalOpen} onOk={handleApprove} onCancel={handleCancel}>
                                                 <p>Bạn có chắc chắn muốn duyệt?</p>
+                                            </Modal>
+                                        </>
+                                    }
+                                    {review.status === "deleted" &&
+                                        <>
+                                            <Button onClick={() => showRestoreModal(review.id)} className="text-white text-center text-base font-semibold h-10 bg-green-500 rounded">Khôi phục</Button>
+                                            <Modal title="Xác nhận khôi phục" open={isRestoreModalOpen} onOk={handleRestore} onCancel={handleCancel}>
+                                                <p>Bạn có chắc chắn muốn khôi phục?</p>
                                             </Modal>
                                         </>
                                     }
