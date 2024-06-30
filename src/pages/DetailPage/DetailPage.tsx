@@ -11,6 +11,7 @@ import {
 import ImgDetail from "./ImgDetail";
 import ProductsSame from "../../components/ProductsSame";
 import { https } from "../../services/config";
+import ListComment from "../../components/ListComment/ListComment";
 
 const DetailPage = () => {
   const { slug } = useParams();
@@ -503,6 +504,7 @@ const DetailPage = () => {
             </div>
           </div>
           {/*  */}
+          <ListComment/>
         </div>
       </div>
       <div>
