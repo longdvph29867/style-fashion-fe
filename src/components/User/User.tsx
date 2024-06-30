@@ -1,12 +1,28 @@
 import { Link } from "react-router-dom";
-import { localUserService } from "../../services/localService";
+import {
+  localTokenService,
+  localUserService,
+} from "../../services/localService";
+import { https } from "../../config/axios";
+import { hiddenSpinner, showSpinner } from "../../util";
+import { message } from "antd";
 
 const User = () => {
   const infoUser = localUserService.get();
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     localUserService.remove();
-    location.href = "/";
+    const data = {
+      refreshToken: localTokenService.get()?.refresh.token,
+    };
+    localTokenService.remove();
+    showSpinner();
+    await https.post("/auth/logout", data);
+    hiddenSpinner();
+    message.success("Đăng xuất thành công!");
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 400);
   };
 
   return (
@@ -38,13 +54,12 @@ const User = () => {
             {infoUser ? (
               <>
                 <li className="px-2">
-                  <a
+                  <Link
                     className="flex items-center px-4 py-2 font-normal rounded-md text-neutral-600 hover:bg-neutral-100"
-                    href="https://k4-typescript-theta.vercel.app/"
-                    target="_black"
+                    to="/account"
                   >
                     Thông tin
-                  </a>
+                  </Link>
                 </li>
                 {infoUser.role === "admin" ? (
                   <li className="px-2">
@@ -72,7 +87,7 @@ const User = () => {
                 <li className="px-2">
                   <Link
                     className="flex items-center px-4 py-2 font-normal rounded-md text-neutral-600 hover:bg-neutral-100"
-                    to="/login"
+                    to="/auth/login"
                   >
                     Đăng nhập
                   </Link>
@@ -80,9 +95,17 @@ const User = () => {
                 <li className="px-2">
                   <Link
                     className="flex items-center px-4 py-2 font-normal rounded-md text-neutral-600 hover:bg-neutral-100"
-                    to="/singup"
+                    to="/auth/register"
                   >
                     Đăng ký
+                  </Link>
+                </li>
+                <li className="px-2">
+                  <Link
+                    className="flex items-center px-4 py-2 font-normal rounded-md text-neutral-600 hover:bg-neutral-100"
+                    to="/account"
+                  >
+                    My Account
                   </Link>
                 </li>
                 {/* <li className="px-2">
@@ -101,7 +124,7 @@ const User = () => {
       {infoUser ? (
         <div className="text-xs text-slate-700">
           Hi,
-          {infoUser.fullName.split(" ")[0]}
+          {infoUser.name.split(" ")[0]}
         </div>
       ) : (
         <></>

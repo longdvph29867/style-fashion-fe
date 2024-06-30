@@ -1,16 +1,13 @@
-import { FC } from "react";
 import User from "../components/User";
 import Search from "../components/Search";
 import AdminMenu from "../components/AdminMenu";
 import { localUserService } from "../services/localService";
-type Props = {
-  Component: FC;
-};
+import { Outlet } from "react-router-dom";
 
-function LayoutAdmin({ Component }: Props) {
-  if (localUserService.get()?.role !== "admin") {
-    window.location.href = "/";
-  }
+function LayoutAdmin() {
+  // if (localUserService.get()?.role !== "admin") {
+  //   window.location.href = "/";
+  // }
   return (
     <div className="flex min-h-screen w-full bg-[#f8f9fa]">
       <AdminMenu />
@@ -24,7 +21,7 @@ function LayoutAdmin({ Component }: Props) {
           </div>
         </nav>
         <div className="flex-grow relative flex flex-col min-w-0 mb-6 bg-white shadow-sm rounded-2xl">
-          {<Component />}
+          <Outlet />
         </div>
       </div>
     </div>

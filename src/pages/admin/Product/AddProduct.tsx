@@ -12,17 +12,17 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { hiddenSpinner, showSpinner } from "../util/util";
-import { https } from "../services/config";
+import { hiddenSpinner, showSpinner } from "../../../util/util";
+import { https } from "../../../config/axios";
 import TextArea from "antd/es/input/TextArea";
 
 const AddProduct: React.FC = () => {
   const navigate = useNavigate();
-  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
+  const [categoriesList, setCategoriesList] = useState<any[]>([]);
 
   const fetchCategoryes = async () => {
-    const categories = await https.get("/categories");
-    setCategoriesList(categories.data.data);
+    const { data } = await https.get("/categories");
+    setCategoriesList(data.results);
   };
   useEffect(() => {
     fetchCategoryes();
@@ -174,7 +174,7 @@ const AddProduct: React.FC = () => {
           <Select placeholder="--- Chọn ---">
             {categoriesList.map((category, index) => (
               <Select.Option key={index} value={category._id}>
-                {category.categoryName}
+                {category.name}
               </Select.Option>
             ))}
           </Select>

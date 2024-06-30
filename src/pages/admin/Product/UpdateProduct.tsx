@@ -14,12 +14,12 @@ import {
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
-import { hiddenSpinner, showSpinner } from "../util/util";
-import { https } from "../services/config";
+import { hiddenSpinner, showSpinner } from "../../../util/util";
+import { https } from "../../../config/axios";
 import TextArea from "antd/es/input/TextArea";
 
 const UpdateProduct: React.FC = () => {
-  const { slug } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [categoriesList, setCategoriesList] = useState<Category[]>([]);
   const [form] = Form.useForm();
@@ -29,8 +29,8 @@ const UpdateProduct: React.FC = () => {
     showSpinner();
     try {
       hiddenSpinner();
-      const categories = await https.get("/categories");
-      setCategoriesList(categories.data.data);
+      const { data } = await https.get("/categories");
+      setCategoriesList(data.results);
     } catch (error) {
       console.log(error);
       hiddenSpinner();
@@ -40,7 +40,7 @@ const UpdateProduct: React.FC = () => {
     showSpinner();
     try {
       hiddenSpinner();
-      const { data } = await https.get(`/products/${slug}`);
+      const { data } = await https.get(`/products/${id}`);
       const product: Product = data.data;
       form.setFieldsValue({
         name: product.name,
@@ -70,7 +70,7 @@ const UpdateProduct: React.FC = () => {
   useEffect(() => {
     fetchProduct();
     fetchCategoryes();
-  }, [slug]);
+  }, [id]);
 
   const onFinish = (values: FormProductData) => {
     const putProduct = async () => {
@@ -102,7 +102,7 @@ const UpdateProduct: React.FC = () => {
       };
 
       try {
-        const res = await https.put(`/products/${slug}`, data);
+        const res = await https.put(`/products/${id}`, data);
         if (res) {
           message.success("Cập nhật sản phẩm thành công!");
           navigate("/admin/products");
