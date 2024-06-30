@@ -8,10 +8,9 @@ type ReviewDetailProps = {
 };
 
 const ReviewsDetail = ({ product }: ReviewDetailProps) => {
-  console.log(product);
-
   const [reviews, setReviews] = useState<Review[]>([]);
   const [totalReview, setTotalReview] = useState([]);
+  const [showAllReviews, setShowAllReviews] = useState<boolean>(false);
   console.log(reviews);
   const fetchReviews = async () => {
     try {
