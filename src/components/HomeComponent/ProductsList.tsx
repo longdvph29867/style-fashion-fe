@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ItemProduct from "./ItemProduct";
-import { hiddenSpinner, showSpinner } from "../util/util";
-import { https } from "../services/config";
+import { hiddenSpinner, showSpinner } from "../../util/util";
+import { https } from "../../config/axios";
 type Props = {
   gender?: string;
 };
@@ -12,10 +12,11 @@ const ProductsList: React.FC<Props> = ({ gender }) => {
   const fetchData = async () => {
     try {
       showSpinner();
-      const API = gender ? `/products?gender=${gender}` : `/products`;
+      const API = `/products`;
       const { data } = await https.get(API);
+      console.log(data.results);
       hiddenSpinner();
-      setProductsList(data.data);
+      setProductsList(data.results);
     } catch (error) {
       hiddenSpinner();
       console.log(error);
@@ -24,10 +25,7 @@ const ProductsList: React.FC<Props> = ({ gender }) => {
   useEffect(() => {
     fetchData();
   }, []);
-
-
-  const [isExpanded, setIsExpanded] = useState<boolean>(false); // Explicitly typed as boolean
-
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
   };
@@ -35,19 +33,16 @@ const ProductsList: React.FC<Props> = ({ gender }) => {
   return (
     <div>
       <div className="">
-        
-
-
         <div className="container mx-auto">
-          <h2 className=" text-3xl md:text-4xl font-semibold mb-12">
+          <h2 className="mb-12 text-3xl font-semibold md:text-4xl">
             {!gender
               ? "Sản phẩm mới"
               : gender === "male"
-                ? "Dành cho nam"
-                : "Dành cho nữ"}
+              ? "Dành cho nam"
+              : "Dành cho nữ"}
           </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-16 xl:gap-20">
-            {productsList.slice(0, 8).map((product, index) => {
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 sm:gap-16 xl:gap-20">
+            {productsList?.map((product, index) => {
               return <ItemProduct product={product} key={index} />;
             })}
           </div>

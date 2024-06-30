@@ -10,22 +10,21 @@ export type ObjString = { [key: string]: string }
 export type LoginType = Pick<RegisterType, 'email' | 'password'>;
 
 export type InforUserType = {
-  user: {
-    name: string,
-    email: string,
-    role: string,
-    isEmailVerified: boolean,
-    active: boolean,
-    id: string
+  name: string,
+  email: string,
+  role: string,
+  isEmailVerified: boolean,
+  active: boolean,
+  id: string
+}
+
+export type UserTokenType = {
+  access: {
+    token: string,
+    expires: string
   },
-  tokens: {
-    access: {
-      token: string,
-      expires: string
-    },
-    refresh: {
-      token: string,
-      expires: string,
-    }
+  refresh: {
+    token: string,
+    expires: string,
   }
 }

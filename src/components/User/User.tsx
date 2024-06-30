@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
-import { localUserService } from "../../services/localService";
+import {
+  localTokenService,
+  localUserService,
+} from "../../services/localService";
 import { https } from "../../config/axios";
 import { hiddenSpinner, showSpinner } from "../../util";
 import { message } from "antd";
@@ -10,10 +13,11 @@ const User = () => {
   const handleLogOut = async () => {
     localUserService.remove();
     const data = {
-      refreshToken: infoUser?.tokens.refresh.token,
-    }
+      refreshToken: localTokenService.get()?.refresh.token,
+    };
+    localTokenService.remove();
     showSpinner();
-    await https.post('/auth/logout', data)
+    await https.post("/auth/logout", data);
     hiddenSpinner();
     message.success("Đăng xuất thành công!");
     setTimeout(() => {
@@ -23,9 +27,9 @@ const User = () => {
 
   return (
     <div className="flex items-center">
-      <button className="relative group lg:w-12 w-10 h-10 lg:h-12 flex justify-center items-center text-slate-700 rounded-full hover:bg-slate-100">
+      <button className="relative flex items-center justify-center w-10 h-10 rounded-full group lg:w-12 lg:h-12 text-slate-700 hover:bg-slate-100">
         <svg
-          className=" w-6 h-6"
+          className="w-6 h-6 "
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -45,22 +49,22 @@ const User = () => {
             strokeLinejoin="round"
           />
         </svg>
-        <div className="group-hover:visible group-hover:opacity-100 invisible duration-300 absolute transform z-10 w-40 top-full right-0 opacity-0">
-          <ul className="rounded-lg shadow-lg border border-neutral-100 text-sm relative bg-white py-4 grid gap-1">
+        <div className="absolute right-0 z-10 invisible w-40 duration-300 transform opacity-0 group-hover:visible group-hover:opacity-100 top-full">
+          <ul className="relative grid gap-1 py-4 text-sm bg-white border rounded-lg shadow-lg border-neutral-100">
             {infoUser ? (
               <>
                 <li className="px-2">
                   <Link
-                    className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
+                    className="flex items-center px-4 py-2 font-normal rounded-md text-neutral-600 hover:bg-neutral-100"
                     to="/account"
                   >
                     Thông tin
                   </Link>
                 </li>
-                {infoUser.user.role === "admin" ? (
+                {infoUser.role === "admin" ? (
                   <li className="px-2">
                     <Link
-                      className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
+                      className="flex items-center px-4 py-2 font-normal rounded-md text-neutral-600 hover:bg-neutral-100"
                       to="/admin/products"
                     >
                       Quản trị
@@ -72,7 +76,7 @@ const User = () => {
                 <li className="px-2">
                   <div
                     onClick={handleLogOut}
-                    className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
+                    className="flex items-center px-4 py-2 font-normal rounded-md text-neutral-600 hover:bg-neutral-100"
                   >
                     Đăng xuất
                   </div>
@@ -82,7 +86,7 @@ const User = () => {
               <>
                 <li className="px-2">
                   <Link
-                    className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
+                    className="flex items-center px-4 py-2 font-normal rounded-md text-neutral-600 hover:bg-neutral-100"
                     to="/auth/login"
                   >
                     Đăng nhập
@@ -90,15 +94,23 @@ const User = () => {
                 </li>
                 <li className="px-2">
                   <Link
-                    className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
+                    className="flex items-center px-4 py-2 font-normal rounded-md text-neutral-600 hover:bg-neutral-100"
                     to="/auth/register"
                   >
                     Đăng ký
                   </Link>
                 </li>
+                <li className="px-2">
+                  <Link
+                    className="flex items-center px-4 py-2 font-normal rounded-md text-neutral-600 hover:bg-neutral-100"
+                    to="/account"
+                  >
+                    My Account
+                  </Link>
+                </li>
                 {/* <li className="px-2">
                   <Link
-                    className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
+                    className="flex items-center px-4 py-2 font-normal rounded-md text-neutral-600 hover:bg-neutral-100"
                     to="/portfolio"
                   >
                     Portfolio
@@ -112,7 +124,7 @@ const User = () => {
       {infoUser ? (
         <div className="text-xs text-slate-700">
           Hi,
-          {infoUser.user.name.split(" ")[0]}
+          {infoUser.name.split(" ")[0]}
         </div>
       ) : (
         <></>

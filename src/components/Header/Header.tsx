@@ -6,7 +6,6 @@ import Search from "../Search/Search";
 
 const Header = () => {
   const [showMenuMobile, setShowMenuMobile] = useState<boolean>(false);
-  console.log(showMenuMobile);
 
   const handleShowMenu = () => {
     setShowMenuMobile(!showMenuMobile);

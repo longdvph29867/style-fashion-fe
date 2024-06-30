@@ -6,7 +6,10 @@ import { Button, Form, Input, message } from "antd";
 import { LoginType } from "../../types/login";
 import { hiddenSpinner, showSpinner } from "../../util";
 import { https } from "../../config/axios";
-import { localUserService } from "../../services/localService";
+import {
+  localTokenService,
+  localUserService,
+} from "../../services/localService";
 
 const Login: React.FC = () => {
   const onFinish = (values: LoginType) => {
@@ -20,9 +23,10 @@ const Login: React.FC = () => {
         const res = await https.post("/auth/login", data);
         if (res) {
           const infoUser = {
-            ...res.data.data,
+            ...res.data.user,
           };
-          localUserService.set(res.data);
+          localUserService.set(res.data.user);
+          localTokenService.set(res.data.tokens);
           hiddenSpinner();
           message.success("Đăng nhập thành công!");
           if (infoUser.role === "admin") {

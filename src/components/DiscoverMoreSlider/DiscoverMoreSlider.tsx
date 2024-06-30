@@ -67,7 +67,7 @@ const DiscoverMoreSlider = (props: Props) => {
       <div className="mx-[-12px]">
         <Slider {...settings}>
           {listData.map((item, index) => (
-            <div className="px-3">
+            <div key={index} className="px-3">
               <li className="list-none">
                 <a className="block " href="#">
                   <div

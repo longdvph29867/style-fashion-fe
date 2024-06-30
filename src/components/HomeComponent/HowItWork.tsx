@@ -1,7 +1,7 @@
-import img1 from "../assets/img/HIW1img.webp";
-import img2 from "../assets/img/HIW2img.webp";
-import img3 from "../assets/img/HIW3img.webp";
-import img4 from "../assets/img/HIW4img.webp";
+import img1 from "../../assets/img/HIW1img.webp";
+import img2 from "../../assets/img/HIW2img.webp";
+import img3 from "../../assets/img/HIW3img.webp";
+import img4 from "../../assets/img/HIW4img.webp";
 import React from "react";
 
 type step = {
@@ -47,7 +47,7 @@ const HowItWork: React.FC = () => {
     <div>
       <div className="mt-35">
         <div className="container mx-auto">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-16 xl:gap-20">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 sm:gap-16 xl:gap-20">
             {listStep.map(({ id, img, title, content, color }, index) => (
               <div
                 key={index}
@@ -56,14 +56,14 @@ const HowItWork: React.FC = () => {
                 <div className="mb-4 sm:mb-10 max-w-[140px] mx-auto">
                   <img src={img} alt="" />
                 </div>
-                <div className="text-center mt-auto space-y-5">
+                <div className="mt-auto space-y-5 text-center">
                   <span
                     className={`${color} inline-flex px-2.5 py-1 rounded-full font-medium text-xs relative`}
                   >
                     Bước {id}
                   </span>
                   <h3 className="text-base font-semibold">{title}</h3>
-                  <span className="block text-slate-600 text-sm leading-6">
+                  <span className="block text-sm leading-6 text-slate-600">
                     {content}
                   </span>
                 </div>
@@ -72,8 +72,7 @@ const HowItWork: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className=" mt-24 border-b border-slate-200 dark:border-slate-700"></div>
-
+      <div className="mt-24 border-b border-slate-200 dark:border-slate-700"></div>
     </div>
   );
 };

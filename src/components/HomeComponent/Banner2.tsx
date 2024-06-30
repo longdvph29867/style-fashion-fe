@@ -1,7 +1,7 @@
 // type Props = {}
-import imgBanner2 from "../assets/img/promo2.webp";
-import imgBg from "../assets/img/bg-banner.svg";
-import imgLogo from "../assets/img/logo140.svg";
+import imgBanner2 from "../../assets/img/promo2.webp";
+import imgBg from "../../assets/img/bg-banner.svg";
+import imgLogo from "../../assets/img/logo140.svg";
 
 const Banner2 = () => {
   return (
@@ -12,18 +12,18 @@ const Banner2 = () => {
             <div>
               <img
                 alt=""
-                className="absolute top-0 left-0 w-full h-full object-contain"
+                className="absolute top-0 left-0 object-contain w-full h-full"
                 src={imgBg}
               />
             </div>
             <div className="lg:w-[45%] max-w-lg relative">
               <a
-                className="ttnc-logo inline-block text-slate-600 w-28"
+                className="inline-block ttnc-logo text-slate-600 w-28"
                 href="/"
               >
                 <img
                   alt=""
-                  className="h-8 sm:h-10 w-auto"
+                  className="w-auto h-8 sm:h-10"
                   src={imgLogo}
                   style={{ color: "transparent" }}
                 />
@@ -35,9 +35,9 @@ const Banner2 = () => {
                 Thời trang là một hình thức thể hiện bản thân và tự chủ ở một
                 thời điểm và địa điểm cụ thể.
               </span>
-              <div className="flex space-x-2 sm:space-x-5 mt-6 sm:mt-12">
+              <div className="flex mt-6 space-x-2 sm:space-x-5 sm:mt-12">
                 <a
-                  className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6  ttnc-ButtonPrimary disabled:bg-opacity-90 bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 text-slate-50 dark:text-slate-800 shadow-xl dark:bg-slate-200 dark:text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000 dark:focus:ring-offset-0 "
+                  className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6  ttnc-ButtonPrimary disabled:bg-opacity-90 bg-slate-900  hover:bg-slate-800 text-slate-50 shadow-xl dark:bg-slate-200 dark:text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000 dark:focus:ring-offset-0 "
                   href="/search"
                 >
                   Xem thêm
