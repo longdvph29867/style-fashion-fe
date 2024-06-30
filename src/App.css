@@ -161,3 +161,6 @@ header.show-mobile .menu-mobile {
 .swiper-rtl .swiper-button-prev:after {
   content: none !important;
 }
+.hidden img{
+  border-radius: 100%;
+}

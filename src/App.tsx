@@ -1,5 +1,4 @@
 import "./App.css";
-import DetailProduct from "./pages/DetailProduct";
 import { Route, Routes } from "react-router-dom";
 import AccountPage from "./pages/AccountPage/AccountPage";
 import AccountInfomation from "./components/Accout/AccountInfomation";
@@ -15,6 +14,7 @@ import ResetPassword from "./pages/Auth/ResetPassword";
 import { ToastContainer } from "react-toastify";
 import HomePage from "./pages/Home/HomePage";
 import Layout from "./Layout/Layout";
+import DetailPage from "./pages/DetailPage/DetailPage";
 import LayoutAdmin from "./Layout/LayoutAdmin";
 import ProductsList from "./pages/admin/Product/ProductsList";
 import AddProduct from "./pages/admin/Product/AddProduct";
@@ -44,7 +44,8 @@ function App() {
             <Route path="updatepassword" element={<ChangePassword />} />
             <Route path="myorder" element={<MyOrderPage />} />
           </Route>
-          <Route path="detail" element={<DetailProduct />} />
+          <Route path="detail/:slug" element={<DetailPage />} />
+          {/* <Route path="details/:slug" element={<DetailProduct />} /> */}
           <Route path="products" element={<ProductListPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
         </Route>
