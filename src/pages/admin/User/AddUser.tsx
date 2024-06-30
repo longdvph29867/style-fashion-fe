@@ -1,12 +1,51 @@
 // type Props = {};
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Radio,
+  Select,
+  Upload,
+  message,
+} from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { hiddenSpinner, showSpinner } from "../../../util/util";
+import { https } from "../../../config/axios";
+import TextArea from "antd/es/input/TextArea";
+import { AddUserType } from "../../../types/userType";
+import { roleList } from "../../../constant/constant";
 
-import React from "react";
-import { Button, Form, Input } from "antd";
-import { Link } from "react-router-dom";
+const AddUser: React.FC = () => {
+  const navigate = useNavigate();
 
-const Register: React.FC = () => {
-  const onFinish = (values: unknown) => {
-    console.log(values);
+  const onFinish = (values: AddUserType) => {
+    const data = {
+      name: values.name,
+      password: values.password,
+      phoneNumber: values.phoneNumber,
+      email: values.email,
+      role: values.role,
+    }
+    // console.log(values);
+    const postUser = async () => {
+      showSpinner();
+      try {
+        const res = await https.post("/users", data);
+        if (res) {
+          message.success("Thêm mới thành công!");
+          navigate("/admin/users");
+          hiddenSpinner();
+        }
+      } catch (error) {
+        hiddenSpinner();
+        message.error(error.response.data.message);
+        console.log(error);
+      }
+    };
+    postUser();
   };
 
   const onFinishFailed = (errorInfo: unknown) => {
@@ -14,8 +53,10 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div>
-      <h3 className=" text-2xl text-slate-700 mb-1">Register</h3>
+    <div className="max-w-lg w-full mx-auto px-5 pb-5">
+      <h3 className=" text-2xl text-slate-700 text-center mt-6 mb-3">
+        Thêm mới
+      </h3>
       <Form
         layout="vertical"
         name="basic"
@@ -29,7 +70,7 @@ const Register: React.FC = () => {
         requiredMark={false}
       >
         <Form.Item
-          label="Name"
+          label="Tên người dùng"
           name="name"
           rules={[
             { required: true, message: "Please fill in this field!" },
@@ -59,7 +100,7 @@ const Register: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          label="Phone Number"
+          label="Số điện thoại"
           name="phoneNumber"
           rules={[
             { required: true, message: "Please fill in this field!" },
@@ -73,7 +114,7 @@ const Register: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          label="Password"
+          label="Mật khẩu"
           name="password"
           rules={[
             { required: true, message: "Please fill in this field!" },
@@ -92,7 +133,7 @@ const Register: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          label="Confirm password"
+          label="Xác nhận mật khẩu"
           name="rePassword"
           rules={[
             { required: true, message: "Please fill in this field!" },
@@ -108,26 +149,33 @@ const Register: React.FC = () => {
         >
           <Input.Password />
         </Form.Item>
-        <div className="flex justify-between sm:items-end items-start gap-1 sm:flex-row flex-col pt-2">
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="text-white bg-slate-800"
-            >
-              Register
-            </Button>
-          </Form.Item>
-          <Link
-            to="/auth/login"
-            className="text-xs text-slate-800 hover:text-slate-500 mb-3"
+
+        <Form.Item
+          label="Role"
+          name="role"
+          rules={[{ required: true, message: "*Vui lòng nhập trường này!" }]}
+        >
+          <Select placeholder="--- Chọn ---">
+            {roleList.map((role, index) => (
+              <Select.Option key={index} value={role}>
+                {role}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="text-white bg-green-500"
           >
-            Already have an account?
-          </Link>
-        </div>
+            Thêm mới
+          </Button>
+        </Form.Item>
       </Form>
     </div>
   );
 };
 
-export default Register;
+export default AddUser;

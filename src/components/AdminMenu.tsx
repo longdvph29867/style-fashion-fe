@@ -30,7 +30,7 @@ const listMenu: Menu[] = [
     active: true,
   },
   {
-    link: "/",
+    link: "/admin/users",
     title: "Users",
     icon: <FaUserAlt />,
     active: false,
