@@ -1,22 +1,16 @@
 // type Props = {};
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Form,
-  Image,
   Input,
-  InputNumber,
-  Radio,
   Select,
-  Upload,
   message,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
-import TextArea from "antd/es/input/TextArea";
 import { roleList } from "../../../constant/constant";
 import { AddUserType, UpdateUserTypeWithoutPassword } from "../../../types/userType";
 

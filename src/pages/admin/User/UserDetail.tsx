@@ -10,8 +10,6 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
-import TextArea from "antd/es/input/TextArea";
-import { BsDot } from "react-icons/bs";
 
 const UserDetail: React.FC = () => {
     const { id } = useParams();
@@ -35,7 +33,7 @@ const UserDetail: React.FC = () => {
                 role: userDetail.role,
             });
             form.setFieldsValue({
-                fields: userDetail.shippingAddress.map((address: any, index: number) => ({
+                fields: userDetail.shippingAddress.map((address: any) => ({
                     recipientName: address.recipientName,
                     recipientPhoneNumber: address.recipientPhoneNumber,
                     streetAddress: address.streetAddress,
