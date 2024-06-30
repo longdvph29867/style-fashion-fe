@@ -10,9 +10,10 @@ type Props = {
 };
 
 const FormComment = ({ comment, addReply, handleHiddenForm }: Props) => {
-  const params = useParams();
+  const { id = "4edd40c86762e0fb12000003" } = useParams();
   const [content, setContent] = useState<string>("");
   const [error, setError] = useState<string>("");
+console.log(comment);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -30,7 +31,7 @@ const FormComment = ({ comment, addReply, handleHiddenForm }: Props) => {
     }
     const userId = localUserService.get()?.user.id;
     const data = {
-      moviesId: params.id as string,
+      productsId: id as string,
       userId: userId as string,
       content,
       parentCommentId: comment._id,

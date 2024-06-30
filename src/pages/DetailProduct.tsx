@@ -8,10 +8,12 @@ import CustomerServices from "../components/DetailComponent/CustomerServices";
 import IntroduceProduct from "../components/DetailComponent/IntroduceProduct";
 import BigThumbnail from "../components/DetailComponent/BigThumbnail";
 import BtnToCart from '../components/DetailComponent/BtnToCart';
+import ListComment from "../components/ListComment/ListComment";
 
 const DetailProduct = () => {
-  return (
+  return (   
     <>
+    <ListComment></ListComment>
       <div className="py-12">
         <div className="container mx-auto">
           <div className="lg:flex">

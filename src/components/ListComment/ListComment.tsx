@@ -4,14 +4,15 @@ import ItemComment from "./ItemComment/ItemComment";
 import commentService from "../../services/commentService";
 import { useParams } from "react-router-dom";
 import AddComment from "./AddComment/AddComment";
+import { https } from "../../config/axios";
 
 const ListComment = () => {
-  const { id = "659682f87ccc34bb2e8e75c2" } = useParams();
+  const { id = "4edd40c86762e0fb12000003" } = useParams();
   const [listComment, setListComment] = useState<Comment[]>([]);
 
   const fetchComments = () => {
-    commentService
-      .getCommentByMovie(id)
+    https.get(`comments/byproduct/${id}`)
+      
       .then((res) => {
         setListComment(res.data);
       })
@@ -24,8 +25,9 @@ const ListComment = () => {
   }, []);
 
   const addComment = (data: PostComment) => {
-    commentService
-      .postCommentByMovie(data)
+    console.log(data);
+    
+    https.post(`comments`,data)
       .then((res) => {
         // console.log(res);
         setListComment([{ ...res.data, replies: [] }, ...listComment]);
@@ -46,7 +48,7 @@ const ListComment = () => {
           Comments
         </h3>
         {/* form comment */}
-        <AddComment idMovie={id} addComment={addComment} />
+        <AddComment idProduct={id} addComment={addComment} />
         {/* list comments */}
         <div className="flex flex-col gap-5">
           {/* item comment */}

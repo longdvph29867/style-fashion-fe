@@ -4,11 +4,11 @@ import { PostComment } from "../../../types/comment";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
-  idMovie: string;
+  idProduct: string;
   addComment: (data: PostComment) => void;
 };
 
-const AddComment = ({ idMovie, addComment }: Props) => {
+const AddComment = ({ idProduct, addComment }: Props) => {
   const navigate = useNavigate();
   const [content, setContent] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -32,7 +32,7 @@ const AddComment = ({ idMovie, addComment }: Props) => {
     }
     const userId = localUserService.get()?.user.id;
     const data = {
-      moviesId: idMovie,
+      productsId: idProduct,
       userId: userId as string,
       content,
     };

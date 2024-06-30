@@ -4,6 +4,7 @@ import { timeAgo } from "../../../util";
 import CommentAction from "../CommentAction/CommentAction";
 import ListReply from "../ListReply/ListReply";
 import commentService from "../../../services/commentService";
+import { https } from "../../../config/axios";
 
 type Props = {
   comment: Comment;
@@ -16,8 +17,7 @@ const ItemComment = ({ comment }: Props) => {
     setShowListReply(!showListReply);
   };
   const addReply = (data: PostComment) => {
-    commentService
-      .postCommentByMovie(data)
+    https.post(`comments`,data)
       .then((res) => {
         // console.log(res);
         setListReply([...listReply, res.data]);

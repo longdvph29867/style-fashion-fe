@@ -22,7 +22,7 @@ export type Comment = {
     replies: Reply[]
 }
 export type PostComment = {
-    moviesId: string,
+    productsId: string,
     userId: string,
     content: string,
     parentCommentId?: string
