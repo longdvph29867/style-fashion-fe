@@ -57,7 +57,7 @@ const DetailProduct = () => {
   }, [product]);
   return (
     <>
-     <ListComment/>
+    
       <div className="py-12">
         <div className="container mx-auto">
           <div className="lg:flex">
@@ -160,7 +160,7 @@ const DetailProduct = () => {
         </div>
 
         <DescriptionDetail />
-       
+        <ListComment/>
         <div className="container mx-auto mt-12">
           <hr />
           <h2 className="flex items-center pt-16 text-2xl font-semibold">

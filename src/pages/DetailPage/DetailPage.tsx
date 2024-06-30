@@ -503,13 +503,13 @@ const DetailPage = () => {
               </div>
             </div>
           </div>
-          {/*  */}
-          <ListComment/>
+          {/*  */}         
         </div>
       </div>
       <div>
         <ProductsSame productsSame={productsSame} />
       </div>
+      <ListComment/>
     </>
   );
 };
