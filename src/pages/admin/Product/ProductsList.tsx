@@ -4,12 +4,13 @@ import {
   showSpinner,
 } from "../../../util/util";
 import { Link } from "react-router-dom";
-import { Image, message } from "antd";
+import { Button, Image, Modal, message } from "antd";
 import { https } from "../../../config/axios";
 import { IProduct } from "../../../types/productType";
 
 const ProductsList: React.FC = () => {
   const [porudctsList, setPorudctsList] = useState<IProduct[]>([]);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const fetchData = async () => {
     window.scrollTo(0, 0);
@@ -28,19 +29,34 @@ const ProductsList: React.FC = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
-    if (confirm("Bạn có chắc chắn xoá không!")) {
-      return;
-      try {
-        const data = await https.delete(`/products/${id}`);
-        if (data) {
-          message.success(data.data.message);
-          fetchData();
-        }
-      } catch (error) {
-        console.log(error);
-        message.error(error.response.data.message);
+    showSpinner();
+    try {
+      const data = await https.delete(`/products/${id}`);
+      if (data) {
+        message.success(data.data.message);
+        fetchData();
+        hiddenSpinner();
       }
+    } catch (error) {
+      hiddenSpinner();
+      console.log(error);
+      message.error(error.response.data.message);
     }
+  };
+
+  const { confirm } = Modal;
+
+  const showConfirm = (id: string) => {
+    confirm({
+      title: 'Bạn có chắc chắn muốn xóa?',
+      onOk() {
+        handleDelete(id);
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+      maskClosable: true,
+    });
   };
 
   return (
@@ -48,7 +64,7 @@ const ProductsList: React.FC = () => {
       <div className="p-4 pb-0 mb-0 bg-white rounded-t-2xl">
         <Link
           to="/admin/products/add"
-          className="text-white text-base font-semibold bg-green-500 py-2 px-2 rounded my-5"
+          className="text-white text-base font-semibold bg-green-500 py-2 px-2 rounded my-5 hover:bg-green-600"
         >
           <span>Thêm mới</span>
         </Link>
@@ -111,7 +127,7 @@ const ProductsList: React.FC = () => {
                   <div className="p-2 space-x-2">
                     <Link
                       to={`/admin/reviews/${product.id}`}
-                      className="text-sm font-semibold text-green-500"
+                      className="text-sm font-semibold text-green-500 hover:text-green-600"
                     >
                       Xem đánh giá
                     </Link>
@@ -119,16 +135,18 @@ const ProductsList: React.FC = () => {
                   <div className="p-2 space-x-2">
                     <Link
                       to={`/admin/products/${product.id}`}
-                      className="text-sm font-semibold text-yellow-500"
+                      className="text-sm font-semibold text-yellow-500 hover:text-yellow-600"
                     >
                       Chi tiết
                     </Link>
-                    <button
-                      onClick={() => handleDelete(product.id)}
-                      className="text-sm font-semibold text-red-500"
-                    >
-                      Xoá
-                    </button>
+                    <>
+                      <button
+                        onClick={() => showConfirm(product.id)}
+                        className="text-sm font-semibold text-red-500 hover:text-red-600"
+                      >
+                        Xoá
+                      </button>
+                    </>
                   </div>
                 </div>
               );

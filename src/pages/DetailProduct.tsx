@@ -8,8 +8,51 @@ import CustomerServices from "../components/DetailComponent/CustomerServices";
 import IntroduceProduct from "../components/DetailComponent/IntroduceProduct";
 import BigThumbnail from "../components/DetailComponent/BigThumbnail";
 import BtnToCart from '../components/DetailComponent/BtnToCart';
-
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  showSpinner,
+} from "../util/util";
+import { https } from "../services/config";
 const DetailProduct = () => {
+  const { slug } = useParams();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [productsSame, setProductsSame] = useState<Product[]>([]);
+
+  // Fetch product details by slug
+  const fetchProduct = async () => {
+    try {
+      showSpinner();
+      const API = `/products/${slug}`;
+      const { data } = await https.get(API);
+      setProduct(data.data);
+    } catch (error) {
+      console.error("Failed to fetch product details:", error);
+  };
+
+  // Fetch similar products by category
+  const fetchProductsSame = async () => {
+    if (!product?.id_category) return;
+
+    try {
+      showSpinner();
+      const API = `/products?category_id=${product.id_category}`;
+      const { data } = await https.get(API);
+      const filteredData = data.data.filter((item: Product) => item._id !== product._id);
+      setProductsSame(filteredData);
+    } catch (error) {
+      console.error("Failed to fetch similar products:", error);
+    } 
+  };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+    fetchProduct();
+  }, [slug]);
+
+  useEffect(() => {
+    fetchProductsSame();
+  }, [product]);
   return (
     <>
       <div className="py-12">

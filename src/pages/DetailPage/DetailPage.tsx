@@ -14,6 +14,7 @@ import { https } from "../../services/config";
 
 const DetailPage = () => {
   const { slug } = useParams();
+  console.log(slug)
   const [product, setProduct] = useState<Product | null>(null);
   const [productsSame, setProductsSame] = useState<Product[]>([]);
 
@@ -71,7 +72,7 @@ const DetailPage = () => {
             <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9">
               <div className="space-y-7">
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-semibold">
+                  <h2 className="text-2xl font-semibold sm:text-3xl">
                     {product?.name}
                   </h2>
                   <div className="flex items-center mt-5 space-x-4 sm:space-x-5">
@@ -82,14 +83,14 @@ const DetailPage = () => {
                         </span>
                       </div>
                     </div>
-                    <div className="h-7 border-l border-slate-300" />
+                    <div className="border-l h-7 border-slate-300" />
                     <div className="flex items-center">
                       <a
                         href="#"
-                        className="flex items-center font-medium text-base"
+                        className="flex items-center text-base font-medium"
                       >
                         <div className="relative w-20 h-6">
-                          <div className="absolute text-slate-400 left-0 bottom-0 h-full w-20">
+                          <div className="absolute bottom-0 left-0 w-20 h-full text-slate-400">
                             ★★★★★
                           </div>
                           <div
@@ -106,7 +107,7 @@ const DetailPage = () => {
                         </div>
                       </a>
                       <span className="hidden sm:block mx-2.5">·</span>
-                      <div className="hidden sm:flex items-center text-sm">
+                      <div className="items-center hidden text-sm sm:flex">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -131,20 +132,20 @@ const DetailPage = () => {
                 <div className="">
                   <div>
                     <div>Size: </div>
-                    <div className="grid grid-cols-5 sm:grid-cols-7 gap-2 mt-3">
-                      <div className="relative h-10 rounded-2xl border flex items-center justify-center text-sm sm:text-base uppercase font-semibold cursor-pointer border-slate-300 text-slate-900 hover:bg-neutral-50">
+                    <div className="grid grid-cols-5 gap-2 mt-3 sm:grid-cols-7">
+                      <div className="relative flex items-center justify-center h-10 text-sm font-semibold uppercase border cursor-pointer rounded-2xl sm:text-base border-slate-300 text-slate-900 hover:bg-neutral-50">
                         S
                       </div>
-                      <div className="relative h-10 rounded-2xl border flex items-center justify-center text-sm sm:text-base uppercase font-semibold cursor-pointer border-slate-300 text-slate-900 hover:bg-neutral-50">
+                      <div className="relative flex items-center justify-center h-10 text-sm font-semibold uppercase border cursor-pointer rounded-2xl sm:text-base border-slate-300 text-slate-900 hover:bg-neutral-50">
                         M
                       </div>
-                      <div className="relative h-10 rounded-2xl border flex items-center justify-center text-sm sm:text-base uppercase font-semibold cursor-pointer border-slate-300 text-slate-900 hover:bg-neutral-50">
+                      <div className="relative flex items-center justify-center h-10 text-sm font-semibold uppercase border cursor-pointer rounded-2xl sm:text-base border-slate-300 text-slate-900 hover:bg-neutral-50">
                         L
                       </div>
-                      <div className="relative h-10 rounded-2xl border flex items-center justify-center text-sm sm:text-base uppercase font-semibold cursor-pointer border-slate-300 text-slate-900 hover:bg-neutral-50">
+                      <div className="relative flex items-center justify-center h-10 text-sm font-semibold uppercase border cursor-pointer rounded-2xl sm:text-base border-slate-300 text-slate-900 hover:bg-neutral-50">
                         XL
                       </div>
-                      <div className="relative h-10 rounded-2xl border flex items-center justify-center text-sm sm:text-base uppercase font-semibold cursor-pointer border-slate-300 text-slate-900 hover:bg-neutral-50">
+                      <div className="relative flex items-center justify-center h-10 text-sm font-semibold uppercase border cursor-pointer rounded-2xl sm:text-base border-slate-300 text-slate-900 hover:bg-neutral-50">
                         2XL
                       </div>
                     </div>
@@ -152,9 +153,9 @@ const DetailPage = () => {
                 </div>
                 <div className="flex space-x-3.5">
                   <div className="flex items-center justify-center bg-slate-100 px-2 py-3 sm:p-3.5 rounded-full">
-                    <div className=" flex items-center justify-between space-x-5 w-full">
+                    <div className="flex items-center justify-between w-full space-x-5 ">
                       <div className=" flex items-center justify-between w-[104px] sm:w-28">
-                        <button className="w-8 h-8 rounded-full flex items-center justify-center border border-neutral-400  bg-white outline-none hover:border-neutral-700">
+                        <button className="flex items-center justify-center w-8 h-8 bg-white border rounded-full outline-none border-neutral-400 hover:border-neutral-700">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
@@ -169,10 +170,10 @@ const DetailPage = () => {
                             />
                           </svg>
                         </button>
-                        <span className="block flex-1 text-center leading-none">
+                        <span className="flex-1 block leading-none text-center">
                           1
                         </span>
-                        <button className="w-8 h-8 rounded-full flex items-center justify-center border border-neutral-400  bg-white outline-none hover:border-neutral-700">
+                        <button className="flex items-center justify-center w-8 h-8 bg-white border rounded-full outline-none border-neutral-400 hover:border-neutral-700">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
@@ -210,20 +211,20 @@ const DetailPage = () => {
                 <div className="w-full rounded-2xl space-y-2.5">
                   {/* item */}
                   <div>
-                    <div className="flex items-center justify-between w-full px-4 py-2 font-medium bg-slate-100/80 rounded-lg">
+                    <div className="flex items-center justify-between w-full px-4 py-2 font-medium rounded-lg bg-slate-100/80">
                       <span>Mô tả</span>
                     </div>
-                    <div className="p-4 pt-3 text-slate-600 text-sm leading-6">
+                    <div className="p-4 pt-3 text-sm leading-6 text-slate-600">
                       {product?.desc}
                     </div>
                   </div>
                   {/* item */}
                   <div>
-                    <div className="flex items-center justify-between w-full px-4 py-2 font-medium bg-slate-100/80 rounded-lg">
+                    <div className="flex items-center justify-between w-full px-4 py-2 font-medium rounded-lg bg-slate-100/80">
                       <span>Vải + Chăm sóc</span>
                     </div>
-                    <div className="p-4 pt-3 text-slate-600 text-sm leading-6">
-                      <ul className="list-disc list-inside leading-7">
+                    <div className="p-4 pt-3 text-sm leading-6 text-slate-600">
+                      <ul className="leading-7 list-disc list-inside">
                         <li>Được làm từ lưới micromesh siêu bền của Bỉ.</li>
                         <li>74% Polyamide (Nylon) 26% Elastane (Spandex)</li>
                         <li>Có thể điều chỉnh móc &amp; mắt đóng và dây đai</li>
@@ -233,7 +234,7 @@ const DetailPage = () => {
                   </div>
                 </div>
                 <div className="block">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative">
+                  <div className="relative grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div className="p-5 rounded-2xl bg-red-50">
                       <div>
                         <svg

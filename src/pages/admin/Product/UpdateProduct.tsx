@@ -461,7 +461,7 @@ const UpdateProduct: React.FC = () => {
                             </Upload.Dragger>
                           </Form.Item>
                         </div>
-                        {fields.length > 0 ? (
+                        {fields.length > 1 ? (
                           <Button
                             className="dynamic-delete-button bg-red-500 text-white"
                             onClick={() => remove(field.name)}
@@ -473,16 +473,18 @@ const UpdateProduct: React.FC = () => {
                       </div>
                     ))}
                     <Divider />
-                    <Form.Item className="">
-                      <Button
-                        type="dashed"
-                        onClick={() => add()}
-                        style={{ width: "60%" }}
-                        className="flex items-center justify-center border-green-500 text-green-500 m-auto"
-                      >
-                        <PlusOutlined /> Thêm thuộc tính
-                      </Button>
-                    </Form.Item>
+                    {fields.length < 20 && (
+                      <Form.Item>
+                        <Button
+                          type="dashed"
+                          onClick={() => add()}
+                          style={{ width: "60%" }}
+                          className="flex items-center justify-center border-green-500 text-green-500 m-auto"
+                        >
+                          <PlusOutlined /> Thêm thuộc tính
+                        </Button>
+                      </Form.Item>
+                    )}
                   </div>
                 );
               }}

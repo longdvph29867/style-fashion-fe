@@ -30,6 +30,14 @@ header.show-mobile .menu-mobile {
   min-height: 40px;
 }
 
+.my-line-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 40px;
+}
+
 .ant-form-item {
   margin-bottom: 12px !important;
 }
@@ -45,8 +53,6 @@ header.show-mobile .menu-mobile {
     padding-right: 24px;
   }
 }
-
-
 
 .swiper {
   width: 100%;
@@ -108,7 +114,6 @@ header.show-mobile .menu-mobile {
   /* transform: translateY(-2px); */
 /* } */
 
-
 /* .slider-product .swiper-button-prev {
   right: 10%;
   left: unset;
@@ -120,7 +125,6 @@ header.show-mobile .menu-mobile {
 .slider-product .swiper-button-prev:hover {
   border: 2px solid rgb(207, 209, 212);
   border-radius: 9999px;
-
 }
 
 /* 
@@ -136,7 +140,6 @@ header.show-mobile .menu-mobile {
 .slider-product .swiper-button-next:hover {
   border: 2px solid rgb(207, 209, 212);
   border-radius: 9999px;
-
 }
 
 .slider-product .swiper {
@@ -148,7 +151,7 @@ header.show-mobile .menu-mobile {
 }
 
 .glide__track .slick-dots {
-  position: unset
+  position: unset;
 }
 
 .swiper-button-prev:after,
@@ -169,5 +172,12 @@ header.show-mobile .menu-mobile {
   background-color: #1677ff !important;
 }
 
+.ant-modal-content .ant-modal-body .ant-modal-confirm-body-wrapper .ant-modal-confirm-btns .ant-btn-primary {
+  background-color: #ff4d4f !important;
+}
+
 /* width: 80vh;
   max-width: 547px; */
+.hidden img {
+  border-radius: 100%;
+}

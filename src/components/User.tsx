@@ -101,7 +101,7 @@ const User = () => {
       {infoUser ? (
         <div className="text-xs text-slate-700">
           Hi,
-          {infoUser.fullName.split(" ")[0]}
+          {infoUser?.name?.split(" ")[0]}
         </div>
       ) : (
         <></>

@@ -1,11 +1,11 @@
 import axios, { AxiosInstance } from "axios";
 import { API_URL } from "../constant/constant";
-import { localUserService } from "../services/localService";
+import { localTokenService } from "../services/localService";
 
 export const BASE_URL = API_URL;
-const accessToken = localUserService.get()
+const accessToken = localTokenService.get()
 const configHeadres  = {
-  "Authorization": "Bearer " + (accessToken?.tokens.access.token ? accessToken?.tokens.access.token : ''),
+  "Authorization": "Bearer " + (accessToken?.access.token ? accessToken?.access.token : ''),
 }
 export const https:AxiosInstance = axios.create({
   baseURL: BASE_URL,

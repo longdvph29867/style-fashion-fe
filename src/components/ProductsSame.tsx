@@ -1,6 +1,6 @@
 import React from "react";
 import Slider from "react-slick";
-import ItemProduct from "./ItemProduct";
+import ItemProduct from "./HomeComponent/ItemProduct";
 
 type Props = {
   productsSame: Product[];

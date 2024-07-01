@@ -2,11 +2,50 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
+import { LoginType } from "../../types/login";
+import { hiddenSpinner, showSpinner } from "../../util";
+import { https } from "../../config/axios";
+import {
+  localTokenService,
+  localUserService,
+} from "../../services/localService";
 
 const Login: React.FC = () => {
-  const onFinish = (values: unknown) => {
-    console.log(values);
+  const onFinish = (values: LoginType) => {
+    const data = {
+      email: values.email,
+      password: values.password,
+    };
+    const postProduct = async () => {
+      try {
+        showSpinner();
+        const res = await https.post("/auth/login", data);
+        if (res) {
+          const infoUser = {
+            ...res.data.user,
+          };
+          localUserService.set(res.data.user);
+          localTokenService.set(res.data.tokens);
+          hiddenSpinner();
+          message.success("Đăng nhập thành công!");
+          if (infoUser.role === "admin") {
+            setTimeout(() => {
+              window.location.href = "/admin/products";
+            }, 1200);
+          } else {
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 1200);
+          }
+        }
+      } catch (error) {
+        hiddenSpinner();
+        console.log(error);
+        message.error(error.response.data.message);
+      }
+    };
+    postProduct();
   };
 
   const onFinishFailed = (errorInfo: unknown) => {
@@ -51,7 +90,7 @@ const Login: React.FC = () => {
           <Input.Password />
         </Form.Item>
 
-        <div className="flex justify-between sm:items-end items-start gap-1 sm:flex-row flex-col pt-2">
+        <div className=" gap-1 pt-2">
           <Form.Item>
             <Button
               type="primary"
@@ -61,12 +100,20 @@ const Login: React.FC = () => {
               Login
             </Button>
           </Form.Item>
-          <Link
-            to="/auth/register"
-            className="text-xs text-slate-800 hover:text-slate-500 mb-3"
-          >
-            You don't have an account?
-          </Link>
+          <div className="flex justify-between sm:flex-row flex-col">
+            <Link
+              to="/auth/forgot-password"
+              className="text-xs text-slate-800 hover:text-slate-500 mb-3"
+            >
+              Forgot password
+            </Link>
+            <Link
+              to="/auth/register"
+              className="text-xs text-slate-800 hover:text-slate-500 mb-3"
+            >
+              You don't have an account?
+            </Link>
+          </div>
         </div>
       </Form>
     </div>

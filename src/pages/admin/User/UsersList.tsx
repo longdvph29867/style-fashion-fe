@@ -5,7 +5,7 @@ import {
   showSpinner,
 } from "../../../util/util";
 import { Link } from "react-router-dom";
-import { message } from "antd";
+import { Modal, message } from "antd";
 import { https } from "../../../config/axios";
 import { IUser } from "../../../types/userType";
 import { CiCircleAlert } from "react-icons/ci";
@@ -30,19 +30,34 @@ const UsersList: React.FC = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
-    if (confirm("Bạn có chắc chắn xoá không!")) {
-      return;
-      try {
-        const data = await https.delete(`/users/${id}`);
-        if (data) {
-          message.success(data.data.message);
-          fetchData();
-        }
-      } catch (error) {
-        console.log(error);
-        message.error(error.response.data.message);
+    showSpinner();
+    try {
+      const data = await https.delete(`/users/${id}`);
+      if (data) {
+        message.success(data.data.message);
+        fetchData();
+        hiddenSpinner();
       }
+    } catch (error) {
+      hiddenSpinner();
+      console.log(error);
+      message.error(error.response.data.message);
     }
+  };
+
+  const { confirm } = Modal;
+
+  const showConfirm = (id: string) => {
+    confirm({
+      title: 'Bạn có chắc chắn muốn xóa?',
+      onOk() {
+        handleDelete(id);
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+      maskClosable: true,
+    });
   };
 
   return (
@@ -50,7 +65,7 @@ const UsersList: React.FC = () => {
       <div className="p-4 pb-0 mb-0 bg-white rounded-t-2xl">
         <Link
           to="/admin/users/add"
-          className="text-white text-base font-semibold bg-green-500 py-2 px-2 rounded my-5"
+          className="text-white text-base font-semibold bg-green-500 py-2 px-2 rounded my-5 hover:bg-green-600"
         >
           <span>Thêm mới</span>
         </Link>
@@ -58,10 +73,10 @@ const UsersList: React.FC = () => {
       <div className="h-full overflow-x-auto">
         <div className="w-full border-gray-200 text-slate-500">
           <div className="w-full hidden lg:grid lg:grid-cols-10  gap-2">
-            <div className="pr-6 pl-4 py-3  text-left font-bold uppercase text-slate-800">
+            <div className="pr-6 pl-4 py-3  text-center font-bold uppercase text-slate-800">
               Ảnh
             </div>
-            <div className="sm:col-span-2 pl-4 py-3  text-left font-bold uppercase text-slate-800">
+            <div className="sm:col-span-2 pl-4 py-3  text-center font-bold uppercase text-slate-800">
               Tên người dùng
             </div>
             <div className="lg:block hidden col-span-2 pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
@@ -90,7 +105,8 @@ const UsersList: React.FC = () => {
                   key={index}
                   className="relative grid lg:grid-cols-10 sm:grid-cols-5 grid-cols-3 gap-2 border-b lg:border-transparent border-slate-300"
                 >
-                  <div className="p-2">
+                  <span className='absolute top-10 left-0.5 text-slate-300'>{++index}</span>
+                  <div className="pl-4">
                     <div className="px-2 py-1 min-w-[110px]">
                       <div>
                         <img
@@ -102,7 +118,7 @@ const UsersList: React.FC = () => {
                   </div>
                   <div className="p-2 sm:col-span-2">
                     <div className="flex flex-col justify-center">
-                      <h6 className="text-base">{user.name}</h6>
+                      <h6 className="text-base text-center">{user.name}</h6>
                     </div>
                   </div>
                   <div className="lg:block col-span-2 p-2">
@@ -146,13 +162,13 @@ const UsersList: React.FC = () => {
                   <div className="absolute right-0 top-4 lg:block p-2 space-x-2 lg:static lg:top-auto lg:right-auto">
                     <Link
                       to={`/admin/users/${user.id}`}
-                      className="text-sm font-semibold text-yellow-500"
+                      className="text-sm font-semibold text-yellow-500 hover:text-yellow-600"
                     >
                       Chi tiết
                     </Link>
                     <button
-                      onClick={() => handleDelete(user.id)}
-                      className="text-sm font-semibold text-red-500"
+                      onClick={() => showConfirm(user.id)}
+                      className="text-sm font-semibold text-red-500 hover:text-red-600"
                     >
                       Xoá
                     </button>

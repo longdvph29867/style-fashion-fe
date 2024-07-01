@@ -1,19 +1,17 @@
-import { Link } from "react-router-dom";
-import { formartCurrency, formartRating } from "../util/util";
-
 type Props = {
-  product: Product;
+  product: any;
 };
 
-const ItemProduct: React.FC<Props> = ({ product }) => {
-  const { name, desc, images, price, slug, rating } = product;
+const SliderProductCardItem: React.FC<Props> = ({ product }) => {
+  // console.log(product);
+  const { name, description, thumbnail,rating } = product;
   return (
-    <Link to={`/products/${slug}`}>
-      <div className="relative flex flex-col bg-transparent duration-200 hover:-translate-y-4 h-full justify-between">
-        <div className="relative flex-shrink-0 bg-slate-50 rounded-3xl overflow-hidden z-1">
+    <>
+      <div className="relative flex flex-col justify-between h-full duration-200 bg-transparent card w-80 bg-base-100 hover:-translate-y-4">
+        <div className="relative flex-shrink-0 overflow-hidden bg-slate-50 rounded-3xl z-1">
           <div className="flex w-full">
             <img
-              src={images[0]}
+              src={thumbnail}
               alt="product"
               className="object-cover w-full h-full drop-shadow-xl"
             />
@@ -36,7 +34,7 @@ const ItemProduct: React.FC<Props> = ({ product }) => {
             </svg>
             <span className="ml-1 leading-none">Mới</span>
           </div>
-          <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white text-neutral-700 nc-shadow-lg absolute top-3 right-3 z-10">
+          <button className="absolute z-10 flex items-center justify-center bg-white rounded-full w-9 h-9 text-neutral-700 nc-shadow-lg top-3 right-3">
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
               <path
                 d="M12.62 20.81C12.28 20.93 11.72 20.93 11.38 20.81C8.48 19.82 2 15.69 2 8.68998C2 5.59998 4.49 3.09998 7.56 3.09998C9.38 3.09998 10.99 3.97998 12 5.33998C13.01 3.97998 14.63 3.09998 16.44 3.09998C19.51 3.09998 22 5.59998 22 8.68998C22 15.69 15.52 19.82 12.62 20.81Z"
@@ -54,33 +52,33 @@ const ItemProduct: React.FC<Props> = ({ product }) => {
             <h2 className="text-base font-semibold min-h-[48px] my-line-2">
               {name}
             </h2>
-            <p className="text-sm text-slate-500 mt-1 ">
-              {desc.slice(0, 50)}...
+            <p className="mt-1 text-sm text-slate-500 ">
+              {description.substring(0, 50)}...
             </p>
           </div>
-          <div className="flex justify-between items-end ">
-            <div className="flex items-center border-2 border-green-500 rounded-lg py-1 px-2  text-sm font-medium">
-              <span className="text-green-500">{formartCurrency(price)}</span>
+          <div className="flex items-end justify-between ">
+            <div className="flex items-center px-2 py-1 text-sm font-medium border-2 border-green-500 rounded-lg">
+              <span className="text-green-500">123.000đ</span>
             </div>
             <div className="flex items-center">
               <div className="relative w-20 h-6">
-                <div className="absolute text-slate-400 left-0 bottom-0 h-full w-20">
+                <div className="absolute bottom-0 left-0 w-20 h-full text-slate-400">
                   ★★★★★
                 </div>
                 <div
                   className={`absolute text-[#fbbf24] left-0 bottom-0 h-full overflow-hidden`}
-                  style={{ width: `${formartRating(rating)}%` }}
+                  //   style={{ width: `${formartRating(rating)}%`}
                 >
                   ★★★★★
                 </div>
               </div>
-              <span className="text-sm ml-1 text-slate-500">({rating})</span>
+              <span className="ml-1 text-sm text-slate-500">{rating}★</span>
             </div>
           </div>
         </div>
       </div>
-    </Link>
+    </>
   );
 };
 
-export default ItemProduct;
+export default SliderProductCardItem;
