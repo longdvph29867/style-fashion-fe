@@ -4,7 +4,7 @@ import React from "react";
 import { Button, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { RegisterType } from "../../types/login";
-import { hiddenSpinner, showSpinner } from "../../util";
+import { hiddenSpinner, showSpinner } from "../../util/spinner";
 import { https } from "../../config/axios";
 
 const Register: React.FC = () => {
@@ -16,8 +16,7 @@ const Register: React.FC = () => {
       password: values.password,
       phoneNumber: values.phoneNumber,
       email: values.email,
-    }
-    // console.log(values);
+    };
     const postProduct = async () => {
       showSpinner();
       try {
@@ -111,7 +110,8 @@ const Register: React.FC = () => {
             },
             {
               pattern: /^(?=.*[A-Za-z])(?=.*\d).{6,25}$/,
-              message: "Password must contain at least one letter and one number!",
+              message:
+                "Password must contain at least one letter and one number!",
             },
           ]}
         >

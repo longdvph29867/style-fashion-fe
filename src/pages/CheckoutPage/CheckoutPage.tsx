@@ -16,7 +16,6 @@ const CheckoutPage = () => {
       cartService
         .getProductByUserId(userId)
         .then((res) => {
-          console.log(res.data);
           setProductList(res.data);
         })
         .catch((err) => {

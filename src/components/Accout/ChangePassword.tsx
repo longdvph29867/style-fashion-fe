@@ -9,7 +9,6 @@ const ChangePassword: React.FC = () => {
   const useEmail = storedUserInfo ? storedUserInfo.email : null;
   const onFinish = async (values: any) => {
     const { oldPassword, newPassword, confirmPassword } = values;
-    console.log(newPassword, confirmPassword);
     const onPassword = async () => {
       showSpinner();
       try {

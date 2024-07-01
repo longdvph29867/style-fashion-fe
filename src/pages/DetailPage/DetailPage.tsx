@@ -14,7 +14,6 @@ import { https } from "../../services/config";
 
 const DetailPage = () => {
   const { slug } = useParams();
-  console.log(slug)
   const [product, setProduct] = useState<Product | null>(null);
   const [productsSame, setProductsSame] = useState<Product[]>([]);
 

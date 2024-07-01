@@ -1,6 +1,6 @@
 import React from "react";
 import Slider from "react-slick";
-import ItemProduct from "./HomeComponent/ItemProduct";
+import ProductCard from "./ProductCard/ProductCard";
 
 type Props = {
   productsSame: Product[];
@@ -51,7 +51,7 @@ const ProductsSame: React.FC<Props> = ({ productsSame }) => {
           <div className="lg:-mx-6 -mx-2 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
             {productsSame.map((product, index) => (
               <div key={index} className="py-6 lg:px-6 px-2">
-                <ItemProduct product={product} />
+                <ProductCard product={product} />
               </div>
             ))}
           </div>
@@ -62,7 +62,7 @@ const ProductsSame: React.FC<Props> = ({ productsSame }) => {
             <Slider {...settings} className="">
               {productsSame.map((product, index) => (
                 <div key={index} className="py-6 lg:px-6 px-2">
-                  <ItemProduct product={product} />
+                  <ProductCard product={product} />
                 </div>
               ))}
             </Slider>

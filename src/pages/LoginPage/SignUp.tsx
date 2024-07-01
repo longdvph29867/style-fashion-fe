@@ -16,7 +16,6 @@ const SignUp: React.FC = () => {
       fullName: values.fullName,
       email: values.email,
     };
-    console.log(data);
     const postProduct = async () => {
       showSpinner();
       try {

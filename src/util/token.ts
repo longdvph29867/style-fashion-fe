@@ -14,7 +14,6 @@ export const refreshToken = async () => {
     const refreshToken = localTokenService.get()?.refresh.token;
     if (refreshToken) {
       const res = await authService.refreshAccessToken(refreshToken);
-      console.log(res);
       localTokenService.set(res.data);
       //   window.location.href = "/";
     }
