@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { https } from "../../services/config";
 import { useLocation } from "react-router-dom";
-import ItemProduct from "../../components/HomeComponent/ItemProduct";
 import { hiddenSpinner, showSpinner } from "../../util/util";
+import ProductCard from "../../components/ProductCard/ProductCard";
 
 const ListProductPage: React.FC = () => {
   const location = useLocation();
@@ -261,7 +261,7 @@ const ListProductPage: React.FC = () => {
           <div className="grid lg:col-span-3 md:col-span-2 sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10 ">
             {/* item */}
             {productsList.map((product, index) => (
-              <ItemProduct key={index} product={product} />
+              <ProductCard key={index} product={product} />
             ))}
           </div>
         </div>

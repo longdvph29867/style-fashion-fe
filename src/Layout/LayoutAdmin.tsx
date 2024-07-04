@@ -1,6 +1,6 @@
-import User from "../components/User";
-import Search from "../components/Search";
-import AdminMenu from "../components/AdminMenu";
+import User from "../components/User/User";
+import Search from "../components/Admin/AdminMenu/Search/Search";
+import AdminMenu from "../components/Admin/AdminMenu/AdminMenu";
 import { localUserService } from "../services/localService";
 import { Outlet } from "react-router-dom";
 

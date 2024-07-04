@@ -4,7 +4,7 @@ import {
   localUserService,
 } from "../../services/localService";
 import { https } from "../../config/axios";
-import { hiddenSpinner, showSpinner } from "../../util";
+import { hiddenSpinner, showSpinner } from "../../util/spinner";
 import { message } from "antd";
 
 const User = () => {

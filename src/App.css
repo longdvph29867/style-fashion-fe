@@ -22,6 +22,14 @@ header.show-mobile .menu-mobile {
   font-size: 12px !important;
 }
 
+.my-line-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 20px;
+}
+
 .my-line-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -180,4 +188,17 @@ header.show-mobile .menu-mobile {
   max-width: 547px; */
 .hidden img {
   border-radius: 100%;
+}
+
+.hidden img {
+  border-radius: 100%;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

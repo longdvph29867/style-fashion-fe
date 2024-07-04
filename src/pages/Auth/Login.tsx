@@ -4,7 +4,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Form, Input, message } from "antd";
 import { LoginType } from "../../types/login";
-import { hiddenSpinner, showSpinner } from "../../util";
+import { hiddenSpinner, showSpinner } from "../../util/spinner";
 import { https } from "../../config/axios";
 import {
   localTokenService,

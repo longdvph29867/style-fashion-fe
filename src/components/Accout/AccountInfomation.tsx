@@ -28,7 +28,6 @@ const AccountInfomation = () => {
     showSpinner();
     try {
       const { data } = await https.get<User>(`/users/${userId}`);
-      console.log(data);
       setAvatar(data.image);
       const user: UpdateUserTypeWithoutPassword = data;
       form.setFieldsValue({

@@ -5,7 +5,7 @@ const Menu = () => {
   const [categoriesList, setCategoriesList] = useState<any[]>([]);
 
   return (
-    <ul className="flex items-center lg:justify-start justify-center lg:flex-nowrap flex-wrap">
+    <ul className="flex items-center lg:justify-start justify-center lg:flex-nowrap flex-wrap overflow-hidden">
       <li>
         <a
           className="py-2.5 px-5 font-medium rounded-full duration-300 hover:bg-slate-100"
