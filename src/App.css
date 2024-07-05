@@ -1,6 +1,7 @@
 .container {
   padding: 0 16px;
 }
+
 header.show-mobile .menu-mobile {
   max-height: 500px !important;
   opacity: 1 !important;
@@ -28,6 +29,7 @@ header.show-mobile .menu-mobile {
   overflow: hidden;
   min-height: 20px;
 }
+
 .my-line-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -35,6 +37,7 @@ header.show-mobile .menu-mobile {
   overflow: hidden;
   min-height: 40px;
 }
+
 .my-line-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -168,6 +171,25 @@ header.show-mobile .menu-mobile {
 .swiper-rtl .swiper-button-prev:after {
   content: none !important;
 }
+
+.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-name {
+  white-space: normal !important;
+}
+
+.ant-modal-footer .ant-btn-primary {
+  background-color: #1677ff !important;
+}
+
+.ant-modal-content .ant-modal-body .ant-modal-confirm-body-wrapper .ant-modal-confirm-btns .ant-btn-primary {
+  background-color: #ff4d4f !important;
+}
+
+/* width: 80vh;
+  max-width: 547px; */
+.hidden img {
+  border-radius: 100%;
+}
+
 .hidden img {
   border-radius: 100%;
 }

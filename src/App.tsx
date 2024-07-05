@@ -19,6 +19,12 @@ import LayoutAdmin from "./Layout/LayoutAdmin";
 import ProductsList from "./pages/admin/Product/ProductsList";
 import AddProduct from "./pages/admin/Product/AddProduct";
 import UpdateProduct from "./pages/admin/Product/UpdateProduct";
+import ProductDetail from "./pages/admin/Product/ProductDetail";
+import ReviewList from "./pages/admin/Review/ReviewList";
+import UsersList from "./pages/admin/User/UsersList";
+import AddUser from "./pages/admin/User/AddUser";
+import UpdateUser from "./pages/admin/User/UpdateUser";
+import UserDetail from "./pages/admin/User/UserDetail";
 import MyShippingAddress from "./components/Accout/ShipingAddress/MyShippingAddress";
 import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 import { isAccessTokenValid, refreshToken } from "./util/token";
@@ -58,8 +64,14 @@ function App() {
         </Route>
         <Route path="/admin" element={<LayoutAdmin />}>
           <Route path="products" element={<ProductsList />} />
+          <Route path="products/:id" element={<ProductDetail />} />
           <Route path="products/add" element={<AddProduct />} />
           <Route path="products/update/:id" element={<UpdateProduct />} />
+          <Route path="reviews/:id" element={<ReviewList />} />
+          <Route path="users" element={<UsersList />} />
+          <Route path="users/:id" element={<UserDetail />} />
+          <Route path="users/add" element={<AddUser />} />
+          <Route path="users/update/:id" element={<UpdateUser />} />
         </Route>
         {/* Các route khác nếu có */}
       </Routes>
