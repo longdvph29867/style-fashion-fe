@@ -29,6 +29,7 @@ import MyShippingAddress from "./components/Accout/ShipingAddress/MyShippingAddr
 import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 import { isAccessTokenValid, refreshToken } from "./util/token";
 import { useEffect } from "react";
+import OrderPage from "./pages/OrderPage/OrderPage";
 
 function App() {
   useEffect(() => {
@@ -55,6 +56,7 @@ function App() {
           {/* <Route path="details/:slug" element={<DetailProduct />} /> */}
           <Route path="products" element={<ProductListPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
+          <Route path="order" element={<OrderPage />} />
         </Route>
         <Route path="/auth" element={<LoginLayout />}>
           <Route path="verify-email/:token" element={<ResetPassword />} />
