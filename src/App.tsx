@@ -30,6 +30,7 @@ import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 import { isAccessTokenValid, refreshToken } from "./util/token";
 import { useEffect } from "react";
 import OrderPage from "./pages/OrderPage/OrderPage";
+import OrderDetail from "./pages/OrderPage/OrderDetail";
 
 function App() {
   useEffect(() => {
@@ -56,6 +57,7 @@ function App() {
           {/* <Route path="details/:slug" element={<DetailProduct />} /> */}
           <Route path="products" element={<ProductListPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
+          <Route path="order/:id" element={<OrderDetail />} />
           <Route path="order" element={<OrderPage />} />
         </Route>
         <Route path="/auth" element={<LoginLayout />}>

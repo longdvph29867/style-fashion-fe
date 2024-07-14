@@ -104,8 +104,8 @@ const OrderPage = () => {
   ];
 
   return (
-    <div className="container py-16 ">
-      <h3 className="text-2xl mb-8">Danh sách đơn hàng</h3>
+    <div className="container pb-16 ">
+      <h3 className="text-2xl my-8">Danh sách đơn hàng</h3>
       <Tabs type="card" defaultActiveKey="all" items={items} onChange={onChange} />
     </div>
 

@@ -184,6 +184,37 @@ header.show-mobile .menu-mobile {
   background-color: #ff4d4f !important;
 }
 
+.ant-tabs-nav-list * {
+  display: grid !important;
+  grid-template-columns: repeat(9, 1fr);
+  text-align: center;
+}
+
+.ant-tabs-nav-list .ant-tabs-tab {
+  /* color: white; */
+  font-size: 16px;
+  /* background-color: #62D2A2 !important; */
+  border: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  height: 60px;
+}
+
+.ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active {
+  background-color: #FAFAFA;
+  border-bottom: 2px solid #62d2a2 !important;
+}
+
+/* Đảm bảo các phần tử con của tab active cũng có màu chữ chính xác */
+.ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active * {
+  color: #62d2a2 !important;
+
+}
+
+.ant-tabs-nav-list .ant-tabs-tab:hover {
+  color: black;
+}
+
 /* width: 80vh;
   max-width: 547px; */
 .hidden img {
