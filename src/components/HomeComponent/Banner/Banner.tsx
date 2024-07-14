@@ -2,9 +2,9 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "animate.css";
-import imgBanner1 from "../../../assets/img/hero-right-3.webp";
-import imgBanner2 from "../../../assets/img/hero-right-2.webp";
-import imgBanner3 from "../../../assets/img/hero-right.webp";
+import imgBanner1 from "../../../assets/img/banner/hero-right-3.png";
+import imgBanner2 from "../../../assets/img/banner/hero-right-2.png";
+import imgBanner3 from "../../../assets/img/banner/hero-right.png";
 import imgBannerBg from "../../../assets/img/bg-banner.svg";
 
 const Banner = () => {
