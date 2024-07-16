@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { formartCurrency, hiddenSpinner, showSpinner } from '../../util/util'
 import { Button, message, Modal } from 'antd'
-import orderService from '../../services/orderSerivce'
-import { getOrderStatusName, orderStatusValue } from '../../util/constant';
+import { formartCurrency, hiddenSpinner, showSpinner } from '../../../util/util'
+import orderService from '../../../services/orderSerivce'
+import { getOrderStatusName } from '../../../util/constant'
 
 type Props = {
     orderList: any,
@@ -90,7 +90,7 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
             {orderList?.map((order: any) => (
                 <div key={order._id} className="shadow rounded  mb-12 bg-white">
                     {order?.productsOrder.map((product: any) => (
-                        <Link to={`/order/${order._id}`} key={product._id}>
+                        <Link to={`/admin/order/${order._id}`} key={product._id}>
                             <div className="flex justify-between items-center mb-2 p-6">
                                 <div className="flex">
                                     <div className="border-gray-400 mr-3" style={{ borderWidth: "1px" }}>
@@ -108,7 +108,7 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                                     </div>
                                 </div>
                                 <p className="normal-case">
-                                    <span className="text-lg text-[#62d2a2]">{formartCurrency(product.price * product.quantity)}</span>
+                                    <span className="text-lg text-[#62d2a2]">{`₫${formartCurrency(product.price * product.quantity)}`}</span>
                                 </p>
                             </div>
                             <div className="h-[1px] bg-gray-100"></div>
@@ -121,10 +121,10 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                         <div className="pb-8 text-right">
                             <i className="fa-solid fa-file-invoice-dollar text-[#62d2a2]"></i>
                             <span>Thành tiền: </span>
-                            <span className="text-2xl text-[#62d2a2] font-semibold">{formartCurrency(order.totalPrice)}</span>
+                            <span className="text-2xl text-[#62d2a2] font-semibold">{`${formartCurrency(order.totalPrice)}`}</span>
                         </div>
                         <div className="flex justify-between items-end">
-                            <div className="text-green-600 uppercase">
+                            <div className="text-[#EE4D2D] uppercase">
                                 <i className="fa-solid fa-truck"></i>
                                 <span>{getOrderStatusName(order?.orderStatus)}</span>
                             </div>
@@ -134,9 +134,10 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
 
                                     {
                                         order.orderStatus === 0 &&
-                                        <Link to={`/order/${order._id}/detail`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-green-600 text-white uppercase" style={{ borderWidth: "1px" }}>
-                                            Thanh toán ngay
-                                        </Link>
+                                        <span className='text-green-600 uppercase text-lg'>Chờ người bán thanh toán</span>
+                                        // <Link to={`/order/${order._id}/detail`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-green-600 text-white uppercase" style={{ borderWidth: "1px" }}>
+                                        //     Thanh toán ngay
+                                        // </Link>
                                     }
                                     {
                                         order.orderStatus === 5 &&
@@ -147,23 +148,39 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                                     {
                                         order.orderStatus === 4 &&
                                         <>
-                                            <Button onClick={() => showReceiveModal(order._id)} className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
+                                            <span className='text-green-600 uppercase text-lg'>Chờ người bán xác nhận</span>
+                                            {/* <Button onClick={() => showReceiveModal(order._id)} className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
                                                 Đã nhận được hàng
-                                            </Button>
-                                            <Modal title="Xác nhận đã nhận hàng" open={isModalOpen} onOk={handleReceiveOrder} onCancel={handleCancel}>
+                                            </Button> */}
+                                            {/* <Modal title="Xác nhận đã nhận hàng" open={isModalOpen} onOk={handleReceiveOrder} onCancel={handleCancel}>
                                                 <p>Xác nhận đã nhận hàng?</p>
-                                            </Modal>
+                                            </Modal> */}
                                         </>
                                     }
                                     {
-                                        (order.orderStatus === 0 || order.orderStatus === 1 || order.orderStatus === 2) &&
+                                        order.orderStatus === 1 &&
                                         <>
-                                            <Button onClick={() => showCancelOrder(order._id)} className="btn2 block text-center rounded-md h-10 min-w-[130px] py-2 bg-slate-50 uppercase" style={{ borderWidth: "1px" }}>
-                                                Huỷ đơn hàng
+                                            <>
+                                                <Button onClick={() => showReceiveModal(order._id)} className="btn2 block text-center rounded-md h-10 min-w-[130px] py-2 bg-green-600 text-white uppercase" style={{ borderWidth: "1px" }}>
+                                                    Xác nhận đơn hàng
+                                                </Button>
+                                                <Modal title="Xác nhận đã nhận hàng" open={isModalOpen} onOk={handleReceiveOrder} onCancel={handleCancel}>
+                                                    <p>Xác nhận đã nhận hàng?</p>
+                                                </Modal>
+                                            </>
+                                            <>
+                                                <Button onClick={() => showCancelOrder(order._id)} className="btn2 block text-center rounded-md h-10 min-w-[130px] py-2 bg-slate-50 uppercase" style={{ borderWidth: "1px" }}>
+                                                    Huỷ đơn hàng
+                                                </Button>
+                                            </>
+                                        </>
+                                    }
+                                    {
+                                        order.orderStatus === 2 &&
+                                        <>
+                                            <Button onClick={() => showReceiveModal(order._id)} className="btn2 block text-center rounded-md h-10 min-w-[130px] py-2 bg-green-600 text-white uppercase" style={{ borderWidth: "1px" }}>
+                                                Giao hàng
                                             </Button>
-                                            {/* <Modal title="Xác nhận hủy đơn hàng" open={isModalOpen} onOk={handleDelete} onCancel={handleCancel}>
-                                                <p>Bạn có chắc chắn muốn hủy đơn hàng này?</p>
-                                            </Modal> */}
                                         </>
                                     }
                                     {/* <Link to={`/order/${order._id}/detail`} className="btn1 block text-center rounded-md min-w-[100px] py-2 uppercase" style={{ borderWidth: "1px" }}>

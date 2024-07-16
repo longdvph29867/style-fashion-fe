@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { formartCurrency, hiddenSpinner, showSpinner } from '../../util/util';
-import orderService from '../../services/orderSerivce';
 import { Button, message, Modal } from 'antd';
+import { formartCurrency, hiddenSpinner, showSpinner } from '../../../util/util';
+import orderService from '../../../services/orderSerivce';
 
 type Props = {}
 
-const OrderDetail = (props: Props) => {
+const OrderDetailAdmin = (props: Props) => {
   window.scrollTo(0, 0);
   const { id } = useParams();
 
@@ -102,7 +102,7 @@ const OrderDetail = (props: Props) => {
     <div className='container mb-16'>
       <div className='my-6'>
         <div className='my-2'>
-          <Link to='/order'>
+          <Link to='/admin/order'>
             <i className="fa-solid fa-chevron-left"></i>
             <span>Trở về</span>
           </Link>
@@ -142,7 +142,7 @@ const OrderDetail = (props: Props) => {
                 </div>
                 <p className="normal-case">
                   {/* <span className="line-through">₫{product.price * product.quantity}</span> */}
-                  <span className="text-lg text-[#62d2a2]">₫{formartCurrency(product.price * product.quantity)}</span>
+                  <span className="text-lg text-[#62d2a2]">{formartCurrency(product.price * product.quantity)}</span>
                 </p>
               </div>
               <div className="h-[1px] bg-gray-300 my-2"></div>
@@ -178,15 +178,15 @@ const OrderDetail = (props: Props) => {
             <div className="w-3/5 pl-5 text-sm text-gray-500 normal-case">
               <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
                 <p>Tổng tiền hàng</p>
-                <p>₫{formartCurrency(order?.historicalCost)}</p>
+                <p>{formartCurrency(order?.historicalCost)}</p>
               </div>
               <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
                 <p>Phí vận chuyển</p>
-                <p>₫{formartCurrency(order?.shippingFee)}</p>
+                <p>{formartCurrency(order?.shippingFee)}</p>
               </div>
               <div className="flex justify-between items-center py-2 border-gray-300" style={{ borderBottomWidth: 1 }}>
                 <p>Thành tiền</p>
-                <p className="text-2xl text-[#62d2a2] font-semibold">₫{formartCurrency(order?.totalPrice)}</p>
+                <p className="text-2xl text-[#62d2a2] font-semibold">{formartCurrency(order?.totalPrice)}</p>
               </div>
               <div className="flex justify-between items-center py-3 border-gray-200">
                 <p>
@@ -200,12 +200,12 @@ const OrderDetail = (props: Props) => {
         </div>
         <div className="flex justify-end space-x-2 p-2">
 
-          {
+          {/* {
             order?.orderStatus.code === 0 &&
             <Link to={`/order/${order._id}/detail`} className="btn1 block text-center rounded-md min-w-[160px] py-2 bg-green-600 text-white uppercase" style={{ borderWidth: "1px" }}>
               Thanh toán ngay
             </Link>
-          }
+          } */}
           {
             order?.orderStatus.code === 5 &&
             <Link to={`/order/${order._id}/review`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
@@ -243,4 +243,4 @@ const OrderDetail = (props: Props) => {
   )
 }
 
-export default OrderDetail
+export default OrderDetailAdmin

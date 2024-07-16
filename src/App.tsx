@@ -31,6 +31,8 @@ import { isAccessTokenValid, refreshToken } from "./util/token";
 import { useEffect } from "react";
 import OrderPage from "./pages/OrderPage/OrderPage";
 import OrderDetail from "./pages/OrderPage/OrderDetail";
+import OrderAdmin from "./pages/admin/Order/OrderAdmin";
+import OrderDetailAdmin from "./pages/admin/Order/OrderDetailAdmin";
 
 function App() {
   useEffect(() => {
@@ -76,6 +78,8 @@ function App() {
           <Route path="users/:id" element={<UserDetail />} />
           <Route path="users/add" element={<AddUser />} />
           <Route path="users/update/:id" element={<UpdateUser />} />
+          <Route path="order" element={<OrderAdmin />} />
+          <Route path="order/:id" element={<OrderDetailAdmin />} />
         </Route>
         {/* Các route khác nếu có */}
       </Routes>

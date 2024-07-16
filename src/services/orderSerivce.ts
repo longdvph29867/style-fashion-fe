@@ -7,10 +7,10 @@ const orderService = {
         return https.get(`/orders/detail/${orderId}`)
     },
     receivedOrder(orderId: string) {
-        return https.put(`/orders/${orderId}`, { paymentStatus: 5 })
+        return https.put(`/orders/${orderId}`, { orderStatus: 5 })
     },
     cancelOrder(orderId: string) {
-        return https.put(`/orders/${orderId}`, { paymentStatus: 7 })
+        return https.put(`/orders/${orderId}`, { orderStatus: 7 })
     },
 }
 

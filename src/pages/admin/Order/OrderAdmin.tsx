@@ -1,16 +1,10 @@
-import { useLocation } from "react-router-dom";
-import OrderSummary from "../../components/Checkout/OrderSummary";
-import PaymentMethod from "../../components/Checkout/PaymentMethod";
-import ShippingAddress from "../../components/Checkout/ShippingAddress";
-import cartService from "../../services/cartService";
 import { useEffect, useState } from "react";
-import { CartType } from "../../types/cartType";
 import { Tabs, TabsProps } from "antd";
 import Item from "./Item";
-import orderService from "../../services/orderSerivce";
-import { hiddenSpinner, showSpinner } from "../../util/util";
+import { hiddenSpinner, showSpinner } from "../../../util/util";
+import orderService from "../../../services/orderSerivce";
 
-const OrderPage = () => {
+const OrderAdmin = () => {
   // const location = useLocation();
   // const params = new URLSearchParams(location.search);
   // const userId = params.get("user");
@@ -104,12 +98,12 @@ const OrderPage = () => {
   ];
 
   return (
-    <div className="container pb-16 order-client">
+    <div className="p-4">
       <h3 className="text-2xl my-8">Danh sách đơn hàng</h3>
-      <Tabs type="card" defaultActiveKey="all" items={items} onChange={onChange} />
+      <Tabs defaultActiveKey="all" items={items} onChange={onChange} />
     </div>
 
   );
 };
 
-export default OrderPage;
+export default OrderAdmin;
