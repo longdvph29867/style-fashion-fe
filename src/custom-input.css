@@ -1,0 +1,10 @@
+.ant-input-outlined:hover,
+.ant-input:hover {
+  border-color: #fe385c !important;
+}
+.ant-input-outlined:focus-within,
+.ant-input-password:focus,
+.ant-input:focus {
+  box-shadow: 0 0 0 2px #fe385c1a !important;
+  border-color: #fe385c !important;
+}

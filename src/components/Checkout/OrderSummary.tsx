@@ -11,10 +11,7 @@ const OrderSummary = ({ productList }: Props) => {
       <List_Order productList={productList} />
       {/* Discount code */}
       <div className="mt-10 pt-6 text-sm text-slate-500 border-t border-slate-200/70">
-        <label
-          className="font-medium text-neutral-900 text-sm"
-          data-nc-id="Label"
-        >
+        <label className="font-medium text-neutral-900 text-sm">
           Discount code
         </label>
         <div className="flex mt-1.5">

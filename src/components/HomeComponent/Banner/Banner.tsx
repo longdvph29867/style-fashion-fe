@@ -2,10 +2,11 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "animate.css";
-import imgBanner1 from "../../../assets/img/hero-right-3.webp";
-import imgBanner2 from "../../../assets/img/hero-right-2.webp";
-import imgBanner3 from "../../../assets/img/hero-right.webp";
+import imgBanner1 from "../../../assets/img/banner/hero-right-3.png";
+import imgBanner2 from "../../../assets/img/banner/hero-right-2.png";
+import imgBanner3 from "../../../assets/img/banner/hero-right.png";
 import imgBannerBg from "../../../assets/img/bg-banner.svg";
+import "./slick.css";
 
 const Banner = () => {
   const settings = {
@@ -82,7 +83,7 @@ const Banner = () => {
   ];
   return (
     <>
-      <div className="bg-[#E3FFE6] relative">
+      <div className="bg-[#ffecf09a] relative banner-slider">
         <img
           src={imgBannerBg}
           alt="img-banner-bg"
@@ -105,15 +106,15 @@ const Banner = () => {
                       className="w-full h-full"
                     >
                       <div className="flex flex-col items-start justify-center h-full relative z-10">
-                        <span className="text-sm sm:text-xl text-slate-700">
+                        <span className="text-sm sm:text-xl text-[#6a6a6a]">
                           {item.content}
                         </span>
                         <h1
                           dangerouslySetInnerHTML={{ __html: item.title }}
-                          className="mt-1 text-xl font-semibold ls:leading-10 sm:mt-2 lg:mt-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-slate-800"
+                          className="mt-1 text-xl font-semibold ls:leading-10 sm:mt-2 lg:mt-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-[#222]"
                         ></h1>
                         <a
-                          className="relative inline-flex items-center justify-center h-auto px-6 py-3 mt-2 text-sm font-medium transition-colors rounded-full shadow-xl sm:mt-4 lg:mt-12 sm:text-base sm:py-5 sm:px-9 bg-slate-800 text-slate-50"
+                          className="relative inline-flex items-center justify-center h-auto px-6 py-3 mt-2 text-sm font-medium transition-colors rounded-full shadow-xl sm:mt-4 lg:mt-12 sm:text-base sm:py-5 sm:px-9 bg-[#fe385c] text-white"
                           href="/"
                         >
                           <span>Xem ngay</span>
@@ -125,15 +126,15 @@ const Banner = () => {
                             >
                               <path
                                 d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
+                                stroke="#fff"
+                                strokeWidth="2"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                               />
                               <path
-                                d="M22 22L20 20"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
+                                d="M222 222L20 20"
+                                stroke="#fff"
+                                strokeWidth="2"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                               ></path>

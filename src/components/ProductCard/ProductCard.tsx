@@ -51,7 +51,7 @@ const ProductCard = ({ product }: Props) => {
         </div>
         <div className="space-y-4 px-2.5 pt-5 pb-2.5">
           <div>
-            <h2 className="text-base font-semibold min-h-[48px] my-line-2">
+            <h2 className="text-base font-semibold min-h-[48px] my-line-2 text-[#222]">
               {name}
             </h2>
             {/* <p className="text-sm text-slate-500 mt-1  my-line-2">
@@ -59,14 +59,14 @@ const ProductCard = ({ product }: Props) => {
             </p> */}
           </div>
           <div className="flex justify-between items-end ">
-            <div className="flex items-center border-2 border-green-500 rounded-lg py-1 px-2  text-sm font-medium">
-              <span className="text-green-500">
+            <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2  text-sm font-medium">
+              <span className="text-[#fe385c]">
                 {formartCurrency(minPrice)}
               </span>
             </div>
             <div className="flex items-center">
               <div className="relative w-20 h-6">
-                <div className="absolute text-slate-400 left-0 bottom-0 h-full w-20">
+                <div className="absolute text-slate-300 left-0 bottom-0 h-full w-20">
                   ★★★★★
                 </div>
                 <div
@@ -76,7 +76,7 @@ const ProductCard = ({ product }: Props) => {
                   ★★★★★
                 </div>
               </div>
-              <span className="text-sm ml-1 text-slate-500">
+              <span className="text-sm ml-1 text-[#6a6a6a]">
                 ({finalScoreReview})
               </span>
             </div>

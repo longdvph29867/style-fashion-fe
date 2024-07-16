@@ -26,7 +26,10 @@ const NewProductList = (props: Props) => {
 
   return (
     <div className="relative my-10 md:my-20 space-y-6 md:space-y-10">
-      <Title title="Sản phẩm mới" content="Sản phẩm mới" />
+      <Title
+        title="Sản phẩm mới"
+        content="Khám phá bộ sưu tập quần áo mới nhất"
+      />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
         {productsList?.map((product, index) => {
           return <PrimaryProductCard product={product} key={index} />;

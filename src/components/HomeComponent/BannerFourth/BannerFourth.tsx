@@ -1,43 +1,52 @@
-import promo3 from "../../../assets/img/promo3.webp";
+import promo3 from "../../../assets/img/promo3.png";
 const BannerFourth = () => {
   return (
     <div className="mt-24 lg:pt-10">
       <div className="relative flex flex-col lg:flex-row bg-slate-50 rounded-2xl sm:rounded-[40px] p-4 pb-0 sm:p-5 sm:pb-0 lg:p-24">
         <div className="absolute inset-0"></div>
         <div className="lg:w-[50%] max-w-lg relative">
-          <h2 className="text-4xl font-semibold md:text-5xl">
+          <h2 className="text-4xl font-semibold md:text-5xl text-[#222]">
             Đừng bỏ lỡ những ưu đãi đặc biệt
           </h2>
-          <span className="block mt-5 text-neutral-500">
-            Đăng ký để nhận tin tức mới nhất, combo tiết kiệm, mã giảm giá...
+          <span className="block mt-3 text-[#6a6a6a]">
+            Khi mua hàng tại cửa hàng chúng tôi, bạn sẽ nhận được những ưu đãi
+            và dịch vụ tốt nhất...
           </span>
-          <ul className="mt-10 space-y-4">
-            <li className="flex items-center space-x-4">
-              <span className="nc-Badge inline-flex px-2.5 py-1 rounded-full font-medium text-xs text-purple-800 bg-purple-100 relative">
+          <ul className="mt-6 space-y-3">
+            <li className="flex items-center space-x-3">
+              <span className="inline-flex px-2.5 py-1 rounded-full font-medium text-xs text-purple-800 bg-purple-100 relative">
                 01
               </span>
-              <span className="font-medium text-neutral-700">
-                Combo tiết kiệm
-              </span>
+              <span className="font-medium text-[#222]">Combo tiết kiệm</span>
             </li>
-            <li className="flex items-center space-x-4">
-              <span className="nc-Badge inline-flex px-2.5 py-1 rounded-full font-medium text-xs text-blue-800 bg-blue-100 relative">
+            <li className="flex items-center space-x-3">
+              <span className="inline-flex px-2.5 py-1 rounded-full font-medium text-xs text-blue-800 bg-blue-100 relative">
                 02
               </span>
-              <span className="font-medium text-neutral-700">
+              <span className="font-medium text-[#222]">
                 Miễn phí vận chuyển
               </span>
             </li>
-            <li className="flex items-center space-x-4">
-              <span className="nc-Badge inline-flex px-2.5 py-1 rounded-full font-medium text-xs text-red-800 bg-red-100 relative">
+            <li className="flex items-center space-x-3">
+              <span className="inline-flex px-2.5 py-1 rounded-full font-medium text-xs text-red-800 bg-red-100 relative">
                 03
               </span>
-              <span className="font-medium text-neutral-700">
-                Sản phẩm cao cấp
+              <span className="font-medium text-[#222]">Sản phẩm cao cấp</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <span className="inline-flex px-2.5 py-1 rounded-full font-medium text-xs text-yellow-800 bg-yellow-100 relative">
+                04
               </span>
+              <span className="font-medium text-[#222]">Đổi trả dễ dàng</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <span className="inline-flex px-2.5 py-1 rounded-full font-medium text-xs text-green-800 bg-green-100 relative">
+                05
+              </span>
+              <span className="font-medium text-[#222]">Ưu đãi đặc biệt</span>
             </li>
           </ul>
-          <form className="relative max-w-sm mt-10">
+          {/* <form className="relative max-w-sm mt-10">
             <input
               className="block w-full px-4 py-3 text-sm font-normal bg-white rounded-full border-neutral-200 h-11"
               required
@@ -63,7 +72,7 @@ const BannerFourth = () => {
                 ></path>
               </svg>
             </button>
-          </form>
+          </form> */}
         </div>
         <div className="relative block lg:absolute lg:right-0 lg:bottom-0 mt-10 lg:mt-0 max-w-lg lg:max-w-[calc(50%-40px)]">
           <img width="751" height="824" src={promo3} alt="img" />

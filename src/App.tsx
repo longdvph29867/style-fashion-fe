@@ -29,6 +29,7 @@ import MyShippingAddress from "./components/Accout/ShipingAddress/MyShippingAddr
 import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 import { isAccessTokenValid, refreshToken } from "./util/token";
 import { useEffect } from "react";
+import "./custom-input.css";
 
 function App() {
   useEffect(() => {

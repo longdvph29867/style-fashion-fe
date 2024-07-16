@@ -26,8 +26,10 @@ const PrimaryProductCard = ({ product }: Props) => {
       </div>
       <div className="relative flex justify-between mt-5">
         <div className="flex-1">
-          <h2 className="text-lg font-semibold sm:text-xl my-line-2">{name}</h2>
-          <div className="flex items-center mt-3 text-slate-500">
+          <h2 className="text-lg font-semibold sm:text-xl my-line-2 text-[#222]">
+            {name}
+          </h2>
+          <div className="flex items-center mt-3 text-[#6a6a6a]">
             <span className="text-sm">
               <span className="line-clamp-1">Orange</span>
             </span>
@@ -37,7 +39,7 @@ const PrimaryProductCard = ({ product }: Props) => {
               viewBox="0 0 24 24"
               fill="currentColor"
               aria-hidden="true"
-              className="w-4 h-4 text-orange-400"
+              className="w-4 h-4 text-[#fbbf24]"
             >
               <path
                 fillRule="evenodd"
@@ -51,8 +53,8 @@ const PrimaryProductCard = ({ product }: Props) => {
           </div>
         </div>
         <div className="mt-0.5 sm:mt-1 ml-4">
-          <div className="flex items-center border-2 border-green-500 rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium">
-            <span className="text-green-500 !leading-none">$52</span>
+          <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium">
+            <span className="text-[#fe385c] !leading-none">$52</span>
           </div>
         </div>
       </div>
