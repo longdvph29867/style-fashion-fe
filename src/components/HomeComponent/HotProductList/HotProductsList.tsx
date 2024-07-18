@@ -30,7 +30,7 @@ const HotProductList = () => {
           return <ProductCard product={product} key={index} />;
         })}
       </div>
-      <Line />
+      {/* <Line /> */}
     </div>
   );
 };
