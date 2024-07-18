@@ -3,7 +3,7 @@ import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
 import ProductCard from "../../ProductCard/ProductCard";
 import Title from "../../Title/Title";
-import Line from "../../Line/Line";
+// import Line from "../../Line/Line";
 
 const HotProductList = () => {
   const [productsList, setProductsList] = useState<Product[]>([]);
@@ -21,6 +21,7 @@ const HotProductList = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
 
   return (
     <div className="relative my-10 md:my-20 space-y-6 md:space-y-10">
