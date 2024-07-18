@@ -1,7 +1,7 @@
-// type Props = {}
-
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import addIcon from "../../assets/add.svg";
+import minusIcon from "../../assets/minus.svg";
 import {
   formartCurrency,
   formartRating,
@@ -155,37 +155,13 @@ const DetailPage = () => {
                     <div className="flex items-center justify-between w-full space-x-5 ">
                       <div className=" flex items-center justify-between w-[104px] sm:w-28">
                         <button className="flex items-center justify-center w-8 h-8 bg-white border rounded-full outline-none border-neutral-400 hover:border-neutral-700">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill=""
-                            aria-hidden="true"
-                            className="w-4 h-4"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M3.75 12a.75.75 0 01.75-.75h15a.75.75 0 010 1.5h-15a.75.75 0 01-.75-.75z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
+                          <img src={minusIcon} alt="Minus Icon" />
                         </button>
                         <span className="flex-1 block leading-none text-center">
                           1
                         </span>
                         <button className="flex items-center justify-center w-8 h-8 bg-white border rounded-full outline-none border-neutral-400 hover:border-neutral-700">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill=""
-                            aria-hidden="true"
-                            className="w-4 h-4"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
+                         <img src={addIcon} alt="Minus Icon" />
                         </button>
                       </div>
                     </div>
