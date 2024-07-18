@@ -14,6 +14,7 @@ const SubCategoryList = () =>
       const limitedCategories = allCategories.slice(0, 6)
       setCategories(limitedCategories)
     } catch (error) {
+      
       console.error("Error fetching categories:", error)
     }
   };
