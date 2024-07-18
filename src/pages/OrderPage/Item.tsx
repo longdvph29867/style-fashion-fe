@@ -133,19 +133,19 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                                 <div className="flex space-x-2">
 
                                     {
-                                        order.orderStatus === 0 &&
+                                        (order.orderStatus === 0 || order.orderStatus === 2) &&
                                         <Link to={`/order/${order._id}/detail`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-green-600 text-white uppercase" style={{ borderWidth: "1px" }}>
                                             Thanh toán ngay
                                         </Link>
                                     }
                                     {
-                                        order.orderStatus === 5 &&
+                                        order.orderStatus === 9 &&
                                         <Link to={`/order/${order._id}/review`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
                                             Đánh giá
                                         </Link>
                                     }
                                     {
-                                        order.orderStatus === 4 &&
+                                        order.orderStatus === 6 &&
                                         <>
                                             <Button onClick={() => showReceiveModal(order._id)} className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
                                                 Đã nhận được hàng
@@ -156,7 +156,7 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                                         </>
                                     }
                                     {
-                                        (order.orderStatus === 0 || order.orderStatus === 1 || order.orderStatus === 2) &&
+                                        (order.orderStatus === 0 || order.orderStatus === 1 || order.orderStatus === 3 || order.orderStatus === 4) &&
                                         <>
                                             <Button onClick={() => showCancelOrder(order._id)} className="btn2 block text-center rounded-md h-10 min-w-[130px] py-2 bg-slate-50 uppercase" style={{ borderWidth: "1px" }}>
                                                 Huỷ đơn hàng

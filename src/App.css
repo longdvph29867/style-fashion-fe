@@ -184,15 +184,17 @@ header.show-mobile .menu-mobile {
   background-color: #ff4d4f !important;
 }
 
+.order-client .ant-tabs-nav-wrap * {
+  display: grid !important;
+  grid-template-columns: repeat(9, 1fr) !important;
+}
+
 .order-client .ant-tabs-nav-list * {
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  text-align: center;
+  text-align: center !important;
 }
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab {
-  font-size: 16px;
-  /* background-color: #62D2A2 !important; */
+  font-size: 14px;
   border: none !important;
   margin: 0 !important;
   border-radius: 0 !important;
@@ -204,7 +206,6 @@ header.show-mobile .menu-mobile {
   border-bottom: 2px solid #62d2a2 !important;
 }
 
-/* Đảm bảo các phần tử con của tab active cũng có màu chữ chính xác */
 .order-client .ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active * {
   color: #62d2a2 !important;
 
