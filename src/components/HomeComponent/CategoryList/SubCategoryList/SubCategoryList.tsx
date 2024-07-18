@@ -1,24 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useEffect, useState } from "react";
 import { https } from "../../../../config/axios";
 import SubCategoryCart from "../SubCategoryCart/SubCategoryCart";
 
-const SubCategoryList = () => {
+const SubCategoryList = () => 
+  {
   const [categories, setCategories] = useState<any[]>([]);
   const fetchCategories = async () => {
     try {
-      const response = await https.get("/categories");
-      const allCategories = response.data.results;
-      const limitedCategories = allCategories.slice(0, 6);
-      setCategories(limitedCategories);
+      const response = await https.get("/categories")
+      const allCategories = response.data.results
+      const limitedCategories = allCategories.slice(0, 6)
+      setCategories(limitedCategories)
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.error("Error fetching categories:", error)
     }
   };
-
   useEffect(() => {
     fetchCategories();
   }, []);
-
   return (
     <>
       <div className="grid grid-cols-1 grid-rows-2 gap-7 md:grid-cols-2 xl:grid-cols-3">
