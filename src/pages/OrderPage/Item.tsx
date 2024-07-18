@@ -18,11 +18,24 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
 
     const { confirm } = Modal;
 
-    const [open, setOpen] = useState(false);
+    const [reviewFormOpen, setReviewFormOpen] = useState(false);
     const [formReviewValue, setFormReviewValues] = useState(null);
 
     useEffect(() => {
         console.log(formReviewValue)
+        if (formReviewValue) {
+            orderService.reviewProduct(formReviewValue).then((res) => {
+                if (res) {
+                    message.success('Đánh giá thành công')
+                    fetchOrdersList()
+                }
+            }).catch((error) => {
+                console.log(error)
+                message.error(error.response.data.message)
+            }).finally(() => {
+                setReviewFormOpen(false)
+            })
+        }
     }, [formReviewValue])
 
 
@@ -94,7 +107,7 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
     // };
 
     const handleReview = (id: string) => {
-        setOpen(true)
+        setReviewFormOpen(true)
 
     }
 
@@ -154,15 +167,15 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                                     {
                                         order.orderStatus === 9 &&
                                         <>
-                                            <Button onClick={() => setOpen(true)} className="h-10 btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
+                                            <Button onClick={() => setReviewFormOpen(true)} className="h-10 btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
                                                 Đánh giá
                                             </Button>
                                             <Modal
                                                 title="Đánh giá sản phẩm"
                                                 centered
-                                                open={open}
-                                                onOk={() => setOpen(false)}
-                                                onCancel={() => setOpen(false)}
+                                                open={reviewFormOpen}
+                                                onOk={() => setReviewFormOpen(false)}
+                                                onCancel={() => setReviewFormOpen(false)}
                                                 width={1000}
                                             >
                                                 <ReviewForm orderId={order._id} setFormReviewValues={setFormReviewValues}></ReviewForm>

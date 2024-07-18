@@ -12,6 +12,9 @@ const orderService = {
     cancelOrder(orderId: string) {
         return https.put(`/orders/${orderId}`, { orderStatus: 10 })
     },
+    reviewProduct(data: any) {
+        return https.post(`/reviews`, data)
+    }
 }
 
 export default orderService;

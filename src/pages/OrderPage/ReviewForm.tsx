@@ -52,51 +52,56 @@ const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues }: Props) =>
 
     const onFinish = (values: any) => {
         const postProduct = async () => {
-            // console.log(values, 'values');
-            setFormReviewValues(values);
-            return;
+            // setFormReviewValues(values);
+            // return;
             showSpinner();
             const attributeData: any = [];
             // console.log(attributeData, 'attributeData');
             // console.log('123')
 
             const listFiles = values.gallery;
-            const thumbnail: any = values.thumbnail;
+            const videoFile: any = values.video;
 
 
             const newArrayFiles = listFiles.map((file: any) => file.originFileObj);
-            const thumbnailFile = thumbnail[0].originFileObj;
+            const newVideoFile = videoFile[0].originFileObj;
 
             const formData = new FormData();
             for (const file of newArrayFiles) {
                 formData.append("images", file);
             }
 
-            const formDataThumbnail = new FormData();
-            formDataThumbnail.append("images", thumbnailFile);
+            const formDataVideo = new FormData();
+            formDataVideo.append("videos", newVideoFile);
             try {
                 const { data: dataGallery } = await https.post("/images", formData);
                 const urlGallery: { url: string; publicId: string }[] = dataGallery.data;
+                console.log("Gallery upload successful:", urlGallery);
 
-                const { data: dataThumbnail } = await https.post("/images", formDataThumbnail);
-                const urlThumbnail: { url: string; publicId: string }[] = dataThumbnail.data;
+                const { data: dataVideo } = await https.post("/videos", formDataVideo);
+                const urlVideo: { url: string; publicId: string }[] = dataVideo.data;
+                console.log("Video upload successful:", urlVideo);
 
                 const data = {
-                    name: values.name,
-                    description: values.description,
-                    gallery: urlGallery.map((image) => image.url),
-                    thumbnail: urlThumbnail[0].url,
-                    categories: values.categories,
-                    attributes: attributeData,
-                    video: "",
+                    content: values.content,
+                    score: values.score,
+                    images: urlGallery.map((image) => image.url),
+                    // thumbnail: urlThumbnail[0].url,
+                    email: 'tung123@gmail.com',
+                    productId: '66521a0c4595adbe4d9a04b8',
+                    name: "Tung",
+                    // video: urlVideo[0].url,
                 };
 
-                const res = await https.post("/products", data);
-                if (res) {
-                    message.success("Thêm sản phẩm thành công!");
-                    navigate("/admin/products");
-                    hiddenSpinner();
-                }
+                setFormReviewValues(data);
+                return
+
+                // const res = await https.post("/products", data);
+                // if (res) {
+                //     message.success("Thêm sản phẩm thành công!");
+                //     navigate("/admin/products");
+                //     hiddenSpinner();
+                // }
             } catch (error) {
                 hiddenSpinner();
                 console.log(error);
@@ -164,14 +169,14 @@ const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues }: Props) =>
                                     {/*  */}
                                     <Form.Item
                                         label="Nhận xét"
-                                        name="description"
+                                        name="content"
                                         rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
                                     >
                                         <TextArea rows={4} placeholder="Hãy chia sẻ nhận xét cho sản phẩm này bạn nhé" />
                                     </Form.Item>
 
                                     <Form.Item
-                                        name="star"
+                                        name="score"
                                         label="Đánh giá"
                                         rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
                                         initialValue={starValue}
@@ -184,23 +189,32 @@ const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues }: Props) =>
                                     </Form.Item>
                                 </div>
                                 <div>
-                                    {/* thumbnail */}
+                                    {/* gallery */}
                                     <Form.Item
                                         label="Thêm hình ảnh"
-                                        name="thumbnail"
+                                        name="gallery"
                                         valuePropName="fileList"
-                                        getValueFromEvent={(e) => Array.isArray(e) ? e : e && e.fileList}
+                                        getValueFromEvent={(e) => e?.fileList}
                                         rules={[
-                                            { required: true, message: "Vui lòng chọn file!" },
                                             {
                                                 validator(_, fileList) {
-                                                    if (fileList && fileList.length > 0) {
-                                                        const file = fileList[0];
-                                                        if (file.size > 1024 * 1024) {
-                                                            return Promise.reject("File tối đa 1MB");
+                                                    if (fileList) {
+                                                        if (fileList.length > 5) {
+                                                            return Promise.reject("Tối đa 5 file!");
                                                         }
-                                                        if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
-                                                            return Promise.reject("File phải có định dạng png, jpg, jpeg!");
+                                                        for (const file of fileList) {
+                                                            if (file.size > 1024 * 1024) {
+                                                                return Promise.reject("File tối đa 1MB");
+                                                            }
+                                                            if (
+                                                                !["image/jpeg", "image/jpg", "image/png"].includes(
+                                                                    file.type
+                                                                )
+                                                            ) {
+                                                                return Promise.reject(
+                                                                    "File phải có định dạng png, jpg, jpeg!"
+                                                                );
+                                                            }
                                                         }
                                                         return Promise.resolve();
                                                     }
@@ -210,9 +224,9 @@ const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues }: Props) =>
                                         ]}
                                     >
                                         <Upload.Dragger
+                                            multiple
                                             listType="picture"
                                             beforeUpload={() => false}
-                                            maxCount={1} // chỉ cho phép tải lên một file duy nhất
                                         >
                                             <Button icon={<UploadOutlined />}>Click to upload</Button>
                                         </Upload.Dragger>
@@ -224,16 +238,15 @@ const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues }: Props) =>
                                         valuePropName="fileList"
                                         getValueFromEvent={(e) => Array.isArray(e) ? e : e && e.fileList}
                                         rules={[
-                                            { required: true, message: "Vui lòng chọn file!" },
                                             {
                                                 validator(_, fileList) {
                                                     if (fileList && fileList.length > 0) {
                                                         const file = fileList[0];
-                                                        if (file.size > 1024 * 1024) {
-                                                            return Promise.reject("File tối đa 1MB");
+                                                        if (file.size > 1024 * 1024 * 10) { // Giới hạn kích thước file là 10MB
+                                                            return Promise.reject("File tối đa 10MB");
                                                         }
-                                                        if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
-                                                            return Promise.reject("File phải có định dạng png, jpg, jpeg!");
+                                                        if (!["video/mp4", "video/avi", "video/mov"].includes(file.type)) { // Các định dạng video được phép
+                                                            return Promise.reject("File phải có định dạng mp4, avi, mov!");
                                                         }
                                                         return Promise.resolve();
                                                     }
@@ -250,6 +263,7 @@ const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues }: Props) =>
                                             <Button icon={<UploadOutlined />}>Click to upload</Button>
                                         </Upload.Dragger>
                                     </Form.Item>
+
                                 </div>
 
 
