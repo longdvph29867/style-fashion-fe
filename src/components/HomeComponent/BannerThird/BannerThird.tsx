@@ -7,19 +7,17 @@ const BannerThird = () => {
   <div className="mt-28">
   <div className="lg:pt-10">
     <div className="container mx-auto relative flex flex-col lg:flex-row lg:justify-end bg-yellow-50 rounded-2xl sm:rounded-[40px] p-4 pb-0 sm:p-5 sm:pb-0 lg:p-24">
-      {/* Hình nền của banner */}
       <div>
         <img
-          alt=""
+          alt="imgBg"
           className="absolute top-0 left-0 object-contain w-full h-full"
           src={imgBg}
         />
       </div>
-      {/* Nội dung chính của banner */}
       <div className="lg:w-[45%] max-w-lg relative">
         <a className="inline-block text-slate-600" href="/">
           <img
-            alt="logo"
+            alt="logo-image"
             className="w-auto h-8 sm:h-10"
             src={imgLogo}
             style={{ color: "transparent" }}
@@ -39,16 +37,14 @@ const BannerThird = () => {
           >
             Xem thêm
           </a>
-        </div>
-      </div>
-      {/* Hình ảnh quảng cáo của sản phẩm */}
+         </div>
+       </div>
       <div className="relative block lg:absolute lg:left-0 lg:bottom-0 mt-10 lg:mt-0 max-w-xl lg:max-w-[calc(55%-40px)]">
-        <img alt="" src={imgBanner2} />
+        <img alt="banner2" src={imgBanner2} />
       </div>
     </div>
   </div>
 </div>
 );
 }
-
 export default BannerThird;
