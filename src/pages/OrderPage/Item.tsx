@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { formartCurrency, hiddenSpinner, showSpinner } from '../../util/util'
 import { Button, message, Modal } from 'antd'
 import orderService from '../../services/orderSerivce'
 import { getOrderStatusName, orderStatusValue } from '../../util/constant';
+import ReviewForm from './ReviewForm'
 
 type Props = {
     orderList: any,
@@ -17,6 +18,12 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
 
     const { confirm } = Modal;
 
+    const [open, setOpen] = useState(false);
+    const [formReviewValue, setFormReviewValues] = useState(null);
+
+    useEffect(() => {
+        console.log(formReviewValue)
+    }, [formReviewValue])
 
 
     const handleReceiveOrder = async () => {
@@ -85,6 +92,12 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
     //     setIsModalOpen(true);
     //     setSelectedOrderId(id);
     // };
+
+    const handleReview = (id: string) => {
+        setOpen(true)
+
+    }
+
     return (
         <div className=' mt-2'>
             {orderList?.map((order: any) => (
@@ -140,9 +153,21 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                                     }
                                     {
                                         order.orderStatus === 9 &&
-                                        <Link to={`/order/${order._id}/review`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
-                                            Đánh giá
-                                        </Link>
+                                        <>
+                                            <Button onClick={() => setOpen(true)} className="h-10 btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
+                                                Đánh giá
+                                            </Button>
+                                            <Modal
+                                                title="Đánh giá sản phẩm"
+                                                centered
+                                                open={open}
+                                                onOk={() => setOpen(false)}
+                                                onCancel={() => setOpen(false)}
+                                                width={1000}
+                                            >
+                                                <ReviewForm orderId={order._id} setFormReviewValues={setFormReviewValues}></ReviewForm>
+                                            </Modal>
+                                        </>
                                     }
                                     {
                                         order.orderStatus === 6 &&
