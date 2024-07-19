@@ -3,7 +3,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Form, Input, message } from "antd";
-import { localUserService } from "../../services/localService";
+import {
+  localTokenService,
+  localUserService,
+} from "../../services/localService";
 import { hiddenSpinner, showSpinner } from "../../util/util";
 import { https } from "../../services/config";
 
@@ -19,9 +22,10 @@ const SignIn: React.FC = () => {
         const res = await https.post("/auth/login", data);
         if (res) {
           const infoUser = {
-            ...res.data.data,
+            ...res.data.user,
           };
-          localUserService.set(infoUser);
+          localUserService.set(res.data.user);
+          localTokenService.set(res.data.tokens);
           hiddenSpinner();
           message.success("Đăng nhập thành công!");
           if (infoUser.role === "admin") {

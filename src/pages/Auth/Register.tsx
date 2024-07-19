@@ -1,12 +1,38 @@
 // type Props = {};
 
 import React from "react";
-import { Button, Form, Input } from "antd";
-import { Link } from "react-router-dom";
+import { Button, Form, Input, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { RegisterType } from "../../types/login";
+import { hiddenSpinner, showSpinner } from "../../util/spinner";
+import { https } from "../../config/axios";
 
 const Register: React.FC = () => {
-  const onFinish = (values: unknown) => {
-    console.log(values);
+  const navigate = useNavigate();
+
+  const onFinish = (values: RegisterType) => {
+    const data = {
+      name: values.name,
+      password: values.password,
+      phoneNumber: values.phoneNumber,
+      email: values.email,
+    };
+    const postProduct = async () => {
+      showSpinner();
+      try {
+        const res = await https.post("/auth/register", data);
+        if (res) {
+          message.success("Đăng ký thành công!");
+          navigate("/auth/login");
+          hiddenSpinner();
+        }
+      } catch (error) {
+        hiddenSpinner();
+        message.error(error.response.data.message);
+        console.log(error);
+      }
+    };
+    postProduct();
   };
 
   const onFinishFailed = (errorInfo: unknown) => {
@@ -81,6 +107,11 @@ const Register: React.FC = () => {
               min: 6,
               max: 25,
               message: "Password must be between 6 and 25 characters!",
+            },
+            {
+              pattern: /^(?=.*[A-Za-z])(?=.*\d).{6,25}$/,
+              message:
+                "Password must contain at least one letter and one number!",
             },
           ]}
         >
