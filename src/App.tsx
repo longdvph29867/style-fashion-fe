@@ -33,6 +33,7 @@ import OrderPage from "./pages/OrderPage/OrderPage";
 import OrderDetail from "./pages/OrderPage/OrderDetail";
 import OrderAdmin from "./pages/admin/Order/OrderAdmin";
 import OrderDetailAdmin from "./pages/admin/Order/OrderDetailAdmin";
+import ListProductPage from "./pages/ListProductPage/ListProductPage";
 
 function App() {
   useEffect(() => {
@@ -57,10 +58,12 @@ function App() {
           </Route>
           <Route path="detail/:slug" element={<DetailPage />} />
           {/* <Route path="details/:slug" element={<DetailProduct />} /> */}
-          <Route path="products" element={<ProductListPage />} />
+          {/* <Route path="products" element={<ProductListPage />} /> */}
           <Route path="checkout" element={<CheckoutPage />} />
           <Route path="order/:id" element={<OrderDetail />} />
           <Route path="order" element={<OrderPage />} />
+          {/* <Route path="detail" element={<DetailProduct />} /> */}
+          <Route path="products" element={<ListProductPage />} />
         </Route>
         <Route path="/auth" element={<LoginLayout />}>
           <Route path="verify-email/:token" element={<ResetPassword />} />

@@ -27,5 +27,10 @@ type FormProductData = {
     description: string;
     video: string;
     images: File[];
+    scoreReview: number;
 }
+
+
+
+type FormProductData = Pick<Product, 'desc' | 'gender' | 'name' | 'price'> & { images: File[], id_category: string }
 

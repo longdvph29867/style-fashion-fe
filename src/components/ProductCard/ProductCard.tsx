@@ -5,17 +5,17 @@ type Props = {
   product: any;
 };
 
-const ProductCard = ({ product }: Props) => {
-  const { name, minPrice, slug, finalScoreReview, thumbnail } = product;
+const ItemProduct: React.FC<Props> = ({ product }) => {
+  const { name, description, thumbnail, slug, scoreReview } = product;
   return (
     <Link to={`/products/${slug}`}>
       <div className="relative flex flex-col bg-transparent duration-200 hover:-translate-y-4 h-full justify-between">
         <div className="relative flex-shrink-0 bg-slate-50 rounded-3xl overflow-hidden z-1">
-          <div className="flex w-full relative pb-[100%]">
+          <div className="flex w-full">
             <img
               src={thumbnail}
               alt="product"
-              className="object-cover w-full drop-shadow-xl absolute top-0 left-0"
+              className="object-cover w-full h-full  drop-shadow-xl"
             />
           </div>
           <div className="rounded-full flex items-center justify-center absolute top-3 left-3 px-2.5 py-1.5 text-xs bg-white text-slate-700 ">
@@ -54,15 +54,13 @@ const ProductCard = ({ product }: Props) => {
             <h2 className="text-base font-semibold min-h-[48px] my-line-2">
               {name}
             </h2>
-            {/* <p className="text-sm text-slate-500 mt-1  my-line-2">
-              {description}
-            </p> */}
+            <p className="text-sm text-slate-500 mt-1 ">
+              {description.slice(0, 50)}...
+            </p>
           </div>
           <div className="flex justify-between items-end ">
             <div className="flex items-center border-2 border-green-500 rounded-lg py-1 px-2  text-sm font-medium">
-              <span className="text-green-500">
-                {formartCurrency(minPrice)}
-              </span>
+              <span className="text-green-500">{formartCurrency(100000)}</span>
             </div>
             <div className="flex items-center">
               <div className="relative w-20 h-6">
@@ -71,14 +69,12 @@ const ProductCard = ({ product }: Props) => {
                 </div>
                 <div
                   className={`absolute text-[#fbbf24] left-0 bottom-0 h-full overflow-hidden`}
-                  style={{ width: `${formartRating(finalScoreReview)}%` }}
+                  style={{ width: `${formartRating(scoreReview)}%` }}
                 >
                   ★★★★★
                 </div>
               </div>
-              <span className="text-sm ml-1 text-slate-500">
-                ({finalScoreReview})
-              </span>
+              <span className="text-sm ml-1 text-slate-500">({scoreReview})</span>
             </div>
           </div>
         </div>
@@ -87,4 +83,4 @@ const ProductCard = ({ product }: Props) => {
   );
 };
 
-export default ProductCard;
+export default ItemProduct;
