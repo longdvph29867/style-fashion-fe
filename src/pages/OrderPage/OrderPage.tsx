@@ -32,15 +32,15 @@ const OrderPage = () => {
       .getAllOrders()
       .then((res) => {
         setOrdersList(res.data.results);
-        setPaymentPendingList(res.data.results.filter((order: any) => order.orderStatus === 0));
+        setPaymentPendingList(res.data.results.filter((order: any) => order.orderStatus === 0 || order.orderStatus === 2));
         setConfirmPendingList(res.data.results.filter((order: any) => order.orderStatus === 3 || order.orderStatus === 1));
         setPrepareList(res.data.results.filter((order: any) => order.orderStatus === 4));
-        setShippingList(res.data.results.filter((order: any) => order.orderStatus === 5));
-        setDeliveredList(res.data.results.filter((order: any) => order.orderStatus === 7));
-        setSuccessList(res.data.results.filter((order: any) => order.orderStatus === 7));
+        setShippingList(res.data.results.filter((order: any) => order.orderStatus === 5 || order.orderStatus === 6 || order.orderStatus === 7));
+        // setDeliveredList(res.data.results.filter((order: any) => order.orderStatus === 7));
+        // setSuccessList(res.data.results.filter((order: any) => order.orderStatus === 7));
         setCompleteList(res.data.results.filter((order: any) => order.orderStatus === 9));
         setCancelList(res.data.results.filter((order: any) => order.orderStatus === 10));
-        setPaymentFailedList(res.data.results.filter((order: any) => order.orderStatus === 2));
+        // setPaymentFailedList(res.data.results.filter((order: any) => order.orderStatus === 2));
         hiddenSpinner();
       })
       .catch((err) => {
@@ -125,11 +125,11 @@ const OrderPage = () => {
       label: label5,
       children: <Item fetchOrdersList={fetchOrdersList} orderList={shippingList} />,
     },
-    {
-      key: '7',
-      label: label7,
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={successList} />,
-    },
+    // {
+    //   key: '7',
+    //   label: label7,
+    //   children: <Item fetchOrdersList={fetchOrdersList} orderList={successList} />,
+    // },
     {
       key: '9',
       label: label9,
@@ -140,11 +140,11 @@ const OrderPage = () => {
       label: 'Đã hủy',
       children: <Item fetchOrdersList={fetchOrdersList} orderList={cancelList} />,
     },
-    {
-      key: '2',
-      label: 'Thanh toán thất bại',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={paymentFailedList} />,
-    },
+    // {
+    //   key: '2',
+    //   label: 'Thanh toán thất bại',
+    //   children: <Item fetchOrdersList={fetchOrdersList} orderList={paymentFailedList} />,
+    // },
   ];
 
   return (

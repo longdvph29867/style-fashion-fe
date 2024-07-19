@@ -186,11 +186,14 @@ header.show-mobile .menu-mobile {
 
 .order-client .ant-tabs-nav-wrap * {
   display: grid !important;
-  grid-template-columns: repeat(9, 1fr) !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  /* justify-content: center !important; */
+  /* align-items: center !important; */
 }
 
-.order-client .ant-tabs-nav-list * {
-  text-align: center !important;
+.order-client .ant-tabs-nav-list {
+  /* display: contents !important; */
+  /* text-align: center !important; */
 }
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab {

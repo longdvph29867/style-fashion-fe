@@ -150,7 +150,7 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                             <span className="text-2xl text-[#62d2a2] font-semibold">{formartCurrency(order.totalPrice)}</span>
                         </div>
                         <div className="flex justify-between items-end">
-                            <div className="text-green-600 uppercase">
+                            <div className="text-green-600">
                                 <i className="fa-solid fa-truck"></i>
                                 <span>{getOrderStatusName(order?.orderStatus)}</span>
                             </div>
@@ -194,7 +194,14 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                                         </>
                                     }
                                     {
-                                        (order.orderStatus === 0 || order.orderStatus === 1 || order.orderStatus === 3 || order.orderStatus === 4) &&
+                                        (order.orderStatus === 5 || order.orderStatus === 7) &&
+                                        <Button className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-gray-200 text-white uppercase" style={{ borderWidth: "1px" }}>
+                                            Đã nhận được hàng
+                                        </Button>
+                                    }
+
+                                    {
+                                        (order.orderStatus === 0 || order.orderStatus === 1 || order.orderStatus === 2 || order.orderStatus === 3 || order.orderStatus === 4) &&
                                         <>
                                             <Button onClick={() => showCancelOrder(order._id)} className="btn2 block text-center rounded-md h-10 min-w-[130px] py-2 bg-slate-50 uppercase" style={{ borderWidth: "1px" }}>
                                                 Huỷ đơn hàng
