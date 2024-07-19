@@ -41,7 +41,6 @@ const listData: {
   },
 ];
 
-
 const CategorySlider = (props: Props) => {
   const settings = {
     dots: false,

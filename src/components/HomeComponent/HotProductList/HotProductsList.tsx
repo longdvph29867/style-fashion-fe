@@ -22,7 +22,6 @@ const HotProductList = () => {
     fetchData();
   }, []);
 
-
   return (
     <div className="relative my-10 md:my-20 space-y-6 md:space-y-10">
       <Title title="Sản phẩm hot" content="Đừng bỏ lỡ các ưu đãi đặc biệt" />
