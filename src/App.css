@@ -184,6 +184,40 @@ header.show-mobile .menu-mobile {
   background-color: #ff4d4f !important;
 }
 
+.order-client .ant-tabs-nav-wrap * {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  /* justify-content: center !important; */
+  /* align-items: center !important; */
+}
+
+.order-client .ant-tabs-nav-list {
+  /* display: contents !important; */
+  /* text-align: center !important; */
+}
+
+.order-client .ant-tabs-nav-list .ant-tabs-tab {
+  font-size: 14px;
+  border: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  height: 60px;
+}
+
+.order-client .ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active {
+  background-color: #FAFAFA;
+  border-bottom: 2px solid #62d2a2 !important;
+}
+
+.order-client .ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active * {
+  color: #62d2a2 !important;
+
+}
+
+.order-client .ant-tabs-nav-list .ant-tabs-tab:hover {
+  color: black;
+}
+
 /* width: 80vh;
   max-width: 547px; */
 .hidden img {
