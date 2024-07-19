@@ -195,9 +195,9 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                                     }
                                     {
                                         (order.orderStatus === 5 || order.orderStatus === 7) &&
-                                        <Button className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-gray-200 text-white uppercase" style={{ borderWidth: "1px" }}>
+                                        <button className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-gray-200 text-white uppercase" style={{ borderWidth: "1px" }}>
                                             Đã nhận được hàng
-                                        </Button>
+                                        </button>
                                     }
 
                                     {
