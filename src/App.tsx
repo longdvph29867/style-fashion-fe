@@ -34,6 +34,9 @@ import OrderDetail from "./pages/OrderPage/OrderDetail";
 import OrderAdmin from "./pages/admin/Order/OrderAdmin";
 import OrderDetailAdmin from "./pages/admin/Order/OrderDetailAdmin";
 import ListProductPage from "./pages/ListProductPage/ListProductPage";
+import CategoryList from "./pages/admin/Category/CategoryList";
+import AddCategory from "./pages/admin/Category/AddCategory";
+import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 
 function App() {
   useEffect(() => {
@@ -84,6 +87,10 @@ function App() {
           <Route path="users/update/:id" element={<UpdateUser />} />
           <Route path="order" element={<OrderAdmin />} />
           <Route path="order/:id" element={<OrderDetailAdmin />} />
+          <Route path="categories" element={<CategoryList />} />
+          <Route path="categories/add" element={<AddCategory />} />
+          <Route path="categories/update/:id" element={<UpdateCategory />} />
+
         </Route>
         {/* Các route khác nếu có */}
       </Routes>
