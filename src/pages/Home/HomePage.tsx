@@ -22,7 +22,9 @@ const HomePage = () => {
       <CategoryList />
 
       <div className="container mx-auto">
+        
         {/* <BannerSecond /> */}
+        
         <BannerThird />
         <ShoppingFeatures />
         <NewProductList />

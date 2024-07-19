@@ -206,8 +206,8 @@ const CategoryTabs = (props: Props) => {
     },
   ];
   return (
-    <nav className="flex justify-center w-full text-sm mb-10 md:text-base">
-      <ul className="flex p-1 bg-white rounded-full shadow-lg overflow-auto scrollbar-hide">
+    <nav className="flex justify-center w-full mb-10 text-sm md:text-base">
+      <ul className="flex p-1 overflow-auto bg-white rounded-full shadow-lg scrollbar-hide">
         {menuCategory.map((item, index) => (
           <li key={index} className="relative">
             <button
