@@ -4,7 +4,7 @@ import React from "react";
 import { Button, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { RegisterType } from "../../types/login";
-import { hiddenSpinner, showSpinner } from "../../util";
+import { hiddenSpinner, showSpinner } from "../../util/spinner";
 import { https } from "../../config/axios";
 
 const Register: React.FC = () => {
@@ -16,8 +16,7 @@ const Register: React.FC = () => {
       password: values.password,
       phoneNumber: values.phoneNumber,
       email: values.email,
-    }
-    // console.log(values);
+    };
     const postProduct = async () => {
       showSpinner();
       try {
@@ -42,7 +41,7 @@ const Register: React.FC = () => {
 
   return (
     <div>
-      <h3 className=" text-2xl text-slate-700 mb-1">Register</h3>
+      <h3 className=" text-2xl text-[#fe385c] mb-1">Đăng ký</h3>
       <Form
         layout="vertical"
         name="basic"
@@ -56,14 +55,14 @@ const Register: React.FC = () => {
         requiredMark={false}
       >
         <Form.Item
-          label="Name"
+          label="Họ tên"
           name="name"
           rules={[
-            { required: true, message: "Please fill in this field!" },
+            { required: true, message: "Vui lòng nhập trường này!" },
             {
               min: 6,
               max: 25,
-              message: "Name must be between 6 and 25 characters!",
+              message: "Họ tên 6 - 25 ký tự!!",
             },
           ]}
         >
@@ -74,11 +73,11 @@ const Register: React.FC = () => {
           label="Email"
           name="email"
           rules={[
-            { required: true, message: "Please fill in this field!" },
+            { required: true, message: "Vui lòng nhập trường này!" },
             {
               pattern:
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-              message: "Invalid email address!",
+              message: "Email không đúng định dạng!",
             },
           ]}
         >
@@ -86,13 +85,13 @@ const Register: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          label="Phone Number"
+          label="Số điện thoại"
           name="phoneNumber"
           rules={[
-            { required: true, message: "Please fill in this field!" },
+            { required: true, message: "Vui lòng nhập trường này!" },
             {
               pattern: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
-              message: "Invalid phone number format!",
+              message: "Số điện thoại không hợp lệ!",
             },
           ]}
         >
@@ -100,18 +99,18 @@ const Register: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          label="Password"
+          label="Mật khẩu"
           name="password"
           rules={[
-            { required: true, message: "Please fill in this field!" },
+            { required: true, message: "Vui lòng nhập trường này!" },
             {
               min: 6,
               max: 25,
-              message: "Password must be between 6 and 25 characters!",
+              message: "Mật khẩu 6 - 25 ký tự!",
             },
             {
               pattern: /^(?=.*[A-Za-z])(?=.*\d).{6,25}$/,
-              message: "Password must contain at least one letter and one number!",
+              message: "Mật khẩu phải bao gồm chữ và số!!",
             },
           ]}
         >
@@ -119,16 +118,16 @@ const Register: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          label="Confirm password"
+          label="Nhập lại mật khẩu"
           name="rePassword"
           rules={[
-            { required: true, message: "Please fill in this field!" },
+            { required: true, message: "Vui lòng nhập trường này!" },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();
                 }
-                return Promise.reject("Mismatched passwords!");
+                return Promise.reject("Mật khẩu không khớp!");
               },
             }),
           ]}
@@ -140,16 +139,16 @@ const Register: React.FC = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="text-white bg-slate-800"
+              className="text-white shadow-none bg-[#fe385c] hover:!bg-white hover:!text-[#fe385c] border border-[#fe385c]"
             >
-              Register
+              Đăng ký
             </Button>
           </Form.Item>
           <Link
             to="/auth/login"
-            className="text-xs text-slate-800 hover:text-slate-500 mb-3"
+            className="text-xs text-[#6a6a6a] hover:text-[#222] mb-3"
           >
-            Already have an account?
+            Đã có tài khoản!
           </Link>
         </div>
       </Form>

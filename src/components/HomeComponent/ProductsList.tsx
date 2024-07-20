@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ItemProduct from "./ItemProduct";
+import ItemProduct from "../DetailComponent/ItemProduct";
 import { hiddenSpinner, showSpinner } from "../../util/util";
 import { https } from "../../config/axios";
 type Props = {

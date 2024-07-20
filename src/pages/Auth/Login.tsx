@@ -4,7 +4,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Form, Input, message } from "antd";
 import { LoginType } from "../../types/login";
-import { hiddenSpinner, showSpinner } from "../../util";
+import { hiddenSpinner, showSpinner } from "../../util/spinner";
 import { https } from "../../config/axios";
 import {
   localTokenService,
@@ -54,7 +54,7 @@ const Login: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center h-full">
-      <h3 className=" text-2xl text-slate-700 mb-1">Login</h3>
+      <h3 className=" text-2xl text-[#fe385c] mb-1">Đăng nhập</h3>
       <Form
         layout="vertical"
         name="basic"
@@ -70,12 +70,13 @@ const Login: React.FC = () => {
         <Form.Item
           label="Email"
           name="email"
+          className=""
           rules={[
-            { required: true, message: "Please fill in this field!" },
+            { required: true, message: "Vui lòng nhập trường này!" },
             {
               pattern:
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-              message: "Invalid email address!",
+              message: "Email không đúng định dạng!",
             },
           ]}
         >
@@ -83,9 +84,9 @@ const Login: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          label="Password"
+          label="Mật khẩu"
           name="password"
-          rules={[{ required: true, message: "Please fill in this field!" }]}
+          rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
         >
           <Input.Password />
         </Form.Item>
@@ -95,23 +96,23 @@ const Login: React.FC = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="text-white bg-slate-800"
+              className="text-white shadow-none bg-[#fe385c] hover:!bg-white hover:!text-[#fe385c] border border-[#fe385c]"
             >
-              Login
+              Đăng nhập
             </Button>
           </Form.Item>
           <div className="flex justify-between sm:flex-row flex-col">
             <Link
               to="/auth/forgot-password"
-              className="text-xs text-slate-800 hover:text-slate-500 mb-3"
+              className="text-xs text-[#6a6a6a] hover:text-[#222] mb-3"
             >
-              Forgot password
+              Quên mật khẩu
             </Link>
             <Link
               to="/auth/register"
-              className="text-xs text-slate-800 hover:text-slate-500 mb-3"
+              className="text-xs text-[#6a6a6a] hover:text-[#222] mb-3"
             >
-              You don't have an account?
+              Bạn chưa có tài khoản?
             </Link>
           </div>
         </div>

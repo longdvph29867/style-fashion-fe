@@ -4,7 +4,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Form, Input, message } from "antd";
 import { LoginType } from "../../types/login";
-import { hiddenSpinner, showSpinner } from "../../util";
+import { hiddenSpinner, showSpinner } from "../../util/spinner";
 import { https } from "../../config/axios";
 
 const ForgotPassword: React.FC = () => {
@@ -34,8 +34,8 @@ const ForgotPassword: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center h-full">
-      <h3 className="text-center text-2xl text-slate-700 mb-1">
-        Forgot Password
+      <h3 className="text-center text-2xl text-[#fe385c] mb-1">
+        Đặt lại mật khẩu
       </h3>
       {isHidden && (
         <div className="text-center text-red-600">
@@ -43,8 +43,11 @@ const ForgotPassword: React.FC = () => {
             Chúng tôi đã gửi một liên kết đến email của bạn, vui lòng nhấp vào
             liên kết để thay đổi mật khẩu. Nếu không thấy, hãy kiểm tra thư rác!
           </p>
-          <Link to="/auth/login" className="text-blue-700">
-            Back to login
+          <Link
+            to="/auth/login"
+            className="text-xs text-[#6a6a6a] hover:text-[#222]"
+          >
+            Quay lại
           </Link>
         </div>
       )}
@@ -65,11 +68,11 @@ const ForgotPassword: React.FC = () => {
             label="Email"
             name="email"
             rules={[
-              { required: true, message: "Please fill in this field!" },
+              { required: true, message: "Vui lòng nhập email!" },
               {
                 pattern:
                   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                message: "Invalid email address!",
+                message: "Email không hợp lệ!",
               },
             ]}
           >
@@ -81,13 +84,16 @@ const ForgotPassword: React.FC = () => {
               <Button
                 type="primary"
                 htmlType="submit"
-                className="text-white bg-slate-800"
+                className="mt-1 text-white shadow-none bg-[#fe385c] hover:!bg-white hover:!text-[#fe385c] border border-[#fe385c]"
               >
-                Submit
+                Gửi
               </Button>
             </Form.Item>
-            <Link to="/auth/login" className="text-blue-700">
-              Back to login
+            <Link
+              to="/auth/login"
+              className="text-xs text-[#6a6a6a] hover:text-[#222]"
+            >
+              Quay lại
             </Link>
           </div>
         </Form>

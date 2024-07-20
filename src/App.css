@@ -1,6 +1,18 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
 .container {
   padding: 0 16px;
 }
+
 header.show-mobile .menu-mobile {
   max-height: 500px !important;
   opacity: 1 !important;
@@ -21,6 +33,14 @@ header.show-mobile .menu-mobile {
   font-size: 12px !important;
 }
 
+.my-line-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 20px;
+}
+
 .my-line-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -28,6 +48,7 @@ header.show-mobile .menu-mobile {
   overflow: hidden;
   min-height: 40px;
 }
+
 .my-line-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -161,6 +182,75 @@ header.show-mobile .menu-mobile {
 .swiper-rtl .swiper-button-prev:after {
   content: none !important;
 }
-.hidden img{
+
+.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper
+  .ant-upload-list
+  .ant-upload-list-item
+  .ant-upload-list-item-name {
+  white-space: normal !important;
+}
+
+.ant-modal-footer .ant-btn-primary {
+  background-color: #1677ff !important;
+}
+
+.ant-modal-content
+  .ant-modal-body
+  .ant-modal-confirm-body-wrapper
+  .ant-modal-confirm-btns
+  .ant-btn-primary {
+  background-color: #ff4d4f !important;
+}
+
+.order-client .ant-tabs-nav-wrap * {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  /* justify-content: center !important; */
+  /* align-items: center !important; */
+}
+
+.order-client .ant-tabs-nav-list {
+  /* display: contents !important; */
+  /* text-align: center !important; */
+}
+
+.order-client .ant-tabs-nav-list .ant-tabs-tab {
+  font-size: 14px;
+  border: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  height: 60px;
+}
+
+.order-client .ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active {
+  background-color: #FAFAFA;
+  border-bottom: 2px solid #62d2a2 !important;
+}
+
+.order-client .ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active * {
+  color: #62d2a2 !important;
+
+}
+
+.order-client .ant-tabs-nav-list .ant-tabs-tab:hover {
+  color: black;
+}
+
+/* width: 80vh;
+  max-width: 547px; */
+.hidden img {
   border-radius: 100%;
+}
+
+.hidden img {
+  border-radius: 100%;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

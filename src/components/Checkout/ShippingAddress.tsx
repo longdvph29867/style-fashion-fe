@@ -11,7 +11,7 @@ import shippingService from "../../services/shippingService";
 type Props = {
   addressSelected: ShippingAddressType | null;
   setAddressSelected: (address: ShippingAddressType) => void;
-  userId: string | null;
+  userId: string | undefined;
 };
 const ShippingAddress = ({
   addressSelected,

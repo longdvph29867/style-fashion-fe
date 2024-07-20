@@ -3,7 +3,7 @@ import facebook from "../../assets/img/facebook.svg";
 import twitter from "../../assets/img/twitter.svg";
 import youtube from "../../assets/img/youtube.svg";
 import telegram from "../../assets/img/telegram.svg";
-import imgLogo from "../../assets/img/sf-logo.png";
+import imgLogo from "../../assets/img/sf-logo2.png";
 
 const Footer = () => {
   return (
@@ -59,7 +59,9 @@ const Footer = () => {
             </a>
           </div>
           <div className="text-sm">
-            <h2 className="font-semibold text-neutral-700">Về Ciseco.</h2>
+            <h2 className="font-semibold text-neutral-700">
+              Về Style Fashion.
+            </h2>
             <ul className="mt-5 space-y-4">
               <li>
                 <a

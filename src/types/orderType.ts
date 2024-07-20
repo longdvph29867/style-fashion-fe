@@ -16,6 +16,7 @@ export type ShippingAddressCheckoutType = Omit<
 >;
 // Khai báo type cho đơn hàng
 export type CheckoutType = {
+  user:string
   productsOrder: ProductOrderType[];
   shippingAddress: ShippingAddressCheckoutType;
   historicalCost: number;

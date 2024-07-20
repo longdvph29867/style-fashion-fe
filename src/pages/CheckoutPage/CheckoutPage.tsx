@@ -1,9 +1,9 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OrderSummary from "../../components/Checkout/OrderSummary";
 import PaymentMethod from "../../components/Checkout/PaymentMethod";
 import ShippingAddress from "../../components/Checkout/ShippingAddress";
 import cartService from "../../services/cartService";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { CartType } from "../../types/cartType";
 import { ShippingAddressType } from "../../types/shippingAddress";
 import { hiddenSpinner, showSpinner } from "../../util/util";
@@ -11,22 +11,25 @@ import { majorCities, surroundingProvinces } from "../../constant/constant";
 import { CheckoutType, ProductOrderType } from "../../types/orderType";
 import orderService from "../../services/orderService";
 import OrderNote from "../../components/Checkout/OrderNote";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Toolkits/store";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import { message } from "antd";
 
 const CheckoutPage = () => {
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const userId = params.get("user");
+  const user = useSelector((state: RootState) => state.userSlice.userInfo);
   const [productList, setProductList] = useState<CartType | null>(null);
   const [paymentMethod, setPaymentMethod] = useState("COD");
+  const navigate = useNavigate();
   const [orderNote, setOrderNote] = useState("");
   const [addressSelected, setAddressSelected] =
     useState<ShippingAddressType | null>(null);
 
   useEffect(() => {
-    if (userId) {
+    if (user?.id) {
       showSpinner();
       cartService
-        .getProductByUserId(userId)
+        .getCartByUserId(user.id)
         .then((res) => {
           setProductList(res.data);
           hiddenSpinner();
@@ -62,7 +65,7 @@ const CheckoutPage = () => {
   }, [addressSelected]);
 
   const handleCreateOrder = () => {
-    if (productList && addressSelected && userId) {
+    if (productList && addressSelected && user?.id) {
       const productsOrder: ProductOrderType[] = productList.products_cart.map(
         (item) => ({
           productId: item.product.id,
@@ -86,6 +89,7 @@ const CheckoutPage = () => {
       const newOrder: CheckoutType = {
         productsOrder,
         shippingAddress: shippingAddressOrder,
+        user: user.id,
         historicalCost: subtotal,
         salePrice: 0,
         shippingFee: shippingFee,
@@ -95,9 +99,16 @@ const CheckoutPage = () => {
         paymentId: "",
         voucher: "",
       };
-      orderService.create(userId, newOrder).then((response) => {
-        console.log(response);
-      });
+      if (paymentMethod === "VNPAY") {
+        orderService.createVNPAY(newOrder).then((response) => {
+          console.log(response);
+          window.location.href = response.data.url;
+        });
+      } else {
+        orderService.createCOD(newOrder).then((response) => {
+          message.success("Đặt hàng thành công")
+        });
+      }
     }
   };
 
@@ -107,10 +118,19 @@ const CheckoutPage = () => {
     };
   };
 
+  const listBreadcrumb = [
+    {
+      label: "Giỏ hàng",
+      link: "/carts",
+    },
+    { label: "Thanh toán" },
+  ];
+
   return (
     <div className="Checkout-Page">
       <main className="container py-16 sm:py-24">
         <div className="mb-16">
+          {/* <Breadcrumb list={listBreadcrumb} /> */}
           <h2 className="block text-2xl font-mono sm:text-3xl lg:text-4xl font-semibold">
             Thanh toán
           </h2>
@@ -128,7 +148,7 @@ const CheckoutPage = () => {
             <div className="space-y-8">
               {/* SHIPPING ADDRESS */}
               <ShippingAddress
-                userId={userId}
+                userId={user?.id}
                 setAddressSelected={setAddressSelected}
                 addressSelected={addressSelected}
               />

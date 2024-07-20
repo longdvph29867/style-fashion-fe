@@ -43,7 +43,7 @@ const PaymentMethod = ({ selectShippingMethod, shippingMethod }: Props) => {
           <div className="grid grid-cols-2 gap-5">
             <label
               onClick={() => selectShippingMethod("COD")}
-              className={`relative flex items-center justify-center p-3 border border-slate-700 rounded-xl overflow-hidden`}
+              className={`cursor-pointer relative flex items-center justify-center p-3 border border-slate-700 rounded-xl overflow-hidden`}
             >
               <img
                 className="w-16 h-16"
@@ -61,7 +61,7 @@ const PaymentMethod = ({ selectShippingMethod, shippingMethod }: Props) => {
             </label>
             <label
               onClick={() => selectShippingMethod("VNPAY")}
-              className={`relative flex items-center justify-center p-3 border border-slate-700 rounded-xl overflow-hidden`}
+              className={`cursor-pointer relative flex items-center justify-center p-3 border border-slate-700 rounded-xl overflow-hidden`}
             >
               <img className="" src={logoVnpayQr} alt="Logo-VNPAY-QR" />
               {shippingMethod === "VNPAY" && (
