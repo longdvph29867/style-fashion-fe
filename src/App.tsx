@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AccountPage from "./pages/AccountPage/AccountPage";
 import AccountInfomation from "./components/Accout/AccountInfomation";
 import ChangePassword from "./components/Accout/ChangePassword";
@@ -40,6 +40,17 @@ import AddCategory from "./pages/admin/Category/AddCategory";
 import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 
 function App() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+  const vnpay = queryParams.get("vnp_BankCode");
+
+  useEffect(() => {
+    if (vnpay) {
+      navigate("/order");
+    }
+  },[]);
+  
   useEffect(() => {
     if (!isAccessTokenValid()) {
       refreshToken();
@@ -91,7 +102,6 @@ function App() {
           <Route path="categories" element={<CategoryList />} />
           <Route path="categories/add" element={<AddCategory />} />
           <Route path="categories/update/:id" element={<UpdateCategory />} />
-
         </Route>
         {/* Các route khác nếu có */}
       </Routes>

@@ -7,8 +7,7 @@ const cartService = {
   getCartByUserId(userId: string) {
     return https.get(`/carts?userId=${userId}`);
   },
-  addToCart(data: AddCartType) {
-    const userId = localUserService.get()?.id;
+  addToCart(userId:string,data: AddCartType) {
     return https.post(`/carts?userId=${userId}`, data);
   },
   updateCart(userId: string, productCartId: string, quantity: number) {

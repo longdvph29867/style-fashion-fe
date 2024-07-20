@@ -24,32 +24,30 @@ const CheckoutPage = () => {
   const [orderNote, setOrderNote] = useState("");
   const [addressSelected, setAddressSelected] =
     useState<ShippingAddressType | null>(null);
-
-  useEffect(() => {
-    if (user?.id) {
-      showSpinner();
-      cartService
-        .getCartByUserId(user.id)
-        .then((res) => {
-          setProductList(res.data);
-          hiddenSpinner();
-        })
-        .catch((err) => {
-          console.error("Error fetching data:", err);
-        });
-    }
-  }, []);
+  const carts = useSelector((state: RootState) => state.cartSlice.carts);
+  
+  // useEffect(() => {
+  //   if (user?.id) {
+  //     showSpinner();
+  //     cartService
+  //       .getCartByUserId(user.id)
+  //       .then((res) => {
+  //         setProductList(res.data);
+  //         hiddenSpinner();
+  //       })
+  //       .catch((err) => {
+  //         console.error("Error fetching data:", err);
+  //       });
+  //   }
+  // }, []);
 
   const subtotal = useMemo(() => {
-    if (productList) {
-      return productList.products_cart.reduce(
-        (accumulator, currentValue) =>
-          accumulator + currentValue.quantity * currentValue.attribute.price,
-        0
-      );
-    }
-    return 0;
-  }, [productList]);
+    return carts.reduce(
+      (accumulator, currentValue) =>
+        accumulator + currentValue.quantity * currentValue.attribute.price,
+      0
+    );
+  }, [carts]);
 
   const shippingFee = useMemo(() => {
     if (addressSelected) {
@@ -65,8 +63,10 @@ const CheckoutPage = () => {
   }, [addressSelected]);
 
   const handleCreateOrder = () => {
-    if (productList && addressSelected && user?.id) {
-      const productsOrder: ProductOrderType[] = productList.products_cart.map(
+    if (carts.length > 0 && addressSelected && user?.id) {
+      console.log("Create Order");
+      
+      const productsOrder: ProductOrderType[] = carts.map(
         (item) => ({
           productId: item.product.id,
           quantity: item.quantity,
@@ -101,12 +101,14 @@ const CheckoutPage = () => {
       };
       if (paymentMethod === "VNPAY") {
         orderService.createVNPAY(newOrder).then((response) => {
-          console.log(response);
           window.location.href = response.data.url;
         });
       } else {
+        console.log("COD");
+        
         orderService.createCOD(newOrder).then((response) => {
-          message.success("Đặt hàng thành công")
+          navigate("/order");
+          message.success("Đặt hàng thành công");
         });
       }
     }
@@ -165,7 +167,7 @@ const CheckoutPage = () => {
           {/* Order summary */}
           <OrderSummary
             confirmOrder={handleCreateOrder}
-            productList={productList}
+            productList={carts}
             shippingfee={shippingFee}
             subTotal={subtotal}
           />

@@ -15,7 +15,7 @@ const LoginLayout = () => {
     `}
       style={{ backgroundImage: `url(${imgBg})` }}
     >
-      <div className="bg-white rounded-xl md:max-w-3xl w-full max-w-md z-10 overflow-scroll max-h-[95vh]">
+      <div className="bg-white rounded-xl md:max-w-3xl w-full max-w-md z-10 overflow-hidden max-h-[95vh]">
         <div className=" grid md:grid-cols-2">
           <div className="p-5">
             <Outlet />

@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import categoryService from "../../services/categoryService";
 
 const Menu = () => {
   const [categoriesList, setCategoriesList] = useState<any[]>([]);
 
+  useEffect(()=>{
+    categoryService.getAllCategories()
+    .then(response => setCategoriesList(response.data.results))
+  },[])
+
   return (
-    <ul className="flex items-center lg:justify-start justify-center lg:flex-nowrap flex-wrap overflow-hidden">
+    <ul className="flex items-center lg:justify-start justify-center lg:flex-nowrap flex-wrap">
       <li>
-        <a
+        <Link
           className="py-2.5 px-5 font-medium rounded-full duration-300 text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb]"
-          href="#"
+          to="/"
         >
           Trang chủ
-        </a>
+        </Link>
       </li>
       <li className="relative group">
         <a
@@ -41,9 +47,9 @@ const Menu = () => {
                 <li key={index} className="px-2">
                   <Link
                     className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
-                    to={`/products?category=${category.categorySlug}`}
+                    to={`/products?category=${category.slug}`}
                   >
-                    {category.categoryName}
+                    {category.name}
                   </Link>
                 </li>
               );

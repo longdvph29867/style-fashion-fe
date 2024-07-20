@@ -125,7 +125,7 @@ const MyShippingAddress = () => {
       <div className="space-y-10 sm:space-y-12">
         <div className="flex justify-between items-center flex-wrap">
           <h2 className="text-2xl sm:text-3xl font-semibold">
-            Shipping Address
+            Địa chỉ của tôi
           </h2>
           <div
             className=""

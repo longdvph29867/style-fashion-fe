@@ -12,7 +12,7 @@ const HomePage = () => {
     <>
       <Banner />
       <div className="container mx-auto">
-        <CategorySlider />
+        {/* <CategorySlider /> */}
         <HotProductList />
       </div>
       <CategoryList />

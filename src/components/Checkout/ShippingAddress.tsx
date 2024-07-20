@@ -8,6 +8,7 @@ import { memo, useCallback, useEffect, useState } from "react";
 import DrawerShippingAddress from "./DrawerShippingAddress";
 import ShippingAddressModal from "../Accout/ShipingAddress/ShippingAddressModal";
 import shippingService from "../../services/shippingService";
+import { hiddenSpinner, showSpinner } from "../../util/util";
 type Props = {
   addressSelected: ShippingAddressType | null;
   setAddressSelected: (address: ShippingAddressType) => void;
@@ -27,12 +28,14 @@ const ShippingAddress = ({
 
   const getAllShippingAddress = async (userId: string) => {
     try {
+      showSpinner()
       const data = await shippingService.getShippingAll(userId);
       setAddressList(data);
       const addressSelected = data.find((item) => item.selected === true);
       if (addressSelected) {
         setAddressSelected(addressSelected);
       }
+      hiddenSpinner()
     } catch (error) {
       console.log(error);
     }

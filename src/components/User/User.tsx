@@ -61,6 +61,14 @@ const User = () => {
                     Thông tin
                   </Link>
                 </li>
+                <li className="px-2">
+                  <Link
+                    className="flex items-center px-4 py-2 font-normal rounded-md text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb] duration-300"
+                    to="/order"
+                  >
+                    Đơn hàng
+                  </Link>
+                </li>
                 {infoUser.role === "admin" ? (
                   <li className="px-2">
                     <Link
@@ -116,7 +124,7 @@ const User = () => {
       {infoUser ? (
         <div className="text-xs text-slate-700">
           Hi,
-          {/* {infoUser.name.split(" ")[0]} */}
+          {infoUser.name}
         </div>
       ) : (
         <></>

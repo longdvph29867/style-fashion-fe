@@ -3,6 +3,9 @@ import { Attribute, Product } from "../../../../types/products";
 import { message } from "antd";
 import { formartCurrency, formartRating } from "../../../../util/util";
 import cartService from "../../../../services/cartService";
+import { useDispatch } from "react-redux";
+import { setCartAll } from "../../../../Toolkits/cartSlice";
+import { localUserService } from "../../../../services/localService";
 
 type Props = {
   setCurrentImage: (value: string) => void;
@@ -13,7 +16,8 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
   const [attribute, setAttribute] = useState<Attribute | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [showMaxQuantity, setShowMaxQuantity] = useState<boolean>(false);
-
+  const dispatch = useDispatch();
+  const userId = localUserService.get()?.id;
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (!attribute) {
@@ -56,13 +60,16 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
         message.error("Vui lòng chọn loại sản phẩm!");
       } else if (showMaxQuantity) {
         return;
+      } else if (!userId) {
+        message.error("Vui lòng đăng nhập để thêm sản phẩm!");
       } else {
-        const res = await cartService.addToCart({
+        const res = await cartService.addToCart(userId, {
           product: product.id,
           attribute: attribute.id,
           quantity: quantity,
         });
         console.log(res);
+        dispatch(setCartAll(res.data.products_cart));
         message.success("Thêm sản phẩm thành công!");
       }
     } catch (error) {

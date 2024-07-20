@@ -2,13 +2,14 @@ import { CartType } from "../../types/cartType";
 import { formartCurrency } from "../../util/util";
 import AtrributeSvgCheckout from "../../assets/svgs/AtrributeSvgCheckout";
 import { memo } from "react";
+import { ProductCartType } from "../../types/cart";
 type Props = {
-  productList: CartType | null;
+  productList: ProductCartType[];
 };
 const ListOrder = ({ productList }: Props) => {
   return (
     <div className="mt-8">
-      {productList?.products_cart?.map((item) => (
+      {productList.map((item) => (
         <div
           key={item._id}
           className="relative flex border-b last:border-0 border-[#e5e7eb] py-7 first:pt-0 last:pb-0"
@@ -41,8 +42,8 @@ const ListOrder = ({ productList }: Props) => {
                     </div>
                     <div className="hidden flex-1 sm:flex justify-end">
                       <div className="mt-0.5">
-                        <div className="flex items-center border-2 border-green-500 rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium">
-                          <span className="text-green-500 !leading-none">
+                        <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium">
+                          <span className="text-[#fe385c] !leading-none">
                             {formartCurrency(item.attribute.price)}
                           </span>
                         </div>
