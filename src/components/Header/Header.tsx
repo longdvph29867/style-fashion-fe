@@ -1,12 +1,11 @@
 import { useState } from "react";
-import imgLogo from "../../assets/img/sf-logo.png";
+import imgLogo from "../../assets/img/sf-logo2.png";
 import Menu from "./Menu";
 import User from "../User/User";
 import Search from "../Search/Search";
 
 const Header = () => {
   const [showMenuMobile, setShowMenuMobile] = useState<boolean>(false);
-  console.log(showMenuMobile);
 
   const handleShowMenu = () => {
     setShowMenuMobile(!showMenuMobile);
@@ -23,7 +22,7 @@ const Header = () => {
           <div className="flex items-center lg:hidden flex-1">
             <button
               onClick={handleShowMenu}
-              className="btn-show-menu p-2.5 pl-0 rounded-lg text-neutral-700 flex items-center justify-center"
+              className="btn-show-menu p-2.5 pl-0 rounded-lg text-[#6a6a6a] flex items-center justify-center"
             >
               {showMenuMobile ? (
                 <>
@@ -65,7 +64,7 @@ const Header = () => {
               <Search />
             </div>
             <User />
-            <button className="lg:w-12 w-10 h-10 lg:h-12 flex justify-center items-center relative text-slate-700 rounded-full hover:bg-slate-100">
+            <button className="lg:w-12 w-10 h-10 lg:h-12 flex justify-center items-center relative text-[#6a6a6a] rounded-full hover:text-[#222] hover:bg-[#ebebeb] duration-300">
               <svg
                 className="w-6 h-6"
                 viewBox="0 0 24 24"
@@ -105,7 +104,7 @@ const Header = () => {
                   strokeLinejoin="round"
                 />
               </svg>
-              <span className="absolute w-3.5 h-3.5 flex items-center justify-center bg-[#12a5e8] top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
+              <span className="absolute w-3.5 h-3.5 flex items-center justify-center bg-[#fe385c] top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
                 0
               </span>
             </button>

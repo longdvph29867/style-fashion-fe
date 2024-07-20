@@ -1,6 +1,7 @@
 .container {
   padding: 0 16px;
 }
+
 header.show-mobile .menu-mobile {
   max-height: 500px !important;
   opacity: 1 !important;
@@ -21,9 +22,25 @@ header.show-mobile .menu-mobile {
   font-size: 12px !important;
 }
 
+.my-line-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 20px;
+}
+
 .my-line-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 40px;
+}
+
+.my-line-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   min-height: 40px;
@@ -44,8 +61,6 @@ header.show-mobile .menu-mobile {
     padding-right: 24px;
   }
 }
-
-
 
 .swiper {
   width: 100%;
@@ -107,7 +122,6 @@ header.show-mobile .menu-mobile {
   /* transform: translateY(-2px); */
 /* } */
 
-
 /* .slider-product .swiper-button-prev {
   right: 10%;
   left: unset;
@@ -119,7 +133,6 @@ header.show-mobile .menu-mobile {
 .slider-product .swiper-button-prev:hover {
   border: 2px solid rgb(207, 209, 212);
   border-radius: 9999px;
-
 }
 
 /* 
@@ -135,7 +148,6 @@ header.show-mobile .menu-mobile {
 .slider-product .swiper-button-next:hover {
   border: 2px solid rgb(207, 209, 212);
   border-radius: 9999px;
-  
 }
 
 .slider-product .swiper {
@@ -147,7 +159,7 @@ header.show-mobile .menu-mobile {
 }
 
 .glide__track .slick-dots {
-  position: unset
+  position: unset;
 }
 
 .swiper-button-prev:after,
@@ -160,3 +172,33 @@ header.show-mobile .menu-mobile {
   content: none !important;
 }
 
+.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-name {
+  white-space: normal !important;
+}
+
+.ant-modal-footer .ant-btn-primary {
+  background-color: #1677ff !important;
+}
+
+.ant-modal-content .ant-modal-body .ant-modal-confirm-body-wrapper .ant-modal-confirm-btns .ant-btn-primary {
+  background-color: #ff4d4f !important;
+}
+
+/* width: 80vh;
+  max-width: 547px; */
+.hidden img {
+  border-radius: 100%;
+}
+
+.hidden img {
+  border-radius: 100%;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

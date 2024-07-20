@@ -5,10 +5,10 @@ const Menu = () => {
   const [categoriesList, setCategoriesList] = useState<any[]>([]);
 
   return (
-    <ul className="flex items-center lg:justify-start justify-center lg:flex-nowrap flex-wrap">
+    <ul className="flex items-center lg:justify-start justify-center lg:flex-nowrap flex-wrap overflow-hidden">
       <li>
         <a
-          className="py-2.5 px-5 font-medium rounded-full duration-300 hover:bg-slate-100"
+          className="py-2.5 px-5 font-medium rounded-full duration-300 text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb]"
           href="#"
         >
           Trang chủ
@@ -17,7 +17,7 @@ const Menu = () => {
       <li className="relative group">
         <a
           href="#"
-          className="flex items-center py-2.5 px-5 font-medium rounded-full duration-300 hover:bg-slate-100"
+          className="flex items-center py-2.5 px-5 font-medium rounded-full duration-300 text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb]"
         >
           Danh mục
           <svg
@@ -53,7 +53,7 @@ const Menu = () => {
       </li>
       <li>
         <Link
-          className="py-2.5 px-5 font-medium rounded-full duration-300 hover:bg-slate-100"
+          className="py-2.5 px-5 font-medium rounded-full duration-300 text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb]"
           to="/products"
         >
           Sản phẩm
@@ -61,7 +61,7 @@ const Menu = () => {
       </li>
       <li>
         <a
-          className="py-2.5 px-5 font-medium rounded-full duration-300 hover:bg-slate-100"
+          className="py-2.5 px-5 font-medium rounded-full duration-300 text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb]"
           href="#"
         >
           Khuyến mại
@@ -69,7 +69,7 @@ const Menu = () => {
       </li>
       <li>
         <a
-          className="py-2.5 px-5 font-medium rounded-full duration-300 hover:bg-slate-100"
+          className="py-2.5 px-5 font-medium rounded-full duration-300 text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb]"
           href="#"
         >
           Giới thiệu

@@ -2,11 +2,50 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
+import { LoginType } from "../../types/login";
+import { hiddenSpinner, showSpinner } from "../../util/spinner";
+import { https } from "../../config/axios";
+import {
+  localTokenService,
+  localUserService,
+} from "../../services/localService";
 
 const Login: React.FC = () => {
-  const onFinish = (values: unknown) => {
-    console.log(values);
+  const onFinish = (values: LoginType) => {
+    const data = {
+      email: values.email,
+      password: values.password,
+    };
+    const postProduct = async () => {
+      try {
+        showSpinner();
+        const res = await https.post("/auth/login", data);
+        if (res) {
+          const infoUser = {
+            ...res.data.user,
+          };
+          localUserService.set(res.data.user);
+          localTokenService.set(res.data.tokens);
+          hiddenSpinner();
+          message.success("Đăng nhập thành công!");
+          if (infoUser.role === "admin") {
+            setTimeout(() => {
+              window.location.href = "/admin/products";
+            }, 1200);
+          } else {
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 1200);
+          }
+        }
+      } catch (error) {
+        hiddenSpinner();
+        console.log(error);
+        message.error(error.response.data.message);
+      }
+    };
+    postProduct();
   };
 
   const onFinishFailed = (errorInfo: unknown) => {
@@ -15,7 +54,7 @@ const Login: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center h-full">
-      <h3 className=" text-2xl text-slate-700 mb-1">Login</h3>
+      <h3 className=" text-2xl text-[#fe385c] mb-1">Đăng nhập</h3>
       <Form
         layout="vertical"
         name="basic"
@@ -31,12 +70,13 @@ const Login: React.FC = () => {
         <Form.Item
           label="Email"
           name="email"
+          className=""
           rules={[
-            { required: true, message: "Please fill in this field!" },
+            { required: true, message: "Vui lòng nhập trường này!" },
             {
               pattern:
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-              message: "Invalid email address!",
+              message: "Email không đúng định dạng!",
             },
           ]}
         >
@@ -44,29 +84,37 @@ const Login: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          label="Password"
+          label="Mật khẩu"
           name="password"
-          rules={[{ required: true, message: "Please fill in this field!" }]}
+          rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
         >
           <Input.Password />
         </Form.Item>
 
-        <div className="flex justify-between sm:items-end items-start gap-1 sm:flex-row flex-col pt-2">
+        <div className=" gap-1 pt-2">
           <Form.Item>
             <Button
               type="primary"
               htmlType="submit"
-              className="text-white bg-slate-800"
+              className="text-white shadow-none bg-[#fe385c] hover:!bg-white hover:!text-[#fe385c] border border-[#fe385c]"
             >
-              Login
+              Đăng nhập
             </Button>
           </Form.Item>
-          <Link
-            to="/auth/register"
-            className="text-xs text-slate-800 hover:text-slate-500 mb-3"
-          >
-            You don't have an account?
-          </Link>
+          <div className="flex justify-between sm:flex-row flex-col">
+            <Link
+              to="/auth/forgot-password"
+              className="text-xs text-[#6a6a6a] hover:text-[#222] mb-3"
+            >
+              Quên mật khẩu
+            </Link>
+            <Link
+              to="/auth/register"
+              className="text-xs text-[#6a6a6a] hover:text-[#222] mb-3"
+            >
+              Bạn chưa có tài khoản?
+            </Link>
+          </div>
         </div>
       </Form>
     </div>
