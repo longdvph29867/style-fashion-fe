@@ -6,7 +6,7 @@ import {
   District,
   FieldTypeShipping,
   ShippingActionModal,
-  ShippingAddress,
+  ShippingAddressType,
   Ward,
 } from "../../../types/shippingAddress";
 import shippingService from "../../../services/shippingService";
@@ -14,7 +14,7 @@ import shippingService from "../../../services/shippingService";
 type Props = {
   action: ShippingActionModal;
   open: boolean;
-  handleSubmit: (value: ShippingAddress) => Promise<void>;
+  handleSubmit: (value: ShippingAddressType) => Promise<void>;
   loading?: boolean;
   onClose: (value: boolean) => void;
 };
@@ -90,13 +90,12 @@ const ShippingAddressModal = ({
     setWards([]);
     onClose(false);
   };
-  const onFinish = async (value: ShippingAddress) => {
+  const onFinish = async (value: ShippingAddressType) => {
     await handleSubmit(value);
     handleClose();
   };
   return (
     <Modal
-      zIndex={10}
       confirmLoading={loading}
       okType="default"
       maskClosable={true}

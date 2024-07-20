@@ -1,55 +1,101 @@
-const ShippingAddress = () => {
+import { Button } from "antd";
+import {
+  ShippingActionModal,
+  ShippingAddressType,
+} from "../../types/shippingAddress";
+import AddressSvg from "../../assets/svgs/AddressSvg";
+import { memo, useCallback, useEffect, useState } from "react";
+import DrawerShippingAddress from "./DrawerShippingAddress";
+import ShippingAddressModal from "../Accout/ShipingAddress/ShippingAddressModal";
+import shippingService from "../../services/shippingService";
+type Props = {
+  addressSelected: ShippingAddressType | null;
+  setAddressSelected: (address: ShippingAddressType) => void;
+  userId: string | undefined;
+};
+const ShippingAddress = ({
+  addressSelected,
+  userId,
+  setAddressSelected,
+}: Props) => {
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [addressList, setAddressList] = useState<ShippingAddressType[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [formAction, setFormAction] = useState<ShippingActionModal>({
+    type: "create",
+  });
+
+  const getAllShippingAddress = async (userId: string) => {
+    try {
+      const data = await shippingService.getShippingAll(userId);
+      setAddressList(data);
+      const addressSelected = data.find((item) => item.selected === true);
+      if (addressSelected) {
+        setAddressSelected(addressSelected);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (userId) {
+      getAllShippingAddress(userId);
+    }
+  }, []);
+
+  const handleButtonShipping = useCallback(
+    ({ type, shippingAddress }: ShippingActionModal) => {
+      setFormAction({ type, shippingAddress });
+      setOpenModal(true);
+    },
+    []
+  );
+  const hanleSelectAddress = useCallback(
+    ({ address }: { address: string }) => {
+      const addressItem = addressList.find((item) => item._id === address);
+      if (addressItem) {
+        setAddressSelected(addressItem);
+        setOpenDrawer(false);
+      }
+    },
+    [addressList]
+  );
+
+  const handleSubmitModal = useCallback(async (values: ShippingAddressType) => {
+    if (!userId) {
+      return;
+    }
+    try {
+      if (formAction.type === "create") {
+        const data = await shippingService.postShippingAddress(userId, values);
+        setAddressList(data);
+      }
+      if (formAction.type === "update" && formAction.shippingAddress) {
+        const updateData = await shippingService.putShippingAddress(
+          userId,
+          formAction.shippingAddress?._id,
+          values
+        );
+        setAddressList((prev) =>
+          prev.map((item) =>
+            item._id === formAction.shippingAddress?._id ? updateData : item
+          )
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
   return (
     <div className="scroll-mt-24">
-      <div className="border border-slate-200 rounded-xl">
-        <div className="p-6 flex flex-col sm:flex-row items-start">
+      <div className="border border-slate-200 rounded-xl p-6">
+        <div className="flex flex-col sm:flex-row items-start">
           <span className="hidden sm:block">
-            <svg
-              className="w-6 h-6 text-slate-700 mt-0.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12.1401 15.0701V13.11C12.1401 10.59 14.1801 8.54004 16.7101 8.54004H18.6701"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M5.62012 8.55005H7.58014C10.1001 8.55005 12.1501 10.59 12.1501 13.12V13.7701V17.25"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M7.14008 6.75L5.34009 8.55L7.14008 10.35"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M16.8601 6.75L18.6601 8.55L16.8601 10.35"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <AddressSvg />
           </span>
-          <div className="sm:ml-8">
+          <div className="sm:ml-8 flex-grow">
             <h3 className="text-slate-700 flex">
-              <span className="uppercase">SHIPPING ADDRESS</span>
+              <span className="uppercase">Địa chỉ nhận hàng</span>
               <svg
                 fill="none"
                 viewBox="0 0 24 24"
@@ -64,111 +110,55 @@ const ShippingAddress = () => {
                 />
               </svg>
             </h3>
-            <div className="font-semibold mt-1 text-sm">
-              <span className="sm:w-full sm:text-xs">
-                St. Paul's Road, Norris, SD 57560, Dakota, USA
-              </span>
-            </div>
           </div>
         </div>
-        <div className="border-t border-slate-200 px-6 py-7 space-y-4 sm:space-y-6 block">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
-            <div>
-              <label className=" font-medium text-neutral-900 text-sm">
-                First name
-              </label>
-              <input
-                className="block w-full outline-none border border-neutral-200 focus:ring focus:ring-[#bae6fd80] focus:border-[#7dd3fc] bg-white rounded-2xl text-sm font-normal h-11 px-4 py-3 mt-1.5"
-                type="text"
-                defaultValue="Cole"
-              />
+        <div className="flex justify-between items-center p-5 border border-slate-700 rounded-xl mt-5">
+          <div className="font-semibold text-sm">
+            <div className="flex">
+              <div className="flex items-center space-x-1.5">
+                <span>{addressSelected?.recipientName}</span>
+              </div>
+              <span className="mx-4 border-l border-slate-600" />
+              <div className="flex items-center space-x-1.5">
+                <span>{addressSelected?.recipientPhoneNumber}</span>
+              </div>
             </div>
+            <span className="sm:w-full text-slate-600 sm:text-xs">
+              {addressSelected?.streetAddress},{addressSelected?.wardCommune},{" "}
+              {addressSelected?.district},{addressSelected?.cityProvince}
+            </span>
             <div>
-              <label className=" font-medium text-neutral-900 text-sm">
-                Last name
-              </label>
-              <input
-                className="block w-full outline-none border border-neutral-200 focus:ring focus:ring-[#bae6fd80] focus:border-[#7dd3fc] bg-white rounded-2xl text-sm font-normal h-11 px-4 py-3 mt-1.5"
-                type="text"
-                defaultValue="Enrico "
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
-            <div>
-              <label className=" font-medium text-neutral-900 text-sm">
-                Address
-              </label>
-              <input
-                className="block w-full border outline-none border-neutral-200 focus:ring focus:ring-[#bae6fd80] focus:border-[#7dd3fc] bg-white rounded-2xl text-sm font-normal h-11 px-4 py-3 mt-1.5"
-                type="text"
-                defaultValue="123, Dream Avenue, USA"
-              />
-            </div>
-            <div>
-              <label className=" font-medium text-neutral-900 text-sm">
-                Apt, Suite *
-              </label>
-              <input
-                className="block w-full border outline-none border-neutral-200 focus:ring focus:ring-[#bae6fd80] focus:border-[#7dd3fc] bg-white rounded-2xl text-sm font-normal h-11 px-4 py-3 mt-1.5"
-                type="text"
-                defaultValue="55U - DD5 "
-              />
+              <button
+                hidden={!addressSelected?.selected}
+                className="text-red-400 px-1 py-0.5 border leading-none border-red-400 text-xs mt-1"
+              >
+                Mặc định
+              </button>
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
-            <div>
-              <label className=" font-medium text-neutral-900 text-sm">
-                City
-              </label>
-              <input
-                className="block w-full border outline-none border-neutral-200 focus:ring focus:ring-[#bae6fd80] focus:border-[#7dd3fc] bg-white disabled:bg-neutral-200 dark:disabled:bg-neutral-800 rounded-2xl text-sm font-normal h-11 px-4 py-3 mt-1.5"
-                type="text"
-                defaultValue="Norris"
-              />
-            </div>
-            <div>
-              <label className=" font-medium text-neutral-900 text-sm">
-                Country
-              </label>
-              <select className="h-11 mt-1.5 block w-full border outline-none text-sm rounded-2xl border-neutral-200 focus:ring focus:ring-[#bae6fd80] focus:border-[#7dd3fc] bg-white">
-                <option value="United States">United States</option>
-                <option value="United States">Canada</option>
-                <option value="United States">Mexico</option>
-                <option value="United States">Israel</option>
-                <option value="United States">France</option>
-                <option value="United States">England</option>
-                <option value="United States">Laos</option>
-                <option value="United States">China</option>
-              </select>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
-            <div>
-              <label className="font-medium text-neutral-900 text-sm">
-                State/Province
-              </label>
-              <input
-                className="block w-full border outline-none border-neutral-200 focus:ring focus:ring-[#bae6fd80] focus:border-[#7dd3fc] bg-white disabled:bg-neutral-200 dark:disabled:bg-neutral-800 rounded-2xl text-sm font-normal h-11 px-4 py-3 mt-1.5"
-                type="text"
-                defaultValue="Texas"
-              />
-            </div>
-            <div>
-              <label className="font-medium text-neutral-900 text-sm">
-                Postal code
-              </label>
-              <input
-                className="block w-full border outline-none border-neutral-200 focus:ring focus:ring-[#bae6fd80] focus:border-[#7dd3fc] bg-white disabled:bg-neutral-200 dark:disabled:bg-neutral-800 rounded-2xl text-sm font-normal h-11 px-4 py-3 mt-1.5"
-                type="text"
-                defaultValue={2500}
-              />
-            </div>
+          <div>
+            <Button onClick={() => setOpenDrawer(true)} type="text">
+              Thay đổi
+            </Button>
           </div>
         </div>
       </div>
+      <DrawerShippingAddress
+        onFinish={hanleSelectAddress}
+        setFormAction={handleButtonShipping}
+        setOpenDrawer={setOpenDrawer}
+        open={openDrawer}
+        addressList={addressList}
+        idAddressSelected={addressSelected?._id}
+      />
+      <ShippingAddressModal
+        open={openModal}
+        onClose={setOpenModal}
+        action={formAction}
+        handleSubmit={handleSubmitModal}
+      />
     </div>
   );
 };
 
-export default ShippingAddress;
+export default memo(ShippingAddress);

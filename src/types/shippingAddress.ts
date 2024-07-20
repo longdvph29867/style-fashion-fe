@@ -26,7 +26,7 @@ export type FieldTypeShipping = {
   selected: boolean;
 };
 
-export type ShippingAddress = {
+export type ShippingAddressType = {
   recipientName: string;
   recipientPhoneNumber: string;
   streetAddress: string;
@@ -37,8 +37,7 @@ export type ShippingAddress = {
   _id: string;
 };
 
-
 export type ShippingActionModal = {
   type: "update" | "create";
-  shippingAddress?: ShippingAddress;
+  shippingAddress?: ShippingAddressType;
 };

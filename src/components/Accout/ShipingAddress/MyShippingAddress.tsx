@@ -6,14 +6,14 @@ import shippingService from "../../../services/shippingService";
 import ShippingItem from "./ShippingItem";
 import {
   ShippingActionModal,
-  ShippingAddress,
+  ShippingAddressType,
 } from "../../../types/shippingAddress";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import ShippingAddressModal from "./ShippingAddressModal";
 
 const MyShippingAddress = () => {
   const [open, setOpen] = useState(false);
-  const [shippingAddress, setShippingAddress] = useState<ShippingAddress[]>([]);
+  const [shippingAddress, setShippingAddress] = useState<ShippingAddressType[]>([]);
   const [formAction, setFormAction] = useState<ShippingActionModal>({
     type: "create",
   });
@@ -78,7 +78,7 @@ const MyShippingAddress = () => {
     [user]
   );
   const onFinish = useCallback(
-    async (values: ShippingAddress) => {
+    async (values: ShippingAddressType) => {
       if (!user) {
         return;
       }

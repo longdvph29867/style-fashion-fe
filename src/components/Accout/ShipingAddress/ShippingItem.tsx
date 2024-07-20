@@ -1,12 +1,12 @@
 import { Popconfirm, Button } from "antd";
 import {
   ShippingActionModal,
-  ShippingAddress,
+  ShippingAddressType,
 } from "../../../types/shippingAddress";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { memo } from "react";
 type Props = {
-  shipping: ShippingAddress;
+  shipping: ShippingAddressType;
   handleButtonShipping: (action: ShippingActionModal) => void;
   deleteShippingAddress: (id: string) => void;
   onSelected: (id: string) => void;

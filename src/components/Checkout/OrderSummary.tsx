@@ -1,18 +1,31 @@
 import { CartType } from "../../types/cartType";
 import List_Order from "./ListOrder";
+import { formartCurrency } from "../../util/util";
+import { memo } from "react";
 type Props = {
   productList: CartType | null;
+  shippingfee: number;
+  subTotal: number;
+  confirmOrder: () => void;
 };
-const OrderSummary = ({ productList }: Props) => {
+const OrderSummary = ({
+  productList,
+  shippingfee,
+  subTotal,
+  confirmOrder,
+}: Props) => {
   return (
     <div className="w-full lg:w-[36%]">
-      <h3 className="text-lg font-semibold">Order summary</h3>
+      <h3 className="text-lg font-semibold">Tóm Tắt Đơn Hàng</h3>
       {/* List Product Order */}
       <List_Order productList={productList} />
       {/* Discount code */}
       <div className="mt-10 pt-6 text-sm text-slate-500 border-t border-slate-200/70">
-        <label className="font-medium text-neutral-900 text-sm">
-          Discount code
+        <label
+          className="font-medium text-neutral-900 text-sm"
+          data-nc-id="Label"
+        >
+          Mã giảm giá
         </label>
         <div className="flex mt-1.5">
           <input
@@ -20,32 +33,41 @@ const OrderSummary = ({ productList }: Props) => {
             type="text"
           />
           <button className="text-neutral-700 border border-neutral-200 hover:bg-neutral-100 rounded-2xl px-4 ml-3 font-medium text-sm bg-neutral-200/70 w-24 flex justify-center items-center transition-colors">
-            Apply
+            Thêm
           </button>
         </div>
       </div>
       {/* Subtotal */}
       <div className="mt-4 flex justify-between py-2.5">
-        <span className="text-sm text-slate-600">Subtotal</span>
-        <span className="font-semibold text-sm text-slate-900">$249.00</span>
+        <span className="text-sm text-slate-600">Tổng tiền hàng</span>
+        <span className="font-semibold text-sm text-slate-900">
+          {formartCurrency(subTotal)}
+        </span>
       </div>
       {/* Shipping*/}
       <div className="flex justify-between py-2.5">
-        <span className="text-sm text-slate-600">Shipping estimate</span>
-        <span className="font-semibold text-sm text-slate-900">$5.00</span>
+        <span className="text-sm text-slate-600">Phí vận chuyển</span>
+        <span className="font-semibold text-sm text-slate-900">
+          {formartCurrency(shippingfee)}
+        </span>
       </div>
-      {/*Tax */}
+
       <div className="flex justify-between py-2.5">
-        <span className="text-sm text-slate-600">Tax estimate</span>
-        <span className="font-semibold text-sm text-slate-900">$24.90</span>
+        <span className="text-sm text-slate-600">Voucher giảm giá</span>
+        <span className="font-semibold text-sm text-slate-900">
+          {formartCurrency(0)}
+        </span>
       </div>
       {/* Order total */}
       <div className="flex justify-between font-semibold text-slate-900 text-base pt-4">
-        <span>Order total</span>
-        <span>$276.00</span>
+        <span>Tổng tiền đơn hàng</span>
+        <span>{formartCurrency(subTotal + shippingfee)}</span>
       </div>
-      <button className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 disabled:bg-opacity-90 bg-slate-900 hover:bg-slate-800 text-slate-50 shadow-xl mt-8 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000">
-        Confirm order
+      <button
+        onClick={confirmOrder}
+        className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 disabled:bg-opacity-90 bg-slate-900 hover:bg-slate-800 text-slate-50 shadow-xl mt-8 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000"
+      >
+        Xác nhận đơn hàng
       </button>
       <div className="mt-5 text-sm text-slate-500 flex items-center justify-center">
         <p className="block relative pl-5">
@@ -76,15 +98,16 @@ const OrderSummary = ({ productList }: Props) => {
               strokeLinejoin="round"
             />
           </svg>
-          Learn more
-          <a className="text-slate-900 underline font-medium">Taxes</a>
-          <span>and</span>
-          <a className="text-slate-900 underline font-medium">Shipping</a>
-          infomation
+          Tìm hiểu thêm về{" "}
+          <a className="text-slate-900 underline font-medium">Thuế</a>{" "}
+          <span>và</span>{" "}
+          <a className="text-slate-900 underline font-medium">
+            Thông tin Vận Chuyển
+          </a>{" "}
         </p>
       </div>
     </div>
   );
 };
 
-export default OrderSummary;
+export default memo(OrderSummary);
