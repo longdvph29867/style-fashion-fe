@@ -8,7 +8,7 @@ type Props = {
 const ProductCard = ({ product }: Props) => {
   const { name, minPrice, slug, finalScoreReview, thumbnail } = product;
   return (
-    <Link to={`/products/${slug}`}>
+    <Link to={`/detail/${slug}`}>
       <div className="relative flex flex-col bg-transparent duration-200 hover:-translate-y-4 h-full justify-between">
         <div className="relative flex-shrink-0 bg-slate-50 rounded-3xl overflow-hidden z-1">
           <div className="flex w-full relative pb-[100%]">

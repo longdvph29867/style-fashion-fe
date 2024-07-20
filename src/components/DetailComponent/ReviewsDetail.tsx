@@ -11,7 +11,6 @@ const ReviewsDetail = ({ product }: ReviewDetailProps) => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [totalReview, setTotalReview] = useState([]);
   const [showAllReviews, setShowAllReviews] = useState<boolean>(false);
-  console.log(reviews);
   const fetchReviews = async () => {
     try {
       showSpinner();
