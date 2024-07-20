@@ -1,5 +1,3 @@
-// type Props = {}
-
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { hiddenSpinner, showSpinner } from "../../util/util";

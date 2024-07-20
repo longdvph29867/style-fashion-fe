@@ -1,29 +1,29 @@
 .banner-slider .slick-dots li {
-  padding: 0 4px;
-  height: auto;
-  width: auto;
-  margin: 0;
-}
-.banner-slider .slick-dots li button {
-  width: 20px;
-  height: 6px;
-  padding: 0;
-  transition: all 0.3s;
-}
-.banner-slider .slick-dots button::before {
-  opacity: 1 !important;
-  content: "";
-  width: 20px;
-  height: 6px;
-  background: #fa385c;
-  opacity: 0.2;
-  transition: all 0.3s;
-}
-.banner-slider .slick-dots li.slick-active button {
-  width: 40px;
-}
-.banner-slider .slick-dots .slick-active button::before {
-  width: 40px;
-  background: #fa385c;
-  opacity: 1;
-}
+    padding: 0 4px;
+    height: auto;
+    width: auto;
+    margin: 0;
+  }
+  .banner-slider .slick-dots li button {
+    width: 20px;
+    height: 6px;
+    padding: 0;
+    transition: all 0.3s;
+  }
+  .banner-slider .slick-dots button::before {
+    opacity: 1 !important;
+    content: "";
+    width: 20px;
+    height: 6px;
+    background: #fa385c;
+    opacity: 0.2;
+    transition: all 0.3s;
+  }
+  .banner-slider .slick-dots li.slick-active button {
+    width: 40px;
+  }
+  .banner-slider .slick-dots .slick-active button::before {
+    width: 40px;
+    background: #fa385c;
+    opacity: 1;
+  }

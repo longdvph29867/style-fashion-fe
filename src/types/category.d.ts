@@ -1,7 +1,5 @@
 type Category = {
-  id: ObjectId,
-  categoryName: string,
-  categorySlug: string,
-  createAt: string,
-  updateAt: string,
+  name: string;
+  slug: string;
+  id: string;
 }

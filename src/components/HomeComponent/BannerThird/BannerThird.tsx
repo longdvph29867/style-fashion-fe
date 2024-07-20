@@ -47,5 +47,4 @@ const BannerThird = () => {
     </div>
   );
 };
-
 export default BannerThird;

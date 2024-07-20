@@ -1,5 +1,5 @@
 import React from "react";
-import ItemProduct from "./ItemProduct";
+// import ItemProduct from "./ItemProduct";
 import { Product } from "../../types/products"; // Import type Product từ types
 
 type Props = {
@@ -15,7 +15,7 @@ const ProductsSame: React.FC<Props> = ({ productsSame }) => {
       <div className="grid grid-cols-1 -mx-2 lg:-mx-6 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
         {productsSame.map((product, index) => (
           <div key={index} className="px-2 py-6 lg:px-6">
-            <ItemProduct product={product} />
+            {/* <ItemProduct product={product} /> */}
           </div>
         ))}
       </div>

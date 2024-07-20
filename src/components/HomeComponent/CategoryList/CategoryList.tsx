@@ -1,6 +1,5 @@
 import CategoryTabs from "./CategoryTabs/CategoryTabs";
 import SubCategoryList from "./SubCategoryList/SubCategoryList";
-
 const CategoryList = () => {
   return (
     <div className="relative py-20 bg-neutral-100/70">

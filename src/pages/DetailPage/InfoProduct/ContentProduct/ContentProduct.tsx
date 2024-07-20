@@ -166,7 +166,7 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
               className="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11"
             >
               <svg
-                className="w-3 h-3 text-gray-900 dark:text-white"
+                className="w-3 h-3 text-gray-900"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

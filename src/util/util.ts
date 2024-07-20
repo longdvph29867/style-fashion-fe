@@ -22,3 +22,14 @@ export const hiddenSpinner = () => {
     spinnerElement.style.display = 'none';
   }
 }
+
+export function debounce<T extends any[]>(func: (...args: T) => void, delay: number): (...args: T) => void {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  return function(...args: T) {
+    clearTimeout(timeoutId!);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+}
