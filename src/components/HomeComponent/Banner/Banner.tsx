@@ -7,6 +7,7 @@ import imgBanner2 from "../../../assets/img/banner/hero-right-2.png";
 import imgBanner3 from "../../../assets/img/banner/hero-right.png";
 import imgBannerBg from "../../../assets/img/bg-banner.svg";
 import "./slick.css";
+
 const Banner = () => {
   const settings = {
     dots: true,

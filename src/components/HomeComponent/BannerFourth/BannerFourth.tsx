@@ -1,4 +1,4 @@
-import promo3 from "../../../assets/img/promo3.webp";
+import promo3 from "../../../assets/img/promo3.png";
 const BannerFourth = () => {
   return (
     <div className="mt-24 lg:pt-10">

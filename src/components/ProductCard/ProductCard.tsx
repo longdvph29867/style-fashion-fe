@@ -5,17 +5,17 @@ type Props = {
   product: any;
 };
 
-const ItemProduct: React.FC<Props> = ({ product }) => {
-  const { name, description, thumbnail, slug, scoreReview } = product;
+const ProductCard = ({ product }: Props) => {
+  const { name, minPrice, slug, finalScoreReview, thumbnail } = product;
   return (
-    <Link to={`/products/${slug}`}>
+    <Link to={`/detail/${slug}`}>
       <div className="relative flex flex-col bg-transparent duration-200 hover:-translate-y-4 h-full justify-between">
         <div className="relative flex-shrink-0 bg-slate-50 rounded-3xl overflow-hidden z-1">
-          <div className="flex w-full">
+          <div className="flex w-full relative pb-[100%]">
             <img
               src={thumbnail}
               alt="product"
-              className="object-cover w-full h-full  drop-shadow-xl"
+              className="object-cover w-full drop-shadow-xl absolute top-0 left-0"
             />
           </div>
           <div className="rounded-full flex items-center justify-center absolute top-3 left-3 px-2.5 py-1.5 text-xs bg-white text-slate-700 ">
@@ -51,30 +51,34 @@ const ItemProduct: React.FC<Props> = ({ product }) => {
         </div>
         <div className="space-y-4 px-2.5 pt-5 pb-2.5">
           <div>
-            <h2 className="text-base font-semibold min-h-[48px] my-line-2">
+            <h2 className="text-base font-semibold min-h-[48px] my-line-2 text-[#222]">
               {name}
             </h2>
-            <p className="text-sm text-slate-500 mt-1 ">
-              {description.slice(0, 50)}...
-            </p>
+            {/* <p className="text-sm text-slate-500 mt-1  my-line-2">
+              {description}
+            </p> */}
           </div>
           <div className="flex justify-between items-end ">
-            <div className="flex items-center border-2 border-green-500 rounded-lg py-1 px-2  text-sm font-medium">
-              <span className="text-green-500">{formartCurrency(100000)}</span>
+            <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2  text-sm font-medium">
+              <span className="text-[#fe385c]">
+                {formartCurrency(minPrice)}
+              </span>
             </div>
             <div className="flex items-center">
               <div className="relative w-20 h-6">
-                <div className="absolute text-slate-400 left-0 bottom-0 h-full w-20">
+                <div className="absolute text-slate-300 left-0 bottom-0 h-full w-20">
                   ★★★★★
                 </div>
                 <div
                   className={`absolute text-[#fbbf24] left-0 bottom-0 h-full overflow-hidden`}
-                  style={{ width: `${formartRating(scoreReview)}%` }}
+                  style={{ width: `${formartRating(finalScoreReview)}%` }}
                 >
                   ★★★★★
                 </div>
               </div>
-              <span className="text-sm ml-1 text-slate-500">({scoreReview})</span>
+              <span className="text-sm ml-1 text-[#6a6a6a]">
+                ({finalScoreReview})
+              </span>
             </div>
           </div>
         </div>
@@ -83,4 +87,4 @@ const ItemProduct: React.FC<Props> = ({ product }) => {
   );
 };
 
-export default ItemProduct;
+export default ProductCard;

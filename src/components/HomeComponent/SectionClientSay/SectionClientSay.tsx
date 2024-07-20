@@ -1,6 +1,12 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import review1 from "../../../assets/img/reviews/mung.jpg";
+import review2 from "../../../assets/img/reviews/linh.jpg";
+import review3 from "../../../assets/img/reviews/hien.jpg";
+import review4 from "../../../assets/img/reviews/mien.jpg";
+import review5 from "../../../assets/img/reviews/tung.jpg";
+import review6 from "../../../assets/img/reviews/hoanganh.jpg";
 
 const SectionClientSay = () => {
   const settings = {
@@ -13,15 +19,54 @@ const SectionClientSay = () => {
     arrows: false,
   };
 
+  const reviews = [
+    {
+      name: "Mừng Loli",
+      img: review1,
+      content:
+        "Tôi đã mua sắm tại Style Fashion nhiều lần và chưa bao giờ thất vọng. Sản phẩm đa dạng, hợp xu hướng, phù hợp với nhiều phong cách khác nhau.",
+    },
+    {
+      name: "Khánh Linh",
+      img: review2,
+      content:
+        "Style Fashion thật sự là thiên đường của thời trang! Mỗi lần mua sắm ở đây, mình luôn cảm thấy hài lòng vì chất lượng sản phẩm quá tuyệt vời.",
+    },
+    {
+      name: "Hiển Hin",
+      img: review3,
+      content:
+        "Website dễ sử dụng, các sản phẩm được trình bày rõ ràng và hình ảnh chân thực. Đặt hàng rất dễ dàng và mình nhận được sản phẩm nhanh hơn mong đợi.",
+    },
+    {
+      name: "Vũ Miền",
+      img: review4,
+      content:
+        "Mỗi lần mua sắm là một trải nghiệm tuyệt vời. Các sản phẩm không chỉ đẹp mắt mà còn rất bền và thoải mái.",
+    },
+    {
+      name: "Minh Tùng",
+      img: review5,
+      content:
+        "Đây là lần đầu tiên mình mua sắm online mà cảm thấy hài lòng đến vậy. Style Fashion không chỉ có nhiều lựa chọn thời trang phong phú mà còn có giá cả hợp lý.",
+    },
+    {
+      name: "Hoàng anh",
+      img: review6,
+      content:
+        "Sản phẩm đúng như mô tả, chất lượng tốt và giao hàng nhanh chóng. Mình chắc chắn sẽ quay lại để mua thêm nhiều sản phẩm khác.",
+    },
+  ];
+
   return (
     <div className="relative my-10 md:my-20 space-y-6 md:space-y-10">
-      <div className="relative flex flex-col justify-between mb-6 sm:flex-row sm:items-end lg:mb-10 text-neutral-900">
+      <div className="relative flex flex-col justify-between mb-6 sm:flex-row sm:items-end lg:mb-10 text-[#222]">
         <div className="flex flex-col items-center w-full mx-auto text-center">
           <h2 className="justify-center text-3xl font-semibold md:text-4xl">
-            Good news from far away 🥇
+            Đánh giá từ những khách hàng 🥇
           </h2>
-          <span className="block mt-2 text-base font-normal md:mt-3 sm:text-xl text-neutral-500">
-            Let's see what people think of Ciseco
+          <span className="block mt-2 text-base font-normal md:mt-3 sm:text-xl text-[#6a6a6a]">
+            Khách hàng chia sẻ về những trải nghiệm mua hàng tại Style Fashion
           </span>
         </div>
       </div>
@@ -93,24 +138,21 @@ const SectionClientSay = () => {
             srcSet="src/assets/img/quotation28d7c.png"
           />
           <Slider {...settings}>
-            {[0, 1, 2].map((item, index) => (
+            {reviews.map((item, index) => (
               <div key={index}>
                 <img
                   alt=""
                   width="126"
                   height="120"
-                  className="mx-auto"
-                  srcSet="src/assets/img/clientSay1e4d5.png"
+                  className="mx-auto rounded-full"
+                  srcSet={item.img}
                 />
                 <li className="flex flex-col items-center text-center">
-                  <span className="block md:text-2xl mt-4">
-                    Great quality products, affordable prices, fast and friendly
-                    delivery. I very recommend.
-                  </span>
+                  <span className="block md:text-2xl mt-4">{item.content}</span>
                   <span className="block mt-4 text-2xl font-semibold">
-                    Tiana Abie
+                    {item.name}
                   </span>
-                  <div className="flex space-x-0.5 mt-3 text-yellow-500 justify-center">
+                  <div className="flex space-x-0.5 mt-3 text-[#fbbf24] justify-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"

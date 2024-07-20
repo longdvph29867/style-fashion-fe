@@ -22,21 +22,21 @@ const SubCategoryCart: React.FC<CategoryProps> = ({ category }) => {
             alt={name}
           />
         </div>
-        <div className="text-xs font-medium text-slate-700">
+        <div className="text-xs font-medium text-[#6a6a6a]">
           {productCount} sản phẩm
         </div>
       </div>
       <div className="pt-10">
         <div className="">
-          <span className="block mb-2 text-sm text-slate-500 dark:text-slate-400">
+          <span className="block mb-2 text-sm text-[#6a6a6a]">
             Manufacturar
           </span>
-          <h2 className="text-2xl font-semibold sm:text-3xl my-line-1">
+          <h2 className="text-2xl font-semibold sm:text-3xl my-line-1 text-[#222]">
             {name}
           </h2>
           <a
             href="/collection"
-            className="flex items-center pt-6 text-sm font-medium transition-colors text-slate-500 hover:text-blue-600"
+            className="flex items-center pt-6 text-sm font-medium transition-colors text-[#fe385c]"
           >
             <span>Xem ngay</span>
             <svg

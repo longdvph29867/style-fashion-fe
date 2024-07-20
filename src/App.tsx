@@ -28,6 +28,7 @@ import MyShippingAddress from "./components/Accout/ShipingAddress/MyShippingAddr
 import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 import { isAccessTokenValid, refreshToken } from "./util/token";
 import { useEffect } from "react";
+import "./custom-input.css";
 import CartList from "./pages/CartPage/CartList";
 import OrderPage from "./pages/OrderPage/OrderPage";
 import OrderDetail from "./pages/OrderPage/OrderDetail";

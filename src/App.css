@@ -1,3 +1,14 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
 .container {
   padding: 0 16px;
 }
@@ -172,7 +183,10 @@ header.show-mobile .menu-mobile {
   content: none !important;
 }
 
-.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-name {
+.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper
+  .ant-upload-list
+  .ant-upload-list-item
+  .ant-upload-list-item-name {
   white-space: normal !important;
 }
 
@@ -180,7 +194,11 @@ header.show-mobile .menu-mobile {
   background-color: #1677ff !important;
 }
 
-.ant-modal-content .ant-modal-body .ant-modal-confirm-body-wrapper .ant-modal-confirm-btns .ant-btn-primary {
+.ant-modal-content
+  .ant-modal-body
+  .ant-modal-confirm-body-wrapper
+  .ant-modal-confirm-btns
+  .ant-btn-primary {
   background-color: #ff4d4f !important;
 }
 

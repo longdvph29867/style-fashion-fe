@@ -206,16 +206,16 @@ const CategoryTabs = (props: Props) => {
     },
   ];
   return (
-    <nav className="flex justify-center w-full mb-10 text-sm md:text-base">
-      <ul className="flex p-1 overflow-auto bg-white rounded-full shadow-lg scrollbar-hide">
+    <nav className="flex justify-center w-full text-sm mb-10 md:text-base">
+      <ul className="flex p-1 bg-white rounded-full shadow-lg overflow-auto scrollbar-hide gap-1">
         {menuCategory.map((item, index) => (
           <li key={index} className="relative">
             <button
               className={`block font-medium whitespace-nowrap px-3.5 py-2 text-sm sm:px-7 sm:py-3 capitalize rounded-full 
                 duration-200
-              hover:bg-slate-900
-              hover:text-slate-50
-              ${index === 0 ? "bg-slate-900 text-slate-50" : "text-slate-600"}
+              hover:bg-[#ebebeb]
+              hover:text-[#222]
+              ${index === 0 ? "bg-[#fe385c] text-slate-50" : "text-[#6a6a6a]"}
               `}
             >
               {/* bg-slate-900 text-slate-50 */}

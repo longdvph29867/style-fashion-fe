@@ -1,21 +1,29 @@
+export type Attribute = {
+  name: string;
+  price: number;
+  stock: number;
+  discount: number;
+  image: string;
+  id: string;
+};
+
 type Product = {
+    id: string;
     name: string;
-    slug: string;
+    scoreReview: number;
+    description: string;
+    attributes: Attribute[];
+    images: string[];
     thumbnail: string;
     gallery: string[];
-    attributes: string[];
-    categories: string[];
-    description: string;
-    video: string;
-    active: boolean;
-    id: string;
-}
-type Attribute = {
-    name: string;
     price: number;
-    stock: number;
-    discount: number;
-    image: string;
+    slug: string;
+    finalScoreReview: number;
+    categories: { id: string; name: string }[];
+    createAt: string;
+    updateAt: string;
+    gender: string;
+    rating: number;
 }
 
 type FormProductData = {
