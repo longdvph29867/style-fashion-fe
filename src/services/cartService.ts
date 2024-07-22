@@ -1,11 +1,12 @@
 import { https } from "../config/axios";
+import { CartType } from "../types/cartType";
 import { localUserService } from "./localService";
 type AddCartType = { product: string; attribute: string; quantity: number };
 
 
 const cartService = {
   getCartByUserId(userId: string) {
-    return https.get(`/carts?userId=${userId}`);
+    return https.get<CartType>(`/carts?userId=${userId}`);
   },
   addToCart(userId:string,data: AddCartType) {
     return https.post(`/carts?userId=${userId}`, data);

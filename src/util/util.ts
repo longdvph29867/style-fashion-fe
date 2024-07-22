@@ -33,3 +33,12 @@ export function debounce<T extends any[]>(func: (...args: T) => void, delay: num
     }, delay);
   };
 }
+
+
+export const visilibitySpiner = (isLoading:boolean)=>{
+  if(isLoading){
+    showSpinner()
+  }else{
+    hiddenSpinner()
+  }
+}
