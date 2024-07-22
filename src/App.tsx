@@ -38,6 +38,8 @@ import ListProductPage from "./pages/ListProductPage/ListProductPage";
 import CategoryList from "./pages/admin/Category/CategoryList";
 import AddCategory from "./pages/admin/Category/AddCategory";
 import UpdateCategory from "./pages/admin/Category/UpdateCategory";
+import VoucherList from "./pages/admin/Voucher/VoucherList";
+import AddVoucher from "./pages/admin/Voucher/AddVoucher";
 
 function App() {
   const location = useLocation();
@@ -49,8 +51,8 @@ function App() {
     if (vnpay) {
       navigate("/order");
     }
-  },[]);
-  
+  }, []);
+
   useEffect(() => {
     if (!isAccessTokenValid()) {
       refreshToken();
@@ -102,6 +104,8 @@ function App() {
           <Route path="categories" element={<CategoryList />} />
           <Route path="categories/add" element={<AddCategory />} />
           <Route path="categories/update/:id" element={<UpdateCategory />} />
+          <Route path="voucher" element={<VoucherList />} />
+          <Route path="voucher/add" element={<AddVoucher />} />
         </Route>
         {/* Các route khác nếu có */}
       </Routes>

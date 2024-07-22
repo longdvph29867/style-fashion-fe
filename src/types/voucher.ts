@@ -17,3 +17,14 @@ export type VoucherResponse = {
     totalPages: number;
     totalResults: number;
 };
+
+export type VoucherFormValues = {
+    name: string;
+    validFrom: string; // ISO 8601 date string
+    validTo: string;   // ISO 8601 date string
+    discount: number;
+    minCartPrice: number;
+    quantity: number;
+    type: "amount" | "percentage";
+    exclude_promotions: "true" | "false";
+}

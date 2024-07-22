@@ -240,6 +240,11 @@ body .ant-modal-mask {
   color: black;
 }
 
+.ant-picker-panel-layout .ant-picker-ok .ant-btn-primary {
+  background-color: #1677ff !important;
+  color: white !important;
+}
+
 /* width: 80vh;
   max-width: 547px; */
 .hidden img {

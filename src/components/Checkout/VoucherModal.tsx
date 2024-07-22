@@ -12,7 +12,7 @@ type Props = {
 }
 
 const VoucherModal = ({ openModalVoucher, setOpenModalVoucher }: Props) => {
-    const [voucherList, setVoucherList] = useState<any[]>([]);
+    const [voucherList, setVoucherList] = useState<Voucher[]>([]);
     const [selectedVoucher, setSelectedVoucher] = useState<string>('');
 
 
@@ -20,9 +20,7 @@ const VoucherModal = ({ openModalVoucher, setOpenModalVoucher }: Props) => {
         showSpinner
         try {
             const data = await voucherService.getVoucherAll();
-            console.log(data, 'response')
             setVoucherList(data.results);
-            console.log(voucherList, 'voucherList')
             hiddenSpinner();
         } catch (error) {
             hiddenSpinner();
