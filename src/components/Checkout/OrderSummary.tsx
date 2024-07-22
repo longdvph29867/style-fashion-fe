@@ -1,8 +1,9 @@
 import { CartType } from "../../types/cartType";
 import List_Order from "./ListOrder";
 import { formartCurrency } from "../../util/util";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { ProductCartType } from "../../types/cart";
+import VoucherModal from "./VoucherModal";
 type Props = {
   productList: ProductCartType[];
   shippingfee: number;
@@ -15,6 +16,7 @@ const OrderSummary = ({
   subTotal,
   confirmOrder,
 }: Props) => {
+  const [openModalVoucher, setOpenModalVoucher] = useState(false);
   return (
     <div className="w-full lg:w-[36%]">
       <h3 className="text-lg font-semibold">Tóm Tắt Đơn Hàng</h3>
@@ -37,6 +39,18 @@ const OrderSummary = ({
             Thêm
           </button>
         </div>
+      </div>
+      {/* Mã giảm giá  */}
+      <div className="voucher-modal-client">
+        <button
+          onClick={() => setOpenModalVoucher(true)}
+          className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium sm:py-3.5 mt-4 sm:px-6 disabled:bg-opacity-90 bg-[#ff385c]  hover:bg-[#cf3350] text-slate-50 shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000"
+        >
+          Chọn voucher
+        </button>
+        <>
+          <VoucherModal openModalVoucher={openModalVoucher} setOpenModalVoucher={setOpenModalVoucher} />
+        </>
       </div>
       {/* Subtotal */}
       <div className="mt-4 flex justify-between py-2.5">
