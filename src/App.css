@@ -190,7 +190,11 @@ header.show-mobile .menu-mobile {
 }
 
 .ant-modal-footer .ant-btn-primary {
-  background-color: #1677ff !important;
+  background-color: #ff385c !important;
+}
+
+.ant-modal-footer .ant-btn-primary:hover {
+  background-color: #cf3350 !important;
 }
 
 body .ant-modal-mask {

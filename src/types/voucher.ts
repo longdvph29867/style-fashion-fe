@@ -2,6 +2,7 @@ export type Voucher = {
     name: string;
     code: string;
     validFrom: string;
+    minCartPrice: number;
     validTo: string;
     discount: number;
     quantity: number;

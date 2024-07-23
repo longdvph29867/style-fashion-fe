@@ -12,6 +12,7 @@ import { CiCircleAlert } from "react-icons/ci";
 import { IoIosCheckboxOutline } from "react-icons/io";
 import voucherService from "../../../services/voucherService";
 import { Voucher } from "../../../types/voucher";
+import { format } from 'date-fns';
 
 const VoucherList: React.FC = () => {
   // const [usersList, setUsersList] = useState<IUser[]>([]);
@@ -19,7 +20,7 @@ const VoucherList: React.FC = () => {
 
 
   const fetchVoucher = async () => {
-    showSpinner
+    showSpinner()
     try {
       const data = await voucherService.getVoucherAll();
       setVoucherList(data.results);
@@ -34,6 +35,10 @@ const VoucherList: React.FC = () => {
   useEffect(() => {
     fetchVoucher();
   }, [])
+
+  const formatDateString = (dateString: string) => {
+    return format(new Date(dateString), 'dd/MM/yyyy HH:mm');
+  };
 
   // const handleDelete = async (id: string) => {
   //   showSpinner();
@@ -109,7 +114,7 @@ const VoucherList: React.FC = () => {
               return (
                 <div
                   key={index}
-                  className="relative grid grid-cols-7 gap-2 border-b lg:border-transparent border-slate-300"
+                  className="relative grid grid-cols-7 gap-2 py-1 border-b lg:border-transparent border-slate-300"
                 >
                   {/* <span className='absolute top-10 left-0.5 text-slate-300'>{++index}</span> */}
 
@@ -130,25 +135,25 @@ const VoucherList: React.FC = () => {
                   </div>
                   <div className="p-2">
                     <div className="flex  items-center">
-                      <h6 className="text-base text-left">{voucher.type}</h6>
+                      <h6 className="text-base text-left">{(voucher.type && (voucher.type === 'amount')) ? 'Giá trị cố định' : 'Phần trăm'}</h6>
                     </div>
                   </div>
                   <div className="p-2">
                     <div className="flex  items-center">
-                      <h6 className="text-base text-left">{voucher.validFrom}</h6>
+                      <h6 className="text-base text-left">{formatDateString(voucher.validFrom)}</h6>
                     </div>
                   </div>
                   <div className="p-2">
                     <div className="flex  items-center">
-                      <h6 className="text-base text-left">{voucher.validTo}</h6>
+                      <h6 className="text-base text-left">{formatDateString(voucher.validTo)}</h6>
                     </div>
                   </div>
                   <div className="absolute right-0 top-4 lg:block p-2 space-x-2 lg:static lg:top-auto lg:right-auto">
                     <Link
-                      to={`/admin/voucher/${voucher.id}`}
+                      to={`/admin/voucher/update/${voucher.id}`}
                       className="text-sm font-semibold text-yellow-500 hover:text-yellow-600"
                     >
-                      Chi tiết
+                      Sửa
                     </Link>
                     <button
                       // onClick={() => showConfirm(user.id)}

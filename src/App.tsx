@@ -40,6 +40,7 @@ import AddCategory from "./pages/admin/Category/AddCategory";
 import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 import VoucherList from "./pages/admin/Voucher/VoucherList";
 import AddVoucher from "./pages/admin/Voucher/AddVoucher";
+import UpdateVoucher from "./pages/admin/Voucher/UpdateVoucher";
 
 function App() {
   const location = useLocation();
@@ -106,6 +107,7 @@ function App() {
           <Route path="categories/update/:id" element={<UpdateCategory />} />
           <Route path="voucher" element={<VoucherList />} />
           <Route path="voucher/add" element={<AddVoucher />} />
+          <Route path="voucher/update/:id" element={<UpdateVoucher />} />
         </Route>
         {/* Các route khác nếu có */}
       </Routes>

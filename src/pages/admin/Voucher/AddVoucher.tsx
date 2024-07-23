@@ -2,35 +2,20 @@
 import {
   Button,
   DatePicker,
-  DatePickerProps,
   Form,
   Input,
-  InputNumber,
-  Radio,
   Select,
-  Upload,
   message,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
-import { https } from "../../../config/axios";
-import TextArea from "antd/es/input/TextArea";
-import { AddUserType } from "../../../types/userType";
-import { roleList } from "../../../constant/constant";
-import { RangePickerProps } from "antd/es/date-picker";
 import voucherService from "../../../services/voucherService";
+import dayjs from "dayjs";
 
 const AddVoucher: React.FC = () => {
   const navigate = useNavigate();
-  const [timeStart, setTimeStart] = useState<any>(null);
-  // let timeStart: any = null;
-  const [timeEnd, setTimeEnd] = useState<any>(null);
-  // let timeEnd: any = null;
   const [form] = Form.useForm();
-
-  let excludePromotions = 'true';
 
   const handleExcludeChange = (value: any) => {
     form.setFieldsValue({ exclude_promotions: value });
@@ -43,7 +28,6 @@ const AddVoucher: React.FC = () => {
       validFrom: values.validFrom ? values.validFrom.format('YYYY-MM-DDTHH:mm:ssZ') : null,
       validTo: values.validTo ? values.validTo.format('YYYY-MM-DDTHH:mm:ssZ') : null,
     };
-    // console.log('Formatted Form values:', formattedValues);
     const createVoucher = async () => {
       showSpinner();
       try {
@@ -55,7 +39,7 @@ const AddVoucher: React.FC = () => {
         }
       } catch (error) {
         hiddenSpinner();
-        message.error(error.response.data.message);
+        message.error(error.response.data);
         console.log(error);
       }
     };
@@ -66,24 +50,15 @@ const AddVoucher: React.FC = () => {
     console.log("Failed:", errorInfo);
   };
 
-  // const handleChange = (value: string) => {
-  //   console.log(`selected ${value}`);
-  // };
+  const validateDateRange = (values: any) => {
+    const validFrom = values.validFrom ? dayjs(values.validFrom) : null;
+    const validTo = values.validTo ? dayjs(values.validTo) : null;
 
-  // const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-  //   console.log(date, dateString);
-  //   // setValidFrom(dateString);
-  //   console.log(validFrom, 'validFrom');
-  // };
-
-  // const onOk = (value: DatePickerProps['value'] | RangePickerProps['value']) => {
-  //   console.log('onOk: ', value);
-  // };
-
-  // useEffect(() => {
-  //   console.log(validFrom, 'validFrom');
-  //   console.log(validTo, 'validTo');
-  // }, [validFrom]);
+    if (validFrom && validTo && validTo.isBefore(validFrom)) {
+      return Promise.reject('Thời gian kết thúc phải lớn hơn thời gian bắt đầu.');
+    }
+    return Promise.resolve();
+  };
   return (
     <div className="max-w-lg w-full mx-auto px-5 pb-5">
       <h3 className=" text-2xl text-slate-700 text-center mt-6 mb-3">
@@ -114,7 +89,7 @@ const AddVoucher: React.FC = () => {
             },
           ]}
         >
-          <Input />
+          <Input className="" />
         </Form.Item>
 
         <Form.Item
@@ -180,16 +155,18 @@ const AddVoucher: React.FC = () => {
             { required: true, message: "Please fill in this field!" },
           ]}
         >
-          <p className="mb-1">Loại bỏ các khuyến mãi khác khi sử dụng voucher</p>
-          <Select
-            defaultValue="true"
-            style={{ width: 200 }}
-            onChange={handleExcludeChange}
-            options={[
-              { value: 'true', label: 'Có' },
-              { value: 'false', label: 'Không' },
-            ]}
-          />
+          <div>
+            <label className="mb-1">Loại bỏ các khuyến mãi khác khi sử dụng voucher</label>
+            <Select
+              defaultValue="true"
+              style={{ width: 200 }}
+              onChange={handleExcludeChange}
+              options={[
+                { value: 'true', label: 'Có' },
+                { value: 'false', label: 'Không' },
+              ]}
+            />
+          </div>
         </Form.Item>
 
         <div className="flex justify-between">
@@ -197,28 +174,34 @@ const AddVoucher: React.FC = () => {
             name="validFrom"
             rules={[{ required: true, message: 'Vui lòng nhập trường này!' }]}
           >
-            <p className="mb-1">Thời gian bắt đầu</p>
-            <DatePicker
-              showTime
-              onChange={(value) => {
-                // setTimeStart(value);
-                form.setFieldsValue({ validFrom: value });
-              }}
-            />
+            <div>
+              <label className="mb-1">Thời gian bắt đầu</label>
+              <DatePicker
+                showTime
+                onChange={(value) => {
+                  // setTimeStart(value);
+                  form.setFieldsValue({ validFrom: value });
+                }}
+              />
+            </div>
           </Form.Item>
 
           <Form.Item
             name="validTo"
-            rules={[{ required: true, message: 'Vui lòng nhập trường này!' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập trường này!' },
+            { validator: (_, value) => validateDateRange({ validFrom: form.getFieldValue('validFrom'), validTo: value }) }
+            ]}
           >
-            <p className="mb-1">Thời gian kết thúc</p>
-            <DatePicker
-              showTime
-              onChange={(value) => {
-                // setTimeEnd(value);
-                form.setFieldsValue({ validTo: value });
-              }}
-            />
+            <div>
+              <label className="mb-1">Thời gian kết thúc</label>
+              <DatePicker
+                showTime
+                onChange={(value) => {
+                  // setTimeEnd(value);
+                  form.setFieldsValue({ validTo: value });
+                }}
+              />
+            </div>
           </Form.Item>
         </div>
 
