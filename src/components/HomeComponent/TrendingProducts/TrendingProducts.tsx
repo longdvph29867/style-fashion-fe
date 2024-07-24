@@ -1,28 +1,18 @@
-import { useEffect, useState } from "react";
 import CategoryNavigation from "./CategoryNavigation/CategoryNavigation";
-import Filter from "./Filter/Filter";
 import { https } from "../../../config/axios";
-import { showSpinner, hiddenSpinner } from "../../../util/spinner";
 import ProductCard from "../../ProductCard/ProductCard";
+import { Product } from "../../../types/products";
+import { useQuery } from "@tanstack/react-query";
 
-type Props = {};
-
-const TrendingProducts = (props: Props) => {
-  const [productsList, setProductsList] = useState<Product[]>([]);
-  const fetchData = async () => {
-    try {
-      showSpinner();
-      const { data } = await https.get("/products?limit=8");
-      hiddenSpinner();
-      setProductsList(data.results);
-    } catch (error) {
-      hiddenSpinner();
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
+const TrendingProducts = () => {
+  const { data } = useQuery<Product[]>({
+    queryKey: ["product-hot"],
+    queryFn: () => {
+      return https
+        .get("/products?limit=8")
+        .then((response) => response.data.results);
+    },
+  });
   return (
     <div className="relative my-14 md:my-20">
       <div className="relative flex flex-col justify-between mb-4 sm:flex-row sm:items-end md:mb-6 text-[#222]">
@@ -37,7 +27,7 @@ const TrendingProducts = (props: Props) => {
       </div>
       <CategoryNavigation />
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 sm:gap-16 xl:gap-8 md:mt-6 mt-4">
-        {productsList?.map((product, index) => {
+        {data?.map((product, index) => {
           return <ProductCard product={product} key={index} />;
         })}
       </div>

@@ -1,36 +1,21 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { hiddenSpinner, showSpinner } from "../../../util/util";
 import IntroduceProduct from "../../../components/DetailComponent/IntroduceProduct";
-import { Attribute, Product } from "../../../types/products";
-import productService from "../../../services/productService";
+import { Product } from "../../../types/products";
 import ContentProduct from "./ContentProduct/ContentProduct";
 import ImageProduct from "./ImageProduct/ImageProduct";
-type Props = {};
 
-const InfoProduct = (props: Props) => {
-  const { slug } = useParams();
-  const [product, setProduct] = useState<Product | null>(null);
+type Props = {
+  product:Product
+};
 
+const InfoProduct = ({product}: Props) => {
   const [currentImage, setCurrentImage] = useState<string>("");
 
-  const fetchProduct = async () => {
-    try {
-      showSpinner();
-      const res = await productService.getProductBySlug(slug as string);
-      const productDetail: Product = res.data;
-      hiddenSpinner();
-      setProduct(productDetail);
-      setCurrentImage(productDetail.gallery[0]);
-    } catch (error) {
-      hiddenSpinner();
-      console.error("Failed to fetch product:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchProduct();
-  }, []);
+    if(product){
+      setCurrentImage(product.gallery[0]);
+    }
+  }, [product]);
 
   return (
     <div className="container mx-auto">
@@ -38,7 +23,7 @@ const InfoProduct = (props: Props) => {
         <div className="w-full lg:w-[40%]">
           <ImageProduct
             image={currentImage}
-            product={product as Product}
+            product={product}
             setCurrentImage={setCurrentImage}
           />
         </div>
@@ -47,7 +32,7 @@ const InfoProduct = (props: Props) => {
           <div className="space-y-7">
             <ContentProduct
               setCurrentImage={setCurrentImage}
-              product={product as Product}
+              product={product}
             />
             <hr className=" 2xl:!my-10 border-slate-200" />
             <IntroduceProduct product={product} />
