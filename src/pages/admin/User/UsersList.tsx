@@ -12,7 +12,7 @@ import { CiCircleAlert } from "react-icons/ci";
 import { IoIosCheckboxOutline } from "react-icons/io";
 import userService from "../../../services/userService";
 import PaginationPage from "../../../components/PaginationPage/PaginationPage";
-import UserListSkeleton from "../../../components/Skeleton/UserListSkeleton";
+import UserListSkeleton from "../../../components/Skeleton/Admin/UserListSkeleton";
 
 const UsersList: React.FC = () => {
   const params = new URLSearchParams(location.search);
@@ -121,9 +121,8 @@ const UsersList: React.FC = () => {
               return (
                 <div
                   key={index}
-                  className="relative grid lg:grid-cols-10 sm:grid-cols-5 grid-cols-3 gap-2 border-b lg:border-transparent border-slate-300"
+                  className="relative grid lg:grid-cols-10 sm:grid-cols-5 grid-cols-3 gap-2 border-b border-slate-100 py-2"
                 >
-                  {/* <span className='absolute top-10 left-0.5 text-slate-300'>{++index}</span> */}
                   <div className="pl-4 mb-1">
                     <div className="px-2 py-1 min-w-[110px]">
                       <div>

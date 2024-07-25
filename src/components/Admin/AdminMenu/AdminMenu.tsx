@@ -14,31 +14,31 @@ type Menu = {
 const listMenu: Menu[] = [
   {
     link: "/",
-    title: "Dashboard",
+    title: "Trang chủ",
     icon: <MdDashboard />,
     active: false,
   },
   {
     link: "/admin/categories",
-    title: "Category",
+    title: "Danh mục",
     icon: <MdCategory />,
     active: false,
   },
   {
     link: "/admin/products",
-    title: "Products",
+    title: "Sản phẩm",
     icon: <FaBoxes />,
     active: true,
   },
   {
     link: "/admin/users",
-    title: "Users",
+    title: "Người dùng",
     icon: <FaUserAlt />,
     active: false,
   },
   {
     link: "/admin/voucher",
-    title: "Vouchers",
+    title: "Mã giảm giá",
     icon: <BiSolidCoupon />,
     active: false,
   },

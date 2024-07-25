@@ -15,33 +15,50 @@ import { Voucher } from "../../../types/voucher";
 import dayjs from "dayjs";
 import { toZonedTime } from 'date-fns-tz'
 
-const dataFake: Voucher = {
-    "name": "Mã giảm giá 10%",
-    "code": "lyx8t25kR6",
-    "validFrom": "2024-07-24T22:00:00.000Z",
-    "validTo": "2024-07-25T23:00:00.000Z",
-    "discount": 10,
-    "minCartPrice": 50000,
-    "quantity": 20,
-    "type": "percentage",
-    "exclude_promotions": true,
-    "id": "669e927e02160c7f6d7cc8c8"
-}
+// const dataFake: Voucher = {
+//     "name": "Mã giảm giá 10%",
+//     "code": "lyx8t25kR6",
+//     "validFrom": "2024-07-24T22:00:00.000Z",
+//     "validTo": "2024-07-25T23:00:00.000Z",
+//     "discount": 10,
+//     "minCartPrice": 50000,
+//     "quantity": 20,
+//     "type": "percentage",
+//     "exclude_promotions": true,
+//     "id": "669e927e02160c7f6d7cc8c8"
+// }
 
 const UpdateVoucher: React.FC = () => {
     const navigate = useNavigate();
+    const [voucherDetail, setVoucherDetail] = React.useState<Voucher | null>(null);
     const { id } = useParams();
-    console.log(id);
-    console.log(dataFake);
+    // console.log(id);
+    // console.log(dataFake);
     const [form] = Form.useForm();
     // const timeZone = 'Asia/Ho_Chi_Minh';
 
     const fetchVoucherDetail = async () => {
-        form.setFieldsValue({
-            ...dataFake,
-            validFrom: dataFake.validFrom ? dayjs(dataFake.validFrom) : null,
-            validTo: dataFake.validTo ? dayjs(dataFake.validTo) : null,
-        });
+        showSpinner();
+        try {
+            if (id) {
+                const { data } = await voucherService.getDetailVoucher(id);
+                if (data) {
+                    setVoucherDetail(data);
+                    form.setFieldsValue({
+                        ...data,
+                        validFrom: data.validFrom ? dayjs(data.validFrom) : null,
+                        validTo: data.validTo ? dayjs(data.validTo) : null,
+                    });
+                    hiddenSpinner();
+                }
+
+            }
+        } catch (error) {
+            hiddenSpinner();
+            message.error(error.response.data);
+            console.log(error);
+        }
+
     }
 
     useEffect(() => {
@@ -211,7 +228,7 @@ const UpdateVoucher: React.FC = () => {
                         <div>
                             <label className="mb-1">Thời gian bắt đầu</label>
                             <DatePicker
-                                defaultValue={dayjs(dataFake.validFrom)}
+                                defaultValue={dayjs(voucherDetail?.validFrom)}
                                 // value={dayjs(dataFake.validFrom)}
                                 showTime
                                 onChange={(value) => {
@@ -232,7 +249,7 @@ const UpdateVoucher: React.FC = () => {
                         <div>
                             <label className="mb-1">Thời gian kết thúc</label>
                             <DatePicker
-                                defaultValue={dayjs(dataFake.validTo)}
+                                defaultValue={dayjs(voucherDetail?.validTo)}
                                 showTime
                                 onChange={(value) => {
                                     // setTimeEnd(value);

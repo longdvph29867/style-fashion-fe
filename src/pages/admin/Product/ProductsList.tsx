@@ -9,7 +9,7 @@ import { https } from "../../../config/axios";
 import { IProduct } from "../../../types/productType";
 import PaginationPage from "../../../components/PaginationPage/PaginationPage";
 import productService from "../../../services/productService";
-import ProductListSkeleton from "../../../components/Skeleton/ProductListSkeleton";
+import ProductListSkeleton from "../../../components/Skeleton/Admin/ProductListSkeleton";
 
 const ProductsList: React.FC = () => {
   const params = new URLSearchParams(location.search);
@@ -80,7 +80,7 @@ const ProductsList: React.FC = () => {
       </div>
       <div className="h-full mt-4 overflow-x-auto">
         <div className="w-full border-gray-200 text-slate-500">
-          <div className="w-full grid lg:grid-cols-8 sm:grid-cols-5 grid-cols-2 gap-2">
+          <div className="w-full grid lg:grid-cols-8 sm:grid-cols-5 grid-cols-2 gap-2 mb-2">
             <div className="lg:block hidden text-center pr-6 pl-4 py-3 font-bold uppercase text-slate-800">
               Ảnh
             </div>
@@ -109,7 +109,7 @@ const ProductsList: React.FC = () => {
               return (
                 <div
                   key={index}
-                  className="relative grid lg:grid-cols-8 sm:grid-cols-5 grid-cols-2 gap-2 border-t border-slate-100"
+                  className="relative grid lg:grid-cols-8 sm:grid-cols-5 grid-cols-2 gap-2 border-b border-slate-100"
                 >
                   {/* <span className='absolute top-0.5 left-1 text-slate-300'>{++index}</span> */}
                   <div className="p-2">

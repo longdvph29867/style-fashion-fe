@@ -14,11 +14,9 @@ const UserListSkeleton = () => (
         </div>
         <div className="lg:block col-span-2 p-2">
             <div className="bg-gray-200 h-4 w-full rounded mb-2"></div>
-            <div className="bg-gray-200 h-4 w-3/4 rounded"></div>
         </div>
         <div className="p-2">
             <div className="bg-gray-200 h-4 w-32 rounded"></div>
-            <div className="bg-gray-200 h-4 w-3/4 rounded mt-2"></div>
         </div>
         <div className="p-2">
             <div className="bg-gray-200 h-4 w-32 rounded"></div>
@@ -30,7 +28,6 @@ const UserListSkeleton = () => (
             <div className="bg-gray-200 h-4 w-24 rounded"></div>
         </div>
         <div className="absolute right-0 top-4 lg:block p-2 space-x-2 lg:static lg:top-auto lg:right-auto">
-            <div className="bg-gray-200 h-4 w-20 rounded"></div>
             <div className="bg-gray-200 h-4 w-20 rounded"></div>
         </div>
     </div>
