@@ -3,33 +3,37 @@ import imgLogo from "../../assets/img/sf-logo2.png";
 import Menu from "./Menu";
 import User from "../User/User";
 import Search from "../Search/Search";
+import { Link } from "react-router-dom";
+import cartService from "../../services/cartService";
+import { useQuery } from "@tanstack/react-query";
+import { localUserService } from "../../services/localService";
 import { useDispatch, useSelector } from "react-redux";
 import { setCartAll } from "../../Toolkits/cartSlice";
 import { RootState } from "../../Toolkits/store";
-import { Link } from "react-router-dom";
-import cartService from "../../services/cartService";
 
 const Header = () => {
-  const dispatch = useDispatch();
   const [showMenuMobile, setShowMenuMobile] = useState<boolean>(false);
   const carts = useSelector((state: RootState) => state.cartSlice.carts);
-  const userId = useSelector(
-    (state: RootState) => state.userSlice.userInfo?.id
-  );
-
+  const dispatch = useDispatch();
+  const userId = localUserService.get()?.id;
   const handleShowMenu = () => {
     setShowMenuMobile(!showMenuMobile);
   };
 
+  const { data } = useQuery({
+    queryKey: ["carts"],
+    queryFn: () =>
+      cartService
+        .getCartByUserId(userId!)
+        .then((res) => res.data.products_cart),
+    refetchInterval: 3 * 60 * 1000,
+  });
+
   useEffect(() => {
-    if (userId) {
-      cartService.getCartByUserId(userId).then((response) => {
-        if (response.data !== "") {
-          dispatch(setCartAll(response.data.products_cart));
-        }
-      });
+    if (data) {
+      dispatch(setCartAll(data));
     }
-  }, [userId]);
+  }, [data, dispatch]);
 
   return (
     <header
@@ -127,7 +131,7 @@ const Header = () => {
                     />
                   </svg>
                   <span className="absolute w-3.5 h-3.5 flex items-center justify-center bg-[#fe385c] top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
-                    {carts.length}
+                    {carts?.length}
                   </span>
                 </button>
               </Link>
