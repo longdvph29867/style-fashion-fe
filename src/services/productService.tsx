@@ -6,6 +6,9 @@ const productService = {
   getProductByCategories(listId: string) {
     return https.get(`/products/?categories=${listId}`);
   },
+  getAllProducts(limit: number, page: number) {
+    return https.get(`/products?limit=${limit}&page=${page}`);
+  }
 };
 
 export default productService;

@@ -299,7 +299,7 @@ const AddProduct: React.FC = () => {
                               <div className="grid grid-cols-3 gap-2">
                                 <Form.Item
                                   name={[index, "price"]}
-                                  label="Giá"
+                                  label="Giá gốc"
                                   rules={[{ required: true, message: "Vui lòng nhập trường này!" },
                                   {
                                     pattern: /^[0-9]*$/,
@@ -323,7 +323,7 @@ const AddProduct: React.FC = () => {
                                 </Form.Item>
                                 <Form.Item
                                   name={[index, "discount"]}
-                                  label="Giảm giá"
+                                  label="Giá khuyến mãi"
                                   rules={[{ required: true, message: "Vui lòng nhập trường này!" },
                                   {
                                     pattern: /^[0-9]*$/,
