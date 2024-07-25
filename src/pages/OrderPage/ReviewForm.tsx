@@ -3,6 +3,7 @@ import {
     Button,
     Form,
     Rate,
+    Skeleton,
     Space,
     Upload,
     message,
@@ -136,6 +137,7 @@ const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues }: Props) =>
             {/* <h3 className=" text-2xl text-slate-700 text-center mt-6 mb-3">
                 Thêm mới
             </h3> */}
+            {!orderDetail ? <Skeleton active /> : null}
             {orderDetail?.productsOrder.map((product: any) => (
                 <>
                     <div className="flex gap-2">

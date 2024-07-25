@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { formartCurrency, hiddenSpinner, showSpinner } from '../../util/util'
-import { Button, message, Modal } from 'antd'
+import { Button, message, Modal, Skeleton } from 'antd'
 import orderService from '../../services/orderSerivce'
 import { getOrderStatusName, orderStatusValue } from '../../util/constant';
 import ReviewForm from './ReviewForm'
@@ -112,7 +112,21 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
     }
 
     return (
-        <div className=' mt-2'>
+        <div className='mt-2'>
+            {/* {!orderList ? <>
+                <div className='flex gap-2 mb-4'>
+                    <Skeleton.Image active />
+                    <Skeleton active />
+                </div>
+                <div className='flex gap-2 mb-4'>
+                    <Skeleton.Image active />
+                    <Skeleton active />
+                </div>
+                <div className='flex gap-2 mb-4'>
+                    <Skeleton.Image active />
+                    <Skeleton active />
+                </div>
+            </> : null} */}
             {orderList?.map((order: any) => (
                 <div key={order._id} className="shadow rounded  mb-12 bg-white">
                     {order?.productsOrder.map((product: any) => (
@@ -172,7 +186,8 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                                             </Button>
                                             <Modal
                                                 title="Đánh giá sản phẩm"
-                                                centered
+                                                // centered
+                                                footer={null}
                                                 open={reviewFormOpen}
                                                 onOk={() => setReviewFormOpen(false)}
                                                 onCancel={() => setReviewFormOpen(false)}

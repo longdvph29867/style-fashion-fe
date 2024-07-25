@@ -2,11 +2,13 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   /* display: none; <- Crashes Chrome on hover */
   -webkit-appearance: none;
-  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  margin: 0;
+  /* <-- Apparently some margin are still there even though it's hidden */
 }
 
 input[type="number"] {
-  -moz-appearance: textfield; /* Firefox */
+  -moz-appearance: textfield;
+  /* Firefox */
 }
 
 .container {
@@ -183,22 +185,28 @@ header.show-mobile .menu-mobile {
   content: none !important;
 }
 
-.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper
-  .ant-upload-list
-  .ant-upload-list-item
-  .ant-upload-list-item-name {
+.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-name {
   white-space: normal !important;
 }
 
 .ant-modal-footer .ant-btn-primary {
-  background-color: #1677ff !important;
+  background-color: #ff385c !important;
 }
 
-.ant-modal-content
-  .ant-modal-body
-  .ant-modal-confirm-body-wrapper
-  .ant-modal-confirm-btns
-  .ant-btn-primary {
+.ant-modal-footer .ant-btn-primary:hover {
+  background-color: #cf3350 !important;
+}
+
+body .ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.195) !important;
+  /* Điều chỉnh độ mờ của nền */
+}
+
+.voucher-modal-client .ant-modal-footer .ant-btn-primary {
+  background-color: #ff385c !important;
+}
+
+.ant-modal-content .ant-modal-body .ant-modal-confirm-body-wrapper .ant-modal-confirm-btns .ant-btn-primary {
   background-color: #ff4d4f !important;
 }
 
@@ -234,6 +242,11 @@ header.show-mobile .menu-mobile {
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab:hover {
   color: black;
+}
+
+.ant-picker-panel-layout .ant-picker-ok .ant-btn-primary {
+  background-color: #1677ff !important;
+  color: white !important;
 }
 
 /* width: 80vh;
