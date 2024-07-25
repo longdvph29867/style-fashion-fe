@@ -90,6 +90,20 @@ const ProductDetail: React.FC = () => {
                 <h3 className="text-2xl text-slate-700 text-center mt-6 mb-3">
                     Chi tiết sản phẩm
                 </h3>
+                <div className="my-4">
+                    <Link
+                        to={`/admin/products/update/${id}`}
+                        className=""
+                    >
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            className="text-white bg-green-500"
+                        >
+                            Cập nhật sản phẩm
+                        </Button>
+                    </Link>
+                </div>
                 <Form
                     form={form}
                     layout="vertical"
@@ -216,20 +230,6 @@ const ProductDetail: React.FC = () => {
 
                         </div>
                     </div>
-                    <Form.Item>
-                        <Link
-                            to={`/admin/products/update/${id}`}
-                            className=""
-                        >
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                className="text-white bg-green-500"
-                            >
-                                Cập nhật sản phẩm
-                            </Button>
-                        </Link>
-                    </Form.Item>
                 </Form>
             </div>
 

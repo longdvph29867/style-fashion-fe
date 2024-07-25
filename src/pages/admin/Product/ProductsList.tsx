@@ -7,17 +7,26 @@ import { Link } from "react-router-dom";
 import { Button, Image, Modal, message } from "antd";
 import { https } from "../../../config/axios";
 import { IProduct } from "../../../types/productType";
+import PaginationPage from "../../../components/PaginationPage/PaginationPage";
+import productService from "../../../services/productService";
+import ProductListSkeleton from "../../../components/Skeleton/ProductListSkeleton";
 
 const ProductsList: React.FC = () => {
-  const [porudctsList, setPorudctsList] = useState<IProduct[]>([]);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const params = new URLSearchParams(location.search);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const limitPerPage = 15;
+  const currentPage = params.get("page") ? Number(params.get("page")) : 1;
+  const [productList, setProductList] = useState<IProduct[]>([]);
 
   const fetchData = async () => {
-    window.scrollTo(0, 0);
     showSpinner();
     try {
-      const { data } = await https.get("/products?limit=100");
-      setPorudctsList(data.results);
+      const { data } = await productService.getAllProducts(limitPerPage, currentPage);
+      setLoading(false);
+      setProductList(data.results);
+      setTotalProducts(data.totalResults);
+      window.scrollTo(0, 0);
       hiddenSpinner();
     } catch (error) {
       hiddenSpinner();
@@ -26,7 +35,7 @@ const ProductsList: React.FC = () => {
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [location.search]);
 
   const handleDelete = async (id: string) => {
     showSpinner();
@@ -89,13 +98,20 @@ const ProductsList: React.FC = () => {
             </div>
           </div>
           <div>
-            {[...porudctsList].reverse().map((product, index) => {
+            {
+              loading && <div>
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <ProductListSkeleton key={index} />
+                ))}
+              </div>
+            }
+            {[...productList].map((product, index) => {
               return (
                 <div
                   key={index}
                   className="relative grid lg:grid-cols-8 sm:grid-cols-5 grid-cols-2 gap-2 border-t border-slate-100"
                 >
-                  <span className='absolute top-0.5 left-1 text-slate-300'>{++index}</span>
+                  {/* <span className='absolute top-0.5 left-1 text-slate-300'>{++index}</span> */}
                   <div className="p-2">
                     <div className="px-2 py-1 min-w-[110px] text-center">
                       <Image
@@ -108,7 +124,6 @@ const ProductsList: React.FC = () => {
                   <div className="p-2 sm:col-span-2">
                     <div className="flex flex-col justify-center">
                       <h6 className="text-base font-normal">{product.name}</h6>
-                      {/* <p className="text-sm text-slate-400">Nữ</p> */}
                     </div>
                   </div>
                   <div className="lg:block p-2 col-span-3">
@@ -116,14 +131,6 @@ const ProductsList: React.FC = () => {
                       {product.description?.slice(0, 150)}...
                     </p>
                   </div>
-                  {/* <div className="p-2">
-                    <span className="text-sm font-semibold text-slate-400">
-                      {formartCurrency(100000)}
-                    </span>
-                  </div>
-                  <div className="lg:block hidden p-2">
-                    <p className="text-sm ">{`categories`}</p>
-                  </div> */}
                   <div className="p-2 space-x-2">
                     <Link
                       to={`/admin/reviews/${product.id}`}
@@ -153,6 +160,10 @@ const ProductsList: React.FC = () => {
             })}
           </div>
         </div>
+        <PaginationPage
+          current={1}
+          total={totalProducts}
+          pageSize={limitPerPage} />
       </div>
     </div>
   );
