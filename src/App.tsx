@@ -38,6 +38,7 @@ import ListProductPage from "./pages/ListProductPage/ListProductPage";
 import CategoryList from "./pages/admin/Category/CategoryList";
 import AddCategory from "./pages/admin/Category/AddCategory";
 import UpdateCategory from "./pages/admin/Category/UpdateCategory";
+import BlogPage from "./components/Blog/BlogPage";
 
 function App() {
   const location = useLocation();
@@ -80,6 +81,7 @@ function App() {
           <Route path="order" element={<OrderPage />} />
           {/* <Route path="detail" element={<DetailProduct />} /> */}
           <Route path="products" element={<ListProductPage />} />
+          <Route path="blog" element={<BlogPage/>}/>
         </Route>
         <Route path="/auth" element={<LoginLayout />}>
           <Route path="verify-email/:token" element={<ResetPassword />} />

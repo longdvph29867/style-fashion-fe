@@ -76,9 +76,9 @@ const Menu = () => {
       <li>
         <a
           className="py-2.5 px-5 font-medium rounded-full duration-300 text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb]"
-          href="#"
+          href="/blog"
         >
-          Giới thiệu
+          Tin Tức
         </a>
       </li>
     </ul>
