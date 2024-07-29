@@ -185,7 +185,10 @@ header.show-mobile .menu-mobile {
   content: none !important;
 }
 
-.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-name {
+.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper
+  .ant-upload-list
+  .ant-upload-list-item
+  .ant-upload-list-item-name {
   white-space: normal !important;
 }
 
@@ -206,7 +209,11 @@ body .ant-modal-mask {
   background-color: #ff385c !important;
 }
 
-.ant-modal-content .ant-modal-body .ant-modal-confirm-body-wrapper .ant-modal-confirm-btns .ant-btn-primary {
+.ant-modal-content
+  .ant-modal-body
+  .ant-modal-confirm-body-wrapper
+  .ant-modal-confirm-btns
+  .ant-btn-primary {
   background-color: #ff4d4f !important;
 }
 
@@ -231,13 +238,12 @@ body .ant-modal-mask {
 }
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active {
-  background-color: #FAFAFA;
+  background-color: #fafafa;
   border-bottom: 2px solid #62d2a2 !important;
 }
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active * {
   color: #62d2a2 !important;
-
 }
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab:hover {
@@ -266,4 +272,15 @@ body .ant-modal-mask {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+/* WebKit browsers */
+.modal-voucher-scroll::-webkit-scrollbar {
+  width: 6px;
+  padding: 2px;
+}
+
+.modal-voucher-scroll::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 20px;
+  margin-left: 2px;
 }

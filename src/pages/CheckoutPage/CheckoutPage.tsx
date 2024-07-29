@@ -2,9 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import OrderSummary from "../../components/Checkout/OrderSummary";
 import PaymentMethod from "../../components/Checkout/PaymentMethod";
 import ShippingAddress from "../../components/Checkout/ShippingAddress";
-import cartService from "../../services/cartService";
-import React, { useEffect, useMemo, useState } from "react";
-import { CartType } from "../../types/cartType";
+import { ChangeEvent, useMemo, useState } from "react";
 import { ShippingAddressType } from "../../types/shippingAddress";
 import { hiddenSpinner, showSpinner } from "../../util/util";
 import { majorCities, surroundingProvinces } from "../../constant/constant";
@@ -13,33 +11,19 @@ import orderService from "../../services/orderService";
 import OrderNote from "../../components/Checkout/OrderNote";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Toolkits/store";
-import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+
 import { message } from "antd";
+import VoucherModal from "../../components/Checkout/VoucherModal";
 
 const CheckoutPage = () => {
   const user = useSelector((state: RootState) => state.userSlice.userInfo);
-  const [productList, setProductList] = useState<CartType | null>(null);
+  const [openModalVoucher, setOpenModalVoucher] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const navigate = useNavigate();
   const [orderNote, setOrderNote] = useState("");
   const [addressSelected, setAddressSelected] =
     useState<ShippingAddressType | null>(null);
   const carts = useSelector((state: RootState) => state.cartSlice.carts);
-  
-  // useEffect(() => {
-  //   if (user?.id) {
-  //     showSpinner();
-  //     cartService
-  //       .getCartByUserId(user.id)
-  //       .then((res) => {
-  //         setProductList(res.data);
-  //         hiddenSpinner();
-  //       })
-  //       .catch((err) => {
-  //         console.error("Error fetching data:", err);
-  //       });
-  //   }
-  // }, []);
 
   const subtotal = useMemo(() => {
     return carts.reduce(
@@ -64,20 +48,16 @@ const CheckoutPage = () => {
 
   const handleCreateOrder = () => {
     if (carts.length > 0 && addressSelected && user?.id) {
-      console.log("Create Order");
-      
-      const productsOrder: ProductOrderType[] = carts.map(
-        (item) => ({
-          productId: item.product.id,
-          quantity: item.quantity,
-          price: item.attribute.price,
-          productName: item.product.name,
-          slug: item.product.slug,
-          imageProduct: item.product.thumbnail,
-          imageAtrribute: item.attribute.image,
-          attribute: item.attribute.name,
-        })
-      );
+      const productsOrder: ProductOrderType[] = carts.map((item) => ({
+        productId: item.product.id,
+        quantity: item.quantity,
+        price: item.attribute.price,
+        productName: item.product.name,
+        slug: item.product.slug,
+        imageProduct: item.product.thumbnail,
+        imageAtrribute: item.attribute.image,
+        attribute: item.attribute.name,
+      }));
       const shippingAddressOrder = {
         recipientName: addressSelected.recipientName,
         recipientPhoneNumber: addressSelected.recipientPhoneNumber,
@@ -104,9 +84,7 @@ const CheckoutPage = () => {
           window.location.href = response.data.url;
         });
       } else {
-        console.log("COD");
-        
-        orderService.createCOD(newOrder).then((response) => {
+        orderService.createCOD(newOrder).then(() => {
           navigate("/order");
           message.success("Đặt hàng thành công");
         });
@@ -115,24 +93,19 @@ const CheckoutPage = () => {
   };
 
   const handleChangeOrderNote = () => {
-    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    (event: ChangeEvent<HTMLTextAreaElement>) => {
       setOrderNote(event.target.value);
     };
   };
 
-  const listBreadcrumb = [
-    {
-      label: "Giỏ hàng",
-      link: "/carts",
-    },
-    { label: "Thanh toán" },
-  ];
+  const onOpenVoucherModal = () => {
+    setOpenModalVoucher(true);
+  };
 
   return (
     <div className="Checkout-Page">
       <main className="container py-16 sm:py-24">
         <div className="mb-16">
-          {/* <Breadcrumb list={listBreadcrumb} /> */}
           <h2 className="block text-2xl font-mono sm:text-3xl lg:text-4xl font-semibold">
             Thanh toán
           </h2>
@@ -169,7 +142,12 @@ const CheckoutPage = () => {
             confirmOrder={handleCreateOrder}
             productList={carts}
             shippingfee={shippingFee}
+            onOpenVoucher={onOpenVoucherModal}
             subTotal={subtotal}
+          />
+          <VoucherModal
+            openModalVoucher={openModalVoucher}
+            setOpenModalVoucher={setOpenModalVoucher}
           />
         </div>
       </main>
