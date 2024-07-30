@@ -4,16 +4,16 @@ import PaymentMethod from "../../components/Checkout/PaymentMethod";
 import ShippingAddress from "../../components/Checkout/ShippingAddress";
 import { ChangeEvent, useMemo, useState } from "react";
 import { ShippingAddressType } from "../../types/shippingAddress";
-import { hiddenSpinner, showSpinner } from "../../util/util";
 import { majorCities, surroundingProvinces } from "../../constant/constant";
 import { CheckoutType, ProductOrderType } from "../../types/orderType";
 import orderService from "../../services/orderService";
 import OrderNote from "../../components/Checkout/OrderNote";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Toolkits/store";
-
 import { message } from "antd";
 import VoucherModal from "../../components/Checkout/VoucherModal";
+import { Voucher } from "../../types/voucher";
+import "../../assets/css/checkoutPage.css";
 
 const CheckoutPage = () => {
   const user = useSelector((state: RootState) => state.userSlice.userInfo);
@@ -21,6 +21,7 @@ const CheckoutPage = () => {
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const navigate = useNavigate();
   const [orderNote, setOrderNote] = useState("");
+  const [voucherSelected, setVoucherSelected] = useState<Voucher | null>(null);
   const [addressSelected, setAddressSelected] =
     useState<ShippingAddressType | null>(null);
   const carts = useSelector((state: RootState) => state.cartSlice.carts);
@@ -102,6 +103,10 @@ const CheckoutPage = () => {
     setOpenModalVoucher(true);
   };
 
+  const handleSelectVoucher = (voucher: Voucher) => {
+    setVoucherSelected(voucher);
+  };
+
   return (
     <div className="Checkout-Page">
       <main className="container py-16 sm:py-24">
@@ -146,8 +151,10 @@ const CheckoutPage = () => {
             subTotal={subtotal}
           />
           <VoucherModal
+            selectVoucher={handleSelectVoucher}
             openModalVoucher={openModalVoucher}
             setOpenModalVoucher={setOpenModalVoucher}
+            voucherSelected={voucherSelected}
           />
         </div>
       </main>

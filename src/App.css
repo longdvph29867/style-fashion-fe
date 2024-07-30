@@ -273,14 +273,3 @@ body .ant-modal-mask {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-/* WebKit browsers */
-.modal-voucher-scroll::-webkit-scrollbar {
-  width: 6px;
-  padding: 2px;
-}
-
-.modal-voucher-scroll::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 20px;
-  margin-left: 2px;
-}
