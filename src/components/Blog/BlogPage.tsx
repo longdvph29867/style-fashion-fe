@@ -1,11 +1,11 @@
-import React from 'react'
+
 import BlogList from './BlogList'
 import Breadcrumb from '../Breadcrumb/Breadcrumb'
 import HotBlog from './HotBlog'
 
-type Props = {}
 
-const BlogPage = (props: Props) => {
+
+const BlogPage = () => {
     const listBreadcrumb = [
         {
           label: "Tin Tức",

@@ -1,8 +1,8 @@
-import React from "react";
 
-type Props = {};
 
-const HotBlog = (props: Props) => {
+
+
+const HotBlog = () => {
   const blogList = [
     {
       id: 1,
@@ -65,9 +65,9 @@ const HotBlog = (props: Props) => {
         <div className="flex justify-center items-center gap-2">
           <div className="relative p-3">
             <a href="">
-              <img className="xl:w-72 xl:h-28 w-44 h-16 rounded" src={blog.image} alt="" />
+              <img className="xl:w-60 xl:h-24 lg:w-48 w-32 h-16 rounded" src={blog.image} alt="" />
             </a>
-            <p className="absolute left-0 top-[35px] xl:top-[55px] rounded-full w-5 h-5 xl:w-6 xl:h-6 bg-[#fe385c] text-white flex justify-center items-center">
+            <p className="absolute left-0 top-[35px] xl:top-[50px] rounded-full w-5 h-5 xl:w-6 xl:h-6 bg-[#fe385c] text-white flex justify-center items-center">
               {blog.id}
             </p>
           </div>

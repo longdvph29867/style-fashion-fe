@@ -39,6 +39,7 @@ import CategoryList from "./pages/admin/Category/CategoryList";
 import AddCategory from "./pages/admin/Category/AddCategory";
 import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 import BlogPage from "./components/Blog/BlogPage";
+import PostNews from "./pages/admin/Blog/PostNews";
 
 function App() {
   const location = useLocation();
@@ -104,6 +105,7 @@ function App() {
           <Route path="categories" element={<CategoryList />} />
           <Route path="categories/add" element={<AddCategory />} />
           <Route path="categories/update/:id" element={<UpdateCategory />} />
+          <Route path="blog/postnew" element={<PostNews/>}/>
         </Route>
         {/* Các route khác nếu có */}
       </Routes>

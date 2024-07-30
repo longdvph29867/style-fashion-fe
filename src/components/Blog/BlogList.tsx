@@ -1,8 +1,4 @@
 
-
-type Props = {}
-
-
 const BlogList = () => {
 const blogList = [
     {
