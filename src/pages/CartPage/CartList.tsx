@@ -30,13 +30,6 @@ const CartList = () => {
     500
   );
 
-  useEffect(()=>{
-    if(carts.length == 0){
-      showSpinner()
-    }else{
-      hiddenSpinner()
-    }
-  })
   const handleDelete = (idItemCart: string) => {
     if (userId) {
       showSpinner();
