@@ -34,6 +34,13 @@ const CheckoutPage = () => {
     );
   }, [carts]);
 
+  const calculateDiscount = useMemo(() => {
+    if (voucherSelected && voucherSelected.type === "percentage") {
+      return subtotal * (voucherSelected.discount / 100);
+    }
+    return voucherSelected?.discount ?? 0;
+  }, [subtotal, voucherSelected]);
+
   const shippingFee = useMemo(() => {
     if (addressSelected) {
       if (majorCities.includes(addressSelected.cityProvince)) {
@@ -71,14 +78,13 @@ const CheckoutPage = () => {
         productsOrder,
         shippingAddress: shippingAddressOrder,
         user: user.id,
-        historicalCost: subtotal,
-        salePrice: 0,
+        subTotal: subtotal,
+        discountAmount: calculateDiscount,
         shippingFee: shippingFee,
         note: orderNote,
-        totalPrice: subtotal + shippingFee,
+        totalPrice: subtotal + shippingFee - calculateDiscount,
         paymentMethod: paymentMethod,
-        paymentId: "",
-        voucher: "",
+        voucherCode: voucherSelected?.code ?? "",
       };
       if (paymentMethod === "VNPAY") {
         orderService.createVNPAY(newOrder).then((response) => {
@@ -145,6 +151,8 @@ const CheckoutPage = () => {
           <div className="border border-slate-200 rounded-xl my-10 lg:my-0" />
           {/* Order summary */}
           <OrderSummary
+            discountAmount={calculateDiscount}
+            voucherName={voucherSelected?.name}
             confirmOrder={handleCreateOrder}
             productList={carts}
             shippingfee={shippingFee}
@@ -156,7 +164,7 @@ const CheckoutPage = () => {
             selectVoucher={handleSelectVoucher}
             openModalVoucher={openModalVoucher}
             setOpenModalVoucher={setOpenModalVoucher}
-            voucherSelected={voucherSelected}
+            voucherSelectedId={voucherSelected?.id ?? ""}
           />
         </div>
       </main>

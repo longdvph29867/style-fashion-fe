@@ -10,6 +10,8 @@ type Props = {
   subTotal: number;
   onOpenVoucher: () => void;
   confirmOrder: () => void;
+  voucherName: string | undefined;
+  discountAmount: number;
 };
 const OrderSummary = ({
   productList,
@@ -17,6 +19,8 @@ const OrderSummary = ({
   subTotal,
   onOpenVoucher,
   confirmOrder,
+  voucherName,
+  discountAmount,
 }: Props) => {
   return (
     <div className="w-full lg:w-[36%]">
@@ -44,6 +48,9 @@ const OrderSummary = ({
           </button>
         </div>
       </div>
+      {voucherName && (
+        <span className="text-green-500">Đã áp dụng voucher {voucherName}</span>
+      )}
       {/* Subtotal */}
       <div className="mt-4 flex justify-between py-2.5">
         <span className="text-sm text-slate-600">Tổng tiền hàng</span>
@@ -62,13 +69,13 @@ const OrderSummary = ({
       <div className="flex justify-between py-2.5">
         <span className="text-sm text-slate-600">Voucher giảm giá</span>
         <span className="font-semibold text-sm text-slate-900">
-          {formartCurrency(0)}
+          -{formartCurrency(discountAmount)}
         </span>
       </div>
       {/* Order total */}
       <div className="flex justify-between font-semibold text-slate-900 text-base pt-4">
         <span>Tổng tiền đơn hàng</span>
-        <span>{formartCurrency(subTotal + shippingfee)}</span>
+        <span>{formartCurrency(subTotal + shippingfee - discountAmount)}</span>
       </div>
       <button
         onClick={confirmOrder}

@@ -4,13 +4,14 @@ import { Voucher } from "../../types/voucher";
 import voucherService from "../../services/voucherService";
 import { formartCurrency, hiddenSpinner, showSpinner } from "../../util/util";
 import dayjs from "dayjs";
-import { isValid } from "date-fns";
+import { IoIosRadioButtonOff } from "react-icons/io";
+import { GiConfirmed } from "react-icons/gi";
 
 type Props = {
   openModalVoucher: boolean;
   setOpenModalVoucher: (open: boolean) => void;
   selectVoucher: (voucher: Voucher) => void;
-  voucherSelected: Voucher | null;
+  voucherSelectedId: string;
   totalCartPrice: number;
 };
 
@@ -18,17 +19,11 @@ const VoucherModal = ({
   openModalVoucher,
   setOpenModalVoucher,
   selectVoucher,
-  voucherSelected,
+  voucherSelectedId,
   totalCartPrice,
 }: Props) => {
   const [voucherList, setVoucherList] = useState<Voucher[]>([]);
-  const [selectedVoucherId, setSelectedVoucherId] = useState("");
-
-  useEffect(() => {
-    if (voucherSelected) {
-      setSelectedVoucherId(voucherSelected.id);
-    }
-  }, [voucherSelected]);
+  const [selectedVoucherId, setSelectedVoucherId] = useState(voucherSelectedId);
 
   const validateVoucher = (
     quantity: number,
@@ -74,7 +69,7 @@ const VoucherModal = ({
   }, []);
 
   const onCancel = () => {
-    setSelectedVoucherId("");
+    setSelectedVoucherId(voucherSelectedId);
     setOpenModalVoucher(false);
   };
 
@@ -106,9 +101,13 @@ const VoucherModal = ({
               voucher.minCartPrice
             );
             return (
-              <label
-                htmlFor={`voucher-${voucher.code}`}
+              <div
                 key={voucher.id}
+                onClick={
+                  voucherValid.isValid
+                    ? () => setSelectedVoucherId(voucher.id)
+                    : undefined
+                }
                 className={`flex justify-between items-center p-5 mb-4 border border-gray-300 rounded-lg shadow-md bg-white hover:shadow-lg ${
                   voucherValid.isValid &&
                   "hover:border-[#ff385d98] cursor-pointer"
@@ -132,23 +131,21 @@ const VoucherModal = ({
                     </p>
                   </div>
                 </div>
+                {selectedVoucherId == voucher.id ? (
+                  <GiConfirmed size={22} color="#ff385c" />
+                ) : (
+                  <IoIosRadioButtonOff
+                    opacity={!voucherValid.isValid ? 0.2 : 1}
+                    size={20}
+                  />
+                )}
+
                 {!voucherValid.isValid && (
                   <div className="bg-[#ff8ba0] font-medium absolute bottom-0 left-0 w-full pl-4">
                     <span>{voucherValid.message}</span>
                   </div>
                 )}
-                <input
-                  name="voucher"
-                  type="radio"
-                  disabled={!voucherValid.isValid}
-                  onChange={() => setSelectedVoucherId(voucher.id)}
-                  className="hidden-input-radio"
-                  value={voucher.id}
-                  id={`voucher-${voucher.code}`}
-                  checked={voucher.id === selectedVoucherId}
-                />
-                <span className="input-radio-voucher"></span>
-              </label>
+              </div>
             );
           })}
         </div>

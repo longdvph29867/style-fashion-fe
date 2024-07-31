@@ -16,15 +16,14 @@ export type ShippingAddressCheckoutType = Omit<
 >;
 // Khai báo type cho đơn hàng
 export type CheckoutType = {
-  user:string
   productsOrder: ProductOrderType[];
   shippingAddress: ShippingAddressCheckoutType;
-  historicalCost: number;
-  salePrice: number;
+  user: string;
+  subTotal: number;
+  discountAmount: number;
   shippingFee: number;
   note: string;
   totalPrice: number;
   paymentMethod: string;
-  paymentId: string;
-  voucher: string;
+  voucherCode: string;
 };
