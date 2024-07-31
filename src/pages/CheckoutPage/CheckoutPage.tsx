@@ -105,7 +105,9 @@ const CheckoutPage = () => {
 
   const handleSelectVoucher = (voucher: Voucher) => {
     setVoucherSelected(voucher);
+    setOpenModalVoucher(false);
   };
+  console.log(voucherSelected);
 
   return (
     <div className="Checkout-Page">
