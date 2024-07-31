@@ -107,7 +107,6 @@ const CheckoutPage = () => {
     setVoucherSelected(voucher);
     setOpenModalVoucher(false);
   };
-  console.log(voucherSelected);
 
   return (
     <div className="Checkout-Page">
@@ -153,6 +152,7 @@ const CheckoutPage = () => {
             subTotal={subtotal}
           />
           <VoucherModal
+            totalCartPrice={subtotal}
             selectVoucher={handleSelectVoucher}
             openModalVoucher={openModalVoucher}
             setOpenModalVoucher={setOpenModalVoucher}
