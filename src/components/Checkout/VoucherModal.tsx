@@ -25,27 +25,32 @@ const VoucherModal = ({
   const [voucherList, setVoucherList] = useState<Voucher[]>([]);
   const [selectedVoucherId, setSelectedVoucherId] = useState(voucherSelectedId);
 
-  const validateVoucher = (
-    quantity: number,
-    validTo: string,
-    minCartPrice: number
-  ) => {
-    if (quantity === 0) {
+  const validateVoucher = (voucher: Voucher) => {
+    if (voucher.quantity === 0) {
       return {
         isValid: false,
         message: "Voucher đã được sử dụng hết số lượng",
       };
     }
     const now = dayjs();
-    const expiryDate = dayjs(validTo);
-    if (!now.isBefore(expiryDate)) {
+    const endDate = dayjs(voucher.validTo);
+    if (!now.isBefore(endDate)) {
       return { isValid: false, message: "Voucher này đã hết hạn" };
     }
-    if (totalCartPrice < minCartPrice) {
+    const startDate = dayjs(voucher.validFrom);
+    if (!now.isAfter(startDate)) {
+      return {
+        isValid: false,
+        message: `Voucher có hiệu lực vào ${dayjs(voucher.validFrom).format(
+          "DD/MM/YYYY"
+        )}`,
+      };
+    }
+    if (totalCartPrice < voucher.minCartPrice) {
       return {
         isValid: false,
         message: `Giá trị đơn hàng chưa đạt mức tối thiểu ${formartCurrency(
-          minCartPrice
+          voucher.minCartPrice
         )}`,
       };
     }
@@ -95,11 +100,7 @@ const VoucherModal = ({
         <p className="text-[18px] font-semibold mb-6">Chọn Voucher</p>
         <div className="h-[70vh] overflow-y-auto pr-1 modal-voucher-scroll">
           {voucherList.map((voucher: Voucher) => {
-            const voucherValid = validateVoucher(
-              voucher.quantity,
-              voucher.validTo,
-              voucher.minCartPrice
-            );
+            const voucherValid = validateVoucher(voucher);
             return (
               <div
                 key={voucher.id}
@@ -122,7 +123,12 @@ const VoucherModal = ({
                         ? formartCurrency(voucher.discount)
                         : `${voucher.discount}%`}
                     </p>
-
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">Ngày hiệu lực:</span>{" "}
+                      {voucher.validFrom
+                        ? dayjs(voucher.validFrom).format("DD/MM/YYYY HH:mm")
+                        : "Không xác định"}
+                    </p>
                     <p className="text-sm text-gray-600">
                       <span className="font-medium">Ngày hết hạn:</span>{" "}
                       {voucher.validTo
