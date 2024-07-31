@@ -14,6 +14,8 @@ import { message } from "antd";
 import VoucherModal from "../../components/Checkout/VoucherModal";
 import { Voucher } from "../../types/voucher";
 import "../../assets/css/checkoutPage.css";
+import { hiddenSpinner, showSpinner } from "../../util/util";
+import { useQueryClient } from "@tanstack/react-query";
 
 const CheckoutPage = () => {
   const user = useSelector((state: RootState) => state.userSlice.userInfo);
@@ -25,6 +27,7 @@ const CheckoutPage = () => {
   const [addressSelected, setAddressSelected] =
     useState<ShippingAddressType | null>(null);
   const carts = useSelector((state: RootState) => state.cartSlice.carts);
+  const queryClient = useQueryClient();
 
   const subtotal = useMemo(() => {
     return carts.reduce(
@@ -64,7 +67,8 @@ const CheckoutPage = () => {
         slug: item.product.slug,
         imageProduct: item.product.thumbnail,
         imageAtrribute: item.attribute.image,
-        attribute: item.attribute.name,
+        attributeName: item.attribute.name,
+        attributeId: item.attribute.id,
       }));
       const shippingAddressOrder = {
         recipientName: addressSelected.recipientName,
@@ -86,12 +90,19 @@ const CheckoutPage = () => {
         paymentMethod: paymentMethod,
         voucherCode: voucherSelected?.code ?? "",
       };
+      showSpinner();
       if (paymentMethod === "VNPAY") {
-        orderService.createVNPAY(newOrder).then((response) => {
+        orderService.createVNPAY(newOrder).then(async (response) => {
+          hiddenSpinner();
           window.location.href = response.data.url;
         });
       } else {
         orderService.createCOD(newOrder).then(() => {
+          queryClient.refetchQueries({
+            queryKey: ["carts"],
+            type: "active",
+          });
+          hiddenSpinner();
           navigate("/order");
           message.success("Đặt hàng thành công");
         });

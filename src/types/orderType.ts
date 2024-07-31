@@ -8,7 +8,8 @@ export type ProductOrderType = {
   slug: string;
   imageProduct: string;
   imageAtrribute: string;
-  attribute: string;
+  attributeName: string;
+  attributeId: string;
 };
 export type ShippingAddressCheckoutType = Omit<
   ShippingAddressType,

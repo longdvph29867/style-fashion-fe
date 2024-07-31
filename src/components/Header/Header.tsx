@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import imgLogo from "../../assets/img/sf-logo2.png";
 import Menu from "./Menu";
 import User from "../User/User";
@@ -25,15 +25,9 @@ const Header = () => {
     queryFn: () =>
       cartService
         .getCartByUserId(userId!)
-        .then((res) => res.data.products_cart),
+        .then((res) => dispatch(setCartAll(res.data.products_cart))),
     refetchInterval: 3 * 60 * 1000,
   });
-
-  useEffect(() => {
-    if (data) {
-      dispatch(setCartAll(data));
-    }
-  }, [data, dispatch]);
 
   return (
     <header
