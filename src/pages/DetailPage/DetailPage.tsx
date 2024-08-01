@@ -4,23 +4,28 @@ import ReviewsDetail from "../../components/DetailComponent/ReviewsDetail";
 import productService from "../../services/productService";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import InfoProduct from "./InfoProduct/InfoProduct";
-import SkeletionList from "../../components/Skeletion/Skeletion";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { visilibitySpiner } from "../../util/util";
+import axios from "axios";
 const DetailPage = () => {
   const { slug } = useParams<string>();
 
   const { data, isLoading } = useQuery({
     queryKey: ["product-detail"],
     queryFn: () =>
-      productService.getProductBySlug(slug as string).then((res) => res.data),
+      axios
+        .get(
+          "https://style-fashion-api-2rrd.vercel.app/api/v1/products/product-name-mung"
+        )
+        .then((res) => res.data),
     staleTime: 3 * 60 * 1000, // quá 3 phút sẽ gọi lại api
     enabled: !!slug, // khi nào có slug thì mới gọi api
   });
   useEffect(() => {
     visilibitySpiner(isLoading);
-  }, []);
+  }, [isLoading]);
+
   const listBreadcrumb = [
     {
       label: "Chi tiết sản phẩm",

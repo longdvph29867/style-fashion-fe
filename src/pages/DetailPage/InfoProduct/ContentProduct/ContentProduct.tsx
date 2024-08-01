@@ -1,5 +1,4 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { Attribute, Product } from "../../../../types/products";
 import { message } from "antd";
 import { formartCurrency, formartRating } from "../../../../util/util";
 import cartService from "../../../../services/cartService";
@@ -13,7 +12,7 @@ type Props = {
 };
 
 const ContentProduct = ({ setCurrentImage, product }: Props) => {
-  const [attribute, setAttribute] = useState<Attribute | null>(null);
+  const [attribute, setAttribute] = useState<{ [key: string]: string }>({});
   const [quantity, setQuantity] = useState(1);
   const [showMaxQuantity, setShowMaxQuantity] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -27,32 +26,35 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
     setQuantity(Number(value) === 0 ? 1 : Number(value));
   };
 
-  const handleChangeQuantity = (value: number) => {
-    if (!attribute) {
-      message.error("Vui lòng chọn loại hàng!");
-      return;
-    } else if (quantity + value < 1) {
-      return;
-    } else if (quantity + value > attribute.stock && value > 0) {
-      return;
-    }
-    setQuantity(quantity + value);
-  };
+  // const handleChangeQuantity = (value: number) => {
+  //   if (!attribute) {
+  //     message.error("Vui lòng chọn loại hàng!");
+  //     return;
+  //   } else if (quantity + value < 1) {
+  //     return;
+  //   } else if (quantity + value > attribute.stock && value > 0) {
+  //     return;
+  //   }
+  //   setQuantity(quantity + value);
+  // };
 
-  useEffect(() => {
-    if (!attribute) {
-      return;
-    } else if (quantity > attribute?.stock) {
-      setShowMaxQuantity(true);
-    } else {
-      setShowMaxQuantity(false);
-    }
-  }, [quantity, attribute]);
+  // useEffect(() => {
+  //   if (!attribute) {
+  //     return;
+  //   } else if (quantity > attribute?.stock) {
+  //     setShowMaxQuantity(true);
+  //   } else {
+  //     setShowMaxQuantity(false);
+  //   }
+  // }, [quantity, attribute]);
 
-  const handleChangeAttribute = (attribute: Attribute) => {
-    setCurrentImage(attribute.image);
-    setAttribute(attribute);
+  const handleChangeAttribute = (key: string, idAttribute: string) => {
+    setAttribute((prevState) => ({
+      ...prevState,
+      [key]: idAttribute,
+    }));
   };
+\
 
   const handleAddtoCart = async () => {
     try {
@@ -65,7 +67,7 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
       } else {
         const res = await cartService.addToCart(userId, {
           product: product.id,
-          attribute: attribute.id,
+          attribute: "",
           quantity: quantity,
         });
         console.log(res);
@@ -87,7 +89,8 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
             <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold">
               <span className="text-[#fe385c] !leading-none">
                 {formartCurrency(
-                  attribute ? attribute.price : product?.attributes[0].price
+                  0
+                  // attribute ? attribute.price : product?.attributes[0].price
                 )}
               </span>
             </div>
@@ -137,39 +140,48 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
       {/* SELECT SIZE FROM ATTRIBUTES */}
       <div className="my-8 space-y-2">
         <div>
-          <div className="font-semibold text-sm text-[#222]">Thuộc Tính:</div>
-          <div className="flex items-center justify-start flex-wrap gap-3 mt-2">
-            {product?.attributes.map((attr, index) => (
-              <div
-                key={index}
-                className={`flex items-center justify-center px-5 h-12 text-[14px] font-semibold uppercase border cursor-pointer rounded-2xl sm:text-base duration-200 ${
-                  attribute?.name === attr.name
-                    ? "border-[#fe385c] text-white bg-[#fe385c]"
-                    : "border-[#a6a6a6] text-[#222]"
-                } hover:text-white hover:bg-[#fe385c] hover:border-[#fe385c]`}
-                onClick={() => handleChangeAttribute(attr)}
-              >
-                {attr.name}
+          <div className="font-semibold text-[#222]">Thuộc Tính:</div>
+          <div className="pl-3">
+            {product?.attributes.map((attr) => (
+              <div key={attr._id} className="mt-3">
+                <p className="font-semibold">{attr.name}</p>
+                <div className="flex items-center justify-start flex-wrap gap-3 mt-2">
+                  {attr.values.map((variant) => (
+                    <div
+                      key={variant._id}
+                      className={`flex items-center justify-center px-5 h-12 text-[14px] font-semibold uppercase border cursor-pointer rounded-2xl sm:text-base duration-200 ${
+                        variant?.name === attr.name
+                          ? "border-[#fe385c] text-white bg-[#fe385c]"
+                          : "border-[#a6a6a6] text-[#222]"
+                      } hover:text-white hover:bg-[#fe385c] hover:border-[#fe385c]`}
+                      onClick={() =>
+                        handleChangeAttribute(attr.name, variant._id)
+                      }
+                    >
+                      {variant.name}
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
         </div>
         <div>
-          <div className="text-sm text-[#222] italic">
+          {/* <div className="text-sm text-[#222] italic">
             {attribute
               ? attribute.stock
               : product?.attributes.reduce((total, item) => {
                   return total + item.stock;
                 }, 0)}{" "}
             sản phẩm
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="flex space-x-3.5">
         <div>
           <div className="relative flex items-center max-w-[8rem]">
             <button
-              onClick={() => handleChangeQuantity(-1)}
+              // onClick={() => handleChangeQuantity(-1)}
               className="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11"
             >
               <svg
@@ -196,7 +208,7 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
               onChange={handleChangeInput}
             />
             <button
-              onClick={() => handleChangeQuantity(1)}
+              // onClick={() => handleChangeQuantity(1)}
               className="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11"
             >
               <svg
@@ -217,7 +229,7 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
             </button>
           </div>
           <p className="text-[#e03] italic text-sm mt-1 h-5">
-            {showMaxQuantity && <span>Tối đa sản {attribute?.stock} phẩm</span>}
+            {/* {showMaxQuantity && <span>Tối đa sản {attribute?.stock} phẩm</span>} */}
           </p>
         </div>
         <button
