@@ -65,6 +65,7 @@ const AddCategory: React.FC = () => {
                 >
                     <Input />
                 </Form.Item>
+
                 <Form.Item>
                     <Button
                         type="primary"
@@ -74,6 +75,7 @@ const AddCategory: React.FC = () => {
                         Thêm mới
                     </Button>
                 </Form.Item>
+                
             </Form>
         </div>
     );

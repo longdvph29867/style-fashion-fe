@@ -36,16 +36,16 @@ const fetchData = async () => {
         <a href="">Tin tức nổi bật</a>
       </h2>
       {blogList.map((blog,index) => (
-        <div className="flex items-center gap-2">
-          <div className="relative p-3">
+        <div className="flex gap-2 items-center">
+          <div className="relative p-3 xl:w-3/6">
             <a href="">
-              <img className="xl:w-24 xl:h-32 lg:w-20 w-16 h-16 rounded" src={blog.image} alt="" />
+              <img className="xl:w-full xl:h-32 lg:w-20 w-16 h-16 rounded" src={blog.image} alt="" />
             </a>
             <p className="absolute left-0 top-[37px] xl:top-[63px] rounded-full w-5 h-5 xl:w-6 xl:h-6 bg-[#fe385c] text-white flex justify-center items-center">
               {index+1}
             </p>
           </div>
-          <div className="">
+          <div className="xl:w-3/4">
             <h3 className="text-sm font-semibold hover:text-[#fe385c]">
               <a href="">{blog.title}</a>
             </h3>

@@ -4,5 +4,11 @@ export type Blog = {
     image:string;
     user:string;
     content:string,
-    createdAt:Date
+}
+
+export type FormPostNews = {
+    title:string;
+    image:string;
+    user:string;
+    content:string,
 }

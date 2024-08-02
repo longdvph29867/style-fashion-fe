@@ -2,7 +2,7 @@
   import imgLogo from "../../../assets/img/logo140.svg";
   import imgLogoIcon from "../../../assets/img/logo_icon.png";
   import { MdDashboard, MdCategory } from "react-icons/md";
-  import { FaBoxes, FaUserAlt } from "react-icons/fa";
+  import { FaBoxes, FaPenAlt, FaUserAlt } from "react-icons/fa";
   import { Link, useLocation } from "react-router-dom";
   type Menu = {
     link: string;
@@ -33,6 +33,12 @@
       link: "/admin/users",
       title: "Users",
       icon: <FaUserAlt />,
+      active: false,
+    },
+    {
+      link: "/admin/blog/postnew",
+      title: "Blog",
+      icon: <FaPenAlt />,
       active: false,
     },
   ];
