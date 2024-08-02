@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { message } from "antd";
 import { formartCurrency, formartRating } from "../../../../util/util";
 import cartService from "../../../../services/cartService";
@@ -12,53 +12,95 @@ type Props = {
 };
 
 const ContentProduct = ({ setCurrentImage, product }: Props) => {
-  const [attribute, setAttribute] = useState<{ [key: string]: string }>({});
+  const [variantSelected, setVariantSelected] = useState<{
+    [key: string]: string;
+  }>({});
+  const [varinatIdInvalid, setVariantIdInvalid] = useState<string[]>([]);
   const [quantity, setQuantity] = useState(1);
   const [showMaxQuantity, setShowMaxQuantity] = useState<boolean>(false);
   const dispatch = useDispatch();
   const userId = localUserService.get()?.id;
+  const stockRef = useRef(0);
+
+  useEffect(() => {
+    if (product && Object.values(variantSelected).length === 0) {
+      const totalStock = product?.variants.reduce(
+        (total, item) => total + item.stock,
+        0
+      );
+      stockRef.current = totalStock;
+    }
+  }, [product, variantSelected]);
+
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    if (!attribute) {
+    const value = parseInt(e.target.value);
+    if (Object.values(variantSelected).length !== product.attributes.length) {
       message.error("Vui lòng chọn loại sản phẩm!");
       return;
     }
-    setQuantity(Number(value) === 0 ? 1 : Number(value));
+    if (isNaN(value)) {
+      setQuantity(0);
+    } else if (value < 0 || value > stockRef.current) {
+      setShowMaxQuantity(true);
+      setQuantity(1);
+    } else {
+      setShowMaxQuantity(false);
+      setQuantity(value);
+    }
   };
 
-  // const handleChangeQuantity = (value: number) => {
-  //   if (!attribute) {
-  //     message.error("Vui lòng chọn loại hàng!");
-  //     return;
-  //   } else if (quantity + value < 1) {
-  //     return;
-  //   } else if (quantity + value > attribute.stock && value > 0) {
-  //     return;
-  //   }
-  //   setQuantity(quantity + value);
-  // };
-
-  // useEffect(() => {
-  //   if (!attribute) {
-  //     return;
-  //   } else if (quantity > attribute?.stock) {
-  //     setShowMaxQuantity(true);
-  //   } else {
-  //     setShowMaxQuantity(false);
-  //   }
-  // }, [quantity, attribute]);
-
-  const handleChangeAttribute = (key: string, idAttribute: string) => {
-    setAttribute((prevState) => ({
-      ...prevState,
-      [key]: idAttribute,
-    }));
+  const handleChangeQuantity = (value: number) => {
+    if (Object.values(variantSelected).length !== product.attributes.length) {
+      message.error("Vui lòng chọn loại hàng!");
+      return;
+    } else if (quantity + value < 1) {
+      return;
+    } else if (quantity + value > stockRef.current && value > 0) {
+      setShowMaxQuantity(true);
+      return;
+    }
+    setShowMaxQuantity(false);
+    setQuantity(quantity + value);
   };
-\
+
+  const handleChangeAttribute = (
+    key: string,
+    idAttribute: string,
+    image: undefined | string
+  ) => {
+    const newAttribute = { ...variantSelected, [key]: idAttribute };
+    const attributeIds = Object.values(newAttribute);
+    const invalidVariants: string[] = [];
+    for (const idAttr of attributeIds) {
+      product.variants.forEach((variant) => {
+        if (variant.stock === 0 && variant.tier_index.includes(idAttr)) {
+          variant.tier_index.forEach((tier) => {
+            if (tier !== idAttr && !invalidVariants.includes(tier)) {
+              invalidVariants.push(tier);
+            }
+          });
+        }
+      });
+    }
+    if (attributeIds.length === product.attributes.length) {
+      const varinat = product.variants.find((item) => {
+        const newSet = new Set([...attributeIds, ...item.tier_index]);
+        if (newSet.size === attributeIds.length) {
+          return true;
+        }
+      });
+      stockRef.current = varinat?.stock ?? 0;
+    }
+    if (image) {
+      setCurrentImage(image);
+    }
+    setVariantIdInvalid(invalidVariants);
+    setVariantSelected(newAttribute);
+  };
 
   const handleAddtoCart = async () => {
     try {
-      if (!attribute) {
+      if (!variantSelected) {
         message.error("Vui lòng chọn loại sản phẩm!");
       } else if (showMaxQuantity) {
         return;
@@ -147,41 +189,40 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
                 <p className="font-semibold">{attr.name}</p>
                 <div className="flex items-center justify-start flex-wrap gap-3 mt-2">
                   {attr.values.map((variant) => (
-                    <div
+                    <button
+                      disabled={varinatIdInvalid.includes(variant._id)}
                       key={variant._id}
-                      className={`flex items-center justify-center px-5 h-12 text-[14px] font-semibold uppercase border cursor-pointer rounded-2xl sm:text-base duration-200 ${
-                        variant?.name === attr.name
-                          ? "border-[#fe385c] text-white bg-[#fe385c]"
-                          : "border-[#a6a6a6] text-[#222]"
-                      } hover:text-white hover:bg-[#fe385c] hover:border-[#fe385c]`}
+                      className={`button-variant ${
+                        variantSelected[attr.name] === variant._id &&
+                        "active-variant"
+                      }`}
                       onClick={() =>
-                        handleChangeAttribute(attr.name, variant._id)
+                        handleChangeAttribute(
+                          attr.name,
+                          variant._id,
+                          variant.image
+                        )
                       }
                     >
                       {variant.name}
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
             ))}
+            <div className="mt-1">
+              <span className="text-sm text-[#222] italic">
+                {stockRef.current} sản phẩm
+              </span>
+            </div>
           </div>
-        </div>
-        <div>
-          {/* <div className="text-sm text-[#222] italic">
-            {attribute
-              ? attribute.stock
-              : product?.attributes.reduce((total, item) => {
-                  return total + item.stock;
-                }, 0)}{" "}
-            sản phẩm
-          </div> */}
         </div>
       </div>
       <div className="flex space-x-3.5">
         <div>
           <div className="relative flex items-center max-w-[8rem]">
             <button
-              // onClick={() => handleChangeQuantity(-1)}
+              onClick={() => handleChangeQuantity(-1)}
               className="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11"
             >
               <svg
@@ -208,7 +249,7 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
               onChange={handleChangeInput}
             />
             <button
-              // onClick={() => handleChangeQuantity(1)}
+              onClick={() => handleChangeQuantity(1)}
               className="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11"
             >
               <svg
@@ -229,7 +270,7 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
             </button>
           </div>
           <p className="text-[#e03] italic text-sm mt-1 h-5">
-            {/* {showMaxQuantity && <span>Tối đa sản {attribute?.stock} phẩm</span>} */}
+            {showMaxQuantity && <span>Tối đa sản {stockRef.current} phẩm</span>}
           </p>
         </div>
         <button

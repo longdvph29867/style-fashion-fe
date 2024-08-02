@@ -273,3 +273,37 @@ body .ant-modal-mask {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.button-variant {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  height: 3rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: 1px solid;
+  cursor: pointer;
+  border-radius: 1rem;
+  transition-duration: 0.2s;
+  border: 1px solid #a6a6a6;
+  color: #222;
+}
+
+.button-variant:hover {
+  color: white;
+  background-color: #fe385c;
+  border-color: #fe385c;
+}
+.active-variant {
+  border: 1px solid #fe385c;
+  color: white;
+  background: #fe385c;
+}
+
+.button-variant:disabled {
+  cursor: no-drop;
+  opacity: 0.5;
+  background-color: white;
+  color: black;
+  border: 1px solid #a6a6a6;
+}
