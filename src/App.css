@@ -290,8 +290,8 @@ body .ant-modal-mask {
 }
 
 .button-variant:hover {
-  color: white;
-  background-color: #fe385c;
+  /* color: white; */
+  /* background-color: #fe385c; */
   border-color: #fe385c;
 }
 .active-variant {

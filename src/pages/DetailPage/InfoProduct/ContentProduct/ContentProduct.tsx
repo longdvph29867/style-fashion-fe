@@ -68,7 +68,12 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
     idAttribute: string,
     image: undefined | string
   ) => {
-    const newAttribute = { ...variantSelected, [key]: idAttribute };
+    const newAttribute = { ...variantSelected };
+    if (newAttribute[key] === idAttribute) {
+      delete newAttribute[key];
+    } else {
+      newAttribute[key] = idAttribute;
+    }
     const attributeIds = Object.values(newAttribute);
     const invalidVariants: string[] = [];
     for (const idAttr of attributeIds) {
