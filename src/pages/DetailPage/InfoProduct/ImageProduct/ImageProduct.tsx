@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Product } from "../../../../types/products";
 import { Skeleton } from "antd";
 
 type Props = {
@@ -12,7 +11,12 @@ const ImageProduct = ({ image, product, setCurrentImage }: Props) => {
   const [images, setImages] = useState<string[]>([]);
   useEffect(() => {
     if (product) {
-      const listImageAttributes = product.attributes.map((item) => item.image);
+      const listImageAttributes = product.attributes.flatMap((item) =>
+        item.values
+          .map((value) => value.image)
+          .filter((image): image is string => image !== undefined)
+      );
+
       setImages([...product.gallery, ...listImageAttributes]);
     }
   }, [product]);

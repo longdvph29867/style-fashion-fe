@@ -5,6 +5,7 @@ import cartService from "../../../../services/cartService";
 import { useDispatch } from "react-redux";
 import { setCartAll } from "../../../../Toolkits/cartSlice";
 import { localUserService } from "../../../../services/localService";
+import { IoRemoveOutline } from "react-icons/io5";
 
 type Props = {
   setCurrentImage: (value: string) => void;
@@ -17,20 +18,39 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
   }>({});
   const [varinatIdInvalid, setVariantIdInvalid] = useState<string[]>([]);
   const [quantity, setQuantity] = useState(1);
+  const [price, setPrice] = useState<number[]>([]);
   const [showMaxQuantity, setShowMaxQuantity] = useState<boolean>(false);
   const dispatch = useDispatch();
   const userId = localUserService.get()?.id;
   const stockRef = useRef(0);
 
   useEffect(() => {
-    if (product && Object.values(variantSelected).length === 0) {
-      const totalStock = product?.variants.reduce(
-        (total, item) => total + item.stock,
-        0
-      );
-      stockRef.current = totalStock;
+    if (product) {
+      if (Object.values(variantSelected).length === 0) {
+        const totalStock = product?.variants.reduce(
+          (total, item) => total + item.stock,
+          0
+        );
+        stockRef.current = totalStock;
+      }
     }
   }, [product, variantSelected]);
+
+  useEffect(() => {
+    if (product) {
+      const minPrice = Math.min(
+        ...product.variants.map((varriant) => varriant.currentPrice)
+      );
+      const maxPrice = Math.max(
+        ...product.variants.map((varriant) => varriant.currentPrice)
+      );
+      if (minPrice === maxPrice) {
+        setPrice([minPrice]);
+      } else {
+        setPrice([minPrice, maxPrice]);
+      }
+    }
+  }, [product]);
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
@@ -88,13 +108,14 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
       });
     }
     if (attributeIds.length === product.attributes.length) {
-      const varinat = product.variants.find((item) => {
+      const variant = product.variants.find((item) => {
         const newSet = new Set([...attributeIds, ...item.tier_index]);
         if (newSet.size === attributeIds.length) {
           return true;
         }
       });
-      stockRef.current = varinat?.stock ?? 0;
+      stockRef.current = variant?.stock ?? 0;
+      setPrice([variant?.currentPrice ?? 0]);
     }
     if (image) {
       setCurrentImage(image);
@@ -132,15 +153,17 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
       <div>
         <h2 className="text-2xl font-semibold sm:text-3xl">{product?.name}</h2>
         <div className="flex items-center mt-5 space-x-4 sm:space-x-5">
-          <div>
-            <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold">
-              <span className="text-[#fe385c] !leading-none">
-                {formartCurrency(
-                  0
-                  // attribute ? attribute.price : product?.attributes[0].price
-                )}
-              </span>
-            </div>
+          <div className="flex gap-2 items-center text-[#fe385c]">
+            {price.map((amount, index) => (
+              <>
+                {index > 0 && <IoRemoveOutline />}
+                <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold">
+                  <span className="text-[#fe385c] !leading-none">
+                    {formartCurrency(amount)}
+                  </span>
+                </div>
+              </>
+            ))}
           </div>
           <div className="border-l h-7 border-slate-300" />
           <div className="flex items-center">

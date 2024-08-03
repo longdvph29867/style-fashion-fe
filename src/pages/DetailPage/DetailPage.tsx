@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import DescriptionDetail from "../../components/DetailComponent/DescriptionDetail";
 import ReviewsDetail from "../../components/DetailComponent/ReviewsDetail";
-import productService from "../../services/productService";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import InfoProduct from "./InfoProduct/InfoProduct";
 import { useQuery } from "@tanstack/react-query";

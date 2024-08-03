@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import IntroduceProduct from "../../../components/DetailComponent/IntroduceProduct";
-import { Product } from "../../../types/products";
 import ContentProduct from "./ContentProduct/ContentProduct";
 import ImageProduct from "./ImageProduct/ImageProduct";
 
 type Props = {
-  product:Product
+  product: Product;
 };
 
-const InfoProduct = ({product}: Props) => {
+const InfoProduct = ({ product }: Props) => {
   const [currentImage, setCurrentImage] = useState<string>("");
 
   useEffect(() => {
-    if(product){
+    if (product) {
       setCurrentImage(product.gallery[0]);
     }
   }, [product]);
