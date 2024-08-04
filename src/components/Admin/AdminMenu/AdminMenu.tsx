@@ -1,6 +1,6 @@
 import React from "react";
-import imgLogo from "../../../assets/img/logo140.svg";
-import imgLogoIcon from "../../../assets/img/logo_icon.png";
+import imgLogo from "../../../assets/img/sf-logo2.png";
+import imgLogoIcon from "../../../assets/img/logo_icon_v2.png";
 import { MdDashboard, MdCategory } from "react-icons/md";
 import { FaBoxes, FaUserAlt } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
@@ -14,7 +14,7 @@ type Menu = {
 const listMenu: Menu[] = [
   {
     link: "/",
-    title: "Trang chủ",
+    title: "Tổng quan",
     icon: <MdDashboard />,
     active: false,
   },
@@ -67,15 +67,17 @@ const AdminMenu: React.FC = () => {
               return (
                 <li key={index} className="">
                   <Link
-                    className={`text-sm flex items-center lg:px-4 py-2.5 rounded-lg ${pathAfterAdmin === link ? "lg:bg-white lg:shadow-xl" : ""
-                      } `}
+                    className={`text-sm flex items-center lg:px-4 py-2.5 rounded-lg ${
+                      pathAfterAdmin === link ? "lg:bg-white lg:shadow-xl" : ""
+                    } `}
                     to={link}
                   >
                     <div
-                      className={`lg:mr-2 flex h-8 w-8 items-center justify-center rounded-lg ${active
-                        ? "lg:bg-transparent lg:shadow-none bg-white shadow-lg"
-                        : ""
-                        } `}
+                      className={`lg:mr-2 flex h-8 w-8 items-center justify-center rounded-lg ${
+                        active
+                          ? "lg:bg-transparent lg:shadow-none bg-white shadow-lg"
+                          : ""
+                      } `}
                     >
                       {icon}
                     </div>
