@@ -16,7 +16,7 @@ const Navbar = () => {
             to={""}
             className={`block py-5 md:py-8  flex-shrink-0 text-sm sm:text-base ${
               selectedNavItem === ""
-                ? "border-b-2 border-[#ff385c] text-slate-900 font-medium"
+                ? "border-b-2 border-primary2 text-slate-900 font-medium"
                 : ""
             } hover:text-slate-800 text-slate-500`}
             onClick={() => handleNavItemClick("")}
@@ -27,27 +27,27 @@ const Navbar = () => {
             to={"shipping-address"}
             className={`block py-5 md:py-8  flex-shrink-0 text-sm sm:text-base ${
               selectedNavItem === "shipping-address"
-                ? "border-b-2 border-[#ff385c] text-slate-900 font-medium"
+                ? "border-b-2 border-primary2 text-slate-900 font-medium"
                 : ""
             } hover:text-slate-800 text-slate-500`}
             onClick={() => handleNavItemClick("shipping-address")}
           >
             Địa chỉ giao hàng
           </NavLink>
-          {/* <NavLink to={'savelists'} className={`block py-5 md:py-8  flex-shrink-0 text-sm sm:text-base ${selectedNavItem === 'savelists' ? 'border-b-2 border-[#ff385c] text-slate-900 font-medium' : ''} hover:text-slate-800 text-slate-500`} onClick={() => handleNavItemClick('savelists')}>Save lists</NavLink> */}
-          {/* <NavLink to={'myorder'} className={`block py-5 md:py-8  flex-shrink-0 text-sm sm:text-base ${selectedNavItem === 'myorder' ? 'border-b-2 border-[#ff385c] text-slate-900 font-medium' : ''} hover:text-slate-800 text-slate-500`} onClick={() => handleNavItemClick('myorder')}> My order</NavLink> */}
+          {/* <NavLink to={'savelists'} className={`block py-5 md:py-8  flex-shrink-0 text-sm sm:text-base ${selectedNavItem === 'savelists' ? 'border-b-2 border-primary2 text-slate-900 font-medium' : ''} hover:text-slate-800 text-slate-500`} onClick={() => handleNavItemClick('savelists')}>Save lists</NavLink> */}
+          {/* <NavLink to={'myorder'} className={`block py-5 md:py-8  flex-shrink-0 text-sm sm:text-base ${selectedNavItem === 'myorder' ? 'border-b-2 border-primary2 text-slate-900 font-medium' : ''} hover:text-slate-800 text-slate-500`} onClick={() => handleNavItemClick('myorder')}> My order</NavLink> */}
           <NavLink
             to="updatepassword"
             className={`block py-5 md:py-8  flex-shrink-0 text-sm sm:text-base ${
               selectedNavItem === "updatepassword"
-                ? "border-b-2 border-[#ff385c] text-slate-900 font-medium"
+                ? "border-b-2 border-primary2 text-slate-900 font-medium"
                 : ""
             } hover:text-slate-800 text-slate-500`}
             onClick={() => handleNavItemClick("updatepassword")}
           >
             Thay đổi mật khẩu
           </NavLink>
-          {/* <NavLink to={'bill'} className={`block py-5 md:py-8  flex-shrink-0 text-sm sm:text-base ${selectedNavItem === 'bill' ? 'border-b-2 border-[#ff385c] text-slate-900 font-medium' : ''} hover:text-slate-800 text-slate-500`} onClick={() => handleNavItemClick('bill')}>Change Billing</NavLink> */}
+          {/* <NavLink to={'bill'} className={`block py-5 md:py-8  flex-shrink-0 text-sm sm:text-base ${selectedNavItem === 'bill' ? 'border-b-2 border-primary2 text-slate-900 font-medium' : ''} hover:text-slate-800 text-slate-500`} onClick={() => handleNavItemClick('bill')}>Change Billing</NavLink> */}
         </div>
         <hr className="border-slate-200 " />
       </div>

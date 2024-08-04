@@ -34,7 +34,7 @@ const ForgotPassword: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center h-full">
-      <h3 className="text-center text-2xl text-[#fe385c] mb-1">
+      <h3 className="text-center text-2xl text-primary mb-1">
         Đặt lại mật khẩu
       </h3>
       {isHidden && (
@@ -45,7 +45,7 @@ const ForgotPassword: React.FC = () => {
           </p>
           <Link
             to="/auth/login"
-            className="text-xs text-[#6a6a6a] hover:text-[#222]"
+            className="text-xs text-content hover:text-title"
           >
             Quay lại
           </Link>
@@ -84,14 +84,14 @@ const ForgotPassword: React.FC = () => {
               <Button
                 type="primary"
                 htmlType="submit"
-                className="mt-1 text-white shadow-none bg-[#fe385c] hover:!bg-white hover:!text-[#fe385c] border border-[#fe385c]"
+                className="mt-1 text-white shadow-none bg-primary hover:!bg-white hover:!text-primary border border-primary"
               >
                 Gửi
               </Button>
             </Form.Item>
             <Link
               to="/auth/login"
-              className="text-xs text-[#6a6a6a] hover:text-[#222]"
+              className="text-xs text-content hover:text-title"
             >
               Quay lại
             </Link>

@@ -40,7 +40,7 @@ const Header = () => {
           <div className="flex items-center lg:hidden flex-1">
             <button
               onClick={handleShowMenu}
-              className="btn-show-menu p-2.5 pl-0 rounded-lg text-[#6a6a6a] flex items-center justify-center"
+              className="btn-show-menu p-2.5 pl-0 rounded-lg text-content flex items-center justify-center"
             >
               {showMenuMobile ? (
                 <>
@@ -124,7 +124,7 @@ const Header = () => {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  <span className="absolute w-3.5 h-3.5 flex items-center justify-center bg-[#fe385c] top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
+                  <span className="absolute w-3.5 h-3.5 flex items-center justify-center bg-primary top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
                     {carts?.length}
                   </span>
                 </button>

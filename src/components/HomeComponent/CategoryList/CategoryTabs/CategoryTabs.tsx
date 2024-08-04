@@ -214,8 +214,8 @@ const CategoryTabs = (props: Props) => {
               className={`block font-medium whitespace-nowrap px-3.5 py-2 text-sm sm:px-7 sm:py-3 capitalize rounded-full 
                 duration-200
               hover:bg-[#ebebeb]
-              hover:text-[#222]
-              ${index === 0 ? "bg-[#fe385c] text-slate-50" : "text-[#6a6a6a]"}
+              hover:text-title
+              ${index === 0 ? "bg-primary text-slate-50" : "text-content"}
               `}
             >
               {/* bg-slate-900 text-slate-50 */}

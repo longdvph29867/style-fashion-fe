@@ -9,12 +9,12 @@ function LayoutAdmin() {
   //   window.location.href = "/";
   // }
   return (
-    <div className="flex min-h-screen w-full bg-[#f8f9fa] ">
+    <div className="flex min-h-screen w-full bg-bg">
       <AdminMenu />
 
       <div className="flex-grow px-4 flex flex-col">
         <nav className="flex items-center justify-between py-2">
-          <h6 className="font-bold capitalize text-slate-800">Ciseco. admin</h6>
+          <h6 className="font-bold capitalize text-primary">Style Fashion. admin</h6>
           <div className="flex items-center sm:flex-row flex-col-reverse">
             <Search className="border rounded-lg" />
             <User />

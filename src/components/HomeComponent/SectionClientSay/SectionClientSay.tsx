@@ -60,12 +60,12 @@ const SectionClientSay = () => {
 
   return (
     <div className="relative my-10 md:my-20 space-y-6 md:space-y-10">
-      <div className="relative flex flex-col justify-between mb-6 sm:flex-row sm:items-end lg:mb-10 text-[#222]">
+      <div className="relative flex flex-col justify-between mb-6 sm:flex-row sm:items-end lg:mb-10 text-title">
         <div className="flex flex-col items-center w-full mx-auto text-center">
           <h2 className="justify-center text-3xl font-semibold md:text-4xl">
             Đánh giá từ những khách hàng 🥇
           </h2>
-          <span className="block mt-2 text-base font-normal md:mt-3 sm:text-xl text-[#6a6a6a]">
+          <span className="block mt-2 text-base font-normal md:mt-3 sm:text-xl text-content">
             Khách hàng chia sẻ về những trải nghiệm mua hàng tại Style Fashion
           </span>
         </div>

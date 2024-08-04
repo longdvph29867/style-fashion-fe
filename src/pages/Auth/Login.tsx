@@ -54,7 +54,7 @@ const Login: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center h-full">
-      <h3 className=" text-2xl text-[#fe385c] mb-1">Đăng nhập</h3>
+      <h3 className=" text-2xl text-primary mb-1">Đăng nhập</h3>
       <Form
         layout="vertical"
         name="basic"
@@ -96,7 +96,7 @@ const Login: React.FC = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="text-white shadow-none bg-[#fe385c] hover:!bg-white hover:!text-[#fe385c] border border-[#fe385c]"
+              className="text-white shadow-none bg-primary hover:!bg-white hover:!text-primary border border-primary"
             >
               Đăng nhập
             </Button>
@@ -104,13 +104,13 @@ const Login: React.FC = () => {
           <div className="flex justify-between sm:flex-row flex-col">
             <Link
               to="/auth/forgot-password"
-              className="text-xs text-[#6a6a6a] hover:text-[#222] mb-3"
+              className="text-xs text-content hover:text-title mb-3"
             >
               Quên mật khẩu
             </Link>
             <Link
               to="/auth/register"
-              className="text-xs text-[#6a6a6a] hover:text-[#222] mb-3"
+              className="text-xs text-content hover:text-title mb-3"
             >
               Bạn chưa có tài khoản?
             </Link>
