@@ -4,6 +4,7 @@ export type Blog = {
     image:string;
     user:User;
     content:string,
+    view?:number
 }
 
 export type FormPostNews = {

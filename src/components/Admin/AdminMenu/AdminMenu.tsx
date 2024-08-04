@@ -36,7 +36,7 @@
       active: false,
     },
     {
-      link: "/admin/blog/postnew",
+      link: "/admin/blog",
       title: "Blog",
       icon: <FaPenAlt />,
       active: false,
