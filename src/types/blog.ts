@@ -1,8 +1,8 @@
 export type Blog = {
-    _id:string;
+    id:string;
     title:string;
     image:string;
-    user:string;
+    user:User;
     content:string,
 }
 
@@ -11,4 +11,9 @@ export type FormPostNews = {
     image:string;
     user:string;
     content:string,
+}
+
+export type User = {
+    id:string;
+    name:string
 }

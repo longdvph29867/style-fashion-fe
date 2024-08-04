@@ -40,6 +40,7 @@ import AddCategory from "./pages/admin/Category/AddCategory";
 import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 import BlogPage from "./components/Blog/BlogPage";
 import PostNews from "./pages/admin/Blog/PostNews";
+import DetailBlog from "./components/Blog/DetailBlog";
 
 function App() {
   const location = useLocation();
@@ -83,6 +84,7 @@ function App() {
           {/* <Route path="detail" element={<DetailProduct />} /> */}
           <Route path="products" element={<ListProductPage />} />
           <Route path="blog" element={<BlogPage/>}/>
+          <Route path="blog/:id" element={<DetailBlog/>}/>
         </Route>
         <Route path="/auth" element={<LoginLayout />}>
           <Route path="verify-email/:token" element={<ResetPassword />} />

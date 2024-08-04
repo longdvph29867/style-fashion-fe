@@ -8,25 +8,32 @@ import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
 import { localUserService } from "../../../services/localService";
 
-type Props = {
-};
+type Props = {};
 
 const PostNews = (props: Props) => {
   const [content, setContent] = useState<string>("");
   const [image, setPoster] = useState<string>("");
   const navigate = useNavigate();
-  const {id}= useParams();
+  const { id } = useParams();
 
-
-  const handleUpload: UploadProps['customRequest'] = async ({ file, onSuccess, onError }:any) => {
+  const handleUpload: UploadProps["customRequest"] = async ({
+    file,
+    onSuccess,
+    onError,
+  }: any) => {
     const formData = new FormData();
     formData.append("images", file);
-  
+
     showSpinner();
     try {
       const response = await https.post("/images", formData);
       console.log("Phản hồi từ máy chủ khi tải ảnh:", response);
-      if (response.data && response.data.data && response.data.data[0] && response.data.data[0].url) {
+      if (
+        response.data &&
+        response.data.data &&
+        response.data.data[0] &&
+        response.data.data[0].url
+      ) {
         const imageUrl = response.data.data[0].url;
         setPoster(imageUrl);
         message.success("Tải ảnh lên thành công!");
@@ -36,13 +43,15 @@ const PostNews = (props: Props) => {
       }
     } catch (error) {
       console.error("Lỗi khi tải ảnh lên:", error);
-      message.error(error.response?.data?.message || "Có lỗi xảy ra khi tải ảnh lên.");
+      message.error(
+        error.response?.data?.message || "Có lỗi xảy ra khi tải ảnh lên."
+      );
       onError(error);
     } finally {
       hiddenSpinner();
     }
-  }
-  
+  };
+
   const onFinish = async (values: FormPostNews) => {
     const storedUserInfo = localUserService.get();
     const userId = storedUserInfo ? storedUserInfo.id : null;
@@ -51,8 +60,8 @@ const PostNews = (props: Props) => {
       const data = {
         title: values.title,
         content: content,
-        user: userId, 
-        image: image
+        user: userId,
+        image: image,
       };
       console.log("Dữ liệu gửi đến máy chủ:", data);
       const res = await https.post("/blogs", data);
@@ -63,7 +72,11 @@ const PostNews = (props: Props) => {
       }
     } catch (error) {
       console.log("Lỗi khi đăng bài:", error);
-      if (error.response && error.response.data && error.response.data.message) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         message.error(error.response.data.message);
       } else {
         message.error("Có lỗi xảy ra. Vui lòng thử lại sau.");
@@ -71,8 +84,7 @@ const PostNews = (props: Props) => {
     } finally {
       hiddenSpinner();
     }
-  }
-
+  };
 
   return (
     <div className="bg-gray-100 p-6">
@@ -122,16 +134,65 @@ const PostNews = (props: Props) => {
                 value={content}
                 init={{
                   height: 500,
-                  menubar: false,
+                  menubar: true,
+                  // style_formats:,
+                  menu: {
+                    file: { title: 'File', items: 'newdocument restoredraft | preview | importword exportpdf exportword | print | deleteallconversations' },
+                    edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
+                    view: { title: 'View', items: 'code revisionhistory | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments' },
+                    insert: { title: 'Insert', items: 'image link media addcomment pageembed codesample inserttable | math | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime' },
+                    format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | language | removeformat' },
+                    tools: { title: 'Tools', items: 'spellchecker spellcheckerlanguage | a11ycheck code wordcount' },
+                    table: { title: 'Table', items: 'inserttable | cell row column | advtablesort | tableprops deletetable' },
+                    help: { title: 'Help', items: 'help' }
+                  },
                   plugins: [
-                    "advlist autolink lists link image charmap print preview anchor",
-                    "searchreplace visualblocks code fullscreen",
-                    "insertdatetime media table paste code help wordcount",
+                    "advlist",
+                    "autolink",
+                    "link",
+                    "image",
+                    "lists",
+                    "charmap",
+                    "preview",
+                    "anchor",
+                    "pagebreak",
+                    "searchreplace",
+                    "wordcount",
+                    "visualblocks",
+                    "visualchars",
+                    "code",
+                    "fullscreen",
+                    "insertdatetime",
+                    "media",
+                    "table",
+                    "emoticons",
+                    "help",
                   ],
+
                   toolbar:
-                    "undo redo | formatselect | bold italic backcolor | \
-                          alignleft aligncenter alignright alignjustify | \
-                          bullist numlist outdent indent | removeformat | help",
+                    "undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons",
+                  content_style: `
+              /* To style the main scrollbar */
+                  body::-webkit-scrollbar {
+                    width: 12px;
+                      }
+
+              /* Track */
+              body::-webkit-scrollbar-track {
+                background: #f1f1f1;
+              }
+
+              /* Handle */
+              body::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 10px;
+              }
+
+              /* Handle on hover */
+              body::-webkit-scrollbar-thumb:hover {
+                background: #555;
+              }
+            `,
                 }}
                 onEditorChange={(content) => setContent(content)}
               />
@@ -152,6 +213,5 @@ const PostNews = (props: Props) => {
     </div>
   );
 };
-
 
 export default PostNews;
