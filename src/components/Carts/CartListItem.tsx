@@ -89,8 +89,8 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
               </div>
             </div>
             <div className="mt-3">
-              <div className="items-center border-2 border-[#ff385c] rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium w-max inline-flex mr-3">
-                <span className="text-[#ff385c] !leading-none ">
+              <div className="items-center border-2 border-primary2 rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium w-max inline-flex mr-3">
+                <span className="text-primary2 !leading-none ">
                   {formartCurrency(productCart.attribute.price)}
                 </span>
               </div>

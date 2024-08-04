@@ -62,7 +62,7 @@ const ImageProduct = ({ image, product, setCurrentImage }: Props) => {
           <div
             key={index}
             className={`cursor-pointer relative pb-[100%] rounded-2xl overflow-hidden border-2 ${
-              image == item ? "border-[#fe385c]" : "border-transparent"
+              image == item ? "border-primary" : "border-transparent"
             }`}
           >
             <img

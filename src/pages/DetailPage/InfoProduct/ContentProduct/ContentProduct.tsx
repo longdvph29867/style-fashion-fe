@@ -84,8 +84,8 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
         <h2 className="text-2xl font-semibold sm:text-3xl">{product?.name}</h2>
         <div className="flex items-center mt-5 space-x-4 sm:space-x-5">
           <div>
-            <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold">
-              <span className="text-[#fe385c] !leading-none">
+            <div className="flex items-center border-2 border-primary rounded-lg py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold">
+              <span className="text-primary !leading-none">
                 {formartCurrency(
                   attribute ? attribute.price : product?.attributes[0].price
                 )}
@@ -137,16 +137,16 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
       {/* SELECT SIZE FROM ATTRIBUTES */}
       <div className="my-8 space-y-2">
         <div>
-          <div className="font-semibold text-sm text-[#222]">Thuộc Tính:</div>
+          <div className="font-semibold text-sm text-title">Thuộc Tính:</div>
           <div className="flex items-center justify-start flex-wrap gap-3 mt-2">
             {product?.attributes.map((attr, index) => (
               <div
                 key={index}
                 className={`flex items-center justify-center px-5 h-12 text-[14px] font-semibold uppercase border cursor-pointer rounded-2xl sm:text-base duration-200 ${
                   attribute?.name === attr.name
-                    ? "border-[#fe385c] text-white bg-[#fe385c]"
-                    : "border-[#a6a6a6] text-[#222]"
-                } hover:text-white hover:bg-[#fe385c] hover:border-[#fe385c]`}
+                    ? "border-primary text-white bg-primary"
+                    : "border-[#a6a6a6] text-title"
+                } hover:text-white hover:bg-primary hover:border-primary`}
                 onClick={() => handleChangeAttribute(attr)}
               >
                 {attr.name}
@@ -155,7 +155,7 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
           </div>
         </div>
         <div>
-          <div className="text-sm text-[#222] italic">
+          <div className="text-sm text-title italic">
             {attribute
               ? attribute.stock
               : product?.attributes.reduce((total, item) => {

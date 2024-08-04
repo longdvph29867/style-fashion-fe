@@ -5,10 +5,10 @@ const BannerFourth = () => {
       <div className="relative flex flex-col lg:flex-row bg-slate-50 rounded-2xl sm:rounded-[40px] p-4 pb-0 sm:p-5 sm:pb-0 lg:p-24">
         <div className="absolute inset-0"></div>
         <div className="lg:w-[50%] max-w-lg relative">
-          <h2 className="text-4xl font-semibold md:text-5xl text-[#222]">
+          <h2 className="text-4xl font-semibold md:text-5xl text-title">
             Đừng bỏ lỡ những ưu đãi đặc biệt
           </h2>
-          <span className="block mt-3 text-[#6a6a6a]">
+          <span className="block mt-3 text-content">
             Khi mua hàng tại cửa hàng chúng tôi, bạn sẽ nhận được những ưu đãi
             và dịch vụ tốt nhất...
           </span>
@@ -17,13 +17,13 @@ const BannerFourth = () => {
               <span className="inline-flex px-2.5 py-1 rounded-full font-medium text-xs text-purple-800 bg-purple-100 relative">
                 01
               </span>
-              <span className="font-medium text-[#222]">Combo tiết kiệm</span>
+              <span className="font-medium text-title">Combo tiết kiệm</span>
             </li>
             <li className="flex items-center space-x-3">
               <span className="inline-flex px-2.5 py-1 rounded-full font-medium text-xs text-blue-800 bg-blue-100 relative">
                 02
               </span>
-              <span className="font-medium text-[#222]">
+              <span className="font-medium text-title">
                 Miễn phí vận chuyển
               </span>
             </li>
@@ -31,19 +31,19 @@ const BannerFourth = () => {
               <span className="inline-flex px-2.5 py-1 rounded-full font-medium text-xs text-red-800 bg-red-100 relative">
                 03
               </span>
-              <span className="font-medium text-[#222]">Sản phẩm cao cấp</span>
+              <span className="font-medium text-title">Sản phẩm cao cấp</span>
             </li>
             <li className="flex items-center space-x-3">
               <span className="inline-flex px-2.5 py-1 rounded-full font-medium text-xs text-yellow-800 bg-yellow-100 relative">
                 04
               </span>
-              <span className="font-medium text-[#222]">Đổi trả dễ dàng</span>
+              <span className="font-medium text-title">Đổi trả dễ dàng</span>
             </li>
             <li className="flex items-center space-x-3">
               <span className="inline-flex px-2.5 py-1 rounded-full font-medium text-xs text-green-800 bg-green-100 relative">
                 05
               </span>
-              <span className="font-medium text-[#222]">Ưu đãi đặc biệt</span>
+              <span className="font-medium text-title">Ưu đãi đặc biệt</span>
             </li>
           </ul>
           {/* <form className="relative max-w-sm mt-10">

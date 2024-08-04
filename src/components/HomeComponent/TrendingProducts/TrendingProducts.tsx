@@ -15,12 +15,12 @@ const TrendingProducts = () => {
   });
   return (
     <div className="relative my-14 md:my-20">
-      <div className="relative flex flex-col justify-between mb-4 sm:flex-row sm:items-end md:mb-6 text-[#222]">
+      <div className="relative flex flex-col justify-between mb-4 sm:flex-row sm:items-end md:mb-6 text-title">
         <div className="max-w-2xl">
           <h2 className="text-3xl font-semibold md:text-4xl">
             Xu hướng hiện nay
           </h2>
-          <span className="block mt-2 text-base font-normal md:mt-4 sm:text-lg text-[#6a6a6a]">
+          <span className="block mt-2 text-base font-normal md:mt-4 sm:text-lg text-content">
             Khám phá các sản phẩm thịnh hành nhất ở Style Fashion.
           </span>
         </div>

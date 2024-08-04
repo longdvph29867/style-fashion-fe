@@ -23,16 +23,16 @@ const BannerThird = () => {
                 style={{ color: "transparent" }}
               />
             </a>
-            <h2 className="text-[#222] font-semibold text-3xl sm:text-4xl xl:text-5xl 2xl:text-6xl mt-4 sm:mt-6">
+            <h2 className="text-title font-semibold text-3xl sm:text-4xl xl:text-5xl 2xl:text-6xl mt-4 sm:mt-6">
               Sản phẩm <br /> thời trang đặc biệt
             </h2>
-            <span className="block mt-4 text-[#6a6a6a]">
+            <span className="block mt-4 text-content">
               Thời trang là một hình thức thể hiện bản thân và tự chủ ở một thời
               điểm và địa điểm cụ thể.
             </span>
             <div className="flex mt-4 space-x-2 sm:space-x-5 sm:mt-8">
               <a
-                className=" relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 bg-[#fe385c]/90  hover:bg-[#fe385c]/80 text-white shadow-xl"
+                className=" relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 bg-primary/90  hover:bg-primary/80 text-white shadow-xl"
                 href="/search"
               >
                 Xem thêm

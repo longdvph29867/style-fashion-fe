@@ -50,8 +50,8 @@ const TotalOrder = ({ productCart }: Props) => {
           onClick={handleLinkClick}
           className={`relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 text-slate-50 shadow-xl mt-8 w-full ${
             productCart.length === 0
-              ? "bg-[#ff385c]/50 cursor-no-drop"
-              : "bg-[#ff385c]  hover:bg-[#cf3350]"
+              ? "bg-primary2/50 cursor-no-drop"
+              : "bg-primary2  hover:bg-[#cf3350]"
           }`}
           to="/checkout"
         >

@@ -41,7 +41,7 @@ const Register: React.FC = () => {
 
   return (
     <div>
-      <h3 className=" text-2xl text-[#fe385c] mb-1">Đăng ký</h3>
+      <h3 className=" text-2xl text-primary mb-1">Đăng ký</h3>
       <Form
         layout="vertical"
         name="basic"
@@ -139,14 +139,14 @@ const Register: React.FC = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="text-white shadow-none bg-[#fe385c] hover:!bg-white hover:!text-[#fe385c] border border-[#fe385c]"
+              className="text-white shadow-none bg-primary hover:!bg-white hover:!text-primary border border-primary"
             >
               Đăng ký
             </Button>
           </Form.Item>
           <Link
             to="/auth/login"
-            className="text-xs text-[#6a6a6a] hover:text-[#222] mb-3"
+            className="text-xs text-content hover:text-title mb-3"
           >
             Đã có tài khoản!
           </Link>
