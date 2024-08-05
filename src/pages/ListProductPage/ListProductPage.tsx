@@ -16,16 +16,29 @@ import {
 } from "antd";
 import { GoDash } from "react-icons/go";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import { useQuery } from "@tanstack/react-query";
+import productService from "../../services/productService";
+import PaginationPage from "../../components/PaginationPage/PaginationPage";
+
+const limit = 12;
 
 const ListProductPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const slugCategory = queryParams.get("category");
-
+  const currentPage = queryParams.get("page")
+    ? Number(queryParams.get("page"))
+    : 1;
   const [productsList, setProductsList] = useState<Product[]>([]);
   const [categoriesList, setCategoriesList] = useState<Category[]>([]);
   const [filteredCategory, setFilteredCategory] = useState<any>([]);
+
+  const { data } = useQuery({
+    queryKey: ["products", location.search],
+    queryFn: () =>
+      productService.getAllProducts(limit, currentPage).then((res) => res.data),
+  });
 
   const fetchData = async () => {
     showSpinner();
@@ -54,10 +67,10 @@ const ListProductPage: React.FC = () => {
       hiddenSpinner();
     }
   };
-  useEffect(() => {
-    fetchData();
-    fetchCategories();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  //   fetchCategories();
+  // }, []);
 
   const callFilterApi = async () => {
     const paramCategory = queryParams.get("categories");
@@ -96,15 +109,15 @@ const ListProductPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(filteredCategory, "filteredCategory");
-    if (filteredCategory.length === 0) {
-      queryParams.delete("categories");
-      onFilter();
-    } else {
-      onFilter();
-    }
-  }, [filteredCategory]);
+  // useEffect(() => {
+  //   console.log(filteredCategory, "filteredCategory");
+  //   if (filteredCategory.length === 0) {
+  //     queryParams.delete("categories");
+  //     onFilter();
+  //   } else {
+  //     onFilter();
+  //   }
+  // }, [filteredCategory]);
 
   const onSubmitPriceRangeFilter = (values: any) => {};
   const onFinishFailed = (errorInfo: unknown) => {
@@ -193,10 +206,16 @@ const ListProductPage: React.FC = () => {
             {/* list */}
             <div className="lg:col-span-3 md:col-span-2 grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10 ">
               {/* item */}
-              {productsList.map((product, index) => (
-                <ProductCard key={index} product={product} />
+              {data?.results.map((product: Product) => (
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
+            <PaginationPage
+              current={currentPage}
+              total={data?.totalResults}
+              pageSize={limit}
+              theme="dark"
+            />
           </div>
         </div>
       </div>
