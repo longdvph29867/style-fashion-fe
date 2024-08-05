@@ -48,11 +48,6 @@ const UpdateProduct: React.FC = () => {
         status: 'done',
         url: product.thumbnail,
         type: `image/${product?.thumbnail?.split('.')?.pop()}`,
-        // thumbUrl: product.thumbnail,
-        // originFileObj: new File(
-        //   [product.thumbnail],
-        //   product.thumbnail,
-        //   { type: `image/${product.thumbnail.split('.').pop()}` })
       }]);
       form.setFieldsValue({
         gallery: product.gallery.map((url: string, index: number) => ({

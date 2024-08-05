@@ -3,6 +3,7 @@ import {
     Button,
     Divider,
     Form,
+    Image,
     Input,
     InputNumber,
     Radio,
@@ -171,6 +172,38 @@ const AddProduct: React.FC = () => {
             setOriginalVariants(transformedVariants);
             setVariants(transformedVariants);
             console.log(transformedVariants, 'transformedVariants')
+
+            setAttributeImages(product?.attributes?.[0].values.map((value) => value.image));
+
+            const mapImagesToFormFields = (attributes) => {
+                if (!attributes || !attributes[0] || !attributes[0].values) {
+                    console.error('Invalid attributes data');
+                    return;
+                }
+
+                const imageFields = attributes[0].values.map((value, index) => ({
+                    [index]: {
+                        imageAttribute: [
+                            {
+                                uid: value._id,
+                                name: `image_${index + 1}.${value.image?.split('.').pop()}`,
+                                status: 'done',
+                                url: value.image,
+                                type: `image/${value.image?.split('.').pop()}`
+                            }
+                        ]
+                    }
+                }));
+
+                console.log(form.getFieldValue(['imageAttribute']), 'imageAttribute');
+                const mergedImageFields = Object.assign({}, ...imageFields);
+
+                form.setFieldsValue(mergedImageFields);
+            };
+
+            // Sau khi lấy được data sản phẩm, gọi hàm này
+            mapImagesToFormFields(product.attributes);
+
         }
     }, [product]);
 
@@ -249,6 +282,7 @@ const AddProduct: React.FC = () => {
                     // Calculate the correct attribute value index
                     const attrValueIndex = Math.floor(index / (attributes[1]?.values.length || 1));
                     const currentValue = attributes[0]?.values[attrValueIndex] || {};
+                    // const attrValueIndex = Math.floor(index / rowSpan);
 
                     return {
                         children: (
@@ -260,7 +294,7 @@ const AddProduct: React.FC = () => {
                                 </div>
 
                                 <Form.Item
-                                    name={['variants', index, 'colorImage']}
+                                    name={[attrValueIndex, 'imageAttribute']}
                                     valuePropName="fileList"
                                     getValueFromEvent={(e) => Array.isArray(e) ? e : e && e.fileList}
                                     rules={[{ required: true, message: 'Vui lòng tải hình ảnh!' }]}
@@ -270,7 +304,8 @@ const AddProduct: React.FC = () => {
                                         listType="picture"
                                         beforeUpload={() => false}
                                         maxCount={1}
-                                    // defaultFileList={currentValue.image ? [{ thumbUrl: currentValue.image }] : []}
+                                    // defaultFileList={currentValue.image}
+
                                     >
                                         <Button icon={<UploadOutlined />}>Tải lên</Button>
                                     </Upload>
@@ -373,7 +408,9 @@ const AddProduct: React.FC = () => {
     };
 
     const handleInputAttributeNameChange = (value, index) => {
-        setIsInputChanged(true);
+        if (isInputChanged === false) {
+            setIsInputChanged(true);
+        }
         setAttributes(prevAttributes => {
             const newAttributes = [...prevAttributes];
             // Kiểm tra và đảm bảo rằng newAttributes[index] tồn tại và là một đối tượng
@@ -393,7 +430,9 @@ const AddProduct: React.FC = () => {
 
     const handleInputAttributeValueChange = (value, fieldIndex, valueIndex, field) => {
         // console.log(value, fieldIndex, valueIndex, field)
-        setIsInputChanged(true);
+        if (isInputChanged === false) {
+            setIsInputChanged(true);
+        }
         setAttributes(prevAttributes => {
             const newAttributes = [...prevAttributes];
 
@@ -430,7 +469,9 @@ const AddProduct: React.FC = () => {
     };
 
     const handleInputChange = (value, index, field) => {
-        setIsInputChanged(true);
+        if (isInputChanged === false) {
+            setIsInputChanged(true);
+        }
         // console.log(variants, 'handleInputChange')
         let updatedVariants; // Tạo biến để lưu trữ giá trị của newVariants
         // console.log(variants, 'variants')
@@ -445,12 +486,6 @@ const AddProduct: React.FC = () => {
 
         // form.setFieldsValue({ variants: updatedVariants }); // Sử dụng updatedVariants để cập nhật form
         console.log(variants, 'handleInputChange')
-    };
-
-    const handleImageChange = (e, index) => {
-        const newVariants = [...variants];
-        newVariants[index].image = e.fileList;
-        setVariants(newVariants);
     };
 
     const handleUploadImageAttributeChange = (fileList, attrValueIndex) => {
@@ -486,6 +521,9 @@ const AddProduct: React.FC = () => {
     };
 
     const handleRemoveAttribute = (fieldIndex) => {
+        if (isInputChanged === false) {
+            setIsInputChanged(true);
+        }
         setAttributes(prevAttributes => {
             const newAttributes = [...prevAttributes];
             newAttributes.splice(fieldIndex, 1);
@@ -496,7 +534,9 @@ const AddProduct: React.FC = () => {
     };
 
     const handleRemoveAttributeValue = (fieldIndex, valueIndex) => {
-
+        if (isInputChanged === false) {
+            setIsInputChanged(true);
+        }
 
         console.log(attributes, 'attributes-HandleremoveAttributeValue')
         // console.log(newAttributes, 'newAttributes-HandleremoveAttributeValue')
@@ -633,25 +673,60 @@ const AddProduct: React.FC = () => {
             // console.log('123')
             // return;
 
-            const listFiles = values.gallery;
-            // Chuyển object gồm các mảng sang mảng gồm các object
-            const listFilesAttributeImage = Object.values(attributeImages).flat();
-            const thumbnail: any = values.thumbnail;
+            // const listFiles = values.gallery;
+            // // Chuyển object gồm các mảng sang mảng gồm các object
+            // const listFilesAttributeImage = Object.values(attributeImages).flat();
+            // const thumbnail: any = values.thumbnail;
 
-            // Lấy originFileObj
-            const fileOriginAttributeImages = listFilesAttributeImage.map((file: any) => file.originFileObj);
+            // // Lấy originFileObj
+            // const fileOriginAttributeImages = listFilesAttributeImage.map((file: any) => file.originFileObj);
 
-            const formDataAttributeImage = new FormData();
-            for (const file of fileOriginAttributeImages) {
-                formDataAttributeImage.append("images", file);
-            }
+            // const formDataAttributeImage = new FormData();
+            // for (const file of fileOriginAttributeImages) {
+            //     formDataAttributeImage.append("images", file);
+            // }
 
             try {
 
-                const { data: dataAttributeImage } = await https.post("/images", formDataAttributeImage);
-                const urlAttributeImage: { url: string; publicId: string }[] = dataAttributeImage.data;
+                // const { data: dataAttributeImage } = await https.post("/images", formDataAttributeImage);
+                // const urlAttributeImage: { url: string; publicId: string }[] = dataAttributeImage.data;
 
-                console.log(urlAttributeImage, 'urlAttributeImage');
+                // console.log(urlAttributeImage, 'urlAttributeImage');
+
+                let urlImageAttribute = [];
+                const listFiles: File[] = [];
+
+                // Duyệt qua các thuộc tính của object attributeImages
+                Object.values(attributeImages).forEach(image => {
+                    if (typeof image === 'string') {
+                        // Nếu phần tử là URL, giữ nguyên
+                        urlImageAttribute.push(image);
+                    } else if (image[0]?.originFileObj) {
+                        // Nếu phần tử là file, thêm vào listFiles để xử lý sau
+                        listFiles.push(image);
+                    }
+                });
+                console.log(listFiles, 'listFiles');
+                console.log(urlImageAttribute, 'urlImageAttribute');
+                if (listFiles.length > 0) {
+                    const newArrayFiles = listFiles.map((file: any) => file.originFileObj);
+                    const formData = new FormData();
+                    for (const file of newArrayFiles) {
+                        formData.append("images", file);
+                    }
+                    try {
+                        const { data: dataGallery } = await https.post("/images", formData);
+                        const urlArray: { url: string; publicId: string }[] = dataGallery.data;
+                        urlImageAttribute.push(...urlArray);
+                        console.log(urlImageAttribute, 'urlImageAttribute');
+                    } catch (error) {
+                        hiddenSpinner();
+                        console.log(error);
+                        message.error(error.response.data.message);
+                    }
+                }
+
+                return
 
                 const attributeData = values.attributes
 
@@ -731,6 +806,14 @@ const AddProduct: React.FC = () => {
             <h3 className=" text-2xl text-slate-700 text-center mt-6 mb-3">
                 Cập nhật phân loại hàng
             </h3>
+            <div className="flex gap-2">
+                <Image height={100} width={100} src={product.thumbnail} alt={product.name} />
+                <div className="flex flex-col gap-2 pt-2">
+                    <span className="font-medium text-xl">{product.name}</span>
+                    <span>ID: {id}</span>
+                </div>
+            </div>
+            <Divider />
             <Form
                 form={form}
                 layout="vertical"
