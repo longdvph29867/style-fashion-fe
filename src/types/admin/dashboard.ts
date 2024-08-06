@@ -4,3 +4,9 @@ export type IOrderStatus = {
   orderStatus: number;
   name: string;
 };
+
+export type IOrderStatistic = {
+  time: number;
+  totalAmount: number;
+  count: number;
+};

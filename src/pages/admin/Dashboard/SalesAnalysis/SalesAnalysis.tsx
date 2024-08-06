@@ -1,33 +1,54 @@
-import { FC } from "react";
-import { Divider } from "antd";
+import { FC, useEffect, useMemo, useState } from "react";
+import { DatePicker, DatePickerProps, Divider } from "antd";
 import TitleDashboard from "../../../../components/Common/Admin/TitleDashboard/TitleDashboard";
 import { Chart } from "react-google-charts";
-
+import { IOrderStatistic } from "../../../../types/admin/dashboard";
+import dashboardService from "../../../../services/admin/dashboard.service";
+import moment from "moment";
+import { formartCurrency } from "../../../../util/util";
+import PickerWithType from "../PickerWithType/PickerWithType";
 const SalesAnalysis: FC = () => {
-  const data = [
-    ["Month", "Sales", "Đơn hàng"],
-    ["Jan", 1000, 400],
-    ["Feb", 1170, 460],
-    ["Mar", 660, 1120],
-    // ["Apr", 1030, 540],
-    // ["May", 850, 300],
-    // ["Jun", 950, 700],
-    // ["Jul", 1200, 900],
-    // ["Aug", 1300, 1000],
-    // ["Sep", 900, 600],
-    ["Oct", 1100, 750],
-    ["Nov", 1250, 800],
-    ["Dec", 1500, 950],
-  ];
+  const [orderStatistic, setOrderStatistic] = useState<IOrderStatistic[]>([]);
+  const [selectedDate, setSelectedDate] = useState(moment());
+  const fetchData = async () => {
+    try {
+      const res = await dashboardService.getOrderStatistic(
+        "year",
+        2024,
+        2024,
+        2
+      );
+      if (res?.data) {
+        setOrderStatistic(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const data = useMemo(() => {
+    return [
+      ["Time", "Doanh số", "Đơn hàng"],
+      ...(orderStatistic.map((item) => {
+        return [
+          moment(item.time).format("DD/MM"),
+          Number(item.totalAmount) / 1000,
+          item.count,
+        ];
+      }) || []),
+    ];
+  }, [orderStatistic]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
   const options = {
-    // vAxis: { title: "Amount" },
-    // hAxis: { title: "Month" },
     colors: ["#fe385c"],
     chartArea: {
       left: "8%",
       top: "6%",
       height: "80%",
-      width: "90%",
+      width: "88%",
     },
     seriesType: "bars",
     bar: { groupWidth: "30%" },
@@ -40,19 +61,48 @@ const SalesAnalysis: FC = () => {
       },
     },
     tooltip: {
-      trigger: "none",
+      trigger: "focus",
+      isHtml: true,
     },
-    series: { 1: { type: "line" } }, // Makes the third series (Profit) a line chart
+    // series: { 1: { type: "line" } },
+    series: {
+      0: { type: "bars" },
+      1: {
+        type: "line",
+        targetAxisIndex: 1,
+        lineWidth: 1,
+        pointSize: 2,
+        color: "#9370DB",
+      },
+    },
+    vAxis: {
+      format: "", // Hide zero in the axis
+      gridlines: {
+        count: 0, // Reduce the number of gridlines
+        color: "#eee", // Hide gridlines
+      },
+    },
+  };
+  const onChange: DatePickerProps["onChange"] = (date, dateString) => {
+    console.log(moment(dateString).format("W/YYYY"), dateString);
   };
   return (
     <>
-      <TitleDashboard
-        title="Phân tích bán hàng"
-        subtitle="Tổng quan về doanh thu bán hàng"
-      />
+      <div className="flex items-center justify-between">
+        <TitleDashboard
+          title="Phân tích bán hàng"
+          subtitle="Tổng quan về doanh thu bán hàng"
+        />
+        <div>
+          <PickerWithType onChange={onChange}/>
+        </div>
+      </div>
       <div className="flex gap-10 mt-8">
         <div className="flex-grow">
-          <h2 className="font-semibold">Doanh số</h2>
+          <h2 className="font-semibold">
+            Doanh số{" "}
+            <span className="text-xs italic font-light">(nghìn đồng)</span>
+          </h2>
           <div>
             <Chart
               chartType="ComboChart"
@@ -65,30 +115,22 @@ const SalesAnalysis: FC = () => {
         </div>
         <div className="border" />
         <div className="w-1/3">
-          <div className="grid grid-cols-2">
-            <div className="font-semibold text-content">
-              <p>Lượt truy cập</p>
-              <p className="text-title text-xl my-1">0</p>
-              <p>Vs hôm qua 0,00%</p>
-            </div>
-            <div className="font-semibold text-content">
-              <p>Lượt truy cập</p>
-              <p className="text-title text-xl my-1">0</p>
-              <p>Vs hôm qua 0,00%</p>
-            </div>
-          </div>
-          <Divider />
-          <div className="grid grid-cols-2">
-            <div className="font-semibold text-content">
-              <p>Lượt truy cập</p>
-              <p className="text-title text-xl my-1">0</p>
-              <p>Vs hôm qua 0,00%</p>
-            </div>
-            <div className="font-semibold text-content">
-              <p>Lượt truy cập</p>
-              <p className="text-title text-xl my-1">0</p>
-              <p>Vs hôm qua 0,00%</p>
-            </div>
+          <h2 className="font-semibold text-xl">Doanh số</h2>
+          <div className="grid grid-cols-2 gap-y-4 max-h-96 overflow-y-auto">
+            {orderStatistic.map((item, index) => (
+              <div
+                key={index}
+                className="font-semibold text-content border-b pb-4"
+              >
+                <p>{moment(item.time).format("DD/MM")}</p>
+                <p className="text-title text-lg my-1">
+                  {formartCurrency(item.totalAmount)}
+                </p>
+                <p>
+                  {item.count} <span className="font-light">đơn hàng</span>
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
