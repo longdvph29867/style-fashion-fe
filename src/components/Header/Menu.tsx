@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import categoryService from "../../services/categoryService";
+import { useQuery } from "@tanstack/react-query";
+import { CategoryTpype } from "../../types/categoryType";
 
 const Menu = () => {
-  const [categoriesList, setCategoriesList] = useState<any[]>([]);
-
-  useEffect(()=>{
-    categoryService.getAllCategories()
-    .then(response => setCategoriesList(response.data.results))
-  },[])
+  const { data } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () =>
+      categoryService.getAllCategories().then((res) => res.data.results),
+    refetchInterval: 3 * 60 * 1000,
+  });
 
   return (
     <ul className="flex items-center lg:justify-start justify-center lg:flex-nowrap flex-wrap">
@@ -42,12 +44,12 @@ const Menu = () => {
         </a>
         <div className="group-hover:visible group-hover:opacity-100 invisible duration-300 absolute transform z-10 w-56 top-full left-0 opacity-0 translate-y-0">
           <ul className="rounded-lg shadow-lg border border-neutral-100 text-sm relative bg-white py-4 grid gap-1">
-            {categoriesList.map((category, index) => {
+            {data?.map((category: CategoryTpype) => {
               return (
-                <li key={index} className="px-2">
+                <li key={category.id} className="px-2">
                   <Link
                     className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
-                    to={`/products?category=${category.slug}`}
+                    to={`/products?categories=${category.slug}`}
                   >
                     {category.name}
                   </Link>

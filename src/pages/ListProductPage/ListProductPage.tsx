@@ -19,6 +19,7 @@ import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import { useQuery } from "@tanstack/react-query";
 import productService from "../../services/productService";
 import PaginationPage from "../../components/PaginationPage/PaginationPage";
+import categoryService from "../../services/categoryService";
 
 const limit = 12;
 
@@ -26,51 +27,27 @@ const ListProductPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const slugCategory = queryParams.get("category");
+  const slugCategory = queryParams.get("categories")
+    ? queryParams.get("categories")?.split(",")
+    : [];
   const currentPage = queryParams.get("page")
     ? Number(queryParams.get("page"))
     : 1;
-  const [productsList, setProductsList] = useState<Product[]>([]);
-  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
-  const [filteredCategory, setFilteredCategory] = useState<any>([]);
 
   const { data } = useQuery({
     queryKey: ["products", location.search],
     queryFn: () =>
-      productService.getAllProducts(limit, currentPage).then((res) => res.data),
+      productService
+        .getAllProducts(limit, currentPage, queryParams.get("categories"))
+        .then((res) => res.data),
   });
 
-  const fetchData = async () => {
-    showSpinner();
-    try {
-      // const API = slugCategory
-      //   ? `/products?category=${slugCategory}`
-      //   : "/products";
-      const { data } = await https.get("/products");
-      console.log(data);
-      setProductsList(data.results);
-      hiddenSpinner();
-    } catch (error) {
-      console.log(error);
-      hiddenSpinner();
-    }
-  };
-
-  const fetchCategories = async () => {
-    showSpinner();
-    try {
-      const { data } = await https.get("/categories");
-      setCategoriesList(data.results);
-      hiddenSpinner();
-    } catch (error) {
-      console.log(error);
-      hiddenSpinner();
-    }
-  };
-  // useEffect(() => {
-  //   fetchData();
-  //   fetchCategories();
-  // }, []);
+  const { data: categoriesData } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () =>
+      categoryService.getAllCategories().then((res) => res.data.results),
+    refetchInterval: 3 * 60 * 1000,
+  });
 
   const callFilterApi = async () => {
     const paramCategory = queryParams.get("categories");
@@ -82,14 +59,13 @@ const ListProductPage: React.FC = () => {
   };
 
   const onChange: CheckboxProps["onChange"] = (e) => {
-    console.log(`checked = ${e.target.value} ${e.target.checked}`);
-    if (e.target.checked) {
-      setFilteredCategory([...filteredCategory, e.target.value]);
+    const newCategory = e.target.value;
+    if (slugCategory && slugCategory?.length !== 0) {
+      queryParams.set("categories", `${slugCategory.join(",")},${newCategory}`);
     } else {
-      setFilteredCategory(
-        filteredCategory.filter((slug: string) => slug !== e.target.value)
-      );
+      queryParams.set("categories", newCategory);
     }
+    navigate(location.pathname + "?" + queryParams.toString());
   };
 
   const onFilter = async () => {
@@ -142,8 +118,12 @@ const ListProductPage: React.FC = () => {
               <div className="relative flex flex-col py-8 space-y-4 border-b border-slate-300">
                 <h3 className="font-semibold ">Danh mục</h3>
                 <div className="grid grid-flow-row gap-1">
-                  {categoriesList.map((category: Category, index) => (
-                    <Checkbox value={category.slug} onChange={onChange}>
+                  {categoriesData?.map((category: Category) => (
+                    <Checkbox
+                      key={category.id}
+                      value={category.slug}
+                      onChange={onChange}
+                    >
                       {category.name}
                     </Checkbox>
                   ))}
@@ -204,18 +184,20 @@ const ListProductPage: React.FC = () => {
               <Button className="bg-white w-[90px] h-[34px]">Bán chạy</Button>
             </div>
             {/* list */}
-            <div className="lg:col-span-3 md:col-span-2 grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10 ">
+            <div className="lg:col-span-3 md:col-span-2 grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10">
               {/* item */}
               {data?.results.map((product: Product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-            <PaginationPage
-              current={currentPage}
-              total={data?.totalResults}
-              pageSize={limit}
-              theme="dark"
-            />
+            <div className="mt-10">
+              <PaginationPage
+                current={currentPage}
+                total={data?.totalResults}
+                pageSize={limit}
+                theme="dark"
+              />
+            </div>
           </div>
         </div>
       </div>
