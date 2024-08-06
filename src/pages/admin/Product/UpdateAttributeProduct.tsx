@@ -161,6 +161,37 @@ const AddProduct: React.FC = () => {
         });
     };
 
+    const mapImagesToFormFields = (attributes) => {
+        if (!attributes || !attributes[0] || !attributes[0].values) {
+            console.error('Invalid attributes data');
+            return;
+        }
+
+        const imageFields = attributes[0].values.map((value, index) => ({
+            [`imageAttribute[${index}]`]: [{
+                uid: value._id,
+                name: `image_${index + 1}.${value.image?.split('.').pop()}`,
+                status: 'done',
+                url: value.image,
+                type: `image/${value.image?.split('.').pop()}`
+            }]
+        }));
+
+        // Đảm bảo đúng định dạng để form.setFieldsValue hiểu được
+        const mergedImageFields = {};
+        imageFields.forEach(field => {
+            Object.keys(field).forEach(key => {
+                mergedImageFields[key] = field[key];
+            });
+        });
+
+        form.setFieldsValue({
+            imageAttribute: Object.values(mergedImageFields)
+        });
+
+        console.log(form.getFieldValue('imageAttribute'), 'imageAttribute');
+    };
+
     useEffect(() => {
         if (product) {
             const transformedVariants = product?.variants?.map(variant => ({
@@ -169,37 +200,39 @@ const AddProduct: React.FC = () => {
                 originalPrice: variant.originalPrice,
                 currentPrice: variant.currentPrice
             }));
-            setOriginalVariants(transformedVariants);
-            setVariants(transformedVariants);
+            setOriginalVariants(addTierIndexToVariant(transformedVariants, product?.attributes));
+            setVariants(addTierIndexToVariant(transformedVariants, product?.attributes));
             console.log(transformedVariants, 'transformedVariants')
 
             setAttributeImages(product?.attributes?.[0].values.map((value) => value.image));
 
-            const mapImagesToFormFields = (attributes) => {
-                if (!attributes || !attributes[0] || !attributes[0].values) {
-                    console.error('Invalid attributes data');
-                    return;
-                }
+            // const mapImagesToFormFields = (attributes) => {
+            //     if (!attributes || !attributes[0] || !attributes[0].values) {
+            //         console.error('Invalid attributes data');
+            //         return;
+            //     }
 
-                const imageFields = attributes[0].values.map((value, index) => ({
-                    [index]: {
-                        imageAttribute: [
-                            {
-                                uid: value._id,
-                                name: `image_${index + 1}.${value.image?.split('.').pop()}`,
-                                status: 'done',
-                                url: value.image,
-                                type: `image/${value.image?.split('.').pop()}`
-                            }
-                        ]
-                    }
-                }));
+            //     const imageFields = attributes[0].values.map((value, index) => ({
+            //         [index]: {
+            //             imageAttribute: [
+            //                 {
+            //                     uid: value._id,
+            //                     name: `image_${index + 1}.${value.image?.split('.').pop()}`,
+            //                     status: 'done',
+            //                     url: value.image,
+            //                     type: `image/${value.image?.split('.').pop()}`
+            //                 }
+            //             ]
+            //         }
+            //     }));
 
-                console.log(form.getFieldValue(['imageAttribute']), 'imageAttribute');
-                const mergedImageFields = Object.assign({}, ...imageFields);
+            //     console.log(form.getFieldValue(['imageAttribute']), 'imageAttribute');
+            //     const mergedImageFields = Object.assign({}, ...imageFields);
 
-                form.setFieldsValue(mergedImageFields);
-            };
+            //     form.setFieldsValue(mergedImageFields);
+            // };
+
+
 
             // Sau khi lấy được data sản phẩm, gọi hàm này
             mapImagesToFormFields(product.attributes);
@@ -207,7 +240,23 @@ const AddProduct: React.FC = () => {
         }
     }, [product]);
 
+    const addTierIndexToVariant = (data, attributes) => {
+        return data?.map(variant => {
+            const tierIndex = variant.attributes.map((attrValue, index) => {
+                // console.log('123')
+                const attrIndex = attributes[index].values.findIndex(value => value.name === attrValue);
+                return attrIndex;
+            });
 
+            return {
+                tier_index: tierIndex,
+                attributes: variant.attributes,
+                currentPrice: variant.currentPrice,
+                originalPrice: variant.originalPrice,
+                stock: variant.stock,
+            };
+        });
+    };
     // Hàm tạo variants động dựa trên attributes
     // const createVariants = (attributes) => {
     //     // if (!attributes[1]?.name && attributes[1]?.values.length < 0) return variants;
@@ -260,12 +309,14 @@ const AddProduct: React.FC = () => {
             }
 
             for (let value of attributeValues[depth]) {
-                combineAttributes([...prefix, value.name], depth + 1);
+                // Nếu `value.name` là `''`, nó vẫn sẽ được xử lý trong hàm combineAttributes
+                combineAttributes([...prefix, value.name || ''], depth + 1);
             }
         };
 
         combineAttributes();
-        return newVariants;
+
+        return addTierIndexToVariant(newVariants, attributes);
     };
 
     const createColumns = (attributes) => {
@@ -294,7 +345,8 @@ const AddProduct: React.FC = () => {
                                 </div>
 
                                 <Form.Item
-                                    name={[attrValueIndex, 'imageAttribute']}
+                                    // name={[attrValueIndex, 'imageAttribute']}
+                                    name={['imageAttribute', attrValueIndex]}
                                     valuePropName="fileList"
                                     getValueFromEvent={(e) => Array.isArray(e) ? e : e && e.fileList}
                                     rules={[{ required: true, message: 'Vui lòng tải hình ảnh!' }]}
@@ -429,7 +481,7 @@ const AddProduct: React.FC = () => {
     };
 
     const handleInputAttributeValueChange = (value, fieldIndex, valueIndex, field) => {
-        // console.log(value, fieldIndex, valueIndex, field)
+        console.log(value, fieldIndex, valueIndex, field)
         if (isInputChanged === false) {
             setIsInputChanged(true);
         }
@@ -454,9 +506,9 @@ const AddProduct: React.FC = () => {
             // Cập nhật giá trị tại vị trí cụ thể
             newAttributes[fieldIndex].values[valueIndex][field] = value;
 
-            // Xóa giá trị khỏi mảng nếu giá trị mới là rỗng
+            // Thay vì xóa giá trị khi nó là chuỗi rỗng, chúng ta sẽ chỉ cập nhật giá trị
             if (value === "") {
-                newAttributes[fieldIndex].values.splice(valueIndex, 1);
+                newAttributes[fieldIndex].values[valueIndex][field] = ""; // Giữ lại với giá trị rỗng
             }
 
             // console.log(attributes, 'attributes')
@@ -505,22 +557,45 @@ const AddProduct: React.FC = () => {
         })));
     };
 
+    // const mergeVariants = (oldVariants, newVariants) => {
+    //     return newVariants.map(newVariant => {
+    //         // Find a matching old variant where all attributes match exactly
+    //         const matchingOldVariant = oldVariants.find(oldVariant =>
+    //             JSON.stringify(oldVariant.attributes) === JSON.stringify(newVariant.attributes)
+    //         );
+
+    //         if (matchingOldVariant) {
+    //             // If a matching old variant is found, merge the old data with the new one
+    //             return { ...newVariant, ...matchingOldVariant };
+    //         } else {
+    //             // If no matching old variant is found, return the new variant as is
+    //             return newVariant;
+    //         }
+    //     });
+    // };
+
     const mergeVariants = (oldVariants, newVariants) => {
         return newVariants.map(newVariant => {
-            // Find a matching old variant where all attributes match exactly
             const matchingOldVariant = oldVariants.find(oldVariant =>
-                JSON.stringify(oldVariant.attributes) === JSON.stringify(newVariant.attributes)
+                JSON.stringify(oldVariant.tier_index) === JSON.stringify(newVariant.tier_index)
             );
 
             if (matchingOldVariant) {
-                // If a matching old variant is found, merge the old data with the new one
-                return { ...newVariant, ...matchingOldVariant };
+                // Giữ nguyên tên thuộc tính mới và hợp nhất các giá trị còn lại từ variant cũ
+                return {
+                    ...newVariant,
+                    originalPrice: matchingOldVariant.originalPrice,
+                    currentPrice: matchingOldVariant.currentPrice,
+                    stock: matchingOldVariant.stock
+                };
             } else {
-                // If no matching old variant is found, return the new variant as is
+                // Nếu không tìm thấy variant cũ phù hợp, trả về variant mới như là
                 return newVariant;
             }
         });
     };
+
+
 
     const handleRemoveAttribute = (fieldIndex) => {
         if (isInputChanged === false) {
@@ -540,6 +615,17 @@ const AddProduct: React.FC = () => {
             setIsInputChanged(true);
         }
 
+        setAttributes(prevAttributes => {
+            const newAttributes = [...prevAttributes];
+
+            // Xóa value tại valueIndex của attribute fieldIndex
+            if (newAttributes[fieldIndex] && newAttributes[fieldIndex].values) {
+                newAttributes[fieldIndex].values.splice(valueIndex, 1);
+            }
+
+            return newAttributes;
+        });
+
         console.log(attributes, 'attributes-HandleremoveAttributeValue')
         // console.log(newAttributes, 'newAttributes-HandleremoveAttributeValue')
 
@@ -547,6 +633,24 @@ const AddProduct: React.FC = () => {
         const newVariants = createVariants(attributes); // Tạo lại variants từ attributes mới
         const mergedVariants = mergeVariants(variants, newVariants); // Merge dữ liệu cũ và mới
         setVariants(mergedVariants);
+
+        // Nếu fieldIndex là 0, cập nhật attributeImage
+        console.log(fieldIndex, 'fieldIndex')
+        console.log(valueIndex, 'valueIndex')
+        if (fieldIndex === 0) {
+            setAttributeImages(prevAttributeImage => {
+                const newAttributeImage = [...prevAttributeImage];
+                newAttributeImage.splice(valueIndex, 1); // Xóa ảnh tương ứng
+                return newAttributeImage;
+            });
+            // Xóa phần tử index trong getFormValues('imageAttribute')
+            const currentImageAttributes = form.getFieldValue('imageAttribute') || [];
+            if (Array.isArray(currentImageAttributes)) {
+                currentImageAttributes.splice(valueIndex, 1); // Xóa phần tử tại valueIndex
+                form.setFieldsValue({ imageAttribute: currentImageAttributes }); // Cập nhật lại giá trị trong form
+            }
+        }
+
     };
 
     useEffect(() => {
@@ -556,7 +660,7 @@ const AddProduct: React.FC = () => {
 
     // Cập nhật variants và columns khi attributes thay đổi
     useEffect(() => {
-
+        console.log(attributes, 'attributes-useeffect')
         if (!isInputChanged) {
             console.log('!inputChanged')
             console.log(variants, 'variants-useeffect-!inputChanged')
@@ -778,7 +882,7 @@ const AddProduct: React.FC = () => {
 
                 console.log(data, 'dataFinal');
 
-                // return;
+                return;
 
                 const res = await https.put(`/products/attributes/${id}`, data);
                 if (res) {
@@ -909,13 +1013,23 @@ const AddProduct: React.FC = () => {
                                                     <div className="flex gap-4 mt-5">
                                                         <div className="flex flex-col w-[130px]">
                                                             <label className="text-[16px] font-normal" htmlFor="">Phân loại hàng</label>
-                                                            <Button className="mt-2" type="dashed" onClick={() => {
-                                                                console.log(variants, 'addValue')
+                                                            <Button
+                                                                className="mt-2"
+                                                                type="dashed"
+                                                                onClick={() => {
+                                                                    console.log(variants, 'addValue')
 
-                                                                addValue()
-                                                            }
-                                                            }
-                                                                icon={<PlusOutlined />}>
+                                                                    addValue({ name: "" })
+                                                                    // Thêm một object với name='' vào cuối mảng values
+                                                                    setAttributes(prevAttributes => {
+                                                                        const newAttributes = [...prevAttributes];
+                                                                        newAttributes[fieldIndex].values.push({ name: "" });
+                                                                        return newAttributes;
+                                                                    });
+                                                                }}
+                                                                icon={<PlusOutlined />}
+
+                                                            >
                                                                 Thêm
                                                             </Button>
                                                         </div>
@@ -1052,7 +1166,7 @@ const AddProduct: React.FC = () => {
                                 htmlType="submit"
                                 className="text-white bg-green-500"
                             >
-                                Thêm mới
+                                Cập nhật
                             </Button>
                             <Button htmlType="button" onClick={onReset}>
                                 Reset
