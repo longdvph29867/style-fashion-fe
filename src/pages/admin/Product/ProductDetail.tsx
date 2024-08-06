@@ -371,7 +371,7 @@ const ProductDetail: React.FC = () => {
                                     <TextArea rows={4} readOnly />
                                 </Form.Item>
 
-                                <div className="mb-2">
+                                <div className="my-4">
                                     <label htmlFor="">Danh mục</label>
                                     {product?.categories?.map((category: any) => (
                                         <div className="flex items-center">
@@ -380,6 +380,14 @@ const ProductDetail: React.FC = () => {
                                         </div>
                                     ))}
                                 </div>
+
+                                <Table
+                                    columns={columns}
+                                    dataSource={[product]}
+                                    rowKey="id"
+                                    pagination={false}
+                                    bordered
+                                />
                             </div>
                             <div>
                                 {/* thumbnail */}
@@ -394,7 +402,7 @@ const ProductDetail: React.FC = () => {
                                     </div>
                                 </div>
                                 {/* gallery */}
-                                <div>
+                                <div className="my-4">
                                     <div className="mb-2">
                                         <label htmlFor="">Bộ sưu tập hình ảnh sản phẩm</label>
                                     </div>
@@ -478,15 +486,9 @@ const ProductDetail: React.FC = () => {
                         </div>
                     </div>
 
-                    <Table
-                        columns={columns}
-                        dataSource={[product]}
-                        rowKey="id"
-                        pagination={false}
-                        bordered
-                    />
 
-                    <h3 className="text-2xl text-slate-700 text-center mt-10 mb-6">
+                    <Divider />
+                    <h3 className="text-2xl text-slate-700 text-center mb-6">
                         Phân loại hàng
                     </h3>
                     <Table

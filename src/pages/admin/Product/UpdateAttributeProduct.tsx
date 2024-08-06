@@ -96,7 +96,7 @@ const AddProduct: React.FC = () => {
     // const [showPriceAndStock, setShowPriceAndStock] = useState(true);
     let [variants, setVariants] = useState([]);
     const [columns, setColumns] = useState([]);
-    const [attributeImages, setAttributeImages] = useState({});
+    const [attributeImages, setAttributeImages] = useState([]);
     const [product, setProduct] = useState<any>({}); // product detail
     const [originalVariants, setOriginalVariants] = useState([]);
     const [isInputChanged, setIsInputChanged] = useState(false);
@@ -468,6 +468,7 @@ const AddProduct: React.FC = () => {
         });
     };
 
+    // input ở phân loại hàng
     const handleInputChange = (value, index, field) => {
         if (isInputChanged === false) {
             setIsInputChanged(true);
@@ -489,11 +490,12 @@ const AddProduct: React.FC = () => {
     };
 
     const handleUploadImageAttributeChange = (fileList, attrValueIndex) => {
-        console.log(attrValueIndex, 'attrValueIndex')
-        setAttributeImages(prevImages => ({
-            ...prevImages,
-            [attrValueIndex]: fileList,
-        }));
+        console.log(attrValueIndex, 'attrValueIndex');
+        setAttributeImages(prevImages => {
+            const updatedImages = [...prevImages]; // Tạo một bản sao của mảng cũ
+            updatedImages[attrValueIndex] = fileList; // Cập nhật mảng tại vị trí `attrValueIndex`
+            return updatedImages;
+        });
     };
     const fetchCategoryes = async () => {
         const { data } = await https.get("/categories");
@@ -571,7 +573,7 @@ const AddProduct: React.FC = () => {
             console.log('return')
             return;
         }
-        const newVariants = createVariants(attributes, originalVariants);
+        const newVariants = createVariants(attributes);
         console.log(newVariants, 'newVariants-useeffect')
         const mergedVariants = mergeVariants(variants, newVariants);
         console.log(mergedVariants, 'mergedVariants-useeffect')
@@ -692,67 +694,95 @@ const AddProduct: React.FC = () => {
                 // const urlAttributeImage: { url: string; publicId: string }[] = dataAttributeImage.data;
 
                 // console.log(urlAttributeImage, 'urlAttributeImage');
+                console.log(attributeImages, 'attributeImages');
 
-                let urlImageAttribute = [];
+                // const urlAttributeImage: string[] = [];
+                const urlAttributeImage = [...attributeImages]; // Tạo bản sao của mảng ban đầu
                 const listFiles: File[] = [];
 
-                // Duyệt qua các thuộc tính của object attributeImages
-                Object.values(attributeImages).forEach(image => {
+                attributeImages.forEach((image, index) => {
                     if (typeof image === 'string') {
-                        // Nếu phần tử là URL, giữ nguyên
-                        urlImageAttribute.push(image);
+                        // Nếu phần tử là URL, giữ nguyên (đã có sẵn trong urlAttributeImage)
                     } else if (image[0]?.originFileObj) {
                         // Nếu phần tử là file, thêm vào listFiles để xử lý sau
-                        listFiles.push(image);
+                        listFiles.push({ file: image, index });
+                        urlAttributeImage[index] = null; // Đặt vị trí này null để có thể cập nhật sau
                     }
                 });
+
                 console.log(listFiles, 'listFiles');
-                console.log(urlImageAttribute, 'urlImageAttribute');
+                console.log(urlAttributeImage, 'urlGallery');
+
+                // return
+
                 if (listFiles.length > 0) {
-                    const newArrayFiles = listFiles.map((file: any) => file.originFileObj);
+                    const newArrayFiles = listFiles.map((imageFile: any) => imageFile.file[0].originFileObj);
+                    console.log(newArrayFiles, 'newArrayFiles');
                     const formData = new FormData();
                     for (const file of newArrayFiles) {
                         formData.append("images", file);
                     }
+
                     try {
-                        const { data: dataGallery } = await https.post("/images", formData);
-                        const urlArray: { url: string; publicId: string }[] = dataGallery.data;
-                        urlImageAttribute.push(...urlArray);
-                        console.log(urlImageAttribute, 'urlImageAttribute');
+                        const { data: dataAttributeImage } = await https.post("/images", formData);
+                        const urlArray: { url: string; publicId: string }[] = dataAttributeImage.data;
+
+                        console.log(dataAttributeImage, 'dataAttributeImage');
+                        console.log(urlArray, 'urlArray');
+
+                        // return;
+
+                        // Đẩy các URL mới vào mảng theo thứ tự của file ban đầu
+                        urlArray.forEach((urlObj, i) => {
+                            // Sử dụng chỉ mục của listFiles để cập nhật đúng vị trí trong urlAttributeImage
+                            const originalIndex = listFiles[i].index;
+                            urlAttributeImage[originalIndex] = urlObj.url;
+                        });
                     } catch (error) {
-                        hiddenSpinner();
-                        console.log(error);
+                        console.error(error);
                         message.error(error.response.data.message);
                     }
                 }
-
-                return
+                console.log(urlAttributeImage, 'urlAttributeImage');
+                // return
 
                 const attributeData = values.attributes
 
                 attributeData[0].values = attributeData[0].values.map((value, index) => {
                     if (urlAttributeImage[index]) {
-                        return { ...value, image: urlAttributeImage[index].url };
+                        return { ...value, image: urlAttributeImage[index] };
                     }
                     return value; // Trả về giá trị ban đầu nếu không có ảnh tương ứng
                 });
-
                 console.log(attributeData, 'atrtibuteData');
+
+                const attributeDataWithoutID = attributeData.map(attribute => ({
+                    name: attribute.name,
+                    values: attribute.values.map(value => {
+                        const result: any = { name: value.name };
+                        if (value.image) {
+                            result.image = value.image;
+                        }
+                        return result;
+                    })
+                }));
+
+                console.log(attributeDataWithoutID, 'cleanedAttributeData');
 
                 // return;
 
                 const data = {
-                    attributes: attributeData,
+                    attributes: attributeDataWithoutID,
                     variants: convertVariant
                 };
 
                 console.log(data, 'dataFinal');
 
-                return;
+                // return;
 
-                const res = await https.post("/products", data);
+                const res = await https.put(`/products/attributes/${id}`, data);
                 if (res) {
-                    message.success("Thêm sản phẩm thành công!");
+                    message.success("Sửa phẩm thành công!");
                     navigate("/admin/products");
                     hiddenSpinner();
                 }
