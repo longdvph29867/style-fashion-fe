@@ -83,8 +83,9 @@ const SalesAnalysis: FC = () => {
       },
     },
   };
-  const onChange: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(moment(dateString).format("W/YYYY"), dateString);
+  const onChangeTime = (type: string, time: string) => {
+    console.log("type:", type);
+    console.log("time:", moment(time, "DD-MM-YYYY").week());
   };
   return (
     <>
@@ -94,7 +95,7 @@ const SalesAnalysis: FC = () => {
           subtitle="Tổng quan về doanh thu bán hàng"
         />
         <div>
-          <PickerWithType onChange={onChange}/>
+          <PickerWithType onChange={onChangeTime} />
         </div>
       </div>
       <div className="flex gap-10 mt-8">
