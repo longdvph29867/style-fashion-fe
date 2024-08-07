@@ -273,3 +273,37 @@ body .ant-modal-mask {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.filter-product .ant-checkbox-inner {
+  width: 20px;
+  height: 20px;
+}
+
+.filter-product .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #fe385c;
+  border-color: #fe385c;
+}
+
+.filter-product
+  :where(.css-dev-only-do-not-override-1fumvat).ant-checkbox-wrapper:not(
+    .ant-checkbox-wrapper-disabled
+  ):hover
+  .ant-checkbox-checked:not(.ant-checkbox-disabled)
+  .ant-checkbox-inner {
+  background-color: #fe385c;
+  opacity: 0.8;
+  border-color: #fe385c;
+}
+
+.filter-product
+  :where(.css-dev-only-do-not-override-1fumvat).ant-checkbox-wrapper:not(
+    .ant-checkbox-wrapper-disabled
+  ):hover
+  .ant-checkbox-inner {
+  border-color: #fe385c;
+}
+
+.filter-product .ant-checkbox-inner::after {
+  inset-inline-start: 30%;
+  width: 4px;
+}

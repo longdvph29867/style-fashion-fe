@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import categoryService from "../../services/categoryService";
 import { useQuery } from "@tanstack/react-query";

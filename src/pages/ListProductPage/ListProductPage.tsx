@@ -1,19 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { https } from "../../services/config";
+import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-// import ItemProduct from "../../components/ItemProduct";
-import { hiddenSpinner, showSpinner } from "../../util/util";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import { Product } from "../../types/products";
-import {
-  Button,
-  Checkbox,
-  CheckboxProps,
-  Divider,
-  Form,
-  Input,
-  Select,
-} from "antd";
+import { Button, Checkbox, CheckboxProps, Form, Input, Slider } from "antd";
 import { GoDash } from "react-icons/go";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import { useQuery } from "@tanstack/react-query";
@@ -49,56 +38,19 @@ const ListProductPage: React.FC = () => {
     refetchInterval: 3 * 60 * 1000,
   });
 
-  const callFilterApi = async () => {
-    const paramCategory = queryParams.get("categories");
-    let newUrl = `/products?sortBy=createdAt:asc&limit=18&page=1`;
-    if (paramCategory) {
-      newUrl += `&categories=${paramCategory}`;
-    }
-    return https.get(newUrl);
-  };
-
   const onChange: CheckboxProps["onChange"] = (e) => {
     const newCategory = e.target.value;
     if (slugCategory && slugCategory?.length !== 0) {
       queryParams.set("categories", `${slugCategory.join(",")},${newCategory}`);
     } else {
+      console.log("abc");
+
       queryParams.set("categories", newCategory);
     }
     navigate(location.pathname + "?" + queryParams.toString());
   };
 
-  const onFilter = async () => {
-    showSpinner();
-    try {
-      if (filteredCategory.length !== 0) {
-        queryParams.set("categories", filteredCategory.join(","));
-      }
-      navigate(location.pathname + "?" + queryParams.toString());
-      // const { data } = await https.get(`/products?categories=${filteredCategory.join(',')}`);
-      const { data } = await callFilterApi();
-      setProductsList(data.results);
-      hiddenSpinner();
-    } catch (error) {
-      console.log(error);
-      hiddenSpinner();
-    }
-  };
-
-  // useEffect(() => {
-  //   console.log(filteredCategory, "filteredCategory");
-  //   if (filteredCategory.length === 0) {
-  //     queryParams.delete("categories");
-  //     onFilter();
-  //   } else {
-  //     onFilter();
-  //   }
-  // }, [filteredCategory]);
-
   const onSubmitPriceRangeFilter = (values: any) => {};
-  const onFinishFailed = (errorInfo: unknown) => {
-    console.log("Failed:", errorInfo);
-  };
 
   const listBreadcrumb = [
     {
@@ -117,10 +69,11 @@ const ListProductPage: React.FC = () => {
             <div>
               <div className="relative flex flex-col py-8 space-y-4 border-b border-slate-300">
                 <h3 className="font-semibold ">Danh mục</h3>
-                <div className="grid grid-flow-row gap-1">
+                <div className="grid grid-flow-row gap-1 filter-product">
                   {categoriesData?.map((category: Category) => (
                     <Checkbox
                       key={category.id}
+                      checked={slugCategory?.includes(category.slug)}
                       value={category.slug}
                       onChange={onChange}
                     >
@@ -136,10 +89,8 @@ const ListProductPage: React.FC = () => {
                   name="basic"
                   labelCol={{ span: 12 }}
                   wrapperCol={{ span: 24 }}
-                  style={{}}
                   initialValues={{ remember: true }}
                   onFinish={onSubmitPriceRangeFilter}
-                  onFinishFailed={onFinishFailed}
                   autoComplete="off"
                   requiredMark={false}
                 >
@@ -170,6 +121,9 @@ const ListProductPage: React.FC = () => {
                       <Input placeholder="₫ Đến" />
                     </Form.Item>
                   </div>
+                  <button className="relative inline-flex items-center justify-center h-auto w-full px-6 py-3 mt-2 text-sm font-medium transition-colors rounded-full shadow-xl bg-primary text-white">
+                    Áp dụng
+                  </button>
                 </Form>
               </div>
             </div>
