@@ -557,43 +557,43 @@ const AddProduct: React.FC = () => {
         })));
     };
 
-    // const mergeVariants = (oldVariants, newVariants) => {
-    //     return newVariants.map(newVariant => {
-    //         // Find a matching old variant where all attributes match exactly
-    //         const matchingOldVariant = oldVariants.find(oldVariant =>
-    //             JSON.stringify(oldVariant.attributes) === JSON.stringify(newVariant.attributes)
-    //         );
-
-    //         if (matchingOldVariant) {
-    //             // If a matching old variant is found, merge the old data with the new one
-    //             return { ...newVariant, ...matchingOldVariant };
-    //         } else {
-    //             // If no matching old variant is found, return the new variant as is
-    //             return newVariant;
-    //         }
-    //     });
-    // };
-
     const mergeVariants = (oldVariants, newVariants) => {
         return newVariants.map(newVariant => {
+            // Find a matching old variant where all attributes match exactly
             const matchingOldVariant = oldVariants.find(oldVariant =>
-                JSON.stringify(oldVariant.tier_index) === JSON.stringify(newVariant.tier_index)
+                JSON.stringify(oldVariant.attributes) === JSON.stringify(newVariant.attributes)
             );
 
             if (matchingOldVariant) {
-                // Giữ nguyên tên thuộc tính mới và hợp nhất các giá trị còn lại từ variant cũ
-                return {
-                    ...newVariant,
-                    originalPrice: matchingOldVariant.originalPrice,
-                    currentPrice: matchingOldVariant.currentPrice,
-                    stock: matchingOldVariant.stock
-                };
+                // If a matching old variant is found, merge the old data with the new one
+                return { ...newVariant, ...matchingOldVariant };
             } else {
-                // Nếu không tìm thấy variant cũ phù hợp, trả về variant mới như là
+                // If no matching old variant is found, return the new variant as is
                 return newVariant;
             }
         });
     };
+
+    // const mergeVariants = (oldVariants, newVariants) => {
+    //     return newVariants.map(newVariant => {
+    //         const matchingOldVariant = oldVariants.find(oldVariant =>
+    //             JSON.stringify(oldVariant.tier_index) === JSON.stringify(newVariant.tier_index)
+    //         );
+
+    //         if (matchingOldVariant) {
+    //             // Giữ nguyên tên thuộc tính mới và hợp nhất các giá trị còn lại từ variant cũ
+    //             return {
+    //                 ...newVariant,
+    //                 originalPrice: matchingOldVariant.originalPrice,
+    //                 currentPrice: matchingOldVariant.currentPrice,
+    //                 stock: matchingOldVariant.stock
+    //             };
+    //         } else {
+    //             // Nếu không tìm thấy variant cũ phù hợp, trả về variant mới như là
+    //             return newVariant;
+    //         }
+    //     });
+    // };
 
 
 
@@ -601,6 +601,15 @@ const AddProduct: React.FC = () => {
         if (isInputChanged === false) {
             setIsInputChanged(true);
         }
+
+        if (fieldIndex === 0) {
+            // Reset attributeImages
+            setAttributeImages([]);
+
+            // Reset lại giá trị của imageAttribute trong form
+            form.setFieldsValue({ imageAttribute: [] });
+        }
+
         setAttributes(prevAttributes => {
             const newAttributes = [...prevAttributes];
             newAttributes.splice(fieldIndex, 1);
@@ -882,12 +891,12 @@ const AddProduct: React.FC = () => {
 
                 console.log(data, 'dataFinal');
 
-                return;
+                // return;
 
                 const res = await https.put(`/products/attributes/${id}`, data);
                 if (res) {
-                    message.success("Sửa phẩm thành công!");
-                    navigate("/admin/products");
+                    message.success("Cập nhật sản phẩm thành công!");
+                    navigate(`/admin/products/${id}`);
                     hiddenSpinner();
                 }
             } catch (error) {
@@ -961,7 +970,7 @@ const AddProduct: React.FC = () => {
                 requiredMark={false}
             // onFieldsChange={onFieldsChange}
             >
-                <div className="">
+                <div className="relative">
                     <div className="">
                         <h2 className="text-[20px] my-5 font-medium">Phân loại hàng</h2>
                         <Form.List
@@ -972,11 +981,11 @@ const AddProduct: React.FC = () => {
                                 <div className="">
 
                                     {fields.map((field, fieldIndex) => (
-                                        <div key={field.key} className="mb-10 bg-slate-50 p-5">
+                                        <div key={field.key} className="mb-10 bg-gray-50 p-5 w-[90%] m-auto">
                                             <div className="w-[600px]">
                                                 {fields.length > 1 && (
                                                     <Button
-                                                        className="dynamic-delete-button bg-red-800 text-white my-4"
+                                                        className="dynamic-delete-button bg-red-700 text-white my-4"
                                                         onClick={() => {
                                                             // console.log(fields, 'fields')
                                                             // console.log(field.name, 'field.name')
@@ -1115,51 +1124,51 @@ const AddProduct: React.FC = () => {
                     </div>
 
 
-                    {
+                    {/* {
                         containsDefaultValues(attributes) ? null :
-                            <div>
-                                <div className="w-full flex gap-1 mb-2">
-                                    <input
-                                        className="flex-1 p-2 border-[1px] h-10"
-                                        type="number"
-                                        placeholder="Giá gốc"
-                                        value={inputValues.originalPrice}
-                                        onChange={(e) => setInputValues({ ...inputValues, originalPrice: e.target.value })}
-                                    />
-                                    <input
-                                        className="flex-1 p-2 border-[1px] h-10"
-                                        type="text"
-                                        placeholder="Giá khuyễn mãi"
-                                        value={inputValues.currentPrice}
-                                        onChange={(e) => setInputValues({ ...inputValues, currentPrice: e.target.value })}
-                                    />
-                                    <input
-                                        className="flex-1 p-2 border-[1px] h-10"
-                                        type="text"
-                                        placeholder="Kho hàng"
-                                        value={inputValues.stock}
-                                        onChange={(e) => setInputValues({ ...inputValues, stock: e.target.value })}
-                                    />
-                                    <button
-                                        type="button"
-                                        className="flex-1 p-2 w-12 h-10 bg-yellow-400 text-white"
-                                        onClick={applyToAllVariants}
-                                    >
-                                        Áp dụng cho tất cả phân loại
-                                    </button>
-                                </div>
-                                <Table
-                                    // className="custom-table"
-                                    columns={createColumns(attributes)}
-                                    dataSource={variants}
-                                    pagination={false}
-                                    bordered
-                                    rowKey={(record, index) => index}
-                                />
-                            </div>
-                    }
+                    } */}
+                    <div>
+                        <div className="w-full flex gap-1 mb-2">
+                            <input
+                                className="flex-1 p-2 border-[1px] h-10"
+                                type="number"
+                                placeholder="Giá gốc"
+                                value={inputValues.originalPrice}
+                                onChange={(e) => setInputValues({ ...inputValues, originalPrice: e.target.value })}
+                            />
+                            <input
+                                className="flex-1 p-2 border-[1px] h-10"
+                                type="text"
+                                placeholder="Giá khuyễn mãi"
+                                value={inputValues.currentPrice}
+                                onChange={(e) => setInputValues({ ...inputValues, currentPrice: e.target.value })}
+                            />
+                            <input
+                                className="flex-1 p-2 border-[1px] h-10"
+                                type="text"
+                                placeholder="Kho hàng"
+                                value={inputValues.stock}
+                                onChange={(e) => setInputValues({ ...inputValues, stock: e.target.value })}
+                            />
+                            <button
+                                type="button"
+                                className="flex-1 p-2 w-12 h-10 bg-yellow-400 text-white"
+                                onClick={applyToAllVariants}
+                            >
+                                Áp dụng cho tất cả phân loại
+                            </button>
+                        </div>
+                        <Table
+                            // className="custom-table"
+                            columns={createColumns(attributes)}
+                            dataSource={variants}
+                            pagination={false}
+                            bordered
+                            rowKey={(record, index) => index}
+                        />
+                    </div>
 
-                    <Form.Item className="absolute bottom-0">
+                    <Form.Item className="mt-4">
                         <Space>
                             <Button
                                 type="primary"

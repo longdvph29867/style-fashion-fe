@@ -93,7 +93,7 @@ const AddProduct: React.FC = () => {
   // const [showPriceAndStock, setShowPriceAndStock] = useState(true);
   const [variants, setVariants] = useState([]);
   const [columns, setColumns] = useState([]);
-  const [attributeImages, setAttributeImages] = useState({});
+  const [attributeImages, setAttributeImages] = useState([]);
 
   // const [inputValues, setInputValues] = useState({
   //   price: "",
@@ -104,8 +104,27 @@ const AddProduct: React.FC = () => {
 
   const [form] = Form.useForm();
 
+  const addTierIndexToVariant = (data, attributes) => {
+    return data?.map(variant => {
+      const tierIndex = variant.attributes.map((attrValue, index) => {
+        // console.log('123')
+        const attrIndex = attributes[index].values.findIndex(value => value.name === attrValue);
+        return attrIndex;
+      });
+
+      return {
+        tier_index: tierIndex,
+        attributes: variant.attributes,
+        currentPrice: variant.currentPrice,
+        originalPrice: variant.originalPrice,
+        stock: variant.stock,
+      };
+    });
+  };
+
   // Hàm tạo variants động dựa trên attributes
   const createVariants = (attributes) => {
+
     // if (!attributes[1]?.name && attributes[1]?.values.length < 0) return variants;
     if (attributes.length < 1) return [];
 
@@ -126,12 +145,14 @@ const AddProduct: React.FC = () => {
       }
 
       for (let value of attributeValues[depth]) {
-        combineAttributes([...prefix, value.name], depth + 1);
+        // Nếu `value.name` là `''`, nó vẫn sẽ được xử lý trong hàm combineAttributes
+        combineAttributes([...prefix, value.name || ''], depth + 1);
       }
     };
 
     combineAttributes();
-    return newVariants;
+
+    return addTierIndexToVariant(newVariants, attributes);
   };
 
   // const createVariants = (attributes) => {
@@ -193,7 +214,7 @@ const AddProduct: React.FC = () => {
                 </div>
 
                 <Form.Item
-                  name={['variants', index, 'colorImage']}
+                  name={['imageAttribute', attrValueIndex]}
                   valuePropName="fileList"
                   getValueFromEvent={(e) => Array.isArray(e) ? e : e && e.fileList}
                   rules={[{ required: true, message: 'Vui lòng tải hình ảnh!' }]}
@@ -334,9 +355,9 @@ const AddProduct: React.FC = () => {
       // Cập nhật giá trị tại vị trí cụ thể
       newAttributes[fieldIndex].values[valueIndex][field] = value;
 
-      // Xóa giá trị khỏi mảng nếu giá trị mới là rỗng
+      // Thay vì xóa giá trị khi nó là chuỗi rỗng, chúng ta sẽ chỉ cập nhật giá trị
       if (value === "") {
-        newAttributes[fieldIndex].values.splice(valueIndex, 1);
+        newAttributes[fieldIndex].values[valueIndex][field] = ""; // Giữ lại với giá trị rỗng
       }
 
       // console.log(attributes, 'attributes')
@@ -406,11 +427,12 @@ const AddProduct: React.FC = () => {
   };
 
   const handleUploadImageAttributeChange = (fileList, attrValueIndex) => {
-    console.log(attrValueIndex, 'attrValueIndex')
-    setAttributeImages(prevImages => ({
-      ...prevImages,
-      [attrValueIndex]: fileList,
-    }));
+    console.log(attrValueIndex, 'attrValueIndex');
+    setAttributeImages(prevImages => {
+      const updatedImages = [...prevImages]; // Tạo một bản sao của mảng cũ
+      updatedImages[attrValueIndex] = fileList; // Cập nhật mảng tại vị trí `attrValueIndex`
+      return updatedImages;
+    });
   };
 
   // const handleUploadImageAttributeChange = (fileList, attrValueIndex) => {
@@ -456,18 +478,39 @@ const AddProduct: React.FC = () => {
   //   });
   // };
 
+  // const mergeVariants = (oldVariants, newVariants) => {
+  //   return newVariants.map(newVariant => {
+  //     // Find a matching old variant where all attributes match exactly
+  //     const matchingOldVariant = oldVariants.find(oldVariant =>
+  //       JSON.stringify(oldVariant.attributes) === JSON.stringify(newVariant.attributes)
+  //     );
+
+  //     if (matchingOldVariant) {
+  //       // If a matching old variant is found, merge the old data with the new one
+  //       return { ...newVariant, ...matchingOldVariant };
+  //     } else {
+  //       // If no matching old variant is found, return the new variant as is
+  //       return newVariant;
+  //     }
+  //   });
+  // };
+
   const mergeVariants = (oldVariants, newVariants) => {
     return newVariants.map(newVariant => {
-      // Find a matching old variant where all attributes match exactly
       const matchingOldVariant = oldVariants.find(oldVariant =>
-        JSON.stringify(oldVariant.attributes) === JSON.stringify(newVariant.attributes)
+        JSON.stringify(oldVariant.tier_index) === JSON.stringify(newVariant.tier_index)
       );
 
       if (matchingOldVariant) {
-        // If a matching old variant is found, merge the old data with the new one
-        return { ...newVariant, ...matchingOldVariant };
+        // Giữ nguyên tên thuộc tính mới và hợp nhất các giá trị còn lại từ variant cũ
+        return {
+          ...newVariant,
+          originalPrice: matchingOldVariant.originalPrice,
+          currentPrice: matchingOldVariant.currentPrice,
+          stock: matchingOldVariant.stock
+        };
       } else {
-        // If no matching old variant is found, return the new variant as is
+        // Nếu không tìm thấy variant cũ phù hợp, trả về variant mới như là
         return newVariant;
       }
     });
@@ -484,14 +527,16 @@ const AddProduct: React.FC = () => {
   };
 
   const handleRemoveAttributeValue = (fieldIndex, valueIndex) => {
-    // const newAttributes = prevAttributes.map((attribute, index) => {
-    //   if (index === fieldIndex) {
-    //     // Xóa phần tử cụ thể từ mảng values
-    //     const updatedValues = attribute.values.filter((_, idx) => idx !== valueIndex);
-    //     return { ...attribute, values: updatedValues };
-    //   }
-    //   return attribute;
-    // });
+    setAttributes(prevAttributes => {
+      const newAttributes = [...prevAttributes];
+
+      // Xóa value tại valueIndex của attribute fieldIndex
+      if (newAttributes[fieldIndex] && newAttributes[fieldIndex].values) {
+        newAttributes[fieldIndex].values.splice(valueIndex, 1);
+      }
+
+      return newAttributes;
+    });
 
     console.log(attributes, 'attributes-HandleremoveAttributeValue')
     // console.log(newAttributes, 'newAttributes-HandleremoveAttributeValue')
@@ -500,6 +545,24 @@ const AddProduct: React.FC = () => {
     const newVariants = createVariants(attributes); // Tạo lại variants từ attributes mới
     const mergedVariants = mergeVariants(variants, newVariants); // Merge dữ liệu cũ và mới
     setVariants(mergedVariants);
+
+    // Nếu fieldIndex là 0, cập nhật attributeImage
+    console.log(fieldIndex, 'fieldIndex')
+    console.log(valueIndex, 'valueIndex')
+    if (fieldIndex === 0) {
+      setAttributeImages(prevAttributeImage => {
+        const newAttributeImage = [...prevAttributeImage];
+        // const newAttributeImage = Array.isArray(prevAttributeImage) ? [...prevAttributeImage] : [];
+        newAttributeImage.splice(valueIndex, 1); // Xóa ảnh tương ứng
+        return newAttributeImage;
+      });
+      // Xóa phần tử index trong getFormValues('imageAttribute')
+      const currentImageAttributes = form.getFieldValue('imageAttribute') || [];
+      if (Array.isArray(currentImageAttributes)) {
+        currentImageAttributes.splice(valueIndex, 1); // Xóa phần tử tại valueIndex
+        form.setFieldsValue({ imageAttribute: currentImageAttributes }); // Cập nhật lại giá trị trong form
+      }
+    }
   };
 
   useEffect(() => {
@@ -620,12 +683,14 @@ const AddProduct: React.FC = () => {
 
       const listFiles = values.gallery;
       // Chuyển object gồm các mảng sang mảng gồm các object
-      const listFilesAttributeImage = Object.values(attributeImages).flat();
+      const listFilesAttributeImage = [...attributeImages];
       const thumbnail: any = values.thumbnail;
 
       // Lấy originFileObj
+      console.log(listFiles, 'listFiles');
       const newArrayFiles = listFiles.map((file: any) => file.originFileObj);
-      const fileOriginAttributeImages = listFilesAttributeImage.map((file: any) => file.originFileObj);
+      console.log(listFilesAttributeImage, 'listFilesAttributeImage');
+      const fileOriginAttributeImages = listFilesAttributeImage.map((imageFile: any) => imageFile[0].originFileObj);
       const thumbnailFile = thumbnail[0].originFileObj;
 
       const formData = new FormData();
@@ -753,7 +818,8 @@ const AddProduct: React.FC = () => {
       // onFieldsChange={onFieldsChange}
       >
         <div className="">
-          <div className="grid xl:grid-cols-2 xl:gap-10">
+          <h2 className="text-[20px] my-5 font-medium">Thông tin sản phẩm</h2>
+          <div className="grid xl:grid-cols-2 xl:gap-10 px-10">
             <div>
               <Form.Item
                 label="Tên sản phẩm"
@@ -873,182 +939,205 @@ const AddProduct: React.FC = () => {
             </div>
           )} */}
 
-          <div className="">
-            <Form.List
-              name="attributes"
-              initialValue={attributes}
-            >
-              {(fields, { add, remove }) => (
-                <div>
-                  <h2 className="text-[20px] my-5 font-medium">Phân loại hàng</h2>
+          <Divider />
+          <h2 className="text-[20px] mb-8 font-medium">Thông tin bán hàng</h2>
+          <div className="px-10 ">
+            <div className="mb-4">
+              <h2 className="text-[18px]">Phân loại hàng</h2>
+            </div>
+            <div className="w-full">
 
-                  {fields.map((field, fieldIndex) => (
-                    <div key={field.key} className="mb-10 bg-slate-50 p-5">
-                      <div className="w-[600px]">
-                        {fields.length > 1 && (
-                          <Button
-                            className="dynamic-delete-button bg-red-800 text-white my-4"
-                            onClick={() => {
-                              // console.log(fields, 'fields')
-                              // console.log(field.name, 'field.name')
-                              remove(field.name);
-                              console.log(field.name, 'field.name')
-                              console.log(fieldIndex, 'fieldIndex')
-                              handleRemoveAttribute(fieldIndex); // Hàm mới để xử lý xóa thuộc tính
-                              console.log(variants, 'variants-deleteAttribute')
-                              console.log(attributes, 'attribute-deleteAttribute')
+              <Form.List
+                name="attributes"
+                initialValue={attributes}
+              >
+                {(fields, { add, remove }) => (
+                  <div>
 
-                            }}
-                            icon={<MinusCircleOutlined />}
-                          >
-                            Xóa phân loại hàng
-                          </Button>
-                        )}
-                        <div className="flex gap-4 mt-4">
-                          <div className="w-[130px]">
-                            <label htmlFor="" className="text-[16px] font-normal max-w-[130px]">Nhóm phân loại {fieldIndex + 1}</label>
-                          </div>
-                          <div className="">
-                            <Form.Item
-                              name={[field.name, "name"]}
-                              rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
+                    {fields.map((field, fieldIndex) => (
+                      <div key={field.key} className="mb-10 bg-gray-50 p-5">
+                        <div className="w-[600px]">
+                          {fields.length > 1 && (
+                            <Button
+                              className="dynamic-delete-button bg-red-800 text-white my-4"
+                              onClick={() => {
+                                // console.log(fields, 'fields')
+                                // console.log(field.name, 'field.name')
+                                remove(field.name);
+                                console.log(field.name, 'field.name')
+                                console.log(fieldIndex, 'fieldIndex')
+                                handleRemoveAttribute(fieldIndex); // Hàm mới để xử lý xóa thuộc tính
+                                console.log(variants, 'variants-deleteAttribute')
+                                console.log(attributes, 'attribute-deleteAttribute')
+
+                              }}
+                              icon={<MinusCircleOutlined />}
                             >
-                              <Input onChange={(e) => handleInputAttributeNameChange(e.target.value, fieldIndex)} placeholder="Tên phân loại hàng" />
-                            </Form.Item>
+                              Xóa phân loại hàng
+                            </Button>
+                          )}
+                          <div className="flex gap-4 mt-4">
+                            <div className="w-[130px]">
+                              <label htmlFor="" className="text-[16px] font-normal max-w-[130px]">Nhóm phân loại {fieldIndex + 1}</label>
+                            </div>
+                            <div className="">
+                              <Form.Item
+                                name={[field.name, "name"]}
+                                rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
+                              >
+                                <Input onChange={(e) => handleInputAttributeNameChange(e.target.value, fieldIndex)} placeholder="Tên phân loại hàng" />
+                              </Form.Item>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <Form.List name={[field.name, "values"]}>
-                        {(valueFields, { add: addValue, remove: removeValue }) => (
-                          <div className="flex gap-4 mt-5">
-                            <div className="flex flex-col w-[130px]">
-                              <label className="text-[16px] font-normal" htmlFor="">Phân loại hàng</label>
-                              <Button className="mt-2" type="dashed" onClick={() => {
-                                console.log(variants, 'addValue')
+                        <Form.List name={[field.name, "values"]}>
+                          {(valueFields, { add: addValue, remove: removeValue }) => (
+                            <div className="flex gap-4 mt-5">
+                              <div className="flex flex-col w-[130px]">
+                                <label className="text-[16px] font-normal" htmlFor="">Phân loại hàng</label>
+                                <Button className="mt-2" type="dashed" onClick={() => {
+                                  console.log(variants, 'addValue')
 
-                                addValue()
-                              }
-                              }
-                                icon={<PlusOutlined />}>
-                                Thêm
-                              </Button>
-                            </div>
-                            <div className="grid grid-cols-4 gap-4">
-                              {valueFields.map((valueField, valueIndex) => (
-                                <div key={valueField.key} className="min-w-[302px]">
-                                  <Form.Item
-                                    name={[valueField.name, "name"]}
-                                    label={`Giá trị ${valueIndex + 1}`}
-                                    rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
-                                  >
-                                    <Input
-                                      placeholder={`Giá trị ${valueIndex + 1}`}
-                                      onChange={(e) => {
-                                        console.log(valueField.name, 'valueField.name')
-                                        handleInputAttributeValueChange(e.target.value, fieldIndex, valueIndex, "name")
-                                      }}
-                                    />
-                                  </Form.Item>
-
-                                  <div className="">
-                                    {
-                                      valueFields.length > 1 &&
-                                      <Button
-                                        className="dynamic-delete-button bg-red-500 text-white"
-                                        onClick={() => {
-
-                                          removeValue(valueField.name);
-                                          handleInputAttributeValueChange("", fieldIndex, valueIndex, "name"); // Cập nhật attributes khi xóa
-                                          handleRemoveAttributeValue(fieldIndex, valueIndex); // Hàm mới để xử lý xóa giá trị thuộc tính
-                                          console.log(variants, 'deleteValue')
+                                  addValue()
+                                  // Thêm một object với name='' vào cuối mảng values
+                                  setAttributes(prevAttributes => {
+                                    const newAttributes = [...prevAttributes];
+                                    newAttributes[fieldIndex].values.push({ name: "" });
+                                    return newAttributes;
+                                  });
+                                }
+                                }
+                                  icon={<PlusOutlined />}>
+                                  Thêm
+                                </Button>
+                              </div>
+                              <div className="grid grid-cols-4 gap-4">
+                                {valueFields.map((valueField, valueIndex) => (
+                                  <div key={valueField.key} className="">
+                                    <Form.Item
+                                      name={[valueField.name, "name"]}
+                                      label={`Giá trị ${valueIndex + 1}`}
+                                      rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
+                                    >
+                                      <Input
+                                        placeholder={`Giá trị ${valueIndex + 1}`}
+                                        onChange={(e) => {
+                                          console.log(valueField.name, 'valueField.name')
+                                          handleInputAttributeValueChange(e.target.value, fieldIndex, valueIndex, "name")
                                         }}
-                                        icon={<MinusCircleOutlined />}
-                                      >
-                                        Xóa
-                                      </Button>
-                                    }
+                                      />
+                                    </Form.Item>
+
+                                    <div className="">
+                                      {
+                                        valueFields.length > 1 &&
+                                        <Button
+                                          className="dynamic-delete-button bg-red-500 text-white"
+                                          onClick={() => {
+
+                                            removeValue(valueField.name);
+                                            handleInputAttributeValueChange("", fieldIndex, valueIndex, "name"); // Cập nhật attributes khi xóa
+                                            handleRemoveAttributeValue(fieldIndex, valueIndex); // Hàm mới để xử lý xóa giá trị thuộc tính
+                                            console.log(variants, 'deleteValue')
+                                          }}
+                                          icon={<MinusCircleOutlined />}
+                                        >
+                                          Xóa
+                                        </Button>
+                                      }
+                                    </div>
                                   </div>
-                                </div>
-                              ))}
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
-                      </Form.List>
-                    </div>
-                  ))}
-                  <Button className="mb-4" type="dashed" onClick={() => {
-                    add();
-                    // Using setAttributes to ensure the new attribute is added at the correct position (index 1)
-                    setAttributes(prevAttributes => {
-                      const newAttributes = [...prevAttributes];
+                          )}
+                        </Form.List>
+                      </div>
+                    ))}
 
-                      // Insert the new attribute at index 1 if it doesn't exist already
-                      if (newAttributes.length < 2) {
-                        newAttributes.push({ name: '', values: [] });
-                      } else {
-                        // If an attribute at index 1 already exists, you might want to replace or ignore
-                        // depending on your specific logic. Here we ensure that it exists.
-                        newAttributes[1] = newAttributes[1] || { name: '', values: [] };
-                      }
+                    {fields.length < 2 &&
 
-                      return newAttributes;
-                    });
+                      <Button className="mb-4" type="dashed" onClick={() => {
+                        add();
+                        // Using setAttributes to ensure the new attribute is added at the correct position (index 1)
+                        setAttributes(prevAttributes => {
+                          const newAttributes = [...prevAttributes];
 
-                    console.log(attributes, 'attribute-addAttributeEvent');
-                    console.log(variants, 'variant-addAttributeEvent');
-                  }} icon={<PlusOutlined />}>
-                    Thêm phân loại hàng
-                  </Button>
-                </div>
-              )}
-            </Form.List>
+                          // Insert the new attribute at index 1 if it doesn't exist already
+                          if (newAttributes.length < 2) {
+                            newAttributes.push({ name: '', values: [] });
+                          } else {
+                            // If an attribute at index 1 already exists, you might want to replace or ignore
+                            // depending on your specific logic. Here we ensure that it exists.
+                            newAttributes[1] = newAttributes[1] || { name: '', values: [] };
+                          }
+
+                          return newAttributes;
+                        });
+
+                        console.log(attributes, 'attribute-addAttributeEvent');
+                        console.log(variants, 'variant-addAttributeEvent');
+                      }} icon={<PlusOutlined />}>
+                        Thêm phân loại hàng
+                      </Button>
+                    }
+                  </div>
+                )}
+              </Form.List>
+            </div>
           </div>
 
 
-          {
+          {/* {
             containsDefaultValues(attributes) ? null :
-              <div>
-                <div className="w-full flex gap-1 mb-2">
-                  <input
-                    className="flex-1 p-2 border-[1px] h-10"
-                    type="number"
-                    placeholder="Giá gốc"
-                    value={inputValues.originalPrice}
-                    onChange={(e) => setInputValues({ ...inputValues, originalPrice: e.target.value })}
-                  />
-                  <input
-                    className="flex-1 p-2 border-[1px] h-10"
-                    type="text"
-                    placeholder="Giá khuyễn mãi"
-                    value={inputValues.currentPrice}
-                    onChange={(e) => setInputValues({ ...inputValues, currentPrice: e.target.value })}
-                  />
-                  <input
-                    className="flex-1 p-2 border-[1px] h-10"
-                    type="text"
-                    placeholder="Kho hàng"
-                    value={inputValues.stock}
-                    onChange={(e) => setInputValues({ ...inputValues, stock: e.target.value })}
-                  />
-                  <button
-                    type="button"
-                    className="flex-1 p-2 w-12 h-10 bg-yellow-400 text-white"
-                    onClick={applyToAllVariants}
-                  >
-                    Áp dụng cho tất cả phân loại
-                  </button>
-                </div>
-                <Table
-                  // className="custom-table"
-                  columns={createColumns(attributes)}
-                  dataSource={variants}
-                  pagination={false}
-                  bordered
-                  rowKey={(record, index) => index}
+          } */}
+          <div className="px-10 mt-12">
+            <div className="mb-4">
+              <h2 className="text-[18px]">Danh sách phân loại hàng</h2>
+            </div>
+            <div className="w-full">
+              <div className=" flex gap-1 mb-2">
+                <input
+                  className="flex-1 p-2 border-[1px] h-10"
+                  type="number"
+                  placeholder="Giá gốc"
+                  value={inputValues.originalPrice}
+                  onChange={(e) => setInputValues({ ...inputValues, originalPrice: e.target.value })}
                 />
+                <input
+                  className="flex-1 p-2 border-[1px] h-10"
+                  type="text"
+                  placeholder="Giá khuyễn mãi"
+                  value={inputValues.currentPrice}
+                  onChange={(e) => setInputValues({ ...inputValues, currentPrice: e.target.value })}
+                />
+                <input
+                  className="flex-1 p-2 border-[1px] h-10"
+                  type="text"
+                  placeholder="Kho hàng"
+                  value={inputValues.stock}
+                  onChange={(e) => setInputValues({ ...inputValues, stock: e.target.value })}
+                />
+                <button
+                  type="button"
+                  className="flex-1 p-2 w-12 h-10 bg-yellow-400 text-white"
+                  onClick={applyToAllVariants}
+                >
+                  Áp dụng cho tất cả phân loại
+                </button>
               </div>
-          }
+              <Table
+                // className="custom-table"
+                columns={createColumns(attributes)}
+                dataSource={variants}
+                pagination={false}
+                bordered
+                rowKey={(record, index) => index}
+              />
+
+            </div>
+          </div>
 
           <Form.Item className="absolute bottom-0">
             <Space>

@@ -158,7 +158,7 @@ const UpdateProduct: React.FC = () => {
         const res = await https.put(`/products/${id}`, data);
         if (res) {
           message.success("Cập nhật phẩm thành công!");
-          navigate("/admin/products");
+          navigate(`/admin/products/${id}`);
           hiddenSpinner();
         }
       } catch (error) {
