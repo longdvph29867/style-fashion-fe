@@ -1,28 +1,46 @@
-import React, { useState } from "react";
-import { Editor } from "@tinymce/tinymce-react";
-import { Button, Form, Input, message, Upload, UploadProps } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import { useNavigate, useParams } from "react-router-dom";
-import { FormPostNews } from "../../../types/blog";
-import { hiddenSpinner, showSpinner } from "../../../util/util";
-import { https } from "../../../config/axios";
-import { localUserService } from "../../../services/localService";
+import React, { useEffect, useState } from 'react';
+import { hiddenSpinner, showSpinner } from '../../../util/util';
+import { https } from '../../../config/axios';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Button, Form, Image, Input, message, Upload, UploadProps } from 'antd';
+import { FormPostNews, FormUpdateBlog } from '../../../types/blog';
+import { UploadOutlined } from '@ant-design/icons';
+import { Editor } from '@tinymce/tinymce-react';
+import { localUserService } from '../../../services/localService';
 
-type Props = {};
-
-const PostNews = (props: Props) => {
-  const [content, setContent] = useState<string>("");
+const UpdateBlog: React.FC = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [image, setPoster] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
-  const navigate = useNavigate();
-
+  const [form] = Form.useForm();
 
   const handleUpload: UploadProps["customRequest"] = ({ file }: any) => {
     setFile(file);
   };
 
+  const fetchBlog = async () => {
+    showSpinner();
+    try {
+      const { data } = await https.get(`/blogs/${id}`);
+      const blog: FormUpdateBlog = data;
+      form.setFieldsValue({
+        title: blog.title,
+        image: blog.image,
+        content: blog.content
+      });
+      hiddenSpinner();
+    } catch (error) {
+      hiddenSpinner();
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBlog();
+  }, [id]);
+
   const onFinish = async (values: FormPostNews) => {
-    
     showSpinner();
     try {
       let imageUrl = image;
@@ -43,39 +61,34 @@ const PostNews = (props: Props) => {
       const userId = storedUserInfo ? storedUserInfo.id : '';
       const data = {
         title: values.title,
-        content: content,
-        user: userId,
         image: imageUrl,
+        content: values.content,
+        user: userId
       };
-     
-      const res = await https.post("/blogs", data);
+
+      const res = await https.put(`/blogs/${id}`, data);
       if (res) {
-        message.success("Đăng bài thành công!");
+        message.success("Cập nhật thành công!");
         navigate("/admin/blog");
       }
     } catch (error) {
-      console.log("Lỗi khi đăng bài:", error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message.error(error.response.data.message);
-      } else {
-        message.error("Có lỗi xảy ra. Vui lòng thử lại sau.");
-      }
+        console.log(error);
+        message.error(error.response?.data?.message);
     } finally {
       hiddenSpinner();
     }
   };
+
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
+
   return (
     <div className="bg-gray-100 p-6">
       <div className="max-w-2xl mx-auto bg-white p-8 rounded shadow">
-        <h1 className="text-2xl font-bold mb-6">Đăng Tin Tức</h1>
+        <h1 className="text-2xl font-bold mb-6">Sửa Tin Tức</h1>
         <Form
+          form={form}
           layout="vertical"
           name="basic"
           labelCol={{ span: 12 }}
@@ -116,11 +129,9 @@ const PostNews = (props: Props) => {
             >
               <Editor
                 apiKey="2ag9f5652gfh8wi0m8g4ll6hb65iw6ldqyujk4ytt2ubto8n"
-                value={content}
                 init={{
                   height: 500,
                   menubar: true,
-                  // style_formats:,
                   menu: {
                     file: { title: 'File', items: 'newdocument restoredraft | preview | importword exportpdf exportword | print | deleteallconversations' },
                     edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
@@ -153,50 +164,37 @@ const PostNews = (props: Props) => {
                     "emoticons",
                     "help",
                   ],
-
                   toolbar:
                     "undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons",
                   content_style: `
-              /* To style the main scrollbar */
-                  body::-webkit-scrollbar {
-                    width: 12px;
-                      }
-
-              /* Track */
-              body::-webkit-scrollbar-track {
-                background: #f1f1f1;
-              }
-
-              /* Handle */
-              body::-webkit-scrollbar-thumb {
-                background: #888;
-                border-radius: 10px;
-              }
-
-              /* Handle on hover */
-              body::-webkit-scrollbar-thumb:hover {
-                background: #555;
-              }
-            `,
+                    body::-webkit-scrollbar {
+                      width: 12px;
+                    }
+                    body::-webkit-scrollbar-track {
+                      background: #f1f1f1;
+                    }
+                    body::-webkit-scrollbar-thumb {
+                      background: #888;
+                      border-radius: 10px;
+                    }
+                    body::-webkit-scrollbar-thumb:hover {
+                      background: #555;
+                    }
+                  `,
                 }}
-                onEditorChange={(content) => setContent(content)}
               />
             </Form.Item>
           </div>
 
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="text-white bg-green-500"
-            >
-              Đăng bài
+            <Button type="primary" htmlType="submit" className="text-white bg-green-500">
+              Sửa bài
             </Button>
           </Form.Item>
         </Form>
       </div>
     </div>
   );
-};
+}
 
-export default PostNews;
+export default UpdateBlog;

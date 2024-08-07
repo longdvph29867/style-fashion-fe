@@ -31,9 +31,9 @@ const fetchData = async () => {
   const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
  
   return (
-    <div className="p-5 xl:w-3/4 lg:w-3/4">
+    <div className="p-5 xl:w-3/4 lg:w-3/4 md:h-2/4">
         {/* <h1 className="text-2xl font-bold text-center">Tin Tức</h1> */}
-        <div className="list-blog grid grid-cols-1 gap-6 xl:grid-cols-3 lg:grid-cols-2">
+        <div className="list-blog grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 lg:grid-cols-2">
             {blogList.map((blog)=>(
             <div className="">
                 <div className="relative overflow-hidden rounded-md">

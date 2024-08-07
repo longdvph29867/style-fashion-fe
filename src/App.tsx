@@ -42,6 +42,7 @@ import BlogPage from "./components/Blog/BlogPage";
 import PostNews from "./pages/admin/Blog/PostNews";
 import DetailBlog from "./components/Blog/DetailBlog";
 import ListPost from "./pages/admin/Blog/ListPost";
+import UpdateBlog from "./pages/admin/Blog/UpdateBlog";
 
 function App() {
   const location = useLocation();
@@ -109,6 +110,7 @@ function App() {
           <Route path="categories/add" element={<AddCategory />} />
           <Route path="categories/update/:id" element={<UpdateCategory />} />
           <Route path="blog/postnew" element={<PostNews/>}/>
+          <Route path="blog/update/:id" element={<UpdateBlog/>}/>
           <Route path="blog" element={<ListPost/>}/>
         </Route>
         {/* Các route khác nếu có */}

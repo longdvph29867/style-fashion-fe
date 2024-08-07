@@ -65,7 +65,7 @@ const ListPost = (props: Props) => {
     <div className="">
       <div className="p-4 pb-0 mb-0 bg-white rounded-t-2xl">
         <Link
-          to="postnews"
+          to="postnew"
           className="text-white text-base font-semibold bg-green-500 py-2 px-2 rounded my-5 hover:bg-green-600"
         >
           <span>Viết bài</span>
@@ -135,7 +135,7 @@ const ListPost = (props: Props) => {
                   </div>
                   <div className="p-2 space-x-2">
                     <Link
-                      to={`/admin/blog/${blog.id}`}
+                      to={`update/${blog.id}`}
                       className="text-sm font-semibold text-yellow-500 hover:text-yellow-600"
                     >
                       Sửa

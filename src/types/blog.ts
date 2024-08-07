@@ -18,3 +18,9 @@ export type User = {
     id:string;
     name:string
 }
+export type FormUpdateBlog = {
+    title:string;
+    image:string;
+    content:string,
+    user:string;
+};
