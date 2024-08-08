@@ -24,6 +24,8 @@ import type { GetProp } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { set } from "date-fns";
+import { v4 as uuidv4 } from 'uuid';
 
 
 // Xem attribute có chứa values: [{ name: "" }] không, mục đích render table
@@ -100,6 +102,8 @@ const AddProduct: React.FC = () => {
     const [product, setProduct] = useState<any>({}); // product detail
     const [originalVariants, setOriginalVariants] = useState([]);
     const [isInputChanged, setIsInputChanged] = useState(false);
+    // const [isAttributeNamesChanged, setIsAttributeNamesChanged] = useState(false);
+    const [isAttributeDeleted, setIsAttributeDeleted] = useState(false);
 
     // let isInputChanged = false;
 
@@ -249,6 +253,7 @@ const AddProduct: React.FC = () => {
             });
 
             return {
+                id: variant.id, // Giữ lại ID của biến thể
                 tier_index: tierIndex,
                 attributes: variant.attributes,
                 currentPrice: variant.currentPrice,
@@ -300,6 +305,7 @@ const AddProduct: React.FC = () => {
         const combineAttributes = (prefix = [], depth = 0) => {
             if (depth === attributeValues.length) {
                 newVariants.push({
+                    id: uuidv4(), // Thêm ID duy nhất cho mỗi variant
                     attributes: prefix,
                     originalPrice: '',
                     currentPrice: '',
@@ -557,7 +563,7 @@ const AddProduct: React.FC = () => {
         })));
     };
 
-    const mergeVariants = (oldVariants, newVariants) => {
+    const mergeVariantsByOldName = (oldVariants, newVariants) => {
         return newVariants.map(newVariant => {
             // Find a matching old variant where all attributes match exactly
             const matchingOldVariant = oldVariants.find(oldVariant =>
@@ -574,30 +580,74 @@ const AddProduct: React.FC = () => {
         });
     };
 
-    // const mergeVariants = (oldVariants, newVariants) => {
+    const mergeVariantsByOldTierIndex = (oldVariants, newVariants) => {
+        return newVariants.map(newVariant => {
+            const matchingOldVariant = oldVariants.find(oldVariant =>
+                JSON.stringify(oldVariant.tier_index) === JSON.stringify(newVariant.tier_index)
+            );
+
+            if (matchingOldVariant) {
+                // Giữ nguyên tên thuộc tính mới và hợp nhất các giá trị còn lại từ variant cũ
+                return {
+                    ...newVariant,
+                    originalPrice: matchingOldVariant.originalPrice,
+                    currentPrice: matchingOldVariant.currentPrice,
+                    stock: matchingOldVariant.stock
+                };
+            } else {
+                // Nếu không tìm thấy variant cũ phù hợp, trả về variant mới như là
+                return newVariant;
+            }
+        });
+    };
+    // const mergeVariantsById = (oldVariants, newVariants) => {
     //     return newVariants.map(newVariant => {
-    //         const matchingOldVariant = oldVariants.find(oldVariant =>
-    //             JSON.stringify(oldVariant.tier_index) === JSON.stringify(newVariant.tier_index)
-    //         );
+    //         const matchingOldVariant = oldVariants.find(oldVariant => oldVariant.id === newVariant.id);
 
     //         if (matchingOldVariant) {
-    //             // Giữ nguyên tên thuộc tính mới và hợp nhất các giá trị còn lại từ variant cũ
+    //             // Chỉ ghi đè các thuộc tính mới không phải là giá trị rỗng
     //             return {
+    //                 ...matchingOldVariant,
     //                 ...newVariant,
-    //                 originalPrice: matchingOldVariant.originalPrice,
-    //                 currentPrice: matchingOldVariant.currentPrice,
-    //                 stock: matchingOldVariant.stock
+    //                 attributes: newVariant.attributes || matchingOldVariant.attributes,
+    //                 currentPrice: newVariant.currentPrice || matchingOldVariant.currentPrice,
+    //                 originalPrice: newVariant.originalPrice || matchingOldVariant.originalPrice,
+    //                 stock: newVariant.stock || matchingOldVariant.stock,
     //             };
     //         } else {
-    //             // Nếu không tìm thấy variant cũ phù hợp, trả về variant mới như là
+    //             // Nếu không tìm thấy biến thể cũ có ID khớp, trả về biến thể mới như là
     //             return newVariant;
     //         }
     //     });
     // };
 
+    const mergeVariantsById = (oldVariants, newVariants) => {
+        return newVariants.map(newVariant => {
+            const matchingOldVariant = oldVariants.find(oldVariant => oldVariant.id === newVariant.id);
+
+            if (matchingOldVariant) {
+                // Chỉ ghi đè nếu giá trị mới không phải là rỗng hoặc null
+                return {
+                    ...matchingOldVariant,
+                    attributes: newVariant.attributes.length > 0 ? newVariant.attributes : matchingOldVariant.attributes,
+                    currentPrice: newVariant.currentPrice || matchingOldVariant.currentPrice,
+                    originalPrice: newVariant.originalPrice || matchingOldVariant.originalPrice,
+                    stock: newVariant.stock || matchingOldVariant.stock,
+                    id: newVariant.id // Giữ nguyên ID
+                };
+            } else {
+                // Nếu không tìm thấy biến thể cũ có ID khớp, trả về biến thể mới như là
+                return newVariant;
+            }
+        });
+    };
+
+
+
 
 
     const handleRemoveAttribute = (fieldIndex) => {
+        setIsAttributeDeleted(true);
         if (isInputChanged === false) {
             setIsInputChanged(true);
         }
@@ -613,6 +663,9 @@ const AddProduct: React.FC = () => {
         setAttributes(prevAttributes => {
             const newAttributes = [...prevAttributes];
             newAttributes.splice(fieldIndex, 1);
+
+
+
             return newAttributes;
         });
 
@@ -620,6 +673,8 @@ const AddProduct: React.FC = () => {
     };
 
     const handleRemoveAttributeValue = (fieldIndex, valueIndex) => {
+        setIsAttributeDeleted(true);
+
         if (isInputChanged === false) {
             setIsInputChanged(true);
         }
@@ -632,6 +687,37 @@ const AddProduct: React.FC = () => {
                 newAttributes[fieldIndex].values.splice(valueIndex, 1);
             }
 
+            if (fieldIndex === 0) {
+                // Cập nhật variants
+                setVariants(prevVariants => {
+                    return prevVariants
+                        .filter(variant => variant.tier_index[0] !== fieldIndex) // Xóa những biến thể có tierIndex[0] bằng với fieldIndex
+                        .map(variant => {
+                            if (variant.tier_index[0] > fieldIndex) {
+                                variant.tier_index[0] -= 1; // Giảm tier_index[0] nếu lớn hơn fieldIndex
+                            }
+                            return variant;
+                        });
+                });
+            }
+
+            if (fieldIndex === 1) {
+
+
+                // Cập nhật variants
+                setVariants(prevVariants => {
+                    return prevVariants
+                        .filter(variant => variant.tier_index[1] !== valueIndex) // Xóa những biến thể có tierIndex[1] bằng với valueIndex
+                        .map(variant => {
+                            if (variant.tier_index[1] > valueIndex) {
+                                variant.tier_index[1] -= 1; // Giảm tier_index[1] nếu lớn hơn valueIndex
+                            }
+                            return variant;
+                        });
+                });
+            }
+
+
             return newAttributes;
         });
 
@@ -639,9 +725,9 @@ const AddProduct: React.FC = () => {
         // console.log(newAttributes, 'newAttributes-HandleremoveAttributeValue')
 
         // Cập nhật variants
-        const newVariants = createVariants(attributes); // Tạo lại variants từ attributes mới
-        const mergedVariants = mergeVariants(variants, newVariants); // Merge dữ liệu cũ và mới
-        setVariants(mergedVariants);
+        // const newVariants = createVariants(attributes); // Tạo lại variants từ attributes mới
+        // const mergedVariants = mergeVariantsByOldTierIndex(variants, newVariants); // Merge dữ liệu cũ và mới
+        // setVariants(mergedVariants);
 
         // Nếu fieldIndex là 0, cập nhật attributeImage
         console.log(fieldIndex, 'fieldIndex')
@@ -679,16 +765,25 @@ const AddProduct: React.FC = () => {
             form.setFieldsValue({ variants: originalVariants });
             return;
         }
-        console.log(attributes, 'attributes-useeffect')
-        console.log(variants, 'variant-useeffect-event')
-        if (attributes[1]) console.log('có attributes[1]')
-        if (attributes[1] && (!attributes[1].name || attributes[1].values.length === 0)) {
-            console.log('return')
-            return;
-        }
+        // console.log(attributes, 'attributes-useeffect')
+        // console.log(variants, 'variant-useeffect-event')
+        // if (attributes[1]) console.log('có attributes[1]')
+        // if (attributes[1] && (!attributes[1].name || attributes[1].values.length === 0)) {
+        //     console.log('return')
+        //     return;
+        // }
         const newVariants = createVariants(attributes);
         console.log(newVariants, 'newVariants-useeffect')
-        const mergedVariants = mergeVariants(variants, newVariants);
+        // console.log(isAttributeDeleted, 'isAttributeDeleted')
+        // let mergedVariants;
+        // if (isAttributeDeleted) {
+        //     mergedVariants = mergeVariantsByOldName(variants, newVariants);
+        //     setIsAttributeDeleted(false);
+        // } else {
+        //     mergedVariants = mergeVariantsByOldTierIndex(variants, newVariants);
+        // }
+        // console.log(isAttributeNamesChanged, 'isAttributeNamesChanged')
+        const mergedVariants = mergeVariantsByOldTierIndex(variants, newVariants);
         console.log(mergedVariants, 'mergedVariants-useeffect')
         setVariants(mergedVariants);
         form.setFieldsValue({ variants: mergedVariants });
@@ -1035,6 +1130,7 @@ const AddProduct: React.FC = () => {
                                                                         newAttributes[fieldIndex].values.push({ name: "" });
                                                                         return newAttributes;
                                                                     });
+                                                                    setIsAttributeDeleted(true);
                                                                 }}
                                                                 icon={<PlusOutlined />}
 
@@ -1124,49 +1220,49 @@ const AddProduct: React.FC = () => {
                     </div>
 
 
-                    {/* {
+                    {
                         containsDefaultValues(attributes) ? null :
-                    } */}
-                    <div>
-                        <div className="w-full flex gap-1 mb-2">
-                            <input
-                                className="flex-1 p-2 border-[1px] h-10"
-                                type="number"
-                                placeholder="Giá gốc"
-                                value={inputValues.originalPrice}
-                                onChange={(e) => setInputValues({ ...inputValues, originalPrice: e.target.value })}
-                            />
-                            <input
-                                className="flex-1 p-2 border-[1px] h-10"
-                                type="text"
-                                placeholder="Giá khuyễn mãi"
-                                value={inputValues.currentPrice}
-                                onChange={(e) => setInputValues({ ...inputValues, currentPrice: e.target.value })}
-                            />
-                            <input
-                                className="flex-1 p-2 border-[1px] h-10"
-                                type="text"
-                                placeholder="Kho hàng"
-                                value={inputValues.stock}
-                                onChange={(e) => setInputValues({ ...inputValues, stock: e.target.value })}
-                            />
-                            <button
-                                type="button"
-                                className="flex-1 p-2 w-12 h-10 bg-yellow-400 text-white"
-                                onClick={applyToAllVariants}
-                            >
-                                Áp dụng cho tất cả phân loại
-                            </button>
-                        </div>
-                        <Table
-                            // className="custom-table"
-                            columns={createColumns(attributes)}
-                            dataSource={variants}
-                            pagination={false}
-                            bordered
-                            rowKey={(record, index) => index}
-                        />
-                    </div>
+                            <div>
+                                <div className="w-full flex gap-1 mb-2">
+                                    <input
+                                        className="flex-1 p-2 border-[1px] h-10"
+                                        type="number"
+                                        placeholder="Giá gốc"
+                                        value={inputValues.originalPrice}
+                                        onChange={(e) => setInputValues({ ...inputValues, originalPrice: e.target.value })}
+                                    />
+                                    <input
+                                        className="flex-1 p-2 border-[1px] h-10"
+                                        type="text"
+                                        placeholder="Giá khuyễn mãi"
+                                        value={inputValues.currentPrice}
+                                        onChange={(e) => setInputValues({ ...inputValues, currentPrice: e.target.value })}
+                                    />
+                                    <input
+                                        className="flex-1 p-2 border-[1px] h-10"
+                                        type="text"
+                                        placeholder="Kho hàng"
+                                        value={inputValues.stock}
+                                        onChange={(e) => setInputValues({ ...inputValues, stock: e.target.value })}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="flex-1 p-2 w-12 h-10 bg-yellow-400 text-white"
+                                        onClick={applyToAllVariants}
+                                    >
+                                        Áp dụng cho tất cả phân loại
+                                    </button>
+                                </div>
+                                <Table
+                                    // className="custom-table"
+                                    columns={createColumns(attributes)}
+                                    dataSource={variants}
+                                    pagination={false}
+                                    bordered
+                                    rowKey={(record, index) => index}
+                                />
+                            </div>
+                    }
 
                     <Form.Item className="mt-4">
                         <Space>
