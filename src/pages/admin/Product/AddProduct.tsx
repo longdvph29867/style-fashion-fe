@@ -495,7 +495,28 @@ const AddProduct: React.FC = () => {
   //   });
   // };
 
-  const mergeVariants = (oldVariants, newVariants) => {
+  // const mergeVariants = (oldVariants, newVariants) => {
+  //   return newVariants.map(newVariant => {
+  //     const matchingOldVariant = oldVariants.find(oldVariant =>
+  //       JSON.stringify(oldVariant.tier_index) === JSON.stringify(newVariant.tier_index)
+  //     );
+
+  //     if (matchingOldVariant) {
+  //       // Giữ nguyên tên thuộc tính mới và hợp nhất các giá trị còn lại từ variant cũ
+  //       return {
+  //         ...newVariant,
+  //         originalPrice: matchingOldVariant.originalPrice,
+  //         currentPrice: matchingOldVariant.currentPrice,
+  //         stock: matchingOldVariant.stock
+  //       };
+  //     } else {
+  //       // Nếu không tìm thấy variant cũ phù hợp, trả về variant mới như là
+  //       return newVariant;
+  //     }
+  //   });
+  // };
+
+  const mergeVariantsByOldTierIndex = (oldVariants, newVariants) => {
     return newVariants.map(newVariant => {
       const matchingOldVariant = oldVariants.find(oldVariant =>
         JSON.stringify(oldVariant.tier_index) === JSON.stringify(newVariant.tier_index)
@@ -535,6 +556,37 @@ const AddProduct: React.FC = () => {
         newAttributes[fieldIndex].values.splice(valueIndex, 1);
       }
 
+      if (fieldIndex === 0) {
+        // Cập nhật variants
+        setVariants(prevVariants => {
+          return prevVariants
+            .filter(variant => variant.tier_index[0] !== valueIndex) // Xóa những biến thể có tierIndex[0] bằng với fieldIndex
+            .map(variant => {
+              if (variant.tier_index[0] > valueIndex) {
+                variant.tier_index[0] -= 1; // Giảm tier_index[0] nếu lớn hơn fieldIndex
+              }
+              return variant;
+            });
+        });
+      }
+
+      if (fieldIndex === 1) {
+
+
+        // Cập nhật variants
+        setVariants(prevVariants => {
+          return prevVariants
+            .filter(variant => variant.tier_index[1] !== valueIndex) // Xóa những biến thể có tierIndex[1] bằng với valueIndex
+            .map(variant => {
+              if (variant.tier_index[1] > valueIndex) {
+                variant.tier_index[1] -= 1; // Giảm tier_index[1] nếu lớn hơn valueIndex
+              }
+              return variant;
+            });
+        });
+      }
+
+
       return newAttributes;
     });
 
@@ -542,9 +594,9 @@ const AddProduct: React.FC = () => {
     // console.log(newAttributes, 'newAttributes-HandleremoveAttributeValue')
 
     // Cập nhật variants
-    const newVariants = createVariants(attributes); // Tạo lại variants từ attributes mới
-    const mergedVariants = mergeVariants(variants, newVariants); // Merge dữ liệu cũ và mới
-    setVariants(mergedVariants);
+    // const newVariants = createVariants(attributes); // Tạo lại variants từ attributes mới
+    // const mergedVariants = mergeVariants(variants, newVariants); // Merge dữ liệu cũ và mới
+    // setVariants(mergedVariants);
 
     // Nếu fieldIndex là 0, cập nhật attributeImage
     console.log(fieldIndex, 'fieldIndex')
@@ -574,14 +626,14 @@ const AddProduct: React.FC = () => {
   useEffect(() => {
     console.log(attributes, 'attributes-useeffect')
     console.log(variants, 'variant-useeffect-event')
-    if (attributes[1]) console.log('có attributes[1]')
-    if (attributes[1] && (!attributes[1].name || attributes[1].values.length === 0)) {
-      console.log('return')
-      return;
-    }
+    // if (attributes[1]) console.log('có attributes[1]')
+    // if (attributes[1] && (!attributes[1].name || attributes[1].values.length === 0)) {
+    //   console.log('return')
+    //   return;
+    // }
     const newVariants = createVariants(attributes);
     console.log(newVariants, 'newVariants-useeffect')
-    const mergedVariants = mergeVariants(variants, newVariants);
+    const mergedVariants = mergeVariantsByOldTierIndex(variants, newVariants);
     console.log(mergedVariants, 'mergedVariants-useeffect')
     setVariants(mergedVariants);
     form.setFieldsValue({ variants: mergedVariants });
@@ -1066,12 +1118,17 @@ const AddProduct: React.FC = () => {
 
                           // Insert the new attribute at index 1 if it doesn't exist already
                           if (newAttributes.length < 2) {
-                            newAttributes.push({ name: '', values: [] });
+                            newAttributes.push({ name: '', values: [{ name: "" }] });
                           } else {
                             // If an attribute at index 1 already exists, you might want to replace or ignore
                             // depending on your specific logic. Here we ensure that it exists.
-                            newAttributes[1] = newAttributes[1] || { name: '', values: [] };
+                            newAttributes[1] = newAttributes[1] || { name: '', values: [{ name: "" }] };
                           }
+
+                          // Cập nhật form để hiển thị các ô input tương ứng
+                          form.setFieldsValue({
+                            attributes: newAttributes
+                          });
 
                           return newAttributes;
                         });

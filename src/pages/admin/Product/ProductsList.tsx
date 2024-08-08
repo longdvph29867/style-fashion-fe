@@ -15,7 +15,7 @@ const ProductsList: React.FC = () => {
   const params = new URLSearchParams(location.search);
   const [totalProducts, setTotalProducts] = useState(0);
   const [loading, setLoading] = useState(true);
-  const limitPerPage = 15;
+  const limitPerPage = 10;
   const currentPage = params.get("page") ? Number(params.get("page")) : 1;
   const [productList, setProductList] = useState<IProduct[]>([]);
 
@@ -74,7 +74,7 @@ const ProductsList: React.FC = () => {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      render: (_: any, __: IProduct, index: number) => index + 1,
+      render: (_: any, __: IProduct, index: number) => ((currentPage - 1) * limitPerPage + (index + 1)),
     },
     {
       title: "Ảnh",

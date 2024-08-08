@@ -102,10 +102,6 @@ const AddProduct: React.FC = () => {
     const [product, setProduct] = useState<any>({}); // product detail
     const [originalVariants, setOriginalVariants] = useState([]);
     const [isInputChanged, setIsInputChanged] = useState(false);
-    // const [isAttributeNamesChanged, setIsAttributeNamesChanged] = useState(false);
-    const [isAttributeDeleted, setIsAttributeDeleted] = useState(false);
-
-    // let isInputChanged = false;
 
     const [form] = Form.useForm();
 
@@ -253,7 +249,6 @@ const AddProduct: React.FC = () => {
             });
 
             return {
-                id: variant.id, // Giữ lại ID của biến thể
                 tier_index: tierIndex,
                 attributes: variant.attributes,
                 currentPrice: variant.currentPrice,
@@ -305,7 +300,6 @@ const AddProduct: React.FC = () => {
         const combineAttributes = (prefix = [], depth = 0) => {
             if (depth === attributeValues.length) {
                 newVariants.push({
-                    id: uuidv4(), // Thêm ID duy nhất cho mỗi variant
                     attributes: prefix,
                     originalPrice: '',
                     currentPrice: '',
@@ -335,6 +329,7 @@ const AddProduct: React.FC = () => {
                 render: (text, _, index) => {
                     const attributeValue = variants[index]?.attributes ? variants[index].attributes[0] : null;
                     const rowSpan = attributes[1]?.values.length || 1;
+                    console.log(rowSpan, 'rowSpan')
                     // const attrValueIndex = index % rowSpan;
                     // Calculate the correct attribute value index
                     const attrValueIndex = Math.floor(index / (attributes[1]?.values.length || 1));
@@ -647,7 +642,6 @@ const AddProduct: React.FC = () => {
 
 
     const handleRemoveAttribute = (fieldIndex) => {
-        setIsAttributeDeleted(true);
         if (isInputChanged === false) {
             setIsInputChanged(true);
         }
@@ -673,7 +667,6 @@ const AddProduct: React.FC = () => {
     };
 
     const handleRemoveAttributeValue = (fieldIndex, valueIndex) => {
-        setIsAttributeDeleted(true);
 
         if (isInputChanged === false) {
             setIsInputChanged(true);
@@ -691,9 +684,9 @@ const AddProduct: React.FC = () => {
                 // Cập nhật variants
                 setVariants(prevVariants => {
                     return prevVariants
-                        .filter(variant => variant.tier_index[0] !== fieldIndex) // Xóa những biến thể có tierIndex[0] bằng với fieldIndex
+                        .filter(variant => variant.tier_index[0] !== valueIndex) // Xóa những biến thể có tierIndex[0] bằng với fieldIndex
                         .map(variant => {
-                            if (variant.tier_index[0] > fieldIndex) {
+                            if (variant.tier_index[0] > valueIndex) {
                                 variant.tier_index[0] -= 1; // Giảm tier_index[0] nếu lớn hơn fieldIndex
                             }
                             return variant;
@@ -766,7 +759,7 @@ const AddProduct: React.FC = () => {
             return;
         }
         // console.log(attributes, 'attributes-useeffect')
-        // console.log(variants, 'variant-useeffect-event')
+        console.log(variants, 'variant-useeffect-event')
         // if (attributes[1]) console.log('có attributes[1]')
         // if (attributes[1] && (!attributes[1].name || attributes[1].values.length === 0)) {
         //     console.log('return')
@@ -1122,15 +1115,16 @@ const AddProduct: React.FC = () => {
                                                                 type="dashed"
                                                                 onClick={() => {
                                                                     console.log(variants, 'addValue')
-
-                                                                    addValue({ name: "" })
+                                                                    if (isInputChanged === false) {
+                                                                        setIsInputChanged(true);
+                                                                    }
+                                                                    addValue()
                                                                     // Thêm một object với name='' vào cuối mảng values
                                                                     setAttributes(prevAttributes => {
                                                                         const newAttributes = [...prevAttributes];
                                                                         newAttributes[fieldIndex].values.push({ name: "" });
                                                                         return newAttributes;
                                                                     });
-                                                                    setIsAttributeDeleted(true);
                                                                 }}
                                                                 icon={<PlusOutlined />}
 
@@ -1198,12 +1192,17 @@ const AddProduct: React.FC = () => {
 
                                                 // Insert the new attribute at index 1 if it doesn't exist already
                                                 if (newAttributes.length < 2) {
-                                                    newAttributes.push({ name: '', values: [] });
+                                                    newAttributes.push({ name: '', values: [{ name: "" }] });
                                                 } else {
                                                     // If an attribute at index 1 already exists, you might want to replace or ignore
                                                     // depending on your specific logic. Here we ensure that it exists.
-                                                    newAttributes[1] = newAttributes[1] || { name: '', values: [] };
+                                                    newAttributes[1] = newAttributes[1] || { name: '', values: [{ name: "" }] };
                                                 }
+
+                                                // Cập nhật form để hiển thị các ô input tương ứng
+                                                form.setFieldsValue({
+                                                    attributes: newAttributes
+                                                });
 
                                                 return newAttributes;
                                             });
@@ -1220,49 +1219,49 @@ const AddProduct: React.FC = () => {
                     </div>
 
 
-                    {
+                    {/* {
                         containsDefaultValues(attributes) ? null :
-                            <div>
-                                <div className="w-full flex gap-1 mb-2">
-                                    <input
-                                        className="flex-1 p-2 border-[1px] h-10"
-                                        type="number"
-                                        placeholder="Giá gốc"
-                                        value={inputValues.originalPrice}
-                                        onChange={(e) => setInputValues({ ...inputValues, originalPrice: e.target.value })}
-                                    />
-                                    <input
-                                        className="flex-1 p-2 border-[1px] h-10"
-                                        type="text"
-                                        placeholder="Giá khuyễn mãi"
-                                        value={inputValues.currentPrice}
-                                        onChange={(e) => setInputValues({ ...inputValues, currentPrice: e.target.value })}
-                                    />
-                                    <input
-                                        className="flex-1 p-2 border-[1px] h-10"
-                                        type="text"
-                                        placeholder="Kho hàng"
-                                        value={inputValues.stock}
-                                        onChange={(e) => setInputValues({ ...inputValues, stock: e.target.value })}
-                                    />
-                                    <button
-                                        type="button"
-                                        className="flex-1 p-2 w-12 h-10 bg-yellow-400 text-white"
-                                        onClick={applyToAllVariants}
-                                    >
-                                        Áp dụng cho tất cả phân loại
-                                    </button>
-                                </div>
-                                <Table
-                                    // className="custom-table"
-                                    columns={createColumns(attributes)}
-                                    dataSource={variants}
-                                    pagination={false}
-                                    bordered
-                                    rowKey={(record, index) => index}
-                                />
-                            </div>
-                    }
+                    } */}
+                    <div>
+                        <div className="w-full flex gap-1 mb-2">
+                            <input
+                                className="flex-1 p-2 border-[1px] h-10"
+                                type="number"
+                                placeholder="Giá gốc"
+                                value={inputValues.originalPrice}
+                                onChange={(e) => setInputValues({ ...inputValues, originalPrice: e.target.value })}
+                            />
+                            <input
+                                className="flex-1 p-2 border-[1px] h-10"
+                                type="text"
+                                placeholder="Giá khuyễn mãi"
+                                value={inputValues.currentPrice}
+                                onChange={(e) => setInputValues({ ...inputValues, currentPrice: e.target.value })}
+                            />
+                            <input
+                                className="flex-1 p-2 border-[1px] h-10"
+                                type="text"
+                                placeholder="Kho hàng"
+                                value={inputValues.stock}
+                                onChange={(e) => setInputValues({ ...inputValues, stock: e.target.value })}
+                            />
+                            <button
+                                type="button"
+                                className="flex-1 p-2 w-12 h-10 bg-yellow-400 text-white"
+                                onClick={applyToAllVariants}
+                            >
+                                Áp dụng cho tất cả phân loại
+                            </button>
+                        </div>
+                        <Table
+                            // className="custom-table"
+                            columns={createColumns(attributes)}
+                            dataSource={variants}
+                            pagination={false}
+                            bordered
+                            rowKey={(record, index) => index}
+                        />
+                    </div>
 
                     <Form.Item className="mt-4">
                         <Space>
