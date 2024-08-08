@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import { Product } from "../../types/products";
-import { Button, Checkbox, CheckboxProps, Form, Input, Slider } from "antd";
+import { Checkbox, CheckboxProps, Form, Input } from "antd";
 import { GoDash } from "react-icons/go";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +11,12 @@ import PaginationPage from "../../components/PaginationPage/PaginationPage";
 import categoryService from "../../services/categoryService";
 
 const limit = 12;
+
+const buttonSort = [
+  { label: "Phổ biến", value: "popular" },
+  { label: "Mới nhất", value: "newest" },
+  { label: "Bán chạy", value: "seller" },
+];
 
 const ListProductPage: React.FC = () => {
   const navigate = useNavigate();
@@ -40,12 +46,16 @@ const ListProductPage: React.FC = () => {
 
   const onChange: CheckboxProps["onChange"] = (e) => {
     const newCategory = e.target.value;
-    if (slugCategory && slugCategory?.length !== 0) {
-      queryParams.set("categories", `${slugCategory.join(",")},${newCategory}`);
+    let updatedCategories = slugCategory ? [...slugCategory] : [];
+    if (updatedCategories.includes(newCategory)) {
+      updatedCategories = updatedCategories.filter((c) => c !== newCategory);
     } else {
-      console.log("abc");
-
-      queryParams.set("categories", newCategory);
+      updatedCategories.push(newCategory);
+    }
+    if (updatedCategories.length === 0) {
+      queryParams.delete("categories");
+    } else {
+      queryParams.set("categories", updatedCategories.join(","));
     }
     navigate(location.pathname + "?" + queryParams.toString());
   };
@@ -121,7 +131,7 @@ const ListProductPage: React.FC = () => {
                       <Input placeholder="₫ Đến" />
                     </Form.Item>
                   </div>
-                  <button className="relative inline-flex items-center justify-center h-auto w-full px-6 py-3 mt-2 text-sm font-medium transition-colors rounded-full shadow-xl bg-primary text-white">
+                  <button className="relative inline-flex items-center justify-center h-auto w-full px-6 py-3 mt-2 text-sm font-medium transition-colors rounded-full shadow-xl bg-primary hover:bg-[#dc2c4c] text-white">
                     Áp dụng
                   </button>
                 </Form>
@@ -129,13 +139,16 @@ const ListProductPage: React.FC = () => {
             </div>
           </div>
           <div className="col-span-3">
-            <div className="mb-2 h-[62px] w-full bg-slate-50 flex items-center gap-4 pl-10">
+            <div className="mb-5 h-[62px] w-full bg-slate-50 flex items-center gap-4 pl-2">
               <span className="font-normal">Sắp xếp theo</span>
-              <Button className="w-[90px] h-[34px]" type="primary" danger>
-                Phổ biến
-              </Button>
-              <Button className="bg-white w-[90px] h-[34px]">Mới nhất</Button>
-              <Button className="bg-white w-[90px] h-[34px]">Bán chạy</Button>
+              {buttonSort.map((button) => (
+                <button
+                  key={button.value}
+                  className="px-6 py-2 text-sm font-medium rounded-md border border-primary hover:bg-primary hover:text-white text-primary"
+                >
+                  {button.label}
+                </button>
+              ))}
             </div>
             {/* list */}
             <div className="lg:col-span-3 md:col-span-2 grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10">
