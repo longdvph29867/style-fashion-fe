@@ -185,10 +185,7 @@ header.show-mobile .menu-mobile {
   content: none !important;
 }
 
-.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper
-  .ant-upload-list
-  .ant-upload-list-item
-  .ant-upload-list-item-name {
+.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-name {
   white-space: normal !important;
 }
 
@@ -209,11 +206,7 @@ body .ant-modal-mask {
   background-color: #ff385c !important;
 }
 
-.ant-modal-content
-  .ant-modal-body
-  .ant-modal-confirm-body-wrapper
-  .ant-modal-confirm-btns
-  .ant-btn-primary {
+.ant-modal-content .ant-modal-body .ant-modal-confirm-body-wrapper .ant-modal-confirm-btns .ant-btn-primary {
   background-color: #ff4d4f !important;
 }
 
@@ -272,4 +265,25 @@ body .ant-modal-mask {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.custom-table td {
+  border-right: 1px solid #f0f0f0;
+  border-left: 1px solid #f0f0f0;
+  /* Thêm viền bên trái */
+}
+
+.custom-table th {
+  border-right: 1px solid #f0f0f0;
+  border-left: 1px solid #f0f0f0;
+  /* Thêm viền bên trái */
+}
+
+.custom-table tr:last-child td {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.custom-table tr:first-child th:first-child {
+  border-left: 1px solid #f0f0f0;
+  /* Thêm viền bên trái cho ô tiêu đề đầu tiên */
 }
