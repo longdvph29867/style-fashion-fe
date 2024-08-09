@@ -39,8 +39,8 @@ const OrderDetailAdmin = (props: Props) => {
 
   useEffect(() => {
     if (order) {
-      setCurrentStatus(order.orderStatus.code);
-      setNextStatus(order.orderStatus.code + 1);
+      setCurrentStatus(order?.orderStatus?.code);
+      setNextStatus(order?.orderStatus?.code + 1);
     }
   }, [order]);
 
