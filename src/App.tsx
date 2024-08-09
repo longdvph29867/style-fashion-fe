@@ -36,16 +36,13 @@ import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 import VoucherList from "./pages/admin/Voucher/VoucherList";
 import AddVoucher from "./pages/admin/Voucher/AddVoucher";
 import UpdateVoucher from "./pages/admin/Voucher/UpdateVoucher";
-<<<<<<< HEAD
 import { ToastContainer } from "react-toastify";
 import { isAccessTokenValid, refreshToken } from "./util/token";
 import { useEffect } from "react";
 import "./custom-input.css";
 import "./App.css";
 import Dashboard from "./pages/admin/Dashboard/Dashboard";
-=======
 import UpdateAttributeProduct from "./pages/admin/Product/UpdateAttributeProduct";
->>>>>>> 896635f (Update product)
 
 function App() {
   const location = useLocation();
