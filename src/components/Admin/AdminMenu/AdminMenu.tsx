@@ -5,6 +5,7 @@ import { MdDashboard, MdCategory } from "react-icons/md";
 import { FaBoxes, FaUserAlt } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { BiSolidCoupon } from "react-icons/bi";
+import { FaCartArrowDown } from "react-icons/fa";
 type Menu = {
   link: string;
   title: string;
@@ -34,6 +35,12 @@ const listMenu: Menu[] = [
     link: "/admin/users",
     title: "Người dùng",
     icon: <FaUserAlt />,
+    active: false,
+  },
+  {
+    link: "/admin/order",
+    title: "Đơn hàng",
+    icon: <FaCartArrowDown />,
     active: false,
   },
   {

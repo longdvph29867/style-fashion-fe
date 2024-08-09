@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Tabs, TabsProps } from "antd";
 import Item from "./Item";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
-import orderService from "../../../services/orderSerivce";
+import orderService from "../../../services/orderService";
 
 const OrderAdmin = () => {
   // const location = useLocation();
@@ -16,8 +16,10 @@ const OrderAdmin = () => {
   const [shippingList, setShippingList] = useState<any>(null);
   const [deliveredList, setDeliveredList] = useState<any>(null);
   const [successList, setSuccessList] = useState<any>(null);
+  const [unCompleteShippingList, setUnCompleteShippingList] = useState<any>(null);
   const [completeList, setCompleteList] = useState<any>(null);
   const [cancelList, setCancelList] = useState<any>(null);
+  const [paymentFailedList, setPaymentFailedList] = useState<any>(null);
 
   const fetchOrdersList = async () => {
     showSpinner();
@@ -26,13 +28,14 @@ const OrderAdmin = () => {
       .then((res) => {
         setOrdersList(res.data.results);
         setPaymentPendingList(res.data.results.filter((order: any) => order.orderStatus === 0));
-        setConfirmPendingList(res.data.results.filter((order: any) => order.orderStatus === 1));
-        setPrepareList(res.data.results.filter((order: any) => order.orderStatus === 2));
-        setShippingList(res.data.results.filter((order: any) => order.orderStatus === 3));
-        setDeliveredList(res.data.results.filter((order: any) => order.orderStatus === 4));
-        setSuccessList(res.data.results.filter((order: any) => order.orderStatus === 5));
-        setCompleteList(res.data.results.filter((order: any) => order.orderStatus === 6));
-        setCancelList(res.data.results.filter((order: any) => order.orderStatus === 7));
+        setConfirmPendingList(res.data.results.filter((order: any) => order.orderStatus === 3 || order.orderStatus === 1));
+        setPrepareList(res.data.results.filter((order: any) => order.orderStatus === 4));
+        setShippingList(res.data.results.filter((order: any) => order.orderStatus === 5));
+        setDeliveredList(res.data.results.filter((order: any) => order.orderStatus === 6));
+        setUnCompleteShippingList(res.data.results.filter((order: any) => order.orderStatus === 7));
+        setCompleteList(res.data.results.filter((order: any) => order.orderStatus === 8));
+        setCancelList(res.data.results.filter((order: any) => order.orderStatus === 9));
+        setPaymentFailedList(res.data.results.filter((order: any) => order.orderStatus === 2));
         hiddenSpinner();
       })
       .catch((err) => {
@@ -48,6 +51,48 @@ const OrderAdmin = () => {
     // console.log(ordersList, 'ordersList')
   };
 
+  const label0 = (
+    <>
+      Chờ thanh toán <span className="ml-[1px] text-[#fe385c]">{paymentPendingList ? `(${paymentPendingList.length})` : null}</span>
+    </>
+  );
+
+  const label3 = (
+    <>
+      Chờ xác nhận <span className="ml-[1px] text-[#fe385c]">{confirmPendingList ? `(${confirmPendingList.length})` : null}</span>
+    </>
+  );
+
+  const label4 = (
+    <>
+      Chuẩn bị hàng <span className="ml-[1px] text-[#fe385c]">{prepareList ? `(${prepareList.length})` : null}</span>
+    </>
+  );
+
+  const label5 = (
+    <>
+      Đang giao hàng <span className="ml-[1px] text-[#fe385c]">{shippingList ? `(${shippingList.length})` : null}</span>
+    </>
+  );
+
+  const label6 = (
+    <>
+      Đã giao hàng <span className="ml-[1px] text-[#fe385c]">{deliveredList ? `(${deliveredList.length})` : null}</span>
+    </>
+  );
+
+  const label7 = (
+    <>
+      Giao hàng thành công <span className="ml-[1px] text-[#fe385c]">{unCompleteShippingList ? `(${unCompleteShippingList.length})` : null}</span>
+    </>
+  );
+
+  const label9 = (
+    <>
+      Hoàn thành <span className="ml-[1px] text-[#fe385c]">{completeList ? `(${completeList.length})` : null}</span>
+    </>
+  );
+
   const items: TabsProps['items'] = [
     {
       key: 'all',
@@ -56,44 +101,48 @@ const OrderAdmin = () => {
     },
     {
       key: '0',
-      label: 'Chờ thanh toán',
+      label: label0,
       children: <Item fetchOrdersList={fetchOrdersList} orderList={paymentPendingList} />,
     },
     {
-      key: '1',
-      label: 'Chờ xác nhận',
+      key: '3',
+      label: label3,
       children: <Item fetchOrdersList={fetchOrdersList} orderList={confirmPendingList} />,
     },
     {
-      key: '2',
-      label: 'Chuẩn bị hàng',
+      key: '4',
+      label: label4,
       children: <Item fetchOrdersList={fetchOrdersList} orderList={prepareList} />,
     },
     {
-      key: '3',
-      label: 'Đang giao hàng',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={shippingList} />,
-    },
-
-    {
-      key: '4',
-      label: 'Đã giao hàng',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={deliveredList} />,
-    },
-    {
       key: '5',
-      label: 'Giao hàng thành công',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={successList} />,
+      label: label5,
+      children: <Item fetchOrdersList={fetchOrdersList} orderList={shippingList} />,
     },
     {
       key: '6',
-      label: 'Hoàn thành',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={completeList} />,
+      label: label6,
+      children: <Item fetchOrdersList={fetchOrdersList} orderList={deliveredList} />,
     },
     {
       key: '7',
+      label: label7,
+      children: <Item fetchOrdersList={fetchOrdersList} orderList={unCompleteShippingList} />,
+    },
+    {
+      key: '8',
+      label: label9,
+      children: <Item fetchOrdersList={fetchOrdersList} orderList={completeList} />,
+    },
+    {
+      key: '9',
       label: 'Đã hủy',
       children: <Item fetchOrdersList={fetchOrdersList} orderList={cancelList} />,
+    },
+    {
+      key: '2',
+      label: 'Thanh toán thất bại',
+      children: <Item fetchOrdersList={fetchOrdersList} orderList={paymentFailedList} />,
     },
   ];
 

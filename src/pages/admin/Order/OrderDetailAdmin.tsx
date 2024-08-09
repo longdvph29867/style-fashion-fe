@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Button, message, Modal } from 'antd';
+import { Button, message, Modal, Select } from 'antd';
 import { formartCurrency, hiddenSpinner, showSpinner } from '../../../util/util';
-import orderService from '../../../services/orderSerivce';
+import orderService from '../../../services/orderService';
+import { orderStatusValue } from '../../../util/constant';
 
 type Props = {}
 
@@ -13,6 +14,8 @@ const OrderDetailAdmin = (props: Props) => {
   const [order, setOrder] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReceivedOrderId, setSelectedReceivedOrderId] = useState(null);
+  const [currentStatus, setCurrentStatus] = useState(null);
+  const [nextStatus, setNextStatus] = useState(null);
 
   const { confirm } = Modal;
 
@@ -33,6 +36,13 @@ const OrderDetailAdmin = (props: Props) => {
   useEffect(() => {
     fetchOrderDetail();
   }, []);
+
+  useEffect(() => {
+    if (order) {
+      setCurrentStatus(order.orderStatus.code);
+      setNextStatus(order.orderStatus.code + 1);
+    }
+  }, [order]);
 
   const handleReceiveOrder = async () => {
     setIsModalOpen(false);
@@ -97,6 +107,16 @@ const OrderDetailAdmin = (props: Props) => {
     setSelectedReceivedOrderId(null);
   };
 
+  const options = orderStatusValue.map(status => ({
+    value: status.code,
+    label: <span>{status.name}</span>,
+    disabled: status.code !== nextStatus,
+  }));
+
+  const onUpdateStatus = async (value: any) => {
+    console.log(value, 'value');
+  }
+
   console.log(order, 'order');
   return (
     <div className='container mb-16'>
@@ -116,7 +136,7 @@ const OrderDetailAdmin = (props: Props) => {
           <div>
             <span>MÃ ĐƠN HÀNG: {order?.orderCode}</span>
             <span className="mx-1">|</span>
-            <span className="text-[#62d2a2]">{order?.orderStatus.name}</span>
+            <span className="text-[#62d2a2]">{order?.orderStatus?.name}</span>
           </div>
         </div>
 
@@ -172,7 +192,7 @@ const OrderDetailAdmin = (props: Props) => {
                     <p>Ghi chú: {order?.note || 'Không có'}</p>
                   </div>
                 </div>
-                <div className="text-[#62d2a2]">{order?.orderStatus.name}</div>
+                <div className="text-[#62d2a2]">{order?.orderStatus?.name}</div>
               </div>
             </div>
             <div className="w-3/5 pl-5 text-sm text-gray-500 normal-case">
@@ -198,45 +218,14 @@ const OrderDetailAdmin = (props: Props) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-end space-x-2 p-2">
+        <div className='flex justify-end p-6'>
+          <Select
+            options={options}
+            value={order?.orderStatus?.code}
+            onChange={(value) => onUpdateStatus(value)}
+            style={{ width: 250, height: 40 }}
+          />
 
-          {/* {
-            order?.orderStatus.code === 0 &&
-            <Link to={`/order/${order._id}/detail`} className="btn1 block text-center rounded-md min-w-[160px] py-2 bg-green-600 text-white uppercase" style={{ borderWidth: "1px" }}>
-              Thanh toán ngay
-            </Link>
-          } */}
-          {
-            order?.orderStatus.code === 5 &&
-            <Link to={`/order/${order._id}/review`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
-              Đánh giá
-            </Link>
-          }
-          {
-            order?.orderStatus.code === 4 &&
-            <>
-              <Button onClick={() => showReceiveModal(order._id)} className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
-                Đã nhận được hàng
-              </Button>
-              <Modal title="Xác nhận đã nhận hàng" open={isModalOpen} onOk={handleReceiveOrder} onCancel={handleCancel}>
-                <p>Xác nhận đã nhận hàng?</p>
-              </Modal>
-            </>
-          }
-          {
-            (order?.orderStatus.code === 0 || order?.orderStatus.code === 1 || order?.orderStatus.code === 2) &&
-            <>
-              <Button onClick={() => showCancelOrder(order._id)} className="btn2 block text-center rounded-md h-10 min-w-[130px] py-2 bg-slate-50 uppercase" style={{ borderWidth: "1px" }}>
-                Huỷ đơn hàng
-              </Button>
-              {/* <Modal title="Xác nhận hủy đơn hàng" open={isModalOpen} onOk={handleDelete} onCancel={handleCancel}>
-                                                <p>Bạn có chắc chắn muốn hủy đơn hàng này?</p>
-                                            </Modal> */}
-            </>
-          }
-          {/* <Link to={`/order/${order._id}/detail`} className="btn1 block text-center rounded-md min-w-[100px] py-2 uppercase" style={{ borderWidth: "1px" }}>
-                                            Chi tiết
-                                        </Link> */}
         </div>
       </div>
     </div>

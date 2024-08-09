@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
 import { https } from "../../config/axios";
 import { hiddenSpinner, showSpinner } from "../../util/util";
-import orderService from "../../services/orderSerivce";
+import orderService from "../../services/orderService";
 
 const desc = ['Tệ', 'Không hài lòng', 'Bình thường', 'Hài lòng', 'Tuyệt vời'];
 

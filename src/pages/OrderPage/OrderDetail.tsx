@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { formartCurrency, hiddenSpinner, showSpinner } from '../../util/util';
-import orderService from '../../services/orderSerivce';
 import { Button, message, Modal } from 'antd';
+import { getMessageByStatusCode } from '../../util/constant';
+import orderService from '../../services/orderService';
+import ButtonOption from './ButtonOption';
 
 type Props = {}
 
@@ -116,7 +118,7 @@ const OrderDetail = (props: Props) => {
           <div>
             <span>MÃ ĐƠN HÀNG: {order?.orderCode}</span>
             <span className="mx-1">|</span>
-            <span className="text-[#62d2a2]">{order?.orderStatus.name}</span>
+            <span className="text-[#62d2a2]">{order?.orderStatus?.name}</span>
           </div>
         </div>
 
@@ -172,71 +174,36 @@ const OrderDetail = (props: Props) => {
                     <p>Ghi chú: {order?.note || 'Không có'}</p>
                   </div>
                 </div>
-                <div className="text-[#62d2a2]">{order?.orderStatus.name}</div>
+                <div className="text-[#62d2a2]">{getMessageByStatusCode(order?.orderStatus?.code)}</div>
               </div>
             </div>
             <div className="w-3/5 pl-5 text-sm text-gray-500 normal-case">
-              <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
-                <p>Tổng tiền hàng</p>
-                <p>₫{formartCurrency(order?.historicalCost)}</p>
+              <div>
+                <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
+                  <p>Tổng tiền hàng</p>
+                  <p>₫{formartCurrency(order?.historicalCost)}</p>
+                </div>
+                <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
+                  <p>Phí vận chuyển</p>
+                  <p>₫{formartCurrency(order?.shippingFee)}</p>
+                </div>
+                <div className="flex justify-between items-center py-2 border-gray-300" style={{ borderBottomWidth: 1 }}>
+                  <p>Thành tiền</p>
+                  <p className="text-2xl text-[#62d2a2] font-semibold">₫{formartCurrency(order?.totalPrice)}</p>
+                </div>
+                <div className="flex justify-between items-center py-3 border-gray-200">
+                  <p>
+                    <i className="fa-solid fa-file-invoice-dollar text-[#62d2a2]"></i>
+                    Phương thức Thanh toán
+                  </p>
+                  <p>{order?.paymentMethod}</p>
+                </div>
               </div>
-              <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
-                <p>Phí vận chuyển</p>
-                <p>₫{formartCurrency(order?.shippingFee)}</p>
-              </div>
-              <div className="flex justify-between items-center py-2 border-gray-300" style={{ borderBottomWidth: 1 }}>
-                <p>Thành tiền</p>
-                <p className="text-2xl text-[#62d2a2] font-semibold">₫{formartCurrency(order?.totalPrice)}</p>
-              </div>
-              <div className="flex justify-between items-center py-3 border-gray-200">
-                <p>
-                  <i className="fa-solid fa-file-invoice-dollar text-[#62d2a2]"></i>
-                  Phương thức Thanh toán
-                </p>
-                <p>{order?.paymentMethod}</p>
+              <div className=' flex justify-end mt-8'>
+                <ButtonOption orderId={order?._id} orderStatus={order?.orderStatus?.code} fetchOrdersList={fetchOrderDetail} />
               </div>
             </div>
           </div>
-        </div>
-        <div className="flex justify-end space-x-2 p-2">
-
-          {
-            order?.orderStatus.code === 0 &&
-            <Link to={`/order/${order._id}/detail`} className="btn1 block text-center rounded-md min-w-[160px] py-2 bg-green-600 text-white uppercase" style={{ borderWidth: "1px" }}>
-              Thanh toán ngay
-            </Link>
-          }
-          {
-            order?.orderStatus.code === 5 &&
-            <Link to={`/order/${order._id}/review`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
-              Đánh giá
-            </Link>
-          }
-          {
-            order?.orderStatus.code === 4 &&
-            <>
-              <Button onClick={() => showReceiveModal(order._id)} className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
-                Đã nhận được hàng
-              </Button>
-              <Modal title="Xác nhận đã nhận hàng" open={isModalOpen} onOk={handleReceiveOrder} onCancel={handleCancel}>
-                <p>Xác nhận đã nhận hàng?</p>
-              </Modal>
-            </>
-          }
-          {
-            (order?.orderStatus.code === 0 || order?.orderStatus.code === 1 || order?.orderStatus.code === 2) &&
-            <>
-              <Button onClick={() => showCancelOrder(order._id)} className="btn2 block text-center rounded-md h-10 min-w-[130px] py-2 bg-slate-50 uppercase" style={{ borderWidth: "1px" }}>
-                Huỷ đơn hàng
-              </Button>
-              {/* <Modal title="Xác nhận hủy đơn hàng" open={isModalOpen} onOk={handleDelete} onCancel={handleCancel}>
-                                                <p>Bạn có chắc chắn muốn hủy đơn hàng này?</p>
-                                            </Modal> */}
-            </>
-          }
-          {/* <Link to={`/order/${order._id}/detail`} className="btn1 block text-center rounded-md min-w-[100px] py-2 uppercase" style={{ borderWidth: "1px" }}>
-                                            Chi tiết
-                                        </Link> */}
         </div>
       </div>
     </div>

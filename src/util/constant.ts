@@ -12,7 +12,12 @@ export const orderStatusValue = [
 ]
 
 
-export const getOrderStatusName = (code: number) => {
+export const getMessageByStatusCode = (code: number) => {
     const status = orderStatusValue.find(status => status.code === code);
-    return status ? status.message : 'Unknown Status';
+    return status ? status.message : '';
+};
+
+export const getNameByStatusCode = (code: number) => {
+    const status = orderStatusValue.find(status => status.code === code);
+    return status ? status.name : '';
 };
