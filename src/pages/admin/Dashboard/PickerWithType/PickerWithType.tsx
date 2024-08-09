@@ -11,7 +11,7 @@ type Props = {
 };
 const PickerWithType = ({ onChange }: Props) => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
-  const [type, setType] = useState<PickerType>("year");
+  const [type, setType] = useState<PickerType>("week");
 
   const formatTime = (value: Dayjs) => {
     switch (type) {

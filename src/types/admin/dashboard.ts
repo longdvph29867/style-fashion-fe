@@ -6,7 +6,14 @@ export type IOrderStatus = {
 };
 
 export type IOrderStatistic = {
-  time: number;
+  time: string;
   totalAmount: number;
   count: number;
+};
+
+export type ITopSellingProduct = {
+  totalQuantity: number;
+  productId: string;
+  productName: string;
+  productImage: string;
 };

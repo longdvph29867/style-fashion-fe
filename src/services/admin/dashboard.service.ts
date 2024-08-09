@@ -16,6 +16,16 @@ const dashboardService = {
       `/statistics/order?type=${type}&time=${time}&year=${year}&orderStatus=${orderStatus}`
     );
   },
+  async getTopSellingProduct(
+    type: string,
+    time: number,
+    year: number,
+    orderStatus: number
+  ) {
+    return https.get(
+      `/statistics/top-selling-product?type=${type}&time=${time}&year=${year}&orderStatus=${orderStatus}`
+    );
+  },
 };
 
 export default dashboardService;

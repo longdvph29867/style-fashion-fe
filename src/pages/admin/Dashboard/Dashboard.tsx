@@ -2,6 +2,7 @@ import { FC } from "react";
 import OrderStatus from "./OrderStatus/OrderStatus";
 import Line from "../../../components/Line/Line";
 import SalesAnalysis from "./SalesAnalysis/SalesAnalysis";
+import TopSellingProducts from "./TopSellingProducts/TopSellingProducts";
 
 const Dashboard: FC = () => {
   return (
@@ -9,6 +10,8 @@ const Dashboard: FC = () => {
       <OrderStatus />
       <Line />
       <SalesAnalysis />
+      <Line />
+      <TopSellingProducts/>
     </div>
   );
 };

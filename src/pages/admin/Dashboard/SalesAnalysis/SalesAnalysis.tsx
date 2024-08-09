@@ -1,5 +1,5 @@
 import { FC, useEffect, useMemo, useState } from "react";
-import { DatePicker, DatePickerProps, Divider } from "antd";
+import { DatePicker, DatePickerProps, Divider, Skeleton } from "antd";
 import TitleDashboard from "../../../../components/Common/Admin/TitleDashboard/TitleDashboard";
 import { Chart } from "react-google-charts";
 import { IOrderStatistic } from "../../../../types/admin/dashboard";
@@ -9,13 +9,12 @@ import { formartCurrency } from "../../../../util/util";
 import PickerWithType from "../PickerWithType/PickerWithType";
 const SalesAnalysis: FC = () => {
   const [orderStatistic, setOrderStatistic] = useState<IOrderStatistic[]>([]);
-  const [selectedDate, setSelectedDate] = useState(moment());
-  const fetchData = async () => {
+  const fetchData = async (type: string, time: number, year: number) => {
     try {
       const res = await dashboardService.getOrderStatistic(
-        "year",
-        2024,
-        2024,
+        type,
+        time,
+        year,
         2
       );
       if (res?.data) {
@@ -31,7 +30,7 @@ const SalesAnalysis: FC = () => {
       ["Time", "Doanh số", "Đơn hàng"],
       ...(orderStatistic.map((item) => {
         return [
-          moment(item.time).format("DD/MM"),
+          moment(item.time).format(item.time.length != 7 ? "DD/MM" : "MM"),
           Number(item.totalAmount) / 1000,
           item.count,
         ];
@@ -40,7 +39,7 @@ const SalesAnalysis: FC = () => {
   }, [orderStatistic]);
 
   useEffect(() => {
-    fetchData();
+    fetchData('week', Number(moment().format("WW")), Number(moment().format("YYYY")));
   }, []);
   const options = {
     colors: ["#fe385c"],
@@ -76,16 +75,26 @@ const SalesAnalysis: FC = () => {
       },
     },
     vAxis: {
-      format: "", // Hide zero in the axis
+      format: "",
       gridlines: {
-        count: 0, // Reduce the number of gridlines
-        color: "#eee", // Hide gridlines
+        count: 0,
+        color: "#eee",
       },
     },
   };
   const onChangeTime = (type: string, time: string) => {
-    console.log("type:", type);
-    console.log("time:", moment(time, "DD-MM-YYYY").week());
+    const year = moment(time, "DD-MM-YYYY").year();
+    let timeFomart;
+    if(type == "week") {
+      timeFomart = moment(time, "DD-MM-YYYY").week();
+    }
+    else if(type == "month") {
+      timeFomart = moment(time, "DD-MM-YYYY").month() + 1;
+    }
+    else {
+      timeFomart = moment(time, "DD-MM-YYYY").year();
+    }
+    fetchData(type, timeFomart, year);
   };
   return (
     <>
@@ -105,13 +114,18 @@ const SalesAnalysis: FC = () => {
             <span className="text-xs italic font-light">(nghìn đồng)</span>
           </h2>
           <div>
-            <Chart
-              chartType="ComboChart"
-              width="100%"
-              height="400px"
-              data={data}
-              options={options}
-            />
+            {orderStatistic.length > 0 ? (
+              <Chart
+                chartType="ComboChart"
+                width="100%"
+                height="400px"
+                data={data}
+                options={options}
+              />
+            ) : <Skeleton.Button
+            active
+            className="!w-full !h-80 !rounded-2xl"
+          />}
           </div>
         </div>
         <div className="border" />
