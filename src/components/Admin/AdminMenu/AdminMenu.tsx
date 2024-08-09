@@ -3,13 +3,14 @@ import imgLogo from "../../../assets/img/sf-logo2.png";
 import imgLogoIcon from "../../../assets/img/logo_icon_v2.png";
 import { MdDashboard, MdCategory } from "react-icons/md";
 import { FaBoxes, FaUserAlt } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { BiSolidCoupon } from "react-icons/bi";
 type Menu = {
   link: string;
   title: string;
   icon: JSX.Element;
   active: boolean;
+  children?: [{ link: string; title: string; icon?: JSX.Element }];
 };
 const listMenu: Menu[] = [
   {
@@ -23,6 +24,7 @@ const listMenu: Menu[] = [
     title: "Danh mục",
     icon: <MdCategory />,
     active: false,
+    children: [{ link: "", title: "Xem danh mục" }],
   },
   {
     link: "/admin/products",
@@ -51,7 +53,7 @@ const AdminMenu: React.FC = () => {
   const pathAfterAdmin = "/" + pathSegments.join("/");
 
   return (
-    <div className="lg:w-64 lg:px-4 pl-4 lg:min-w-[256px] duration-500">
+    <div className="lg:w-52 lg:px-4 pl-4 lg:min-w-[200px] duration-500">
       <div className="h-full w-8 lg:w-full">
         <Link
           className="block lg:px-8 lg:py-6 my-6 text-sm text-slate-700"
@@ -65,8 +67,8 @@ const AdminMenu: React.FC = () => {
           <ul className="flex flex-col">
             {listMenu.map(({ link, title, icon, active }, index) => {
               return (
-                <li key={index} className="">
-                  <Link
+                <li key={index} className="group relative duration-300">
+                  <NavLink
                     className={`text-sm flex items-center lg:px-4 py-2.5 rounded-lg ${
                       pathAfterAdmin === link ? "lg:bg-white lg:shadow-xl" : ""
                     } `}
@@ -84,7 +86,17 @@ const AdminMenu: React.FC = () => {
                     <span className="ml-1 opacity-100 hidden lg:block">
                       {title}
                     </span>
-                  </Link>
+                    <div className="absolute z-10 left-full invisible w-40 bg-white opacity-0 group-hover:opacity-100 group-hover:visible duration-300">
+                      <div className="bg-white m-2 p-1 shadow-[rgba(27,31,35,0.15)_0px_0px_0px_1px] rounded-lg w-full">
+                        <Link
+                          className="text-sm p-2 rounded-md hover:bg-[#e7e7e7] w-full block"
+                          to={""}
+                        >
+                          Xem sản phẩm
+                        </Link>
+                      </div>
+                    </div>
+                  </NavLink>
                 </li>
               );
             })}
