@@ -13,6 +13,7 @@ import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
 import TextArea from "antd/es/input/TextArea";
 import { BsDot } from "react-icons/bs";
+import { Attribute } from "../../../types/products";
 
 const ProductDetail: React.FC = () => {
     window.scrollTo(0, 0);
@@ -59,78 +60,13 @@ const ProductDetail: React.FC = () => {
         }
     ];
 
-    const createColumnsAttribute = (attributes) => {
+    const createColumnsAttribute = (attributes: Attribute[]) => {
         const columns = [];
-
-        // if (attributes[0]) {
-        //     columns.push({
-        //         title: attributes[0].name,
-        //         dataIndex: 'attribute_0',
-        //         render: (text, _, index) => {
-        //             const attributeValue = variants[index]?.attributes ? variants[index].attributes[0] : null;
-        //             const rowSpan = attributes[1]?.values.length || 1;
-        //             // const attrValueIndex = index % rowSpan;
-        //             // Calculate the correct attribute value index
-        //             const attrValueIndex = Math.floor(index / (attributes[1]?.values.length || 1));
-        //             const currentValue = attributes[0]?.values[attrValueIndex] || {};
-
-        //             return {
-        //                 children: (
-        //                     <>
-        //                         <div className="text-center text-lg">
-        //                             <label htmlFor="">
-        //                                 {attributeValue}
-        //                             </label>
-        //                         </div>
-
-        //                         {/* <Form.Item
-        //               name={['variants', index, 'colorImage']}
-        //               valuePropName="fileList"
-        //               getValueFromEvent={(e) => Array.isArray(e) ? e : e && e.fileList}
-        //               rules={[{ required: true, message: 'Vui lòng tải hình ảnh!' }]}
-        //             >
-        //               <Upload
-        //                 onChange={({ fileList }) => handleUploadImageAttributeChange(fileList, attrValueIndex)}
-        //                 listType="picture"
-        //                 beforeUpload={() => false}
-        //                 maxCount={1}
-        //               // defaultFileList={currentValue.image ? [{ thumbUrl: currentValue.image }] : []}
-        //               >
-        //                 <Button icon={<UploadOutlined />}>Tải lên</Button>
-        //               </Upload>
-        //             </Form.Item> */}
-        //                     </>
-        //                 ),
-        //                 props: {
-        //                     rowSpan: index % rowSpan === 0 ? rowSpan : 0,
-        //                 },
-        //             };
-        //         },
-        //     });
-        // }
-
-        // if (attributes[1]) {
-        //     columns.push({
-        //         title: attributes[1].name,
-        //         dataIndex: 'attribute_1',
-        //         render: (text, _, index) => {
-        //             const attributeValue = variants[index]?.attributes ? variants[index].attributes[1] : null;
-
-        //             return (
-        //                 <div className="text-center text-lg">
-        //                     <label htmlFor="">
-        //                         {attributeValue}
-        //                     </label>
-        //                 </div>
-        //             );
-        //         },
-        //     });
-        // }
         if (attributes?.[0]) {
             columns.push({
                 title: attributes[0].name,  // "Màu"
                 dataIndex: 'attribute_0',
-                render: (text, _, index) => {
+                render: (text: any, _: any, index: number) => {
                     // Determine the row span for merging cells
                     const rowSpan = attributes[1]?.values.length || 1;
 
@@ -142,8 +78,8 @@ const ProductDetail: React.FC = () => {
                     const tierIndex = variant?.tier_index;
 
                     // Safely find the current value using the tierIndex
-                    const currentValue = attributes[0]?.values.find(
-                        (val) => tierIndex && val._id === tierIndex[0] // Check that tierIndex exists and has an element at index 0
+                    const currentValue: any = attributes[0]?.values.find(
+                        (val: any) => tierIndex && val._id === tierIndex[0] // Check that tierIndex exists and has an element at index 0
                     ) || {};
 
                     return {
@@ -173,14 +109,14 @@ const ProductDetail: React.FC = () => {
             columns.push({
                 title: attributes[1].name,  // "Size"
                 dataIndex: 'attribute_1',
-                render: (text, _, index) => {
+                render: (text: any, _: any, index: number) => {
                     // Safely access the variant and its tier_index
                     const variant = variants[index];
                     const tierIndex = variant?.tier_index;
 
                     // Safely find the current value using the tierIndex
-                    const currentValue = attributes[1]?.values.find(
-                        (val) => tierIndex && val._id === tierIndex[1] // Check that tierIndex exists and has an element at index 1
+                    const currentValue: any = attributes[1]?.values.find(
+                        (val: any) => tierIndex && val._id === tierIndex[1] // Check that tierIndex exists and has an element at index 1
                     ) || {};
 
                     return (
@@ -200,7 +136,7 @@ const ProductDetail: React.FC = () => {
             {
                 title: 'Giá gốc',
                 dataIndex: 'originalPrice',
-                render: (text, _, index) => (
+                render: (text: any, _: any, index: number) => (
                     <div className="flex justify-left items-center">
                         <span className="text-xl">{variants[index]?.originalPrice}</span>
                     </div>
@@ -209,7 +145,7 @@ const ProductDetail: React.FC = () => {
             {
                 title: 'Giá khuyến mãi',
                 dataIndex: 'currentPrice',
-                render: (text, _, index) => (
+                render: (text: any, _: any, index: number) => (
                     <div className="flex justify-left items-center">
                         <span className="text-xl">{variants[index]?.currentPrice}</span>
                     </div>
@@ -218,7 +154,7 @@ const ProductDetail: React.FC = () => {
             {
                 title: 'Kho hàng',
                 dataIndex: 'stock',
-                render: (text, _, index) => (
+                render: (text: any, _: any, index: number) => (
                     <div className="flex justify-left items-center">
                         <span className="text-xl">{variants[index]?.stock}</span>
                     </div>
@@ -234,7 +170,7 @@ const ProductDetail: React.FC = () => {
         try {
             const { data } = await https.get(`/products/${id}`);
             setProduct(data);
-            console.log(data)
+            // console.log(data)
             const productDetail: any = data;
             form.setFieldsValue({
                 name: productDetail.name,
@@ -285,7 +221,7 @@ const ProductDetail: React.FC = () => {
             hiddenSpinner();
         } catch (error) {
             hiddenSpinner();
-            console.log(error);
+            // console.log(error);
         }
     };
     useEffect(() => {
@@ -497,7 +433,7 @@ const ProductDetail: React.FC = () => {
                         dataSource={variants}
                         pagination={false}
                         bordered
-                        rowKey={(record, index) => index}
+                        rowKey={(record, index) => index !== undefined ? index : record.id}
                     />
 
 
