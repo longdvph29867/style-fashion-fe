@@ -294,13 +294,17 @@ const AddProduct: React.FC = () => {
                                 >
                                     <Upload
                                         onChange={({ fileList }) => handleUploadImageAttributeChange(fileList, attrValueIndex)}
-                                        listType="picture"
+                                        listType="picture-card"
                                         beforeUpload={() => false}
                                         maxCount={1}
                                     // defaultFileList={currentValue.image}
 
                                     >
-                                        <Button icon={<UploadOutlined />}>Tải lên</Button>
+                                        {/* <Button icon={<UploadOutlined />}>Tải lên</Button> */}
+                                        <button style={{ border: 0, background: 'none' }} type="button">
+                                            <PlusOutlined />
+                                            <div style={{ marginTop: 8 }}>Upload</div>
+                                        </button>
                                     </Upload>
                                 </Form.Item>
                             </>

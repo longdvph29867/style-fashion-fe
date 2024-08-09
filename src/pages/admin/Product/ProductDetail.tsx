@@ -350,7 +350,7 @@ const ProductDetail: React.FC = () => {
                                         ))}
                                     </div>
                                 </div>
-                                <div>
+                                {/* <div>
                                     <div className="mb-2">
                                         <label htmlFor="">Video</label>
                                     </div>
@@ -358,7 +358,7 @@ const ProductDetail: React.FC = () => {
                                         <source src={product.video} type="video/mp4" />
                                         Your browser does not support the video tag.
                                     </video>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
 

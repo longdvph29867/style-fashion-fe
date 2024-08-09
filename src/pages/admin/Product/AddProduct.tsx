@@ -119,12 +119,16 @@ const AddProduct: React.FC = () => {
                 >
                   <Upload
                     onChange={({ fileList }) => handleUploadImageAttributeChange(fileList, attrValueIndex)}
-                    listType="picture"
+                    listType="picture-card"
                     beforeUpload={() => false}
                     maxCount={1}
                   // defaultFileList={currentValue.image ? [{ thumbUrl: currentValue.image }] : []}
                   >
-                    <Button icon={<UploadOutlined />}>Tải lên</Button>
+                    {/* <Button icon={<UploadOutlined />}>Tải lên</Button> */}
+                    <button style={{ border: 0, background: 'none' }} type="button">
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </button>
                   </Upload>
                 </Form.Item>
               </>
@@ -163,7 +167,12 @@ const AddProduct: React.FC = () => {
           <Form.Item
             name={['variants', index, 'originalPrice']}
             initialValue={variants[index]?.originalPrice}
-            rules={[{ required: true, message: 'Vui lòng nhập giá gốc!' }]}
+            rules={[{ required: true, message: "Vui lòng nhập trường này!" },
+            {
+              pattern: /^[0-9]*$/,
+              message: "Vui lòng nhập số dương!",
+            }
+            ]}
           >
             <Input
               placeholder="Giá gốc"
@@ -179,7 +188,12 @@ const AddProduct: React.FC = () => {
           <Form.Item
             name={['variants', index, 'currentPrice']}
             initialValue={variants[index]?.currentPrice}
-            rules={[{ required: true, message: 'Vui lòng nhập giá khuyến mãi!' }]}
+            rules={[{ required: true, message: "Vui lòng nhập trường này!" },
+            {
+              pattern: /^[0-9]*$/,
+              message: "Vui lòng nhập số dương!",
+            }
+            ]}
           >
             <Input
               placeholder="Giá khuyến mãi"
