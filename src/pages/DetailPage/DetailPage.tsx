@@ -6,18 +6,13 @@ import InfoProduct from "./InfoProduct/InfoProduct";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { visilibitySpiner } from "../../util/util";
-import axios from "axios";
+import productService from "../../services/productService";
 const DetailPage = () => {
   const { slug } = useParams<string>();
 
   const { data, isLoading } = useQuery({
     queryKey: ["product-detail"],
-    queryFn: () =>
-      axios
-        .get(
-          "https://style-fashion-api-2rrd.vercel.app/api/v1/products/product-name-mung"
-        )
-        .then((res) => res.data),
+    queryFn: () => productService.getProductDetail("66a7bdc7b43a6d74ee316d2b").then((res) => res.data),
     staleTime: 3 * 60 * 1000, // quá 3 phút sẽ gọi lại api
     enabled: !!slug, // khi nào có slug thì mới gọi api
   });

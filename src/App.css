@@ -209,11 +209,7 @@ body .ant-modal-mask {
   background-color: #ff385c !important;
 }
 
-.ant-modal-content
-  .ant-modal-body
-  .ant-modal-confirm-body-wrapper
-  .ant-modal-confirm-btns
-  .ant-btn-primary {
+.ant-modal-content .ant-modal-body .ant-modal-confirm-body-wrapper .ant-modal-confirm-btns .ant-btn-primary {
   background-color: #ff4d4f !important;
 }
 
@@ -289,18 +285,20 @@ body .ant-modal-mask {
   color: #222;
 }
 
-.button-variant:hover {
-  /* color: white; */
+.button-variant:not(.active-variant):hover {
+  color: #fe385c;
   /* background-color: #fe385c; */
   border-color: #fe385c;
 }
+
 .active-variant {
   border: 1px solid #fe385c;
   color: white;
   background: #fe385c;
 }
 
-.button-variant:disabled {
+.button-variant:disabled,
+.button-variant:disabled:hover {
   cursor: no-drop;
   opacity: 0.5;
   background-color: white;
