@@ -72,49 +72,6 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
     setQuantity(quantity + value);
   };
 
-  // const handleChangeAttribute = (key: string, idAttribute: string, image: undefined | string) => {
-  //   const newAttribute = { ...attributeSelected };
-  //   if (newAttribute[key] === idAttribute) {
-  //     delete newAttribute[key];
-  //   } else {
-  //     newAttribute[key] = idAttribute;
-  //   }
-  //   const attributeIds = Object.values(newAttribute);
-  //   if (attributeIds.length === product.attributes.length) {
-  //     const variant = product.variants.find((item) => {
-  //       const newSet = new Set([...attributeIds, ...item.tier_index]);
-  //       if (newSet.size === attributeIds.length) {
-  //         return true;
-  //       }
-  //     });
-  //     setVariantSelected(variant as Variant);
-  //   }
-  //   if (product.attributes.length !== 1) {
-  //     const invalidVariants: string[] = [];
-  //     for (const idAttr of attributeIds) {
-  //       product.variants.forEach((variant) => {
-  //         variant.tier_index.forEach((tier) => {
-  //           const shouldAddTier =
-  //             variant.stock === 0 &&
-  //             variant.tier_index.includes(idAttr) &&
-  //             tier !== idAttr &&
-  //             !invalidVariants.includes(tier);
-
-  //           if (shouldAddTier) {
-  //             invalidVariants.push(tier);
-  //           }
-  //         });
-  //       });
-  //     }
-  //     setVariantIdInvalid(invalidVariants);
-  //   }
-
-  //   if (image) {
-  //     setCurrentImage(image);
-  //   }
-  //   setAttributeSelected(newAttribute);
-  // };
-
   const handleAddtoCart = async () => {
     try {
       if (!variantSelected) {
