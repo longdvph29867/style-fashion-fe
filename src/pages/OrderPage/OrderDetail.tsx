@@ -144,7 +144,7 @@ const OrderDetail = (props: Props) => {
                 </div>
                 <p className="normal-case">
                   {/* <span className="line-through">₫{product.price * product.quantity}</span> */}
-                  <span className="text-lg text-[#62d2a2]">₫{formartCurrency(product.price * product.quantity)}</span>
+                  <span className="text-lg text-primary">₫{formartCurrency(product.price * product.quantity)}</span>
                 </p>
               </div>
               <div className="h-[1px] bg-gray-300 my-2"></div>
@@ -161,7 +161,7 @@ const OrderDetail = (props: Props) => {
         <div className="p-5">
           <div className="flex justify-between">
             <h3 className="font-semibold text-xl">Địa Chỉ Nhận Hàng</h3>
-            <p className="text-sm text-gray-500">Đơn vị vận chuyển: <span className="text-[#62d2a2]">Giao hàng nhanh</span></p>
+            <p className="text-sm text-gray-500">Đơn vị vận chuyển: <span className="text-primary font-semibold">Giao hàng nhanh</span></p>
           </div>
           <div className="flex pt-4">
             <div className="w-2/5 pr-5 border-gray-300" style={{ borderRightWidth: 1 }}>
@@ -189,11 +189,11 @@ const OrderDetail = (props: Props) => {
                 </div>
                 <div className="flex justify-between items-center py-2 border-gray-300" style={{ borderBottomWidth: 1 }}>
                   <p>Thành tiền</p>
-                  <p className="text-2xl text-[#62d2a2] font-semibold">₫{formartCurrency(order?.totalPrice)}</p>
+                  <p className="text-2xl text-primary font-semibold">₫{formartCurrency(order?.totalPrice)}</p>
                 </div>
                 <div className="flex justify-between items-center py-3 border-gray-200">
                   <p>
-                    <i className="fa-solid fa-file-invoice-dollar text-[#62d2a2]"></i>
+                    <i className="fa-solid fa-file-invoice-dollar text-primary"></i>
                     Phương thức Thanh toán
                   </p>
                   <p>{order?.paymentMethod}</p>
