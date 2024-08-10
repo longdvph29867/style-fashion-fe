@@ -1,6 +1,6 @@
 import React from "react";
-import imgLogo from "../../../assets/img/logo140.svg";
-import imgLogoIcon from "../../../assets/img/logo_icon.png";
+import imgLogo from "../../../assets/img/sf-logo2.png";
+import imgLogoIcon from "../../../assets/img/logo_icon_v2.png";
 import { MdDashboard, MdCategory } from "react-icons/md";
 import { FaBoxes, FaUserAlt } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";

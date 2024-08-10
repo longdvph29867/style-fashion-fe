@@ -277,3 +277,7 @@ body .ant-modal-mask {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.ant-table-filter-dropdown-btns .ant-btn-primary {
+  background-color: #1677FE !important;
+}

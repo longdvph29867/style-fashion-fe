@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
-import { Tabs, TabsProps } from "antd";
+import { Button, Select, Table, Tabs, TabsProps } from "antd";
 import Item from "./Item";
-import { hiddenSpinner, showSpinner } from "../../../util/util";
+import { formartCurrency, hiddenSpinner, showSpinner } from "../../../util/util";
 import orderService from "../../../services/orderService";
+import { getNameByStatusCode, orderStatusValue } from "../../../util/constant";
+import { render } from "react-dom";
+import { Link } from "react-router-dom";
+import { TableRowSelection } from "antd/es/table/interface";
 
 const OrderAdmin = () => {
   // const location = useLocation();
@@ -20,6 +24,9 @@ const OrderAdmin = () => {
   const [completeList, setCompleteList] = useState<any>(null);
   const [cancelList, setCancelList] = useState<any>(null);
   const [paymentFailedList, setPaymentFailedList] = useState<any>(null);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [nextStatus, setNextStatus] = useState(null);
 
   const fetchOrdersList = async () => {
     showSpinner();
@@ -50,6 +57,55 @@ const OrderAdmin = () => {
     // console.log(key);
     // console.log(ordersList, 'ordersList')
   };
+
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const rowSelection: any = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  const hasSelected = selectedRowKeys.length > 0;
+
+  const options = [
+    {
+      value: 4,
+      label: <span className="h-10">Xác nhận đơn hàng</span>,
+      disabled: 4 !== nextStatus,
+    },
+    {
+      value: 5,
+      label: <span className="h-10">Giao hàng</span>,
+      disabled: 5 !== nextStatus,
+    },
+    {
+      value: 6,
+      label: <span className="h-10">Đã giao hàng</span>,
+      disabled: 6 !== nextStatus,
+    },
+    {
+      value: 7,
+      label: <span className="h-10">Giao hàng không thành công</span>,
+      disabled: 7 !== nextStatus,
+    },
+    {
+      value: 9,
+      label: <span className="h-10">Hủy đơn hàng</span>,
+      disabled: 9 !== nextStatus,
+    },
+  ]
+
+  const onUpdateStatus = async (value: any) => {
+    console.log(value, 'value');
+  }
+
+  const statusFilters = orderStatusValue.map((status) => ({
+    text: status.name,
+    value: status.code,
+  }));
 
   const label0 = (
     <>
@@ -146,10 +202,73 @@ const OrderAdmin = () => {
     },
   ];
 
+  const columns = [
+    {
+      title: 'Mã đơn hàng',
+      dataIndex: 'orderCode',
+      key: 'orderCode',
+      render: (text, record) => <span className="text-blue-600"><Link to={`/admin/order/${record._id}`}>{text}</Link></span>,
+    },
+    {
+      title: 'Người nhận',
+      dataIndex: ['shippingAddress', 'recipientName'],
+      key: 'recipientName',
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'orderStatus',
+      key: 'orderStatus',
+      filters: statusFilters,
+      onFilter: (value, record) => record.orderStatus === value,
+      render: (status) => (getNameByStatusCode(status)),
+    },
+
+    {
+      title: 'Thanh toán',
+      dataIndex: 'paymentMethod',
+      key: 'paymentMethod',
+      filters: [
+        { text: 'COD', value: 'COD' },
+        { text: 'VNPAY', value: 'VNPAY' },
+      ],
+      onFilter: (value, record) => record.paymentMethod === value,
+    },
+    {
+      title: 'Tổng tiền',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
+      render: (price) => formartCurrency(price),
+      sorter: (a, b) => a.totalPrice - b.totalPrice,
+    },
+    {
+      title: 'Ngày tạo',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (text) => new Date(text).toLocaleString(),
+      sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+    },
+
+  ];
+
   return (
     <div className="p-4">
       <h3 className="text-2xl my-8">Danh sách đơn hàng</h3>
-      <Tabs defaultActiveKey="all" items={items} onChange={onChange} />
+      {/* <Tabs defaultActiveKey="all" items={items} onChange={onChange} /> */}
+      <div className="mb-4 flex gap-2 items-center">
+        <Select
+          options={options}
+          // value={order?.orderStatus?.code}
+          onChange={(value) => onUpdateStatus(value)}
+          style={{ width: 250, height: 40 }}
+          placeholder="Cập nhật trạng thái đơn hàng"
+        />
+        <span>
+          {hasSelected ? `Chọn ${selectedRowKeys.length} đơn hàng` : null}
+
+        </span>
+
+      </div>
+      <Table rowSelection={rowSelection} dataSource={ordersList} columns={columns} rowKey="_id" />
     </div>
 
   );

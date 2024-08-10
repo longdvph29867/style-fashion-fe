@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Button, message, Modal, Select } from 'antd';
 import { formartCurrency, hiddenSpinner, showSpinner } from '../../../util/util';
 import orderService from '../../../services/orderService';
-import { orderStatusValue } from '../../../util/constant';
+import { getNameByStatusCode, orderStatusValue } from '../../../util/constant';
 
 type Props = {}
 
@@ -107,11 +107,39 @@ const OrderDetailAdmin = (props: Props) => {
     setSelectedReceivedOrderId(null);
   };
 
-  const options = orderStatusValue.map(status => ({
-    value: status.code,
-    label: <span>{status.name}</span>,
-    disabled: status.code !== nextStatus,
-  }));
+  // const options = orderStatusValue.map(status => ({
+  //   value: status.code,
+  //   label: <span>{status.name}</span>,
+  //   disabled: status.code !== nextStatus,
+  // }));
+
+  const options = [
+    {
+      value: 4,
+      label: <span className="h-10">Xác nhận đơn hàng</span>,
+      disabled: 4 !== nextStatus,
+    },
+    {
+      value: 5,
+      label: <span className="h-10">Giao hàng</span>,
+      disabled: 5 !== nextStatus,
+    },
+    {
+      value: 6,
+      label: <span className="h-10">Đã giao hàng</span>,
+      disabled: 6 !== nextStatus,
+    },
+    {
+      value: 7,
+      label: <span className="h-10">Giao hàng không thành công</span>,
+      disabled: 7 !== nextStatus,
+    },
+    {
+      value: 9,
+      label: <span className="h-10">Hủy đơn hàng</span>,
+      disabled: 9 !== nextStatus,
+    },
+  ]
 
   const onUpdateStatus = async (value: any) => {
     console.log(value, 'value');
@@ -136,7 +164,7 @@ const OrderDetailAdmin = (props: Props) => {
           <div>
             <span>MÃ ĐƠN HÀNG: {order?.orderCode}</span>
             <span className="mx-1">|</span>
-            <span className="text-[#62d2a2]">{order?.orderStatus?.name}</span>
+            <span className="text-primary font-semibold">{getNameByStatusCode(order?.orderStatus?.code)}</span>
           </div>
         </div>
 
@@ -162,7 +190,7 @@ const OrderDetailAdmin = (props: Props) => {
                 </div>
                 <p className="normal-case">
                   {/* <span className="line-through">₫{product.price * product.quantity}</span> */}
-                  <span className="text-lg text-[#62d2a2]">{formartCurrency(product.price * product.quantity)}</span>
+                  <span className="text-lg text-primary">{formartCurrency(product.price * product.quantity)}</span>
                 </p>
               </div>
               <div className="h-[1px] bg-gray-300 my-2"></div>
@@ -179,7 +207,7 @@ const OrderDetailAdmin = (props: Props) => {
         <div className="p-5">
           <div className="flex justify-between">
             <h3 className="font-semibold text-xl">Địa Chỉ Nhận Hàng</h3>
-            <p className="text-sm text-gray-500">Đơn vị vận chuyển: <span className="text-[#62d2a2]">Giao hàng nhanh</span></p>
+            <p className="text-sm text-gray-500">Đơn vị vận chuyển: <span className="text-primary font-medium">Giao hàng nhanh</span></p>
           </div>
           <div className="flex pt-4">
             <div className="w-2/5 pr-5 border-gray-300" style={{ borderRightWidth: 1 }}>
@@ -192,7 +220,7 @@ const OrderDetailAdmin = (props: Props) => {
                     <p>Ghi chú: {order?.note || 'Không có'}</p>
                   </div>
                 </div>
-                <div className="text-[#62d2a2]">{order?.orderStatus?.name}</div>
+                {/* <div className="text-[#62d2a2]">{order?.orderStatus?.name}</div> */}
               </div>
             </div>
             <div className="w-3/5 pl-5 text-sm text-gray-500 normal-case">
@@ -206,11 +234,11 @@ const OrderDetailAdmin = (props: Props) => {
               </div>
               <div className="flex justify-between items-center py-2 border-gray-300" style={{ borderBottomWidth: 1 }}>
                 <p>Thành tiền</p>
-                <p className="text-2xl text-[#62d2a2] font-semibold">{formartCurrency(order?.totalPrice)}</p>
+                <p className="text-2xl text-primary font-semibold">{formartCurrency(order?.totalPrice)}</p>
               </div>
               <div className="flex justify-between items-center py-3 border-gray-200">
                 <p>
-                  <i className="fa-solid fa-file-invoice-dollar text-[#62d2a2]"></i>
+                  <i className="fa-solid fa-file-invoice-dollar "></i>
                   Phương thức Thanh toán
                 </p>
                 <p>{order?.paymentMethod}</p>
@@ -218,14 +246,17 @@ const OrderDetailAdmin = (props: Props) => {
             </div>
           </div>
         </div>
-        <div className='flex justify-end p-6'>
+        <div className='flex justify-between p-6'>
+          <div>
+            <span className='font-semibold text-primary'>{getNameByStatusCode(order?.orderStatus?.code)}</span>
+          </div>
           <Select
             options={options}
-            value={order?.orderStatus?.code}
+            // value={order?.orderStatus?.code}
             onChange={(value) => onUpdateStatus(value)}
             style={{ width: 250, height: 40 }}
+            placeholder="Cập nhật trạng thái đơn hàng"
           />
-
         </div>
       </div>
     </div>
