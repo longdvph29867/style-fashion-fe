@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { Button, Form, Input, message, Upload, UploadProps } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FormPostNews } from "../../../types/blog";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
 import { localUserService } from "../../../services/localService";
 
-type Props = {};
 
-const PostNews = (props: Props) => {
+
+const PostNews = () => {
   const [content, setContent] = useState<string>("");
   const [image, setPoster] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
@@ -103,7 +103,7 @@ const PostNews = (props: Props) => {
             >
               Poster:
             </label>
-            <Upload customRequest={handleUpload} showUploadList={false}>
+            <Upload customRequest={handleUpload} showUploadList={true}>
               <Button icon={<UploadOutlined />}>Click to Upload</Button>
             </Upload>
           </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { hiddenSpinner, showSpinner } from '../../../util/util';
 import { https } from '../../../config/axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Form, Image, Input, message, Upload, UploadProps } from 'antd';
+import { Button, Form,Input, message, Upload, UploadProps } from 'antd';
 import { FormPostNews, FormUpdateBlog } from '../../../types/blog';
 import { UploadOutlined } from '@ant-design/icons';
 import { Editor } from '@tinymce/tinymce-react';
@@ -11,7 +11,7 @@ import { localUserService } from '../../../services/localService';
 const UpdateBlog: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [image, setPoster] = useState<string>("");
+  const [image, setPoster] = useState<string>("");  // giữ lại URL ảnh cũ
   const [file, setFile] = useState<File | null>(null);
   const [form] = Form.useForm();
 
@@ -26,9 +26,9 @@ const UpdateBlog: React.FC = () => {
       const blog: FormUpdateBlog = data;
       form.setFieldsValue({
         title: blog.title,
-        image: blog.image,
         content: blog.content
       });
+      setPoster(blog.image); // lưu lại URL của ảnh cũ
       hiddenSpinner();
     } catch (error) {
       hiddenSpinner();
@@ -48,7 +48,7 @@ const UpdateBlog: React.FC = () => {
       if (file) {
         const formData = new FormData();
         formData.append("images", file);
-
+  
         const response = await https.post("/images", formData);
         if (response.data && response.data.data && response.data.data[0] && response.data.data[0].url) {
           imageUrl = response.data.data[0].url;
@@ -56,16 +56,21 @@ const UpdateBlog: React.FC = () => {
           throw new Error("Phản hồi không chứa URL của ảnh!");
         }
       }
-
+  
       const storedUserInfo = localUserService.get();
       const userId = storedUserInfo ? storedUserInfo.id : '';
+  
+      // Lấy nội dung từ tinymce
+      const content = form.getFieldValue('content'); // hoặc bạn có thể sử dụng editor.getContent()
+      
       const data = {
         title: values.title,
         image: imageUrl,
-        content: values.content,
+        content: content,  // Chỉ lấy nội dung văn bản từ tinymce
         user: userId
       };
-
+      console.log(values);
+  
       const res = await https.put(`/blogs/${id}`, data);
       if (res) {
         message.success("Cập nhật thành công!");
@@ -78,7 +83,8 @@ const UpdateBlog: React.FC = () => {
       hiddenSpinner();
     }
   };
-
+  
+  
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
@@ -116,7 +122,9 @@ const UpdateBlog: React.FC = () => {
             >
               Poster:
             </label>
-            <Upload customRequest={handleUpload} showUploadList={false}>
+            <Upload 
+            name='image'
+            customRequest={handleUpload} showUploadList={true}>
               <Button icon={<UploadOutlined />}>Click to Upload</Button>
             </Upload>
           </div>
@@ -198,3 +206,4 @@ const UpdateBlog: React.FC = () => {
 }
 
 export default UpdateBlog;
+
