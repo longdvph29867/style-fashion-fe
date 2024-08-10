@@ -105,7 +105,9 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                       {formartCurrency(productCart?.variant?.currentPrice)}
                     </span>
                   </div>
-                  <span className="text-sm italic">Còn: {productCart?.variant?.stock} sản phẩm</span>
+                  <span className="text-sm italic">
+                    Còn: {productCart?.variant?.stock} sản phẩm
+                  </span>
                 </div>
               ) : (
                 <div>
@@ -114,7 +116,10 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                     className="bg-white shadow-lg"
                     arrow={true}
                     dropdownRender={() => (
-                      <DropdownVarianContent keyReset={dropdownKey} idProduct={productCart.product.id} />
+                      <DropdownVarianContent
+                        keyReset={dropdownKey}
+                        idProduct={productCart.product.id}
+                      />
                     )}
                     trigger={["click"]}
                   >
@@ -123,8 +128,8 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                     </Button>
                   </Dropdown>
                   <div className="text-red-400 mt-4 flex gap-1">
-                    <PiWarningCircleLight fontSize={20} /> Phân loại hàng này bán hết, vui lòng lựa chọn một
-                    phân loại khác.
+                    <PiWarningCircleLight fontSize={20} /> Phân loại hàng này
+                    bán hết, vui lòng lựa chọn một phân loại khác.
                   </div>
                 </div>
               )}
@@ -154,12 +159,17 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                       />
                     </svg>
                   </button>
-                  <span className="flex-1 block leading-none text-center select-none">{quantity}</span>
+                  <span className="flex-1 block leading-none text-center select-none">
+                    {quantity}
+                  </span>
                   <button
                     onClick={increaseQuantity}
                     className="flex items-center justify-center w-8 h-8 bg-white border rounded-full border-neutral-400 dark:border-neutral-500 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 disabled:cursor-no-drop dark:disabled:hover:border-neutral-500 disabled:opacity-50"
                     type="button"
-                    disabled={!productCart.variant || quantity === productCart?.variant?.stock}
+                    disabled={
+                      !productCart.variant ||
+                      quantity === productCart?.variant?.stock
+                    }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

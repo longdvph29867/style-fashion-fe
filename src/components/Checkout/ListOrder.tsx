@@ -42,8 +42,8 @@ const ListOrder = ({ productList }: Props) => {
                     </div>
                     <div className="hidden flex-1 sm:flex justify-end">
                       <div className="mt-0.5">
-                        <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium">
-                          <span className="text-[#fe385c] !leading-none">
+                        <div className="flex items-center border-2 border-primary rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium">
+                          <span className="text-priborder-primary !leading-none">
                             {formartCurrency(item.attribute.price)}
                           </span>
                         </div>

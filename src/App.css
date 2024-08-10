@@ -209,7 +209,11 @@ body .ant-modal-mask {
   background-color: #ff385c !important;
 }
 
-.ant-modal-content .ant-modal-body .ant-modal-confirm-body-wrapper .ant-modal-confirm-btns .ant-btn-primary {
+.ant-modal-content
+  .ant-modal-body
+  .ant-modal-confirm-body-wrapper
+  .ant-modal-confirm-btns
+  .ant-btn-primary {
   background-color: #ff4d4f !important;
 }
 
