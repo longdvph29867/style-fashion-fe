@@ -15,9 +15,16 @@ const UpdateBlog: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [form] = Form.useForm();
 
-  const handleUpload: UploadProps["customRequest"] = ({ file }: any) => {
-    setFile(file);
+  const handleUpload: UploadProps["customRequest"] = ({ file, onSuccess, onError }:any) => {
+    try {
+      setFile(file);
+      onSuccess("ok"); // Đảm bảo gọi onSuccess để thông báo rằng upload thành công
+    } catch (error) {
+      console.error("Upload failed:", error);
+      onError(error); // Gọi onError nếu xảy ra lỗi
+    }
   };
+  
 
   const fetchBlog = async () => {
     showSpinner();
@@ -44,7 +51,7 @@ const UpdateBlog: React.FC = () => {
     showSpinner();
     try {
       let imageUrl = image;
-      
+    
       if (file) {
         const formData = new FormData();
         formData.append("images", file);
@@ -52,6 +59,7 @@ const UpdateBlog: React.FC = () => {
         const response = await https.post("/images", formData);
         if (response.data && response.data.data && response.data.data[0] && response.data.data[0].url) {
           imageUrl = response.data.data[0].url;
+          console.log("Image uploaded successfully:", imageUrl);
         } else {
           throw new Error("Phản hồi không chứa URL của ảnh!");
         }
@@ -69,7 +77,7 @@ const UpdateBlog: React.FC = () => {
         content: content,  // Chỉ lấy nội dung văn bản từ tinymce
         user: userId
       };
-      console.log(values);
+      console.log("Data to be sent:", data);
   
       const res = await https.put(`/blogs/${id}`, data);
       if (res) {
@@ -122,6 +130,7 @@ const UpdateBlog: React.FC = () => {
             >
               Poster:
             </label>
+            <img src={image} alt="Uploaded" className='w-52 p-3' />
             <Upload 
             name='image'
             customRequest={handleUpload} showUploadList={true}>
