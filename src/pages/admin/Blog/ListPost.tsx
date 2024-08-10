@@ -3,19 +3,23 @@ import { Blog } from "../../../types/blog";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
 import { Link } from "react-router-dom";
-import { Image, message, Modal } from "antd";
+import { Image, message, Modal, Pagination } from "antd";
 import DOMPurify from "dompurify";
 
 type Props = {};
 
 const ListPost = (props: Props) => {
   const [blogList, setBlogList] = useState<Blog[]>([]);
-  const fetchData = async () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const fetchData = async (page = 1) => {
     try {
       showSpinner();
-      const API = `/blogs`;
+      const API = `/blogs?page=${page}&limit=${pageSize}`;
       const { data } = await https.get(API);
-      console.log(data.results);
+      setBlogList(data.results);
+      setTotalResults(data.totalResults);
       hiddenSpinner();
       setBlogList(data.results);
     } catch (error) {
@@ -24,8 +28,14 @@ const ListPost = (props: Props) => {
     }
   };
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(currentPage);
+  }, [currentPage]);
+
+  const handlePageChange = (page: any) => {
+    setCurrentPage(page);
+    fetchData(page);
+  };
+
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
@@ -153,6 +163,14 @@ const ListPost = (props: Props) => {
               );
             })}
           </div>
+      <div className="text-center p-5">
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={totalResults}
+          onChange={handlePageChange}
+        />
+      </div>
         </div>
       </div>
     </div>

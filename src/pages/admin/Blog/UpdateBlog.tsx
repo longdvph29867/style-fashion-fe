@@ -11,6 +11,7 @@ import { localUserService } from '../../../services/localService';
 const UpdateBlog: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [content, setContent] = useState<string>("");
   const [image, setPoster] = useState<string>("");  // giữ lại URL ảnh cũ
   const [file, setFile] = useState<File | null>(null);
   const [form] = Form.useForm();
@@ -69,7 +70,7 @@ const UpdateBlog: React.FC = () => {
       const userId = storedUserInfo ? storedUserInfo.id : '';
   
       // Lấy nội dung từ tinymce
-      const content = form.getFieldValue('content'); // hoặc bạn có thể sử dụng editor.getContent()
+      // const content = form.getFieldValue('content'); // hoặc bạn có thể sử dụng editor.getContent()
       
       const data = {
         title: values.title,
@@ -199,6 +200,7 @@ const UpdateBlog: React.FC = () => {
                     }
                   `,
                 }}
+                onEditorChange={(content) => setContent(content)}
               />
             </Form.Item>
           </div>
