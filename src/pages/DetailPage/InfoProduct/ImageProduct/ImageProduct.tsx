@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Product } from "../../../../types/products";
 import { Skeleton } from "antd";
+import { IProduct } from "../../../../types/productType";
 
 type Props = {
   image: string;
-  product: Product;
+  product: IProduct;
   setCurrentImage: (image: string) => void;
 };
 
@@ -12,7 +12,10 @@ const ImageProduct = ({ image, product, setCurrentImage }: Props) => {
   const [images, setImages] = useState<string[]>([]);
   useEffect(() => {
     if (product) {
-      const listImageAttributes = product.attributes.map((item) => item.image);
+      const listImageAttributes = product.attributes.flatMap((item) =>
+        item.values.map((value) => value.image).filter((image): image is string => image !== undefined)
+      );
+
       setImages([...product.gallery, ...listImageAttributes]);
     }
   }, [product]);
@@ -22,17 +25,10 @@ const ImageProduct = ({ image, product, setCurrentImage }: Props) => {
       <div className="relative pb-[100%]">
         {image ? (
           <div className="absolute w-full h-full">
-            <img
-              alt=""
-              className="object-cover w-full h-full rounded-2xl"
-              src={image}
-            />
+            <img alt="" className="object-cover w-full h-full rounded-2xl" src={image} />
           </div>
         ) : (
-          <Skeleton.Button
-            active
-            className="absolute !w-full !h-full !rounded-2xl"
-          />
+          <Skeleton.Button active className="absolute !w-full !h-full !rounded-2xl" />
         )}
         <div className="absolute top-3 left-3 px-2.5 py-1.5 text-xs bg-white rounded-full flex items-center justify-center text-slate-700">
           <svg

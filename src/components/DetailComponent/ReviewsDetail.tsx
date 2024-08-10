@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Product } from "../../types/products";
 import { hiddenSpinner, showSpinner } from "../../util/util";
 import { https } from "../../config/axios";
+import { IProduct } from "../../types/productType";
 
 type ReviewDetailProps = {
-  product: Product | null;
+  product: IProduct | null;
 };
 
 const ReviewsDetail = ({ product }: ReviewDetailProps) => {
@@ -122,9 +122,7 @@ const ReviewsDetail = ({ product }: ReviewDetailProps) => {
               </div>
             </div>
             <div className="mt-4 prose-sm prose sm:prose dark:prose-invert sm:max-w-2xl">
-              <p className="text-slate-600 dark:text-slate-300">
-                {item.content}
-              </p>
+              <p className="text-slate-600 dark:text-slate-300">{item.content}</p>
             </div>
           </div>
         ))}

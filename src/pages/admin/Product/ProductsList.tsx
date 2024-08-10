@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  hiddenSpinner,
-  showSpinner,
-} from "../../../util/util";
+import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { Link } from "react-router-dom";
 import { Button, Image, Modal, Table, message } from "antd";
 import { https } from "../../../config/axios";
@@ -18,12 +15,15 @@ const ProductsList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const limitPerPage = 10;
   const currentPage = params.get("page") ? Number(params.get("page")) : 1;
-  const [productList, setProductList] = useState<Product[]>([]);
+  const [productList, setProductList] = useState<any>([]);
 
   const fetchData = async () => {
     showSpinner();
     try {
-      const { data } = await productService.getAllProducts(limitPerPage, currentPage);
+      const { data } = await productService.getAllProducts(
+        limitPerPage,
+        currentPage
+      );
       setLoading(false);
       setProductList(data.results);
       setTotalProducts(data.totalResults);
@@ -58,12 +58,12 @@ const ProductsList: React.FC = () => {
 
   const showConfirm = (id: string) => {
     confirm({
-      title: 'Bạn có chắc chắn muốn xóa?',
+      title: "Bạn có chắc chắn muốn xóa?",
       onOk() {
         handleDelete(id);
       },
       onCancel() {
-        console.log('Cancel');
+        console.log("Cancel");
       },
       maskClosable: true,
     });
@@ -75,7 +75,8 @@ const ProductsList: React.FC = () => {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      render: (_: any, __: Product, index: number) => ((currentPage - 1) * limitPerPage + (index + 1)),
+      render: (_: any, __: Product, index: number) =>
+        (currentPage - 1) * limitPerPage + (index + 1),
     },
     {
       title: "Ảnh",
@@ -110,7 +111,8 @@ const ProductsList: React.FC = () => {
       title: "Đánh giá",
       dataIndex: "finalScoreReview",
       key: "finalScoreReview",
-      sorter: (a: Product, b: Product) => a.finalScoreReview - b.finalScoreReview,
+      sorter: (a: Product, b: Product) =>
+        a.finalScoreReview - b.finalScoreReview,
     },
     {
       title: "Giá thấp nhất",
@@ -147,9 +149,6 @@ const ProductsList: React.FC = () => {
     },
   ];
 
-
-
-
   return (
     <div className="">
       <div className="p-6 pb-0 mb-0 bg-white rounded-t-2xl">
@@ -160,16 +159,86 @@ const ProductsList: React.FC = () => {
           <span>Thêm mới</span>
         </Link>
       </div>
-      <div className="h-full p-8">
-        <Table
-          columns={columns}
-          dataSource={productList}
-          rowKey="id"
-          pagination={false}
-        />
-        {/* )} */}
+      <div className="h-full mt-4 overflow-x-auto">
+        <div className="w-full border-gray-200 text-slate-500">
+          <div className="w-full grid lg:grid-cols-8 sm:grid-cols-5 grid-cols-2 gap-2 mb-2">
+            <div className="lg:block hidden text-center pr-6 pl-4 py-3 font-bold uppercase text-slate-800">
+              Ảnh
+            </div>
+            <div className="lg:block hidden sm:col-span-2 pr-6 pl-4 py-3  text-left font-bold uppercase text-slate-800">
+              Tên sản phẩm
+            </div>
+            <div className="lg:block hidden col-span-3 pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
+              Mô tả
+            </div>
+            <div className="lg:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
+              Đánh giá
+            </div>
+            <div className="lg:block hidden pr-6 pl-2 py-3  text-left font-bold uppercase text-slate-800">
+              Thao tác
+            </div>
+          </div>
+          <div>
+            {loading && (
+              <div>
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <ProductListSkeleton key={index} />
+                ))}
+              </div>
+            )}
+            {[...productList].map((product, index) => {
+              return (
+                <div
+                  key={index}
+                  className="relative grid lg:grid-cols-8 sm:grid-cols-5 grid-cols-2 gap-2 border-b border-slate-100"
+                >
+                  {/* <span className='absolute top-0.5 left-1 text-slate-300'>{++index}</span> */}
+                  <div className="p-2">
+                    <div className="px-2 py-1 min-w-[110px] text-center">
+                      <Image src={product.thumbnail} width={100} height={100} />
+                    </div>
+                  </div>
+                  <div className="p-2 sm:col-span-2">
+                    <div className="flex flex-col justify-center">
+                      <h6 className="text-base font-normal">{product.name}</h6>
+                    </div>
+                  </div>
+                  <div className="lg:block p-2 col-span-3">
+                    <p className="text-sm ">
+                      {product.description?.slice(0, 150)}...
+                    </p>
+                  </div>
+                  <div className="p-2 space-x-2">
+                    <Link
+                      to={`/admin/reviews/${product.id}`}
+                      className="text-sm font-semibold text-green-500 hover:text-green-600"
+                    >
+                      Xem đánh giá
+                    </Link>
+                  </div>
+                  <div className="p-2 space-x-2">
+                    <Link
+                      to={`/admin/products/${product.id}`}
+                      className="text-sm font-semibold text-yellow-500 hover:text-yellow-600"
+                    >
+                      Chi tiết
+                    </Link>
+                    <>
+                      <button
+                        onClick={() => showConfirm(product.id)}
+                        className="text-sm font-semibold text-red-500 hover:text-red-600"
+                      >
+                        Xoá
+                      </button>
+                    </>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
         <PaginationPage
-          current={currentPage}
+          current={1}
           total={totalProducts}
           pageSize={limitPerPage}
         />

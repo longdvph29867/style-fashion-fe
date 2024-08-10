@@ -1,25 +1,31 @@
-import { useMemo } from "react";
-import { ProductsCart } from "../../types/cartType";
+import { useEffect, useMemo, useState } from "react";
 import { formartCurrency } from "../../util/util";
 import { Link } from "react-router-dom";
+import { ProductCartType } from "../../types/cart";
 
 type Props = {
-  productCart: ProductsCart[];
+  productCart: ProductCartType[];
 };
 
 const TotalOrder = ({ productCart }: Props) => {
+  const [isProductHasVariant, setIsProductHasVariant] = useState(true);
   const total = useMemo<number>(() => {
     return productCart.reduce((accumulator, currentValue) => {
-      accumulator += currentValue.quantity * currentValue.attribute.price;
-      return accumulator;
+      if (!currentValue?.variant) {
+        setIsProductHasVariant(false);
+        return accumulator; // Bỏ qua nếu variant không tồn tại
+      }
+      return (
+        accumulator + currentValue.quantity * currentValue.variant.currentPrice
+      );
     }, 0);
   }, [productCart]);
 
   const handleLinkClick = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
-    if (productCart.length === 0) {
-      e.preventDefault(); // Ngăn chặn hành động nếu bị vô hiệu hóa
+    if (productCart.length === 0 || !isProductHasVariant) {
+      e.preventDefault();
     }
   };
 
@@ -49,14 +55,19 @@ const TotalOrder = ({ productCart }: Props) => {
         <Link
           onClick={handleLinkClick}
           className={`relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 text-slate-50 shadow-xl mt-8 w-full ${
-            productCart.length === 0
-              ? "bg-primary2/50 cursor-no-drop"
-              : "bg-primary2  hover:bg-[#cf3350]"
+            productCart.length === 0 || !isProductHasVariant
+              ? "bg-[#ff385c]/50 cursor-no-drop"
+              : "bg-[#ff385c]  hover:bg-[#cf3350]"
           }`}
           to="/checkout"
         >
           Thanh toán
         </Link>
+        {!isProductHasVariant && (
+          <p className="text-red-500 text-sm mt-3">
+            Vui lòng sử lý sản phẩm lỗi phân loại trước khi thanh toán
+          </p>
+        )}
       </div>
     </>
   );
