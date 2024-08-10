@@ -1,3 +1,5 @@
+import { IVariant } from "./productType";
+
 export type CartType = {
   _id: string;
   user: string;
@@ -15,6 +17,6 @@ interface ProductType {
 export type ProductCartType = {
   product: ProductType;
   quantity: number;
-  variant: Variant;
+  variant: IVariant;
   _id: string;
 };

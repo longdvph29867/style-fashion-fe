@@ -7,14 +7,15 @@ import { setCartAll } from "../../../../Toolkits/cartSlice";
 import { localUserService } from "../../../../services/localService";
 import { IoRemoveOutline } from "react-icons/io5";
 import Variant from "../../../../components/DetailComponent/Variant";
+import { IProduct, IVariant } from "../../../../types/productType";
 
 type Props = {
   setCurrentImage: (value: string) => void;
-  product: Product;
+  product: IProduct;
 };
 
 const ContentProduct = ({ setCurrentImage, product }: Props) => {
-  const [variantSelected, setVariantSelected] = useState<Variant | null>(null);
+  const [variantSelected, setVariantSelected] = useState<IVariant | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [price, setPrice] = useState<number[]>([]);
   const [showMaxQuantity, setShowMaxQuantity] = useState<boolean>(false);

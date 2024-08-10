@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-  hiddenSpinner,
-  showSpinner,
-} from "../../../util/util";
+import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { Link } from "react-router-dom";
-import { Button, Image, Modal, message } from "antd";
+import { Image, Modal, message } from "antd";
 import { https } from "../../../config/axios";
-import { IProduct } from "../../../types/productType";
 import PaginationPage from "../../../components/PaginationPage/PaginationPage";
 import productService from "../../../services/productService";
 import ProductListSkeleton from "../../../components/Skeleton/Admin/ProductListSkeleton";
@@ -17,7 +13,7 @@ const ProductsList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const limitPerPage = 15;
   const currentPage = params.get("page") ? Number(params.get("page")) : 1;
-  const [productList, setProductList] = useState<IProduct[]>([]);
+  const [productList, setProductList] = useState<any>([]);
 
   const fetchData = async () => {
     showSpinner();
@@ -57,12 +53,12 @@ const ProductsList: React.FC = () => {
 
   const showConfirm = (id: string) => {
     confirm({
-      title: 'Bạn có chắc chắn muốn xóa?',
+      title: "Bạn có chắc chắn muốn xóa?",
       onOk() {
         handleDelete(id);
       },
       onCancel() {
-        console.log('Cancel');
+        console.log("Cancel");
       },
       maskClosable: true,
     });
@@ -98,13 +94,13 @@ const ProductsList: React.FC = () => {
             </div>
           </div>
           <div>
-            {
-              loading && <div>
+            {loading && (
+              <div>
                 {Array.from({ length: 10 }).map((_, index) => (
                   <ProductListSkeleton key={index} />
                 ))}
               </div>
-            }
+            )}
             {[...productList].map((product, index) => {
               return (
                 <div
@@ -114,11 +110,7 @@ const ProductsList: React.FC = () => {
                   {/* <span className='absolute top-0.5 left-1 text-slate-300'>{++index}</span> */}
                   <div className="p-2">
                     <div className="px-2 py-1 min-w-[110px] text-center">
-                      <Image
-                        src={product.thumbnail}
-                        width={100}
-                        height={100}
-                      />
+                      <Image src={product.thumbnail} width={100} height={100} />
                     </div>
                   </div>
                   <div className="p-2 sm:col-span-2">
@@ -127,9 +119,7 @@ const ProductsList: React.FC = () => {
                     </div>
                   </div>
                   <div className="lg:block p-2 col-span-3">
-                    <p className="text-sm ">
-                      {product.description?.slice(0, 150)}...
-                    </p>
+                    <p className="text-sm ">{product.description?.slice(0, 150)}...</p>
                   </div>
                   <div className="p-2 space-x-2">
                     <Link
@@ -160,10 +150,7 @@ const ProductsList: React.FC = () => {
             })}
           </div>
         </div>
-        <PaginationPage
-          current={1}
-          total={totalProducts}
-          pageSize={limitPerPage} />
+        <PaginationPage current={1} total={totalProducts} pageSize={limitPerPage} />
       </div>
     </div>
   );
