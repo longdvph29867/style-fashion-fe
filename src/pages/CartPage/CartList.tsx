@@ -8,27 +8,23 @@ import { deleteProductCart, setQuantityCart } from "../../Toolkits/cartSlice";
 import cartEmpty from "../../assets/cart-empty.svg";
 import { Link } from "react-router-dom";
 import { localUserService } from "../../services/localService";
-import { useEffect } from "react";
 
 const CartList = () => {
   const dispatch = useDispatch();
   const carts = useSelector((state: RootState) => state.cartSlice.carts);
   const userId = localUserService.get()?.id;
 
-  const handleUpdateItemProductCart = debounce(
-    (idItemCart: string, quantity: number) => {
-      if (userId) {
-        showSpinner();
-        cartService
-          .updateCart(userId, idItemCart, quantity)
-          .then(() => dispatch(setQuantityCart({ idItemCart, quantity })))
-          .finally(() => {
-            hiddenSpinner();
-          });
-      }
-    },
-    500
-  );
+  const handleUpdateItemProductCart = debounce((idItemCart: string, quantity: number) => {
+    if (userId) {
+      showSpinner();
+      cartService
+        .updateCart(userId, idItemCart, quantity)
+        .then(() => dispatch(setQuantityCart({ idItemCart, quantity })))
+        .finally(() => {
+          hiddenSpinner();
+        });
+    }
+  }, 500);
 
   const handleDelete = (idItemCart: string) => {
     if (userId) {
@@ -73,8 +69,7 @@ const CartList = () => {
             <div className="text-center">
               <img className="mx-auto" src={cartEmpty} alt="" width={200} />
               <span className="font-medium italic">
-                Chưa có sản phẩm nào trong giỏ hàng. Thêm ít nhất 1 sản phẩm để
-                tiến hành thanh toán
+                Chưa có sản phẩm nào trong giỏ hàng. Thêm ít nhất 1 sản phẩm để tiến hành thanh toán
               </span>
             </div>
           )}

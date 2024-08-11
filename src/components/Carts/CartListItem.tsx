@@ -1,8 +1,7 @@
 import { ProductCartType } from "../../types/cart";
 import { useState } from "react";
-import { formartCurrency } from "../../util/util";
+import { formartCurrency, getNameVariants } from "../../util/util";
 import { Button, Dropdown } from "antd";
-
 import { PiWarningCircleLight } from "react-icons/pi";
 import DropdownVarianContent from "./DropdownVarianContent";
 
@@ -54,7 +53,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
               <a href="/product-detail">{productCart.product.name}</a>
             </h3>
             <div className="mt-1.5 sm:mt-2.5 text-sm text-[#334155]">
-              {productCart.variant ? (
+              {productCart.variant && productCart.variant.stock > 0 ? (
                 <div className="mt-2">
                   <div className="flex items-center space-x-1.5">
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
@@ -98,16 +97,14 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                         strokeLinejoin="round"
                       ></path>
                     </svg>
-                    <span>bvhv</span>
+                    <span>{getNameVariants(productCart.variant.tier_index)}</span>
                   </div>
                   <div className="items-center border-2 my-2 border-[#ff385c] rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium w-max mr-3">
                     <span className="text-[#ff385c] !leading-none ">
                       {formartCurrency(productCart?.variant?.currentPrice)}
                     </span>
                   </div>
-                  <span className="text-sm italic">
-                    Còn: {productCart?.variant?.stock} sản phẩm
-                  </span>
+                  <span className="text-sm italic">Còn: {productCart?.variant?.stock} sản phẩm</span>
                 </div>
               ) : (
                 <div>
@@ -116,10 +113,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                     className="bg-white shadow-lg"
                     arrow={true}
                     dropdownRender={() => (
-                      <DropdownVarianContent
-                        keyReset={dropdownKey}
-                        idProduct={productCart.product.id}
-                      />
+                      <DropdownVarianContent keyReset={dropdownKey} idProduct={productCart.product.id} />
                     )}
                     trigger={["click"]}
                   >
@@ -128,8 +122,8 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                     </Button>
                   </Dropdown>
                   <div className="text-red-400 mt-4 flex gap-1">
-                    <PiWarningCircleLight fontSize={20} /> Phân loại hàng này
-                    bán hết, vui lòng lựa chọn một phân loại khác.
+                    <PiWarningCircleLight fontSize={20} /> Phân loại hàng này bán hết, vui lòng lựa chọn một
+                    phân loại khác.
                   </div>
                 </div>
               )}
@@ -159,17 +153,12 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                       />
                     </svg>
                   </button>
-                  <span className="flex-1 block leading-none text-center select-none">
-                    {quantity}
-                  </span>
+                  <span className="flex-1 block leading-none text-center select-none">{quantity}</span>
                   <button
                     onClick={increaseQuantity}
                     className="flex items-center justify-center w-8 h-8 bg-white border rounded-full border-neutral-400 dark:border-neutral-500 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 disabled:cursor-no-drop dark:disabled:hover:border-neutral-500 disabled:opacity-50"
                     type="button"
-                    disabled={
-                      !productCart.variant ||
-                      quantity === productCart?.variant?.stock
-                    }
+                    disabled={!productCart.variant || quantity === productCart?.variant?.stock}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
