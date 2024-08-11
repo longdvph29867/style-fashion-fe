@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Select, Table, Tabs, TabsProps } from "antd";
+import { Button, Image, Select, Table, Tabs, TabsProps } from "antd";
 import Item from "./Item";
 import { formartCurrency, hiddenSpinner, showSpinner } from "../../../util/util";
 import orderService from "../../../services/orderService";
@@ -7,6 +7,8 @@ import { getNameByStatusCode, orderStatusValue } from "../../../util/constant";
 import { render } from "react-dom";
 import { Link } from "react-router-dom";
 import { TableRowSelection } from "antd/es/table/interface";
+import { OrderStatus } from "../../../components/OrderAdmin/status";
+import { PaymentMethod } from "../../../components/OrderAdmin/paymentMethod";
 
 const OrderAdmin = () => {
   // const location = useLocation();
@@ -208,11 +210,7 @@ const OrderAdmin = () => {
       dataIndex: 'orderCode',
       key: 'orderCode',
       render: (text, record) => <span className="text-blue-600"><Link to={`/admin/order/${record._id}`}>{text}</Link></span>,
-    },
-    {
-      title: 'Người nhận',
-      dataIndex: ['shippingAddress', 'recipientName'],
-      key: 'recipientName',
+      width: 100
     },
     {
       title: 'Trạng thái',
@@ -220,9 +218,35 @@ const OrderAdmin = () => {
       key: 'orderStatus',
       filters: statusFilters,
       onFilter: (value, record) => record.orderStatus === value,
-      render: (status) => (getNameByStatusCode(status)),
+      render: (status) => <OrderStatus statusCode={status} />,
+      width: 230,
     },
-
+    {
+      title: 'Sản phẩm',
+      dataIndex: 'productsOrder',
+      key: 'imageAtrribute',
+      render: (productsOrder) => (
+        <div className="">
+          {productsOrder.map((product) => (
+            <Image
+              key={product._id}
+              src={product.imageAtrribute}
+              alt={product.productName}
+              style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: '8px', borderRadius: '8px' }}
+            />
+          ))}
+        </div>
+      ),
+      width: 280, // Chiều rộng tối đa của cột
+      // ellipsis: true, // Sử dụng ellipsis nếu nội dung quá dài
+    },
+    {
+      title: 'Tổng tiền',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
+      render: (price) => formartCurrency(price),
+      sorter: (a, b) => a.totalPrice - b.totalPrice,
+    },
     {
       title: 'Thanh toán',
       dataIndex: 'paymentMethod',
@@ -232,14 +256,17 @@ const OrderAdmin = () => {
         { text: 'VNPAY', value: 'VNPAY' },
       ],
       onFilter: (value, record) => record.paymentMethod === value,
+      render: (paymentMethod: 'COD' | 'VNPAY') => <PaymentMethod paymentMethod={paymentMethod} />,
     },
     {
-      title: 'Tổng tiền',
-      dataIndex: 'totalPrice',
-      key: 'totalPrice',
-      render: (price) => formartCurrency(price),
-      sorter: (a, b) => a.totalPrice - b.totalPrice,
+      title: 'Người nhận',
+      dataIndex: ['shippingAddress', 'recipientName'],
+      key: 'recipientName',
     },
+
+
+
+
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
@@ -251,8 +278,8 @@ const OrderAdmin = () => {
   ];
 
   return (
-    <div className="p-4">
-      <h3 className="text-2xl my-8">Danh sách đơn hàng</h3>
+    <div className="p-10">
+      <h3 className="text-2xl mb-8">Danh sách đơn hàng</h3>
       {/* <Tabs defaultActiveKey="all" items={items} onChange={onChange} /> */}
       <div className="mb-4 flex gap-2 items-center">
         <Select

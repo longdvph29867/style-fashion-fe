@@ -174,7 +174,7 @@ const OrderDetailAdmin = (props: Props) => {
               <div className="flex justify-between items-center mb-2">
                 <div className="flex">
                   <div className="border-gray-400 mr-3" style={{ borderWidth: 1 }}>
-                    <img className="w-20 h-20 object-cover" src={product.imageProduct} alt={product.productName} />
+                    <img className="w-20 h-20 object-cover" src={product.imageAtrribute} alt={product.productName} />
                   </div>
                   <div>
                     <h3 className="text-lg">{product.productName}</h3>
