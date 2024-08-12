@@ -11,6 +11,30 @@ export const orderStatusValue = [
     { code: 9, name: "Đã huỷ", message: "Đơn hàng đã hủy" }
 ]
 
+export const actionAdminOrder = [
+    {
+        value: 4,
+        label: 'Xác nhận đơn hàng',
+    },
+    {
+        value: 5,
+        label: 'Giao hàng',
+    },
+    {
+        value: 6,
+        label: 'Đã giao hàng',
+    },
+    {
+        value: 7,
+        label: 'Giao hàng không thành công',
+    },
+    {
+        value: 9,
+        label: 'Hủy đơn hàng',
+    },
+]
+
+
 
 export const getMessageByStatusCode = (code: number) => {
     const status = orderStatusValue.find(status => status.code === code);

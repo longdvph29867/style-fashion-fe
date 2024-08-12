@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { TableRowSelection } from "antd/es/table/interface";
 import { OrderStatus } from "../../../components/OrderAdmin/status";
 import { PaymentMethod } from "../../../components/OrderAdmin/paymentMethod";
+import { OrderActions } from "../../../components/OrderAdmin/OrderAction";
 
 const OrderAdmin = () => {
   // const location = useLocation();
@@ -263,10 +264,6 @@ const OrderAdmin = () => {
       dataIndex: ['shippingAddress', 'recipientName'],
       key: 'recipientName',
     },
-
-
-
-
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
@@ -274,6 +271,13 @@ const OrderAdmin = () => {
       render: (text) => new Date(text).toLocaleString(),
       sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
     },
+    {
+      fixed: "right",
+      title: 'Hành động',
+      dataIndex: "actions",
+      key: "actions",
+      render: (_value, record) => <OrderActions record={record} />
+    }
 
   ];
 
