@@ -73,7 +73,7 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ statusCode }) => {
             break;
         case 9:
             // Đã hủy
-            color = "grey";
+            color = "brown";
             icon = <CloseCircleOutlined />;
             break;
     }

@@ -13,24 +13,24 @@ export const orderStatusValue = [
 
 export const actionAdminOrder = [
     {
-        value: 4,
-        label: 'Xác nhận đơn hàng',
+        code: 4,
+        name: 'Xác nhận đơn hàng',
     },
     {
-        value: 5,
-        label: 'Giao hàng',
+        code: 5,
+        name: 'Giao hàng',
     },
     {
-        value: 6,
-        label: 'Đã giao hàng',
+        code: 6,
+        name: 'Đã giao hàng',
     },
     {
-        value: 7,
-        label: 'Giao hàng không thành công',
+        code: 7,
+        name: 'Giao hàng không thành công',
     },
     {
-        value: 9,
-        label: 'Hủy đơn hàng',
+        code: 9,
+        name: 'Hủy đơn hàng',
     },
 ]
 
@@ -43,5 +43,10 @@ export const getMessageByStatusCode = (code: number) => {
 
 export const getNameByStatusCode = (code: number) => {
     const status = orderStatusValue.find(status => status.code === code);
+    return status ? status.name : '';
+};
+
+export const getNameByStatusCodeAdmin = (code: number) => {
+    const status = actionAdminOrder.find(status => status.code === code);
     return status ? status.name : '';
 };

@@ -17,6 +17,21 @@ const orderService = {
   getOrderDetail(orderId: string) {
     return https.get(`/orders/detail/${orderId}`)
   },
+  updateStatusOrder(orderId: string, statusCode: number) {
+    return https.put(`/orders/${orderId}`, { orderStatus: statusCode })
+  },
+  confirmOrder(orderId: string) {
+    return https.put(`/orders/${orderId}`, { orderStatus: 4 })
+  },
+  deliveryOrder(orderId: string) {
+    return https.put(`/orders/${orderId}`, { orderStatus: 5 })
+  },
+  deliveredOrder(orderId: string) {
+    return https.put(`/orders/${orderId}`, { orderStatus: 6 })
+  },
+  failDeliveryOrder(orderId: string) {
+    return https.put(`/orders/${orderId}`, { orderStatus: 7 })
+  },
   receivedOrder(orderId: string) {
     return https.put(`/orders/${orderId}`, { orderStatus: 8 })
   },
