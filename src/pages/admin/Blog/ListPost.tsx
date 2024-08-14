@@ -140,7 +140,7 @@ const ListPost = (props: Props) => {
                   </div> */}
                   <div className="p-2 space-x-2">
                    <p className="text-sm font-semibold text-green-500 hover:text-green-600">
-                    {/* {blog.view} */}100,000,000
+                    {blog.view}
                    </p>
                   </div>
                   <div className="p-2 space-x-2">

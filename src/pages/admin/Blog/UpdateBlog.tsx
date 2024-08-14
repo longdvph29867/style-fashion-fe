@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { hiddenSpinner, showSpinner } from '../../../util/util';
 import { https } from '../../../config/axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Form,Input, message, Upload, UploadProps } from 'antd';
+import { Button, Form,Image,Input, message, Upload, UploadProps } from 'antd';
 import { FormPostNews, FormUpdateBlog } from '../../../types/blog';
 import { UploadOutlined } from '@ant-design/icons';
 import { Editor } from '@tinymce/tinymce-react';
@@ -100,7 +100,7 @@ const UpdateBlog: React.FC = () => {
 
   return (
     <div className="bg-gray-100 p-6">
-      <div className="max-w-2xl mx-auto bg-white p-8 rounded shadow">
+      <div className=" mx-auto bg-white p-8 rounded shadow">
         <h1 className="text-2xl font-bold mb-6">Sửa Tin Tức</h1>
         <Form
           form={form}
@@ -108,7 +108,7 @@ const UpdateBlog: React.FC = () => {
           name="basic"
           labelCol={{ span: 12 }}
           wrapperCol={{ span: 24 }}
-          style={{ maxWidth: 600 }}
+          // style={{ maxWidth: 600 }}
           initialValues={{ remember: true }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
@@ -124,23 +124,24 @@ const UpdateBlog: React.FC = () => {
               <Input />
             </Form.Item>
           </div>
-          <div className="image mb-4">
+          <div className="image mb-4 ">
             <label
               htmlFor="title"
               className="block text-gray-700 font-bold mb-2"
             >
               Poster:
             </label>
-            <img src={image} alt="Uploaded" className='w-52 p-3' />
+            <Image src={image} alt="Uploaded" style={{width:"300px"}} />
             <Upload 
             name='image'
             customRequest={handleUpload} showUploadList={true}>
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
             </Upload>
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
           </div>
 
           <div className="mb-4">
             <Form.Item
+              style={{width:"100%"}}
               label="Content"
               name="content"
               rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
@@ -148,6 +149,7 @@ const UpdateBlog: React.FC = () => {
               <Editor
                 apiKey="2ag9f5652gfh8wi0m8g4ll6hb65iw6ldqyujk4ytt2ubto8n"
                 init={{
+                  width:850,
                   height: 500,
                   menubar: true,
                   menu: {
@@ -185,6 +187,7 @@ const UpdateBlog: React.FC = () => {
                   toolbar:
                     "undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons",
                   content_style: `
+
                     body::-webkit-scrollbar {
                       width: 12px;
                     }

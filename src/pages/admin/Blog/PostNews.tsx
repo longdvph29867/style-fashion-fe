@@ -8,31 +8,32 @@ import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
 import { localUserService } from "../../../services/localService";
 
-
-
 const PostNews = () => {
   const [content, setContent] = useState<string>("");
   const [image, setPoster] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const navigate = useNavigate();
 
-
   const handleUpload: UploadProps["customRequest"] = ({ file }: any) => {
     setFile(file);
   };
 
   const onFinish = async (values: FormPostNews) => {
-    
     showSpinner();
     try {
       let imageUrl = image;
-      
+
       if (file) {
         const formData = new FormData();
         formData.append("images", file);
 
         const response = await https.post("/images", formData);
-        if (response.data && response.data.data && response.data.data[0] && response.data.data[0].url) {
+        if (
+          response.data &&
+          response.data.data &&
+          response.data.data[0] &&
+          response.data.data[0].url
+        ) {
           imageUrl = response.data.data[0].url;
         } else {
           throw new Error("Phản hồi không chứa URL của ảnh!");
@@ -40,14 +41,14 @@ const PostNews = () => {
       }
 
       const storedUserInfo = localUserService.get();
-      const userId = storedUserInfo ? storedUserInfo.id : '';
+      const userId = storedUserInfo ? storedUserInfo.id : "";
       const data = {
         title: values.title,
         content: content,
         user: userId,
         image: imageUrl,
       };
-     
+
       const res = await https.post("/blogs", data);
       if (res) {
         message.success("Đăng bài thành công!");
@@ -73,14 +74,14 @@ const PostNews = () => {
   };
   return (
     <div className="bg-gray-100 p-6">
-      <div className="max-w-2xl mx-auto bg-white p-8 rounded shadow">
+      <div className="mx-auto bg-white p-8 rounded shadow">
         <h1 className="text-2xl font-bold mb-6">Đăng Tin Tức</h1>
         <Form
           layout="vertical"
           name="basic"
           labelCol={{ span: 12 }}
           wrapperCol={{ span: 24 }}
-          style={{ maxWidth: 600 }}
+          // style={{ maxWidth: 600 }}
           initialValues={{ remember: true }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
@@ -110,6 +111,7 @@ const PostNews = () => {
 
           <div className="mb-4">
             <Form.Item
+              style={{ width: "100%" }}
               label="Content"
               name="content"
               rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
@@ -118,18 +120,47 @@ const PostNews = () => {
                 apiKey="2ag9f5652gfh8wi0m8g4ll6hb65iw6ldqyujk4ytt2ubto8n"
                 value={content}
                 init={{
+                  width: 850,
                   height: 500,
                   menubar: true,
                   // style_formats:,
                   menu: {
-                    file: { title: 'File', items: 'newdocument restoredraft | preview | importword exportpdf exportword | print | deleteallconversations' },
-                    edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
-                    view: { title: 'View', items: 'code revisionhistory | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments' },
-                    insert: { title: 'Insert', items: 'image link media addcomment pageembed codesample inserttable | math | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime' },
-                    format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | language | removeformat' },
-                    tools: { title: 'Tools', items: 'spellchecker spellcheckerlanguage | a11ycheck code wordcount' },
-                    table: { title: 'Table', items: 'inserttable | cell row column | advtablesort | tableprops deletetable' },
-                    help: { title: 'Help', items: 'help' }
+                    file: {
+                      title: "File",
+                      items:
+                        "newdocument restoredraft | preview | importword exportpdf exportword | print | deleteallconversations",
+                    },
+                    edit: {
+                      title: "Edit",
+                      items:
+                        "undo redo | cut copy paste pastetext | selectall | searchreplace",
+                    },
+                    view: {
+                      title: "View",
+                      items:
+                        "code revisionhistory | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments",
+                    },
+                    insert: {
+                      title: "Insert",
+                      items:
+                        "image link media addcomment pageembed codesample inserttable | math | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime",
+                    },
+                    format: {
+                      title: "Format",
+                      items:
+                        "bold italic underline strikethrough superscript subscript codeformat | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | language | removeformat",
+                    },
+                    tools: {
+                      title: "Tools",
+                      items:
+                        "spellchecker spellcheckerlanguage | a11ycheck code wordcount",
+                    },
+                    table: {
+                      title: "Table",
+                      items:
+                        "inserttable | cell row column | advtablesort | tableprops deletetable",
+                    },
+                    help: { title: "Help", items: "help" },
                   },
                   plugins: [
                     "advlist",

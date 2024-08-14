@@ -13,10 +13,11 @@ const BlogList = () => {
   const fetchData = async (page = 1) => {
     try {
       showSpinner();
-      const API = `/blogs?page=${page}&limit=${pageSize}`;
+      const API = `/blogs?page=${page}&limit=${pageSize}&sortBy=createdAt:desc`;
       const { data } = await https.get(API);
       setBlogList(data.results);
       setTotalResults(data.totalResults);
+      console.log("data",data.results);
       hiddenSpinner();
       setBlogList(data.results);
     } catch (error) {
@@ -45,35 +46,26 @@ const BlogList = () => {
   }/${date.getFullYear()}`;
 
   return (
-    <div className="p-5 xl:w-3/4 lg:w-3/4 md:h-2/4">
-      {/* <h1 className="text-2xl font-bold text-center">Tin Tức</h1> */}
-      <div className="list-blog grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 lg:grid-cols-2">
-        {blogList.map((blog) => (
-          <div className="">
-            <div className="relative overflow-hidden rounded-md">
-              <Link to={`/blog/${blog.id}`} className="text-center">
-                <img
-                  className=" xl:hover:scale-110 transform transition-all duration-200 ease-linear w-full xl:h-72 h-96"
-                  src={blog.image}
-                  alt=""
-                />
-              </Link>
-              <div className="absolute left-2 top-2 border w-28 h-7 bg-[#fe385c] flex justify-center items-center text-white font-medium rounded xl:w-20 xl:text-sm">
-                {formattedDate}
-              </div>
-            </div>
-            <div className="post-new p-1">
-              <h3 className="my-line-1 p-1 font-semibold text-xl hover:text-[#fe385c] xl:text-base">
-                <Link to={`/blog/${blog.id}`}>{blog.title}</Link>
-              </h3>
-              <div className="my-line-2 text-lg font-thin sm:text-base">
-                <p
-                  dangerouslySetInnerHTML={{
+
+   <div className="max-w-7xl mx-auto xl:p-12 p-4">
+  <h2 className="text-4xl font-bold text-center mb-8">Latest News &amp; Blog</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {/* Blog Card 1 */}
+  {blogList.map((blog) => (
+    <div className="relative bg-white rounded-lg shadow-md overflow-hidden">
+       <Link to={`/blog/${blog.id}`}>
+      <img src={blog.image} alt="Blog Image" className="w-full h-72 rounded object-cover object-top" />
+       </Link>
+      <div className="absolute flex justify-center items-center top-[263px] left-6 bg-gradient-to-r h-11 w-32 from-pink-400 to-orange-400 text-white px-3 py-1 rounded text-lg font-normal">
+                    {formattedDate}
+                </div>
+      <div className="px-6 py-4 bg-[#FEEFF3]">
+      <h3 className="mt-4 text-lg font-semibold my-line-1 "><Link to={`/blog/${blog.id}`}>{blog.title}</Link></h3>
+      <p className="mt-2 text-gray-600 my-line-2"  dangerouslySetInnerHTML={{
                     __html: DOMPurify.sanitize(blog.content),
-                  }}
-                ></p>
-              </div>
-              <Link
+                   }}></p>
+      <div className="mt-4 flex items-center text-sm text-gray-500">
+      <Link
                 to={`/blog/${blog.id}`}
                 className="flex justify-start items-center text-[#fe385c] hover:text-orange-500"
               >
@@ -96,19 +88,23 @@ const BlogList = () => {
                   ></path>
                 </svg>
               </Link>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="text-center p-10">
-        <Pagination
-          current={currentPage}
-          pageSize={pageSize}
-          total={totalResults}
-          onChange={handlePageChange}
-        />
       </div>
     </div>
+    </div>
+    ))}
+    </div>
+    <div className="text-center p-10">
+         <Pagination
+           current={currentPage}
+           pageSize={pageSize}
+           total={totalResults}
+           onChange={handlePageChange}
+         />
+       </div>
+  </div>
+
+
+
   );
 };
 export default BlogList;
