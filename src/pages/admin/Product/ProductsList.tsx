@@ -4,13 +4,14 @@ import {
   showSpinner,
 } from "../../../util/util";
 import { Link } from "react-router-dom";
-import { Button, Image, Modal, Table, message } from "antd";
+import { Breadcrumb, Button, Image, Modal, Table, message } from "antd";
 import { https } from "../../../config/axios";
 // import { Product } from "../../../types/productType";
 import PaginationPage from "../../../components/PaginationPage/PaginationPage";
 import productService from "../../../services/productService";
 import ProductListSkeleton from "../../../components/Skeleton/Admin/ProductListSkeleton";
 import { Product } from "../../../types/products";
+import { Content } from "antd/es/layout/layout";
 
 const ProductsList: React.FC = () => {
   const params = new URLSearchParams(location.search);
@@ -81,7 +82,7 @@ const ProductsList: React.FC = () => {
       title: "Ảnh",
       dataIndex: "thumbnail",
       key: "thumbnail",
-      render: (text: string) => <Image src={text} width={100} height={100} />,
+      render: (text: string) => <Image src={text} width={50} height={50} style={{ borderRadius: '8px' }} />,
     },
     {
       title: "Tên sản phẩm",
@@ -125,6 +126,13 @@ const ProductsList: React.FC = () => {
       sorter: (a: Product, b: Product) => a.maxPrice - b.maxPrice,
     },
     {
+      title: "Danh mục",
+      dataIndex: "maxPrice",
+      key: "maxPrice",
+      sorter: (a: Product, b: Product) => a.maxPrice - b.maxPrice,
+    },
+    {
+      // fixed: "right",
       title: "Thao tác",
       key: "actions",
       render: (text: any, record: Product) => (
@@ -152,15 +160,19 @@ const ProductsList: React.FC = () => {
 
   return (
     <div className="">
-      <div className="p-6 pb-0 mb-0 bg-white rounded-t-2xl">
+      {/* <div className="p-6 pb-0 mb-0 bg-white rounded-t-2xl">
         <Link
           to="/admin/products/add"
           className="text-white text-base font-semibold bg-green-500 py-2 px-2 rounded my-5 hover:bg-green-600"
         >
           <span>Thêm mới</span>
         </Link>
-      </div>
-      <div className="h-full p-8">
+      </div> */}
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Sản phẩm</Breadcrumb.Item>
+      </Breadcrumb>
+      <div className="h-full">
         <Table
           columns={columns}
           dataSource={productList}

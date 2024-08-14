@@ -121,8 +121,12 @@ const menuItems = [
   },
   {
     key: '5',
-    label: <Link to="/admin/voucher">Mã giảm giá</Link>,
+    label: 'Mã giảm giá',
     icon: <BiSolidCoupon />,
+    children: [
+      { key: '5-1', label: <Link to="/admin/voucher">Xem mã giảm giá</Link> },
+      { key: '5-2', label: <Link to="/admin/voucher/add">Thêm mã giảm giá</Link> },
+    ],
   },
   {
     key: '6',
@@ -245,16 +249,16 @@ const AdminMenu: React.FC<Props> = ({ collapsed }): any => {
     //   </div>
     // </div>
     <div className="">
-      <div className="">
-        <Link
-          className="block lg:px-8 lg:py-6 my-6 text-sm text-slate-700"
-          to="/admin/products"
-        >
-          <img src={imgLogo} className="hidden lg:block" />
-          {/* <img src={imgLogoIcon} className="lg:hidden inline-block" /> */}
-        </Link>
-        {/* <hr className="h-px border-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" /> */}
-        {/* <div className="mt-4">
+      <Link
+        className="block px-8 py-6 my-6 text-sm text-slate-700"
+        to="/admin"
+      >
+        {!collapsed && <img src={imgLogo} className="" />}
+        {collapsed && <img src={imgLogoIcon} className="w-10" />}
+        {/* <img src={imgLogoIcon} className="lg:hidden inline-block" /> */}
+      </Link>
+      {/* <hr className="h-px border-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" /> */}
+      {/* <div className="mt-4">
           <ul className="flex flex-col">
             {listMenu.map(({ link, title, icon, active, children }, index) => {
               return (
@@ -313,18 +317,17 @@ const AdminMenu: React.FC<Props> = ({ collapsed }): any => {
           </ul>
         </div> */}
 
-        <div>
-          <Menu
-            // onClick={onClick}
-            // style={{ width: 256 }}
-            // defaultSelectedKeys={['3-1']}
-            defaultOpenKeys={['1']}
-            mode="inline"
-            items={menuItems}
-            inlineCollapsed={collapsed}
-          // expandIcon={({ isOpen }) => <CaretDownOutlined rotate={isOpen ? 180 : 0} />}
-          />
-        </div>
+      <div>
+        <Menu
+          // onClick={onClick}
+          // style={{ width: 256 }}
+          // defaultSelectedKeys={['3-1']}
+          defaultOpenKeys={['1']}
+          mode="inline"
+          items={menuItems}
+        // inlineCollapsed={collapsed}
+        // expandIcon={({ isOpen }) => <CaretDownOutlined rotate={isOpen ? 180 : 0} />}
+        />
       </div>
     </div>
   );

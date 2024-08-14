@@ -307,6 +307,13 @@ body .ant-modal-mask {
   color: black !important;
 }
 
-/* .admin-menu .ant-menu-light {
-  background-color: #F8F9FA;
-} */
+.admin-menu .ant-menu-light {
+  /* background-color: #F8F9FA; */
+  /* background-color: #F5F5F5; */
+  border-inline-end: none !important;
+}
+
+.ant-layout .ant-layout-sider-trigger {
+  background-color: #F5F5F5;
+  color: gray;
+}

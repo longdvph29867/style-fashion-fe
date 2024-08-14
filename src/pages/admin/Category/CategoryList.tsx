@@ -4,7 +4,7 @@ import {
     showSpinner,
 } from "../../../util/util";
 import { Link } from "react-router-dom";
-import { message } from "antd";
+import { Breadcrumb, Button, message, Table } from "antd";
 import { https } from "../../../config/axios";
 import { CategoryTpype } from "../../../types/categoryType";
 import PaginationPage from "../../../components/PaginationPage/PaginationPage";
@@ -52,17 +52,46 @@ const CategoryList: React.FC = () => {
         }
     };
 
+    const columns = [
+        {
+            title: 'STT',
+            dataIndex: 'index',
+            key: 'index',
+            render: (text: any, record: any, index: number) => <span>{index + 1}</span>,
+        },
+        {
+            title: 'Tên danh mục',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Thao tác',
+            key: 'actions',
+            render: (text: any, record: any) => (
+                <div>
+                    <Link to={`/admin/categories/update/${record.id}`} className="text-yellow-500">
+                        Sửa
+                    </Link>
+                    <Button
+                        type="link"
+                        className="text-red-500"
+                        onClick={() => handleDelete(record.id)}
+                    >
+                        Xoá
+                    </Button>
+                </div>
+            ),
+        },
+    ];
+
     return (
         <div className="">
-            <div className="p-4 pb-0 mb-0 bg-white rounded-t-2xl">
-                <Link
-                    to="/admin/categories/add"
-                    className="text-white text-base font-semibold bg-green-500 py-2 px-2 rounded my-5"
-                >
-                    <span>Thêm mới</span>
-                </Link>
-            </div>
-            <div className="h-full overflow-x-auto">
+            <Breadcrumb style={{ margin: '16px 0' }}>
+                <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
+                <Breadcrumb.Item>Danh mục</Breadcrumb.Item>
+            </Breadcrumb>
+            <Table columns={columns} dataSource={categoriesList} pagination={false} />
+            {/* <div className="h-full overflow-x-auto">
                 <div className="w-full border-gray-200 text-slate-500">
                     <div className="w-full grid lg:grid-cols-6 sm:grid-cols-5 grid-cols-2 gap-2">
                         <div className="pr-6 pl-4 py-3  text-center font-bold uppercase text-slate-800">
@@ -120,12 +149,12 @@ const CategoryList: React.FC = () => {
                             );
                         })}
                     </div>
-                    <PaginationPage
-                        current={1}
-                        total={totalCategory}
-                        pageSize={limitPerPage} />
-                </div>
-            </div>
+                    </div>
+                    </div> */}
+            <PaginationPage
+                current={1}
+                total={totalCategory}
+                pageSize={limitPerPage} />
         </div>
     );
 };

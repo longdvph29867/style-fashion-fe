@@ -6,7 +6,7 @@ import { Outlet } from "react-router-dom";
 import { Button, Drawer, DrawerProps, Layout, RadioChangeEvent } from "antd";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
 function LayoutAdmin() {
@@ -16,23 +16,69 @@ function LayoutAdmin() {
   const [collapsed, setCollapsed] = useState(false);
 
   const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
+    setCollapsed((prevCollapsed) => !prevCollapsed);
   };
-  const [open, setOpen] = useState(false);
-  const [placement, setPlacement] = useState<DrawerProps['placement']>('left');
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setCollapsed(true);
+      } else {
+        setCollapsed(false);
+      }
+    };
 
-  const showDrawer = () => {
-    setOpen(true);
-  };
+    // Initial check
+    handleResize();
 
-  const onClose = () => {
-    setOpen(false);
-  };
+    // Add event listener
+    window.addEventListener('resize', handleResize);
 
-  const onChange = (e: RadioChangeEvent) => {
-    setPlacement(e.target.value);
-  };
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   return (
+
+
+
+
+    <Layout className="flex min-h-screen w-full admin-menu">
+      <Sider
+        className={` min-w-[255px] border-r border-gray-200`}
+        style={{
+          backgroundColor: 'white',
+        }}
+        collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}
+      >
+        <AdminMenu collapsed={collapsed} />
+      </Sider>
+
+      <Layout>
+        <Header className="flex items-center justify-between sm:flex-row flex-col-reverse h-20"
+          style={{ backgroundColor: 'white' }}>
+          <div>
+            <Search className="border rounded-lg " />
+          </div>
+          <User />
+        </Header>
+        <Content style={{
+          backgroundColor: 'white',
+        }}>
+          <div className="btn-collaspsed-menu pt-2">
+            <Button className="block lg:hidden bg-white" type="primary" onClick={toggleCollapsed} style={{ marginBottom: 16 }}>
+              {!collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            </Button>
+          </div>
+          <div className="py-4 px-8">
+
+            <Outlet />
+          </div>
+        </Content>
+        {/* <Footer>Footer</Footer> */}
+      </Layout>
+    </Layout>
+
     // <div className="flex min-h-screen w-full bg-bg admin-menu">
     //   <AdminMenu />
 
@@ -49,30 +95,6 @@ function LayoutAdmin() {
     //     </div>
     //   </div>
     // </div>
-
-    <Layout className="flex min-h-screen w-full admin-menu">
-      <Sider className={`${collapsed ? 'block' : 'hidden'} ${!collapsed && 'lg:block hidden'} min-w-[255px]  transition-all duration-300 ease-in-out`}
-        style={{
-          backgroundColor: 'white',
-          transform: collapsed ? 'translateX(0)' : 'translateX(-100%)',
-          opacity: collapsed ? 1 : 0,
-        }}>
-        <AdminMenu collapsed={collapsed} />
-      </Sider>
-
-      <Layout>
-        <Header style={{ backgroundColor: 'white' }}>Header</Header>
-        <Content >
-          <div className="btn-collaspsed-menu">
-            <Button className="block lg:hidden " type="primary" onClick={toggleCollapsed} style={{ marginBottom: 16 }}>
-              {!collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            </Button>
-          </div>
-          Content
-        </Content>
-        <Footer>Footer</Footer>
-      </Layout>
-    </Layout>
   );
 }
 

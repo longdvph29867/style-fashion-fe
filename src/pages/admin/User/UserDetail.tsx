@@ -1,5 +1,6 @@
 // type Props = {};
 import {
+    Breadcrumb,
     Button,
     Divider,
     Form,
@@ -56,6 +57,11 @@ const UserDetail: React.FC = () => {
 
     return (
         <>
+            <Breadcrumb style={{ margin: '16px 0' }}>
+                <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
+                <Breadcrumb.Item><Link to="/admin/users">Người dùng</Link></Breadcrumb.Item>
+                <Breadcrumb.Item>Chi tiết người dùng</Breadcrumb.Item>
+            </Breadcrumb>
             <div className="w-full px-5 pb-2">
                 <h3 className="text-2xl text-slate-700 text-center mt-6 mb-3">
                     Chi tiết người dùng
