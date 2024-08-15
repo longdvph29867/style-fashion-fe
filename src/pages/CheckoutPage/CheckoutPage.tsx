@@ -26,16 +26,18 @@ const CheckoutPage = () => {
   const [voucherSelected, setVoucherSelected] = useState<Voucher | null>(null);
   const [addressSelected, setAddressSelected] =
     useState<ShippingAddressType | null>(null);
-  const carts = useSelector((state: RootState) => state.cartSlice.carts);
+  const products = useSelector(
+    (state: RootState) => state.checkoutSlice.products
+  );
   const queryClient = useQueryClient();
 
   const subtotal = useMemo(() => {
-    return carts.reduce(
+    return products.reduce(
       (accumulator, currentValue) =>
-        accumulator + currentValue.quantity * currentValue.attribute.price,
+        accumulator + currentValue.quantity * currentValue.variant.currentPrice,
       0
     );
-  }, [carts]);
+  }, [products]);
 
   const calculateDiscount = useMemo(() => {
     if (voucherSelected && voucherSelected.type === "percentage") {
@@ -58,56 +60,56 @@ const CheckoutPage = () => {
   }, [addressSelected]);
 
   const handleCreateOrder = () => {
-    if (carts.length > 0 && addressSelected && user?.id) {
-      const productsOrder: ProductOrderType[] = carts.map((item) => ({
-        productId: item.product.id,
-        quantity: item.quantity,
-        price: item.attribute.price,
-        productName: item.product.name,
-        slug: item.product.slug,
-        imageProduct: item.product.thumbnail,
-        imageAtrribute: item.attribute.image,
-        attributeName: item.attribute.name,
-        attributeId: item.attribute.id,
-      }));
-      const shippingAddressOrder = {
-        recipientName: addressSelected.recipientName,
-        recipientPhoneNumber: addressSelected.recipientPhoneNumber,
-        streetAddress: addressSelected.streetAddress,
-        wardCommune: addressSelected.wardCommune,
-        district: addressSelected.district,
-        cityProvince: addressSelected.cityProvince,
-      };
-      const newOrder: CheckoutType = {
-        productsOrder,
-        shippingAddress: shippingAddressOrder,
-        user: user.id,
-        subTotal: subtotal,
-        discountAmount: calculateDiscount,
-        shippingFee: shippingFee,
-        note: orderNote,
-        totalPrice: subtotal + shippingFee - calculateDiscount,
-        paymentMethod: paymentMethod,
-        voucherCode: voucherSelected?.code ?? "",
-      };
-      showSpinner();
-      if (paymentMethod === "VNPAY") {
-        orderService.createVNPAY(newOrder).then(async (response) => {
-          hiddenSpinner();
-          window.location.href = response.data.url;
-        });
-      } else {
-        orderService.createCOD(newOrder).then(() => {
-          queryClient.refetchQueries({
-            queryKey: ["carts"],
-            type: "active",
-          });
-          hiddenSpinner();
-          navigate("/order");
-          message.success("Đặt hàng thành công");
-        });
-      }
-    }
+    // if (carts.length > 0 && addressSelected && user?.id) {
+    //   const productsOrder: ProductOrderType[] = products.map((item) => ({
+    //     productId: item.product.id,
+    //     quantity: item.quantity,
+    //     price: item.attribute.price,
+    //     productName: item.product.name,
+    //     slug: item.product.slug,
+    //     imageProduct: item.product.thumbnail,
+    //     imageAtrribute: item.attribute.image,
+    //     attributeName: item.attribute.name,
+    //     attributeId: item.attribute.id,
+    //   }));
+    //   const shippingAddressOrder = {
+    //     recipientName: addressSelected.recipientName,
+    //     recipientPhoneNumber: addressSelected.recipientPhoneNumber,
+    //     streetAddress: addressSelected.streetAddress,
+    //     wardCommune: addressSelected.wardCommune,
+    //     district: addressSelected.district,
+    //     cityProvince: addressSelected.cityProvince,
+    //   };
+    //   const newOrder: CheckoutType = {
+    //     productsOrder,
+    //     shippingAddress: shippingAddressOrder,
+    //     user: user.id,
+    //     subTotal: subtotal,
+    //     discountAmount: calculateDiscount,
+    //     shippingFee: shippingFee,
+    //     note: orderNote,
+    //     totalPrice: subtotal + shippingFee - calculateDiscount,
+    //     paymentMethod: paymentMethod,
+    //     voucherCode: voucherSelected?.code ?? "",
+    //   };
+    //   showSpinner();
+    //   if (paymentMethod === "VNPAY") {
+    //     orderService.createVNPAY(newOrder).then(async (response) => {
+    //       hiddenSpinner();
+    //       window.location.href = response.data.url;
+    //     });
+    //   } else {
+    //     orderService.createCOD(newOrder).then(() => {
+    //       queryClient.refetchQueries({
+    //         queryKey: ["carts"],
+    //         type: "active",
+    //       });
+    //       hiddenSpinner();
+    //       navigate("/order");
+    //       message.success("Đặt hàng thành công");
+    //     });
+    //   }
+    // }
   };
 
   const handleChangeOrderNote = () => {
@@ -165,7 +167,7 @@ const CheckoutPage = () => {
             discountAmount={calculateDiscount}
             voucherName={voucherSelected?.name}
             confirmOrder={handleCreateOrder}
-            productList={carts}
+            productList={products}
             shippingfee={shippingFee}
             onOpenVoucher={onOpenVoucherModal}
             subTotal={subtotal}

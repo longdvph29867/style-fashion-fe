@@ -4,27 +4,43 @@ import Variant from "../DetailComponent/Variant";
 import { Button, message, Skeleton, Space } from "antd";
 import { localUserService } from "../../services/localService";
 import cartService from "../../services/cartService";
-import { setCartAll } from "../../Toolkits/cartSlice";
-import { useDispatch } from "react-redux";
 import { IProduct, IVariant } from "../../types/productType";
 import QuantityAdjuster from "../Common/Customer/QuantityAdjuster";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { UpdateVariant } from "../../types/cart";
 
 interface DropdownVarianContentProps {
   idProduct: string;
   keyReset: number;
 }
 
-const DropdownVarianContent = ({ idProduct, keyReset }: DropdownVarianContentProps) => {
+const DropdownVarianContent = ({
+  idProduct,
+  keyReset,
+}: DropdownVarianContentProps) => {
   const [product, setProduct] = useState<IProduct | null>(null);
   const [variant, setVariant] = useState<IVariant | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState<boolean>(false);
   const userId = localUserService.get()?.id;
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+
+  const mutationDelete = useMutation({
+    mutationFn: (body: UpdateVariant) => cartService.updateVariant(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["carts"] });
+    },
+    onError: (err) => {
+      message.error(err.message);
+    },
+  });
 
   const fetchProductDetails = useCallback(() => {
-    productService.getProductDetail(idProduct).then((res) => setProduct(res.data));
+    productService
+      .getProductDetail(idProduct)
+      .then((res) => setProduct(res.data));
   }, [idProduct]);
+
   useEffect(() => {
     fetchProductDetails();
   }, [fetchProductDetails]);
@@ -63,17 +79,24 @@ const DropdownVarianContent = ({ idProduct, keyReset }: DropdownVarianContentPro
   };
 
   const submitChangeVariant = () => {
-    if (variant) {
-      const payload = { userId: userId, productId: idProduct, variantId: variant?.id, quantity: quantity };
+    if (!variant) {
+      return message.error("Vui lòng chọn phân loại hàng");
+    }
+    if (userId) {
+      const payload: UpdateVariant = {
+        userId: userId,
+        productId: idProduct,
+        variantId: variant?.id,
+        quantity: quantity,
+      };
       setLoading(true);
-      cartService
-        .updateVariant(payload)
-        .then((res) => dispatch(setCartAll(res.data)))
-        .catch((err) => console.log(err))
-        .finally(() => setLoading(false));
-      return;
-    } else {
-      message.error("Vui lòng chọn phân loại hàng");
+      mutationDelete.mutate(payload);
+      // cartService
+      //   .updateVariant(payload)
+      //   .then((res) => console.log(res))
+      //   .catch((err) => console.log(err))
+      //   .finally(() => setLoading(false));
+      // return;
     }
   };
 
@@ -95,7 +118,11 @@ const DropdownVarianContent = ({ idProduct, keyReset }: DropdownVarianContentPro
               handleChangeQuantity={handleChangeQuantity}
               quantity={quantity}
             />
-            {variant && <span className="text-sx italic">Còn: {variant.stock} sản phẩm</span>}
+            {variant && (
+              <span className="text-sx italic">
+                Còn: {variant.stock} sản phẩm
+              </span>
+            )}
           </div>
           <div className="border border-slate-200 my-2" />
           <div className="text-end">
@@ -106,10 +133,22 @@ const DropdownVarianContent = ({ idProduct, keyReset }: DropdownVarianContentPro
         </>
       ) : (
         <Space direction="vertical" className="w-full">
-          <Skeleton.Button active className="relative !w-[96%] !h-14 my-2 !rounded-2xl" />
-          <Skeleton.Button active className="relative !w-[96%] !h-14  !rounded-2xl" />
-          <Skeleton.Button active className="relative !w-[50%] !h-12 my 2 !rounded-2xl" />
-          <Skeleton.Button active className="relative !w-[96%] !h-14  !rounded-2xl" />
+          <Skeleton.Button
+            active
+            className="relative !w-[96%] !h-14 my-2 !rounded-2xl"
+          />
+          <Skeleton.Button
+            active
+            className="relative !w-[96%] !h-14  !rounded-2xl"
+          />
+          <Skeleton.Button
+            active
+            className="relative !w-[50%] !h-12 my 2 !rounded-2xl"
+          />
+          <Skeleton.Button
+            active
+            className="relative !w-[96%] !h-14  !rounded-2xl"
+          />
         </Space>
       )}
     </div>

@@ -1,19 +1,23 @@
-import { ProductCartType } from "../../types/cart";
-import { useState } from "react";
+import { ICart } from "../../types/cart";
+import { useEffect, useState } from "react";
 import { formartCurrency, getNameVariants } from "../../util/util";
 import { Button, Dropdown } from "antd";
 import { PiWarningCircleLight } from "react-icons/pi";
 import DropdownVarianContent from "./DropdownVarianContent";
 
 type Props = {
-  productCart: ProductCartType;
+  productCart: ICart;
   updateItem: (productId: string, quantity: number) => void;
   onDelete: (productId: string) => void;
 };
 
 const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
-  const [quantity, setQuantity] = useState(productCart.quantity);
+  const [quantity, setQuantity] = useState(1);
   const [dropdownKey, setDropdownKey] = useState<number>(Date.now());
+
+  useEffect(() => {
+    setQuantity(productCart.quantity);
+  }, [productCart.quantity]);
 
   const increaseQuantity = () => {
     const newQuantity = quantity + 1;
@@ -34,7 +38,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
   };
 
   return (
-    <div className="relative flex py-8 sm:py-10 xl:py-2 first:pt-0 last:pb-0">
+    <div className="relative flex py-8 sm:py-10 xl:py-2 first:pt-0 last:pb-0 flex-grow">
       <div className="relative flex-shrink-0 overflow-hidden rounded-xl">
         <img
           alt="Rey Nylon Backpack"
@@ -97,14 +101,18 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                         strokeLinejoin="round"
                       ></path>
                     </svg>
-                    <span>{getNameVariants(productCart.variant.tier_index)}</span>
+                    <span>
+                      {getNameVariants(productCart.variant.tier_index)}
+                    </span>
                   </div>
                   <div className="items-center border-2 my-2 border-[#ff385c] rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium w-max mr-3">
                     <span className="text-[#ff385c] !leading-none ">
                       {formartCurrency(productCart?.variant?.currentPrice)}
                     </span>
                   </div>
-                  <span className="text-sm italic">Còn: {productCart?.variant?.stock} sản phẩm</span>
+                  <span className="text-sm italic">
+                    Còn: {productCart?.variant?.stock} sản phẩm
+                  </span>
                 </div>
               ) : (
                 <div>
@@ -113,7 +121,10 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                     className="bg-white shadow-lg"
                     arrow={true}
                     dropdownRender={() => (
-                      <DropdownVarianContent keyReset={dropdownKey} idProduct={productCart.product.id} />
+                      <DropdownVarianContent
+                        keyReset={dropdownKey}
+                        idProduct={productCart.product._id}
+                      />
                     )}
                     trigger={["click"]}
                   >
@@ -122,14 +133,14 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                     </Button>
                   </Dropdown>
                   <div className="text-red-400 mt-4 flex gap-1">
-                    <PiWarningCircleLight fontSize={20} /> Phân loại hàng này bán hết, vui lòng lựa chọn một
-                    phân loại khác.
+                    <PiWarningCircleLight fontSize={20} /> Phân loại hàng này
+                    bán hết, vui lòng lựa chọn một phân loại khác.
                   </div>
                 </div>
               )}
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row justify-between sm:w-52 shrink-0">
+          <div className="flex flex-col sm:flex-row justify-between items-center sm:w-52 shrink-0">
             <div className="relative text-center">
               <div className="relative z-10 flex items-center justify-center space-x-5 nc-NcInputNumber">
                 <div className="flex items-center justify-between w-[104px]">
@@ -153,12 +164,17 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                       />
                     </svg>
                   </button>
-                  <span className="flex-1 block leading-none text-center select-none">{quantity}</span>
+                  <span className="flex-1 block leading-none text-center select-none">
+                    {quantity}
+                  </span>
                   <button
                     onClick={increaseQuantity}
                     className="flex items-center justify-center w-8 h-8 bg-white border rounded-full border-neutral-400 dark:border-neutral-500 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 disabled:cursor-no-drop dark:disabled:hover:border-neutral-500 disabled:opacity-50"
                     type="button"
-                    disabled={!productCart.variant || quantity === productCart?.variant?.stock}
+                    disabled={
+                      !productCart.variant ||
+                      quantity === productCart?.variant?.stock
+                    }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -177,7 +193,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                 </div>
               </div>
             </div>
-            <div className="mt-10 justify-end sm:mt-0">
+            <div className="h-max justify-end sm:mt-0">
               <button
                 onClick={() => onDelete(productCart._id)}
                 className="relative z-10 flex items-center font-medium text-[#0284C7] hover:text-primary-500 text-sm"

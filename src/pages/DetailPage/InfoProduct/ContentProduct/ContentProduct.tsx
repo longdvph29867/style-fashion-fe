@@ -7,12 +7,12 @@ import {
   showSpinner,
 } from "../../../../util/util";
 import cartService from "../../../../services/cartService";
-import { useDispatch } from "react-redux";
-import { setCartAll } from "../../../../Toolkits/cartSlice";
 import { localUserService } from "../../../../services/localService";
 import { IoRemoveOutline } from "react-icons/io5";
 import Variant from "../../../../components/DetailComponent/Variant";
 import { IProduct, IVariant } from "../../../../types/productType";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AddCartType } from "../../../../types/cart";
 
 type Props = {
   setCurrentImage: (value: string) => void;
@@ -24,9 +24,20 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
   const [quantity, setQuantity] = useState(1);
   const [price, setPrice] = useState<number[]>([]);
   const [showMaxQuantity, setShowMaxQuantity] = useState<boolean>(false);
-  const dispatch = useDispatch();
   const userId = localUserService.get()?.id;
   const stockRef = useRef(0);
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (item: AddCartType) => cartService.addToCart(item),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["carts"] });
+      message.success("Thêm sản phẩm thành công!");
+    },
+    onError: (err) => {
+      message.error(err.message);
+    },
+  });
 
   useEffect(() => {
     if (product) {
@@ -85,29 +96,39 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
     setQuantity(quantity + value);
   };
 
-  const handleAddtoCart = async () => {
-    try {
-      if (!variantSelected) {
-        message.error("Vui lòng chọn loại sản phẩm!");
-      } else if (showMaxQuantity) {
-        return;
-      } else if (!userId) {
-        message.error("Vui lòng đăng nhập để thêm sản phẩm!");
-      } else {
-        showSpinner();
-        const res = await cartService.addToCart(userId, {
-          product: product.id,
-          variant: variantSelected.id,
-          quantity: quantity,
-        });
-        hiddenSpinner();
-        dispatch(setCartAll(res.data.products_cart));
-        message.success("Thêm sản phẩm thành công!");
-      }
-    } catch (error) {
+  const handleAddToCart = async () => {
+    if (!variantSelected) {
+      message.error("Vui lòng chọn loại sản phẩm!");
+    } else if (showMaxQuantity) {
+      return;
+    } else if (!userId) {
+      message.error("Vui lòng đăng nhập để thêm sản phẩm!");
+    } else {
+      showSpinner();
+      mutation.mutate({
+        user: userId,
+        product: product.id,
+        variant: variantSelected.id,
+        quantity: quantity,
+      });
+      // cartService
+      //   .addToCart({
+      //     user: userId,
+      //     product: product.id,
+      //     variant: variantSelected.id,
+      //     quantity: quantity,
+      //   })
+      //   .then(() => {
+      //     queryClient.refetchQueries({
+      //       queryKey: ["carts"],
+      //       type: "active",
+      //     });
+      //     message.success("Thêm sản phẩm thành công!");
+      //   })
+      //   .catch((err) => {
+      //     message.error(err.response.data.message);
+      //   });
       hiddenSpinner();
-      console.log(error);
-      message.error(error?.response?.data);
     }
   };
 
@@ -254,7 +275,7 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
           </p>
         </div>
         <button
-          onClick={handleAddtoCart}
+          onClick={handleAddToCart}
           className=" inline-flex items-center justify-center rounded-lg text-sm sm:text-base font-medium py-2 px-3 sm:py-3.5 sm:px-6 bg-[#fc385c] hover:bg-[#f85d79] text-slate-50 shadow-xl h-11"
         >
           <svg

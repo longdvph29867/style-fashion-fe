@@ -1,10 +1,9 @@
-import { CartType } from "../../types/cartType";
-import { formartCurrency } from "../../util/util";
+import { formartCurrency, getNameVariants } from "../../util/util";
 import AtrributeSvgCheckout from "../../assets/svgs/AtrributeSvgCheckout";
 import { memo } from "react";
-import { ProductCartType } from "../../types/cart";
+import { ICart } from "../../types/cart";
 type Props = {
-  productList: ProductCartType[];
+  productList: ICart[];
 };
 const ListOrder = ({ productList }: Props) => {
   return (
@@ -32,7 +31,7 @@ const ListOrder = ({ productList }: Props) => {
                   <div className="mt-1.5 sm:mt-2.5 flex items-center text-sm text-slate-600">
                     <div className="flex items-center space-x-1.5">
                       <AtrributeSvgCheckout />
-                      <span>{item.attribute.name}</span>
+                      <span>{getNameVariants(item.variant.tier_index)}</span>
                     </div>
                     <span className="mx-2 h-5 border-l border-slate-400" />
                     <div className="flex items-center space-x-1.5">
@@ -43,8 +42,8 @@ const ListOrder = ({ productList }: Props) => {
                     <div className="hidden flex-1 sm:flex justify-end">
                       <div className="mt-0.5">
                         <div className="flex items-center border-2 border-primary rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium">
-                          <span className="text-priborder-primary !leading-none">
-                            {formartCurrency(item.attribute.price)}
+                          <span className="text-primary !leading-none">
+                            {formartCurrency(item.variant.currentPrice)}
                           </span>
                         </div>
                       </div>

@@ -1,11 +1,11 @@
 import List_Order from "./ListOrder";
 import { formartCurrency } from "../../util/util";
 import { memo } from "react";
-import { ProductCartType } from "../../types/cart";
+import { ICart } from "../../types/cart";
 import { HiOutlineTicket, HiOutlineChevronRight } from "react-icons/hi2";
 
 type Props = {
-  productList: ProductCartType[];
+  productList: ICart[];
   shippingfee: number;
   subTotal: number;
   onOpenVoucher: () => void;
