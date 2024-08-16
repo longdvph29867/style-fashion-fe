@@ -43,6 +43,7 @@ import PostNews from "./pages/admin/Blog/PostNews";
 import DetailBlog from "./components/Blog/DetailBlog";
 import ListPost from "./pages/admin/Blog/ListPost";
 import UpdateBlog from "./pages/admin/Blog/UpdateBlog";
+import AboutPage from "./components/About/AboutPage";
 
 function App() {
   const location = useLocation();
@@ -69,6 +70,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
+          <Route path="about" element={<AboutPage/>}/>
           {/* account */}
           <Route path="account" element={<AccountPage />}>
             <Route index element={<AccountInfomation />} />
