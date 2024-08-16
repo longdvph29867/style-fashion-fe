@@ -4,6 +4,9 @@ import { Button, message, Modal, Select } from 'antd';
 import { formartCurrency, hiddenSpinner, showSpinner } from '../../../util/util';
 import orderService from '../../../services/orderService';
 import { getNameByStatusCode, orderStatusValue } from '../../../util/constant';
+import { OrderDeliveryDetails } from '../../../components/OrderAdmin/deliveryDetails';
+import ProductOrderDetail from '../../../components/OrderAdmin/productOrderDetail';
+import InforUserDetail from '../../../components/OrderAdmin/InforUserDetail';
 
 type Props = {}
 
@@ -147,109 +150,20 @@ const OrderDetailAdmin = (props: Props) => {
 
   console.log(order, 'order');
   return (
-    <div className='container mb-16'>
-      <div className='my-6'>
-        <div className='my-2'>
-          <Link to='/admin/order'>
-            <i className="fa-solid fa-chevron-left"></i>
-            <span>Trở về</span>
-          </Link>
+    <>
 
-        </div>
-        <h3 className="text-2xl ">Chi tiết đơn hàng</h3>
-      </div>
-
-      <div className="shadow">
-        <div className="p-4 flex justify-between items-center" style={{ borderBottom: '1px dotted rgba(0,0,0,.09)' }}>
-          <div>
-            <span>MÃ ĐƠN HÀNG: {order?.orderCode}</span>
-            <span className="mx-1">|</span>
-            <span className="text-primary font-semibold">{getNameByStatusCode(order?.orderStatus?.code)}</span>
+      <div className='container'>
+        <div className='my-6'>
+          <div className='my-4'>
+            <Link to='/admin/order'>
+              <i className="fa-solid fa-chevron-left"></i>
+              <span>Trở về</span>
+            </Link>
           </div>
+          <span>MÃ ĐƠN HÀNG: <span className='font-medium'>{order?.orderCode}</span></span>
         </div>
 
-        <div className="p-4">
-          {order?.productsOrder.map((product: any) => (
-            <div key={product._id}>
-              <div className="flex justify-between items-center mb-2">
-                <div className="flex">
-                  <div className="border-gray-400 mr-3" style={{ borderWidth: 1 }}>
-                    <img className="w-20 h-20 object-cover" src={product.imageAtrribute} alt={product.productName} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg">{product.productName}</h3>
-                    <p className="normal-case text-[#757575]">
-                      Phân loại hàng: <span className="">{product.attribute}</span>
-                    </p>
-                    <p className="normal-case text-[#212121] ">
-                      {/* Số lượng: <span className="text-xl">{product.quantity} x </span> Cái */}
-                      x{product.quantity}
-                    </p>
-                    {/* <p className="normal-case">Số lượng: <span className="text-xl">{product.quantity} x </span> {product.attribute}</p> */}
-                  </div>
-                </div>
-                <p className="normal-case">
-                  {/* <span className="line-through">₫{product.price * product.quantity}</span> */}
-                  <span className="text-lg text-primary">{formartCurrency(product.price * product.quantity)}</span>
-                </p>
-              </div>
-              <div className="h-[1px] bg-gray-300 my-2"></div>
-            </div>
-          ))}
-        </div>
-
-        <div className="h-1"
-          style={{
-            backgroundImage: 'repeating-linear-gradient(45deg,#6fa6d6,#6fa6d6 33px,transparent 0,transparent 41px,#f18d9b 0,#f18d9b 74px,transparent 0,transparent 82px)'
-          }}
-        ></div>
-
-        <div className="p-5">
-          <div className="flex justify-between">
-            <h3 className="font-semibold text-xl">Địa Chỉ Nhận Hàng</h3>
-            <p className="text-sm text-gray-500">Đơn vị vận chuyển: <span className="text-primary font-medium">Giao hàng nhanh</span></p>
-          </div>
-          <div className="flex pt-4">
-            <div className="w-2/5 pr-5 border-gray-300" style={{ borderRightWidth: 1 }}>
-              <div className="flex flex-col justify-between h-full">
-                <div>
-                  <h4 className="font-medium">{order?.shippingAddress.recipientName}</h4>
-                  <div className="text-sm text-gray-500 space-y-1 normal-case">
-                    <p>{order?.shippingAddress.recipientPhoneNumber}</p>
-                    <p>{order?.shippingAddress.streetAddress}, {order?.shippingAddress.wardCommune}, {order?.shippingAddress.district}, {order?.shippingAddress.cityProvince}</p>
-                    <p>Ghi chú: {order?.note || 'Không có'}</p>
-                  </div>
-                </div>
-                {/* <div className="text-[#62d2a2]">{order?.orderStatus?.name}</div> */}
-              </div>
-            </div>
-            <div className="w-3/5 pl-5 text-sm text-gray-500 normal-case">
-              <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
-                <p>Tổng tiền hàng</p>
-                <p>{formartCurrency(order?.historicalCost)}</p>
-              </div>
-              <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
-                <p>Phí vận chuyển</p>
-                <p>{formartCurrency(order?.shippingFee)}</p>
-              </div>
-              <div className="flex justify-between items-center py-2 border-gray-300" style={{ borderBottomWidth: 1 }}>
-                <p>Thành tiền</p>
-                <p className="text-2xl text-primary font-semibold">{formartCurrency(order?.totalPrice)}</p>
-              </div>
-              <div className="flex justify-between items-center py-3 border-gray-200">
-                <p>
-                  <i className="fa-solid fa-file-invoice-dollar "></i>
-                  Phương thức Thanh toán
-                </p>
-                <p>{order?.paymentMethod}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className='flex justify-between p-6'>
-          <div>
-            <span className='font-semibold text-primary'>{getNameByStatusCode(order?.orderStatus?.code)}</span>
-          </div>
+        <div className='mb-4 flex justify-between items-center'>
           <Select
             options={options}
             // value={order?.orderStatus?.code}
@@ -257,9 +171,47 @@ const OrderDetailAdmin = (props: Props) => {
             style={{ width: 250, height: 40 }}
             placeholder="Cập nhật trạng thái đơn hàng"
           />
+          <div>
+            <span className='text-xl text-primary2 font-medium'>{order?.orderStatus.name}</span>
+          </div>
         </div>
+        <ProductOrderDetail order={order} />
+
+        <div className='mt-6 mb-10 flex '>
+          <div className='w-3/5 pr-10'>
+            <InforUserDetail order={order} />
+          </div>
+          <div className="w-2/5 pl-10 text-sm text-gray-500 normal-case border-l border-gray-200">
+            <div className="flex justify-between items-center py-6 border-gray-200" style={{ borderBottomWidth: 1 }}>
+              <p className='font-medium'>Tổng tiền hàng</p>
+              <p>{formartCurrency(order?.subTotal)}</p>
+            </div>
+            <div className="flex justify-between items-center py-6 border-gray-200" style={{ borderBottomWidth: 1 }}>
+              <p className='font-medium'>Giảm giá</p>
+              <p>{formartCurrency(order?.discountAmount)}</p>
+            </div>
+            <div className="flex justify-between items-center py-6 border-gray-200" style={{ borderBottomWidth: 1 }}>
+              <p className='font-medium'>Phí vận chuyển</p>
+              <p>{formartCurrency(order?.shippingFee)}</p>
+            </div>
+            <div className="flex justify-between items-center py-6 border-gray-300" style={{ borderBottomWidth: 1 }}>
+              <p className='font-medium'>Thành tiền</p>
+              <p className="text-2xl font-medium">{formartCurrency(order?.totalPrice)}</p>
+            </div>
+            <div className="flex justify-between items-center py-6 border-gray-200">
+              <p className='font-medium'>
+                <i className="fa-solid fa-file-invoice-dollar "></i>
+                Phương thức Thanh toán
+              </p>
+              <p>{order?.paymentMethod}</p>
+            </div>
+          </div>
+        </div>
+        <OrderDeliveryDetails order={order} />
+
       </div>
-    </div>
+
+    </>
   )
 }
 

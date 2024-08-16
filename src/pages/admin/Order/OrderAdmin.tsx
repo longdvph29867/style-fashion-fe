@@ -205,12 +205,12 @@ const OrderAdmin = () => {
     },
   ];
 
-  const columns = [
+  const columns: any = [
     {
       title: 'Mã đơn hàng',
       dataIndex: 'orderCode',
       key: 'orderCode',
-      render: (text, record) => <span className="text-blue-600"><Link to={`/admin/order/${record._id}`}>{text}</Link></span>,
+      render: (text: any, record: any) => <span className="text-blue-600"><Link to={`/admin/order/${record._id}`}>{text}</Link></span>,
       width: 100
     },
     {
@@ -218,20 +218,20 @@ const OrderAdmin = () => {
       dataIndex: 'orderStatus',
       key: 'orderStatus',
       filters: statusFilters,
-      onFilter: (value, record) => record.orderStatus === value,
-      render: (status) => <OrderStatus statusCode={status} />,
+      onFilter: (value: any, record: any) => record.orderStatus.code === value,
+      render: (status: any) => <OrderStatus statusCode={status.code} />,
       width: 230,
     },
     {
       title: 'Sản phẩm',
-      dataIndex: 'productsOrder',
+      dataIndex: 'products',
       key: 'imageAtrribute',
-      render: (productsOrder) => (
+      render: (productsOrder: any) => (
         <div className="">
-          {productsOrder.map((product) => (
+          {productsOrder.map((product: any) => (
             <Image
               key={product._id}
-              src={product.imageAtrribute}
+              src={product.image}
               alt={product.productName}
               style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: '8px', borderRadius: '8px' }}
             />
@@ -245,8 +245,8 @@ const OrderAdmin = () => {
       title: 'Tổng tiền',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
-      render: (price) => formartCurrency(price),
-      sorter: (a, b) => a.totalPrice - b.totalPrice,
+      render: (price: any) => formartCurrency(price),
+      sorter: (a: any, b: any) => a.totalPrice - b.totalPrice,
     },
     {
       title: 'Thanh toán',
@@ -256,27 +256,27 @@ const OrderAdmin = () => {
         { text: 'COD', value: 'COD' },
         { text: 'VNPAY', value: 'VNPAY' },
       ],
-      onFilter: (value, record) => record.paymentMethod === value,
+      onFilter: (value: any, record: any) => record.paymentMethod === value,
       render: (paymentMethod: 'COD' | 'VNPAY') => <PaymentMethod paymentMethod={paymentMethod} />,
     },
     {
       title: 'Người nhận',
-      dataIndex: ['shippingAddress', 'recipientName'],
+      dataIndex: ['shippingAddress', 'name'],
       key: 'recipientName',
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (text) => new Date(text).toLocaleString(),
-      sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+      render: (text: any) => new Date(text).toLocaleString(),
+      sorter: (a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
     },
     {
       fixed: "right",
       title: 'Hành động',
       dataIndex: "actions",
       key: "actions",
-      render: (_value, record) => <OrderActions record={record} setOrderList={setOrdersList} />,
+      render: (_value: any, record: any) => <OrderActions record={record} setOrderList={setOrdersList} />,
       width: 110,
     }
 
