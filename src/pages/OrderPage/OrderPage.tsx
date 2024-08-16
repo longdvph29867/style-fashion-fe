@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import OrderSummary from "../../components/Checkout/OrderSummary";
 import PaymentMethod from "../../components/Checkout/PaymentMethod";
 import ShippingAddress from "../../components/Checkout/ShippingAddress";
@@ -26,6 +26,8 @@ const OrderPage = () => {
   const [cancelList, setCancelList] = useState<any>(null);
   const [paymentFailedList, setPaymentFailedList] = useState<any>(null);
 
+  const [userInfo, setUserInfo] = useState<any>(null);
+
   const fetchOrdersList = async () => {
     showSpinner();
     const userData = localStorage.getItem("USER_INFO_FASHION");
@@ -33,6 +35,7 @@ const OrderPage = () => {
     if (userData) {
       // Chuyển đổi từ chuỗi JSON sang đối tượng
       const userObject = JSON.parse(userData);
+      setUserInfo(userObject);
 
       // Lấy id từ đối tượng
       const userId = userObject.id;

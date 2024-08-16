@@ -18,7 +18,7 @@ type Props = {
     order: any;
 };
 
-export const OrderDeliveryDetails = ({ order }: Props) => {
+export const LogOrder = ({ order }: Props) => {
     //   const t = useTranslate();
     const { token } = theme.useToken();
     const breakpoints = Grid.useBreakpoint();
@@ -58,6 +58,7 @@ export const OrderDeliveryDetails = ({ order }: Props) => {
     return (
         <Flex vertical>
             <Steps
+                // size="small"
                 direction="horizontal"
                 items={[
                     {
@@ -73,7 +74,7 @@ export const OrderDeliveryDetails = ({ order }: Props) => {
                     {
                         title: 'Chuẩn bị hàng',
                         status: 'process',
-                        // icon: <LoadingOutlined />,
+                        icon: <LoadingOutlined />,
                     },
                     {
                         title: 'Đang giao hàng',

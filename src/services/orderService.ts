@@ -8,8 +8,8 @@ const orderService = {
   createVNPAY(data: CheckoutType) {
     return https.post(`orders/vnpay`, data);
   },
-  getAllOrders() {
-    return https.get(`/orders??sortBy=createdAt%3Adesc&limit=100&page=1`)
+  getAllOrders(limit: number, page: number) {
+    return https.get(`/orders?limit=${limit}&page=${page}`);
   },
   getOrderUser(id: string) {
     return https.get(`/orders/user/${id}`)

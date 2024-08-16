@@ -14,7 +14,7 @@ const ProductOrderDetail = ({ order }: Props) => {
             title: 'Tên sản phẩm',
             dataIndex: 'productName',
             key: 'productName',
-            render: (text, record) => (
+            render: (text: any, record: any) => (
                 <div className='flex items-center gap-2'>
                     <Image
                         width={50}
@@ -35,12 +35,12 @@ const ProductOrderDetail = ({ order }: Props) => {
             title: 'Đơn giá',
             dataIndex: 'price',
             key: 'price',
-            render: (price) => <Text>{price.toLocaleString()} VND</Text>,
+            render: (price: any) => <Text>{price.toLocaleString()} VND</Text>,
         },
         {
             title: 'Tổng tiền',
             key: 'total',
-            render: (text, record) => (
+            render: (text: any, record: any) => (
                 <Text>{(record.quantity * record.price).toLocaleString()} VND</Text>
             ),
         },

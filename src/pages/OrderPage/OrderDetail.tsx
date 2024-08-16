@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { formartCurrency, hiddenSpinner, showSpinner } from '../../util/util';
-import { Button, message, Modal } from 'antd';
+import { Button, Image, message, Modal } from 'antd';
 import { getMessageByStatusCode } from '../../util/constant';
 import orderService from '../../services/orderService';
 import ButtonOption from './ButtonOption';
+import { LogOrder } from '../../components/OrderAdmin/LogOrder';
 
 type Props = {}
 
@@ -111,6 +112,11 @@ const OrderDetail = (props: Props) => {
 
         </div>
         <h3 className="text-2xl ">Chi tiết đơn hàng</h3>
+
+        <div className='mt-4 mb-2'>
+          <LogOrder order={order} />
+
+        </div>
       </div>
 
       <div className="shadow">
@@ -118,22 +124,28 @@ const OrderDetail = (props: Props) => {
           <div>
             <span>MÃ ĐƠN HÀNG: {order?.orderCode}</span>
             <span className="mx-1">|</span>
-            <span className="text-[#62d2a2]">{order?.orderStatus?.name}</span>
+            <span className="text-primary">{order?.orderStatus?.name}</span>
           </div>
         </div>
 
         <div className="p-4">
-          {order?.productsOrder.map((product: any) => (
+          {order?.products.map((product: any) => (
             <div key={product._id}>
               <div className="flex justify-between items-center mb-2">
-                <div className="flex">
-                  <div className="border-gray-400 mr-3" style={{ borderWidth: 1 }}>
-                    <img className="w-20 h-20 object-cover" src={product.imageProduct} alt={product.productName} />
+                <div className="flex gap-2">
+                  <div>
+                    {/* <img className="w-20 h-20 object-cover" src={product.imageProduct} alt={product.productName} /> */}
+                    <Image
+                      width={80}
+                      src={product.image}
+                      alt={product.productName}
+                      style={{ height: '80px', objectFit: 'cover', marginRight: '8px', borderRadius: '8px' }}
+                    />
                   </div>
                   <div>
                     <h3 className="text-lg">{product.productName}</h3>
                     <p className="normal-case text-[#757575]">
-                      Phân loại hàng: <span className="">{product.attribute}</span>
+                      Phân loại hàng: <span className="">{product.variantName}</span>
                     </p>
                     <p className="normal-case text-[#212121] ">
                       {/* Số lượng: <span className="text-xl">{product.quantity} x </span> Cái */}
@@ -169,19 +181,23 @@ const OrderDetail = (props: Props) => {
                 <div>
                   <h4 className="font-medium">{order?.shippingAddress.recipientName}</h4>
                   <div className="text-sm text-gray-500 space-y-1 normal-case">
-                    <p>{order?.shippingAddress.recipientPhoneNumber}</p>
-                    <p>{order?.shippingAddress.streetAddress}, {order?.shippingAddress.wardCommune}, {order?.shippingAddress.district}, {order?.shippingAddress.cityProvince}</p>
+                    <p>{order?.shippingAddress.phoneNumber}</p>
+                    <p>{order?.shippingAddress.address}, {order?.shippingAddress.ward}, {order?.shippingAddress.district}, {order?.shippingAddress.province}</p>
                     <p>Ghi chú: {order?.note || 'Không có'}</p>
                   </div>
                 </div>
-                <div className="text-[#62d2a2]">{getMessageByStatusCode(order?.orderStatus?.code)}</div>
+                <div className="text-primary">{getMessageByStatusCode(order?.orderStatus?.code)}</div>
               </div>
             </div>
             <div className="w-3/5 pl-5 text-sm text-gray-500 normal-case">
               <div>
                 <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
                   <p>Tổng tiền hàng</p>
-                  <p>₫{formartCurrency(order?.historicalCost)}</p>
+                  <p>₫{formartCurrency(order?.subTotal)}</p>
+                </div>
+                <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
+                  <p className=''>Giảm giá</p>
+                  <p>{formartCurrency(order?.discountAmount)}</p>
                 </div>
                 <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
                   <p>Phí vận chuyển</p>

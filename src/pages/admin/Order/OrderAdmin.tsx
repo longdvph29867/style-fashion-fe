@@ -10,6 +10,7 @@ import { TableRowSelection } from "antd/es/table/interface";
 import { OrderStatus } from "../../../components/OrderAdmin/status";
 import { PaymentMethod } from "../../../components/OrderAdmin/paymentMethod";
 import { OrderActions } from "../../../components/OrderAdmin/OrderAction";
+import PaginationPage from "../../../components/PaginationPage/PaginationPage";
 
 const OrderAdmin = () => {
   // const location = useLocation();
@@ -31,10 +32,16 @@ const OrderAdmin = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [nextStatus, setNextStatus] = useState(null);
 
+  const params = new URLSearchParams(location.search);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const limitPerPage = 15;
+  const currentPage = params.get("page") ? Number(params.get("page")) : 1;
+
+
   const fetchOrdersList = async () => {
     showSpinner();
     orderService
-      .getAllOrders()
+      .getAllOrders(limitPerPage, currentPage)
       .then((res) => {
         setOrdersList(res.data.results);
         setPaymentPendingList(res.data.results.filter((order: any) => order.orderStatus === 0));
@@ -46,6 +53,7 @@ const OrderAdmin = () => {
         setCompleteList(res.data.results.filter((order: any) => order.orderStatus === 8));
         setCancelList(res.data.results.filter((order: any) => order.orderStatus === 9));
         setPaymentFailedList(res.data.results.filter((order: any) => order.orderStatus === 2));
+        setTotalOrders(res.data.totalResults);
         hiddenSpinner();
       })
       .catch((err) => {
@@ -55,7 +63,7 @@ const OrderAdmin = () => {
   }
   useEffect(() => {
     fetchOrdersList();
-  }, []);
+  }, [location.search]);
   const onChange = (key: string) => {
     // console.log(key);
     // console.log(ordersList, 'ordersList')
@@ -300,7 +308,11 @@ const OrderAdmin = () => {
         </span>
 
       </div>
-      <Table rowSelection={rowSelection} dataSource={ordersList} columns={columns} rowKey="_id" />
+      <Table pagination={false} rowSelection={rowSelection} dataSource={ordersList} columns={columns} rowKey="_id" />
+      <PaginationPage
+        current={1}
+        total={totalOrders}
+        pageSize={limitPerPage} />
     </div>
 
   );

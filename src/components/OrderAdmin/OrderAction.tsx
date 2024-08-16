@@ -39,7 +39,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                     setOrderList((prev: any) => {
                         return prev.map((order: any) => {
                             if (order._id === selectedOrderId) {
-                                order.orderStatus = selectedSatusCode
+                                order.orderStatus.code = selectedSatusCode
                             }
                             return order
                         })
@@ -88,7 +88,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record.orderStatus !== 3}
+                    disabled={record.orderStatus.code !== 3}
                     icon={
                         <CheckCircleOutlined
                             style={{
@@ -114,7 +114,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={(record.orderStatus !== 4 && record.orderStatus !== 7)}
+                    disabled={(record.orderStatus.code !== 4 && record.orderStatus.code !== 7)}
                     icon={
                         <TruckIcon
                             style={{
@@ -138,7 +138,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record.orderStatus !== 5}
+                    disabled={record.orderStatus.code !== 5}
                     icon={
                         <VerificationIcon
                             style={{
@@ -162,7 +162,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record.orderStatus !== 5}
+                    disabled={record.orderStatus.code !== 5}
                     icon={
                         <InfoCircleOutlined
                             style={{
@@ -186,7 +186,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record.orderStatus === 8 || record.orderStatus === 9}
+                    disabled={record.orderStatus.code === 8 || record.orderStatus.code === 9}
                     icon={
                         <CloseCircleOutlined
                             style={{
