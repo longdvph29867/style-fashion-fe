@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import { hiddenSpinner, showSpinner } from '../../util/util'
 import DOMPurify from 'dompurify'
 import { https } from '../../config/axios'
+import HotBlog from './HotBlog'
 
 type Props = {}
 
@@ -41,10 +42,11 @@ const DetailBlog = (props: Props) => {
       <div className="w-3/4">
       <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog?.content || '') }}></p>
       <div className="flex justify-end">
-        <p>--{user?.name}Cre:Hoàng Anh--</p>
+        <p>--Cre:{user?.name}--</p>
       </div>
       </div>
       </div>
+      {/* <HotBlog/> */}
     </div>
   )
 }
