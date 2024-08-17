@@ -41,15 +41,15 @@ const OrderPage = () => {
       const userId = userObject.id;
 
       orderService
-        .getOrderUser(userId)
+        .getAllOrderUser(userId)
         .then((res) => {
           setOrdersList(res.data.results);
-          setPaymentPendingList(res.data.results.filter((order: any) => order.orderStatus === 0 || order.orderStatus === 2));
-          setConfirmPendingList(res.data.results.filter((order: any) => order.orderStatus === 3 || order.orderStatus === 1));
-          setPrepareList(res.data.results.filter((order: any) => order.orderStatus === 4));
-          setShippingList(res.data.results.filter((order: any) => order.orderStatus === 5 || order.orderStatus === 6 || order.orderStatus === 7));
-          setCompleteList(res.data.results.filter((order: any) => order.orderStatus === 8));
-          setCancelList(res.data.results.filter((order: any) => order.orderStatus === 9));
+          setPaymentPendingList(res.data.results.filter((order: any) => order?.orderStatus.code === 0 || order?.orderStatus.code === 2));
+          setConfirmPendingList(res.data.results.filter((order: any) => order?.orderStatus.code === 3 || order?.orderStatus.code === 1));
+          setPrepareList(res.data.results.filter((order: any) => order?.orderStatus.code === 4));
+          setShippingList(res.data.results.filter((order: any) => order?.orderStatus.code === 5 || order?.orderStatus.code === 6 || order?.orderStatus.code === 7));
+          setCompleteList(res.data.results.filter((order: any) => order?.orderStatus.code === 8));
+          setCancelList(res.data.results.filter((order: any) => order?.orderStatus.code === 9));
           hiddenSpinner();
         })
         .catch((err) => {

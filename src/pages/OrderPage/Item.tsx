@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { formartCurrency, hiddenSpinner, showSpinner } from '../../util/util'
-import { Button, message, Modal, Skeleton } from 'antd'
+import { Button, Image, message, Modal, Skeleton } from 'antd'
 import { getMessageByStatusCode } from '../../util/constant';
 import ReviewForm from './ReviewForm'
 import orderService from '../../services/orderService';
@@ -133,10 +133,19 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                     {order?.products.map((product: any) => (
                         <Link to={`/order/${order._id}`} key={product._id}>
                             <div className="flex justify-between items-center mb-2 p-6">
-                                <div className="flex">
-                                    <div className="border-gray-400 mr-3" style={{ borderWidth: "1px" }}>
-                                        <img className="w-20 h-20 object-cover" src={product.image} alt={product.productName} />
+                                <div className="flex gap-4">
+                                    <div>
+                                        <Image
+                                            width={80}
+                                            src={product.image}
+                                            alt={product.productName}
+                                            style={{ height: '80px', objectFit: 'cover', marginRight: '8px', borderRadius: '8px' }}
+                                        />
                                     </div>
+                                    {/* <div className="border-gray-400 mr-3" style={{ borderWidth: "1px" }}>
+                                        <img className="w-20 h-20 object-cover" src={product.image} alt={product.productName} />
+                                        
+                                    </div> */}
                                     <div>
                                         <h3 className="text-lg text-[#212121] ">{product.productName}</h3>
                                         <p className="normal-case text-[#757575]">
@@ -170,7 +179,7 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                                 <span>{getMessageByStatusCode(order?.orderStatus.code)}</span>
                             </div>
                             <div>
-                                <ButtonOption orderId={order._id} orderStatus={order.orderStatus} fetchOrdersList={fetchOrdersList} />
+                                <ButtonOption orderId={order._id} orderStatus={order.orderStatus.code} fetchOrdersList={fetchOrdersList} />
 
                             </div>
                         </div>

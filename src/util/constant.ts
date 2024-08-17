@@ -3,7 +3,7 @@ export const orderStatusValue = [
     { code: 1, name: "Đã thanh toán", message: "Đã thanh toán" },
     { code: 2, name: "Thanh toán thất bại", message: "Thanh toán thất bại, vui lòng thanh toán lại!" },
     { code: 3, name: "Chờ xác nhận", message: "Chờ shop xác nhận đơn hàng cho bạn!" },
-    { code: 4, name: "CHuẩn bị hàng", message: "Shop đang chuẩn bị hàng cho bạn!" },
+    { code: 4, name: "Chuẩn bị hàng", message: "Shop đang chuẩn bị hàng cho bạn!" },
     { code: 5, name: "Đang giao hàng", message: "Đơn hàng đang trên đường giao đến bạn, vui lòng để ý điện thoại!" },
     { code: 6, name: "Đã giao hàng", message: "Giao hàng thành công" },
     { code: 7, name: "Giao hàng không thành công", message: "Giao hàng không thành công" },

@@ -1,149 +1,40 @@
-import { Flex, Grid, List, Space, Steps, Typography, theme } from "antd";
-// import type { IEvent, IOrder } from "../../../interfaces";
-// import { useTranslate } from "@refinedev/core";
-import dayjs from "dayjs";
-import {
-    ClockCircleOutlined,
-    HistoryOutlined,
-    LoadingOutlined,
-    PhoneOutlined,
-    ShopOutlined,
-    UserOutlined,
-} from "@ant-design/icons";
-import { useMemo } from "react";
-// import { BikeWhiteIcon } from "../../icons";
-// import { useConfigProvider } from "../../../context";
+import { List } from 'antd';
+import dayjs from 'dayjs';
+import React from 'react'
+
+type Log = {
+    _id: string;
+    action: string;
+    timestamp: string;
+};
 
 type Props = {
-    order: any;
+    logs: Log[];
 };
 
-export const LogOrder = ({ order }: Props) => {
-    //   const t = useTranslate();
-    const { token } = theme.useToken();
-    const breakpoints = Grid.useBreakpoint();
-    // const { mode } = useConfigProvider();
-
-    const details = useMemo(() => {
-        const list: {
-            icon: React.ReactNode;
-            title: string;
-            description: string;
-        }[] = [
-                {
-                    icon: <UserOutlined />,
-                    title: "Khách hàng",
-                    description: order?.shippingAddress?.name,
-                },
-                {
-                    icon: <PhoneOutlined />,
-                    title: "Số điện thoại",
-                    description: order?.shippingAddress?.phoneNumber,
-                },
-                {
-                    icon: <UserOutlined />,
-                    title: "Địa chỉ giao hàng",
-                    description: `${order?.user.firstName} ${order?.user.lastName}`,
-                },
-                {
-                    icon: <HistoryOutlined />,
-                    title: "Ngày tạo",
-                    description: order?.createdAt,
-                },
-            ];
-
-        return list;
-    }, [order]);
-
+const LogOrder = ({ logs }: Props) => {
     return (
-        <Flex vertical>
-            <Steps
-                // size="small"
-                direction="horizontal"
-                items={[
-                    {
-                        title: 'Đặt hàng thành công',
-                        status: 'finish',
-                        // icon: <UserOutlined />,
-                    },
-                    {
-                        title: 'Chờ xác nhận',
-                        status: 'finish',
-                        // icon: <SolutionOutlined />,
-                    },
-                    {
-                        title: 'Chuẩn bị hàng',
-                        status: 'process',
-                        icon: <LoadingOutlined />,
-                    },
-                    {
-                        title: 'Đang giao hàng',
-                        status: 'wait',
-                        // icon: <SmileOutlined />,
-                    },
-                    {
-                        title: 'Đã giao hàng',
-                        status: 'wait',
-                        // icon: <SmileOutlined />,
-                    },
-                    {
-                        title: 'Đã nhận được hàng',
-                        status: 'wait',
-                        // icon: <SmileOutlined />,
-                    },
-                ]}
-            />
-            {/* <List
-                size="large"
-                dataSource={details}
-                style={{
-                    borderTop: `1px solid ${token.colorBorderSecondary}`,
-                }}
-                renderItem={(item) => (
-                    <List.Item>
-                        <Flex gap={8}>
-                            <Space
-                                style={{
-                                    width: "120px",
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        // color: mode === "dark" ? token.volcano9 : token.volcano6,
-                                    }}
-                                >
-                                    {item.icon}
-                                </div>
-                                <Typography.Text type="secondary">{item.title}</Typography.Text>
-                            </Space>
-                            <Typography.Text>{item.description}</Typography.Text>
-                        </Flex>
+        <div>
+            <div className='mt-2'>
+                <h2 className='text-lg  font-semibold mb-4'>Nhật ký trạng thái đơn hàng</h2>
+            </div>
+            <List
+                className='flex flex-col gap-2'
+                itemLayout="horizontal"
+                dataSource={logs}
+                renderItem={(log) => (
+                    <List.Item className="flex items-center pl-8 mb-4 relative">
+                        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-2.5 h-2.5 bg-gray-300 rounded-full"></div>
+                        <List.Item.Meta
+                            className='pl-12'
+                            title={log?.action}
+                            description={dayjs(log?.timestamp).format('DD/MM/YYYY HH:mm:ss')}
+                        />
                     </List.Item>
                 )}
-            /> */}
-        </Flex>
-    );
-};
+            />
+        </div>
+    )
+}
 
-// const getCurrentStep = (order: IOrder) => {
-//     return order?.events.findIndex((el) => el.status === order?.status?.text);
-// };
-
-// const getNotFinishedCurrentStep = (
-//     order: IOrder,
-//     event: IEvent,
-//     index: number,
-// ) => {
-//     return (
-//         event.status !== "Cancelled" &&
-//         event.status !== "Delivered" &&
-//         order?.events.findIndex((el) => el.status === order?.status?.text) === index
-//     );
-// };
-
-// const getStepStatus = (order: IOrder, event: IEvent, index: number) => {
-//     if (!event.date) return "wait";
-//     if (event.status === "Cancelled") return "error";
-//     if (getNotFinishedCurrentStep(order, event, index)) return "process";
-//     return "finish";
-// };
+export default LogOrder

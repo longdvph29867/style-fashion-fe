@@ -5,9 +5,34 @@ import { Button, Image, message, Modal } from 'antd';
 import { getMessageByStatusCode } from '../../util/constant';
 import orderService from '../../services/orderService';
 import ButtonOption from './ButtonOption';
-import { LogOrder } from '../../components/OrderAdmin/LogOrder';
+import { StepStatus } from '../../components/OrderAdmin/StepStatus';
+import LogOrder from '../../components/OrderAdmin/LogOrder';
 
 type Props = {}
+
+
+const log = [
+  {
+    "_id": "66bcdb9e882f4ba25813dc2d",
+    "action": "Đặt hàng thành công",
+    "timestamp": "2024-08-14T16:30:12.719Z"
+  },
+  {
+    "_id": "66bcdb9e882f4ba25813dc2d",
+    "action": "Đặt hàng thành công",
+    "timestamp": "2024-08-14T16:30:12.719Z"
+  },
+  {
+    "_id": "66bcdb9e882f4ba25813dc2d",
+    "action": "Đặt hàng thành công",
+    "timestamp": "2024-08-14T16:30:12.719Z"
+  },
+  {
+    "_id": "66bcdb9e882f4ba25813dc2d",
+    "action": "Đặt hàng thành công",
+    "timestamp": "2024-08-14T16:30:12.719Z"
+  }
+]
 
 const OrderDetail = (props: Props) => {
   window.scrollTo(0, 0);
@@ -114,7 +139,7 @@ const OrderDetail = (props: Props) => {
         <h3 className="text-2xl ">Chi tiết đơn hàng</h3>
 
         <div className='mt-4 mb-2'>
-          <LogOrder order={order} />
+          <StepStatus order={order} />
 
         </div>
       </div>
@@ -122,9 +147,9 @@ const OrderDetail = (props: Props) => {
       <div className="shadow">
         <div className="p-4 flex justify-between items-center" style={{ borderBottom: '1px dotted rgba(0,0,0,.09)' }}>
           <div>
-            <span>MÃ ĐƠN HÀNG: {order?.orderCode}</span>
+            <span>MÃ ĐƠN HÀNG: <span className='font-medium'>{order?.orderCode}</span></span>
             <span className="mx-1">|</span>
-            <span className="text-primary">{order?.orderStatus?.name}</span>
+            <span className="font-medium text-primary">{order?.orderStatus?.name}</span>
           </div>
         </div>
 
@@ -179,36 +204,40 @@ const OrderDetail = (props: Props) => {
             <div className="w-2/5 pr-5 border-gray-300" style={{ borderRightWidth: 1 }}>
               <div className="flex flex-col justify-between h-full">
                 <div>
-                  <h4 className="font-medium">{order?.shippingAddress.recipientName}</h4>
+                  <h4 className="">{order?.shippingAddress.name}</h4>
                   <div className="text-sm text-gray-500 space-y-1 normal-case">
                     <p>{order?.shippingAddress.phoneNumber}</p>
                     <p>{order?.shippingAddress.address}, {order?.shippingAddress.ward}, {order?.shippingAddress.district}, {order?.shippingAddress.province}</p>
                     <p>Ghi chú: {order?.note || 'Không có'}</p>
                   </div>
                 </div>
-                <div className="text-primary">{getMessageByStatusCode(order?.orderStatus?.code)}</div>
+                <div className='mt-10'>
+                  <LogOrder logs={order?.logs} />
+
+                </div>
+                <div className="font-medium text-primary">{getMessageByStatusCode(order?.orderStatus?.code)}</div>
               </div>
             </div>
             <div className="w-3/5 pl-5 text-sm text-gray-500 normal-case">
               <div>
                 <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
-                  <p>Tổng tiền hàng</p>
+                  <p className='font-medium'>Tổng tiền hàng</p>
                   <p>₫{formartCurrency(order?.subTotal)}</p>
                 </div>
                 <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
-                  <p className=''>Giảm giá</p>
+                  <p className='font-medium'>Giảm giá</p>
                   <p>{formartCurrency(order?.discountAmount)}</p>
                 </div>
                 <div className="flex justify-between items-center py-3 border-gray-200" style={{ borderBottomWidth: 1 }}>
-                  <p>Phí vận chuyển</p>
+                  <p className='font-medium'>Phí vận chuyển</p>
                   <p>₫{formartCurrency(order?.shippingFee)}</p>
                 </div>
                 <div className="flex justify-between items-center py-2 border-gray-300" style={{ borderBottomWidth: 1 }}>
-                  <p>Thành tiền</p>
+                  <p className='font-medium'>Thành tiền</p>
                   <p className="text-2xl text-primary font-semibold">₫{formartCurrency(order?.totalPrice)}</p>
                 </div>
                 <div className="flex justify-between items-center py-3 border-gray-200">
-                  <p>
+                  <p className='font-medium'>
                     <i className="fa-solid fa-file-invoice-dollar text-primary"></i>
                     Phương thức Thanh toán
                   </p>

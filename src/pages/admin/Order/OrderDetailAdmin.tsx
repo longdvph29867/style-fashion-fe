@@ -4,11 +4,13 @@ import { Button, message, Modal, Select } from 'antd';
 import { formartCurrency, hiddenSpinner, showSpinner } from '../../../util/util';
 import orderService from '../../../services/orderService';
 import { getNameByStatusCode, orderStatusValue } from '../../../util/constant';
-import { LogOrder } from '../../../components/OrderAdmin/LogOrder';
+import { StepStatus } from '../../../components/OrderAdmin/StepStatus';
 import ProductOrderDetail from '../../../components/OrderAdmin/productOrderDetail';
 import InforUserDetail from '../../../components/OrderAdmin/InforUserDetail';
+import LogOrder from '../../../components/OrderAdmin/LogOrder';
 
 type Props = {}
+
 
 const OrderDetailAdmin = (props: Props) => {
   window.scrollTo(0, 0);
@@ -161,6 +163,12 @@ const OrderDetailAdmin = (props: Props) => {
             </Link>
           </div>
           <span>MÃ ĐƠN HÀNG: <span className='font-medium'>{order?.orderCode}</span></span>
+
+          <div className='my-4'>
+            <StepStatus order={order} />
+
+          </div>
+
         </div>
 
         <div className='mb-4 flex justify-between items-center'>
@@ -183,6 +191,7 @@ const OrderDetailAdmin = (props: Props) => {
             <div className='mt-6 mb-10 flex '>
               <div className='w-3/5 pr-10'>
                 <InforUserDetail order={order} />
+                <LogOrder logs={order?.logs} />
               </div>
               <div className="w-2/5 pl-10 text-sm text-gray-500 normal-case border-l border-gray-200">
                 <div className="flex justify-between items-center py-6 border-gray-200" style={{ borderBottomWidth: 1 }}>
@@ -212,7 +221,6 @@ const OrderDetailAdmin = (props: Props) => {
             </div>
           </div>
 
-          <LogOrder order={order} />
         </div>
 
 
