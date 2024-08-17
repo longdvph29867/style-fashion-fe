@@ -13,7 +13,7 @@ const BlogPage = () => {
       ];
   return (
     <div>
-        <Breadcrumb list={listBreadcrumb} />
+        {/* <Breadcrumb list={listBreadcrumb} /> */}
         <div className="xl:flex xl:justify-center lg:flex lg:justify-center">
         <BlogList/>
         {/* <HotBlog/> */}

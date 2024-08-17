@@ -10,45 +10,46 @@ import { localUserService } from "../../../services/localService";
 
 const PostNews = () => {
   const [content, setContent] = useState<string>("");
-  const [image, setPoster] = useState<string>("");
+  const [image, setImage] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const navigate = useNavigate();
-
-  const handleUpload: UploadProps["customRequest"] = ({ file }: any) => {
-    setFile(file);
-  };
 
   const onFinish = async (values: FormPostNews) => {
     showSpinner();
     try {
-      let imageUrl = image;
-
-      if (file) {
-        const formData = new FormData();
-        formData.append("images", file);
-
-        const response = await https.post("/images", formData);
-        if (
-          response.data &&
-          response.data.data &&
-          response.data.data[0] &&
-          response.data.data[0].url
-        ) {
-          imageUrl = response.data.data[0].url;
-        } else {
-          throw new Error("Phản hồi không chứa URL của ảnh!");
+      let imageUrl = "";
+      // Kiểm tra nếu `values.image` là mảng và phần tử đầu tiên có chứa thông tin file upload
+      if (values.image && Array.isArray(values.image) && values.image[0]) {
+        const file = values.image[0];  // Lấy phần tử đầu tiên của mảng image
+        
+        // Nếu file là một đối tượng có `originFileObj`, tức là nó chứa thông tin về file thực tế cần upload
+        if (file.originFileObj) {
+          const formData = new FormData();
+          formData.append("images", file.originFileObj);  // Lấy file từ originFileObj để upload
+  
+          const response = await https.post("/images", formData);
+          if (
+            response.data &&
+            response.data.data &&
+            response.data.data[0] &&
+            response.data.data[0].url
+          ) {
+            imageUrl = response.data.data[0].url;
+          } else {
+            throw new Error("Phản hồi không chứa URL của ảnh!");
+          }
         }
       }
-
+  
       const storedUserInfo = localUserService.get();
       const userId = storedUserInfo ? storedUserInfo.id : "";
       const data = {
         title: values.title,
         content: content,
         user: userId,
-        image: imageUrl,
+        image: imageUrl,  // Sử dụng URL hình ảnh đã lấy được
       };
-
+  
       const res = await https.post("/blogs", data);
       if (res) {
         message.success("Đăng bài thành công!");
@@ -69,6 +70,12 @@ const PostNews = () => {
       hiddenSpinner();
     }
   };
+  
+  
+  
+
+
+
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
@@ -98,15 +105,56 @@ const PostNews = () => {
             </Form.Item>
           </div>
           <div className="image mb-4">
-            <label
-              htmlFor="title"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Poster:
-            </label>
-            <Upload customRequest={handleUpload} showUploadList={true}>
+
+            {/* <Upload customRequest={handleUpload} showUploadList={true}>
               <Button icon={<UploadOutlined />}>Click to Upload</Button>
-            </Upload>
+            </Upload> */}
+
+      <Form.Item
+          label="Hình ảnh"
+          name="image"
+          valuePropName="fileList"
+          getValueFromEvent={(e) => e?.fileList}
+          rules={[
+            { required: true, message: "Vui lòng chọn file!" },
+            {
+              validator(_, fileList) {
+                if (fileList) {
+                  if (fileList.length > 5) {
+                    return Promise.reject("Tối đa 5 file!");
+                  }
+                  for (const file of fileList) {
+                    if (file.size > 1024 * 1024) {
+                      return Promise.reject("File tối đa 1MB");
+                    }
+                    if (
+                      !["image/jpeg", "image/jpg", "image/png"].includes(
+                        file.type
+                      )
+                    ) {
+                      return Promise.reject(
+                        "File phải có định dạng png, jpg, jpeg!"
+                      );
+                    }
+                  }
+                  return Promise.resolve();
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
+        >
+          <Upload.Dragger
+            multiple
+            listType="picture"
+            maxCount={1}
+            beforeUpload={() => false}
+          
+          >
+            <Button icon={<UploadOutlined />}>Click to upload</Button>
+          </Upload.Dragger>
+        </Form.Item>
+
           </div>
 
           <div className="mb-4">

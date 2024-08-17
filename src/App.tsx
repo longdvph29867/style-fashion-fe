@@ -70,7 +70,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="about" element={<AboutPage/>}/>
+          {/* <Route path="about" element={<AboutPage/>}/> */}
           {/* account */}
           <Route path="account" element={<AccountPage />}>
             <Route index element={<AccountInfomation />} />
