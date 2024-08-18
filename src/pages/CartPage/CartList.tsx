@@ -75,7 +75,6 @@ const CartList = () => {
       dispatch(selectProduct([...selectedProduct, productCart]));
     }
   };
-  console.log(data);
 
   return (
     <div className="my-20">

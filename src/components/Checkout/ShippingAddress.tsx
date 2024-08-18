@@ -32,15 +32,19 @@ const ShippingAddress = ({
       showSpinner();
       const data = await shippingService.getShippingAll(userId);
       setAddressList(data);
-      const addressSelected = data.find((item) => item.selected === true);
-      if (addressSelected) {
-        setAddressSelected(addressSelected);
-      }
       hiddenSpinner();
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    const addressSelected = addressList.find((item) => item.selected === true);
+    if (addressSelected) {
+      setAddressSelected(addressSelected);
+    }
+  }, [addressList, setAddressSelected]);
+
   useEffect(() => {
     if (userId) {
       getAllShippingAddress(userId);
@@ -54,7 +58,7 @@ const ShippingAddress = ({
     },
     []
   );
-  const hanleSelectAddress = useCallback(
+  const handleSelectAddress = useCallback(
     ({ address }: { address: string }) => {
       const addressItem = addressList.find((item) => item._id === address);
       if (addressItem) {
@@ -62,34 +66,40 @@ const ShippingAddress = ({
         setOpenDrawer(false);
       }
     },
-    [addressList]
+    [addressList, setAddressSelected]
   );
 
-  const handleSubmitModal = useCallback(async (values: BodyShippingAddress) => {
-    if (!userId) {
-      return;
-    }
-    try {
-      if (formAction.type === "create") {
-        const data = await shippingService.postShippingAddress(userId, values);
-        setAddressList(data);
+  const handleSubmitModal = useCallback(
+    async (values: BodyShippingAddress) => {
+      if (!userId) {
+        return;
       }
-      if (formAction.type === "update" && formAction.shippingAddress) {
-        const updateData = await shippingService.putShippingAddress(
-          userId,
-          formAction.shippingAddress?._id,
-          values
-        );
-        setAddressList((prev) =>
-          prev.map((item) =>
-            item._id === formAction.shippingAddress?._id ? updateData : item
-          )
-        );
+      try {
+        if (formAction.type === "create") {
+          const data = await shippingService.postShippingAddress(
+            userId,
+            values
+          );
+          setAddressList(data);
+        }
+        if (formAction.type === "update" && formAction.shippingAddress) {
+          const updateData = await shippingService.putShippingAddress(
+            userId,
+            formAction.shippingAddress?._id,
+            values
+          );
+          setAddressList((prev) =>
+            prev.map((item) =>
+              item._id === formAction.shippingAddress?._id ? updateData : item
+            )
+          );
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+    },
+    [formAction.shippingAddress, formAction.type, userId]
+  );
   return (
     <div className="scroll-mt-24">
       <div className="border border-slate-200 rounded-xl p-6">
@@ -170,7 +180,7 @@ const ShippingAddress = ({
         </div>
       </div>
       <DrawerShippingAddress
-        onFinish={hanleSelectAddress}
+        onFinish={handleSelectAddress}
         setFormAction={handleButtonShipping}
         setOpenDrawer={setOpenDrawer}
         open={openDrawer}
@@ -182,6 +192,7 @@ const ShippingAddress = ({
         onClose={setOpenModal}
         action={formAction}
         handleSubmit={handleSubmitModal}
+        loading
       />
     </div>
   );

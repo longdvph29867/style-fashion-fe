@@ -37,22 +37,12 @@ const ShippingAddressModal = ({
       if (action.type === "update" && action.shippingAddress) {
         const shippingAddress = action.shippingAddress;
         form.setFieldsValue(shippingAddress);
-        // const idCity = cititesData.find(
-        //   (city) => city.name === shippingAddress.cityProvince
-        // );
-        // if (!idCity) {
-        //   return false;
-        // }
-        // const districtsData = await shippingService.getDistricts(idCity._id);
-        // setDistricts(districtsData);
-        // const idDistrict = districtsData.find(
-        //   (district) => district.name === shippingAddress.district
-        // );
-        // if (!idDistrict) {
-        //   return false;
-        // }
-        // const wardsData = await shippingService.getWards(idDistrict._id);
-        // setWards(wardsData);
+        const districts = await infoShipping.getDistrict(
+          shippingAddress.provinceCode
+        );
+        setDistricts(districts.data);
+        const wards = await infoShipping.getWard(shippingAddress.districtCode);
+        setWards(wards.data);
       }
     } catch (error) {
       console.log(error);
