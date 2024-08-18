@@ -2,19 +2,17 @@ import { Input, Modal, Select } from "antd";
 import { memo, useEffect, useState } from "react";
 import { Form } from "antd";
 import {
-  City,
-  District,
+  BodyShippingAddress,
   FieldTypeShipping,
   ShippingActionModal,
-  ShippingAddressType,
-  Ward,
 } from "../../../types/shippingAddress";
-import shippingService from "../../../services/shippingService";
+import infoShipping from "../../../services/infoShippingService";
+import { District, Province, Ward } from "../../../types/infoShippingType";
 
 type Props = {
   action: ShippingActionModal;
   open: boolean;
-  handleSubmit: (value: ShippingAddressType) => Promise<void>;
+  handleSubmit: (value: BodyShippingAddress) => Promise<void>;
   loading?: boolean;
   onClose: (value: boolean) => void;
 };
@@ -25,7 +23,7 @@ const ShippingAddressModal = ({
   loading,
   onClose,
 }: Props) => {
-  const [cities, setCitites] = useState<City[]>([]);
+  const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
   const [wards, setWards] = useState<Ward[]>([]);
   const [form] = Form.useForm();
@@ -34,27 +32,27 @@ const ShippingAddressModal = ({
   }, [action]);
   const handleShippingAction = async () => {
     try {
-      const cititesData = await shippingService.getCities();
-      setCitites(cititesData);
+      const provinces = await infoShipping.getProvince();
+      setProvinces(provinces.data);
       if (action.type === "update" && action.shippingAddress) {
         const shippingAddress = action.shippingAddress;
         form.setFieldsValue(shippingAddress);
-        const idCity = cititesData.find(
-          (city) => city.name === shippingAddress.cityProvince
-        );
-        if (!idCity) {
-          return false;
-        }
-        const districtsData = await shippingService.getDistricts(idCity._id);
-        setDistricts(districtsData);
-        const idDistrict = districtsData.find(
-          (district) => district.name === shippingAddress.district
-        );
-        if (!idDistrict) {
-          return false;
-        }
-        const wardsData = await shippingService.getWards(idDistrict._id);
-        setWards(wardsData);
+        // const idCity = cititesData.find(
+        //   (city) => city.name === shippingAddress.cityProvince
+        // );
+        // if (!idCity) {
+        //   return false;
+        // }
+        // const districtsData = await shippingService.getDistricts(idCity._id);
+        // setDistricts(districtsData);
+        // const idDistrict = districtsData.find(
+        //   (district) => district.name === shippingAddress.district
+        // );
+        // if (!idDistrict) {
+        //   return false;
+        // }
+        // const wardsData = await shippingService.getWards(idDistrict._id);
+        // setWards(wardsData);
       }
     } catch (error) {
       console.log(error);
@@ -68,30 +66,53 @@ const ShippingAddressModal = ({
       form.setFieldsValue({ wardCommune: "", district: "" });
     }
   };
-  const handleCity = async (value: string) => {
-    const idCity = cities.find((city) => city.name === value);
-    if (idCity) {
-      const districtsData = await shippingService.getDistricts(idCity._id);
-      setDistricts(districtsData);
-      setWards([]);
-    }
+  const handleCity = (provinceId: number) => {
+    infoShipping
+      .getDistrict(provinceId)
+      .then((res) => {
+        setDistricts(res.data);
+        setWards([]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
-  const handleDistrict = async (value: string) => {
-    const district = districts.find((district) => district.name === value);
-    if (district) {
-      const wardsData = await shippingService.getWards(district._id);
-      setWards(wardsData);
-    }
+  const handleDistrict = (districtID: number) => {
+    infoShipping
+      .getWard(districtID)
+      .then((res) => {
+        setWards(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   const handleClose = () => {
     form.resetFields();
-    setCitites([]);
+    setProvinces([]);
     setDistricts([]);
     setWards([]);
     onClose(false);
   };
-  const onFinish = async (value: ShippingAddressType) => {
-    await handleSubmit(value);
+  const onFinish = async (value: FieldTypeShipping) => {
+    const province = provinces.find(
+      (province) => province.ProvinceID === value.provinceCode
+    );
+    const district = districts.find(
+      (district) => district.DistrictID === value.districtCode
+    );
+
+    const ward = wards.find((ward) => ward.WardCode === value.wardCode);
+    if (!province || !ward || !district) {
+      return false;
+    }
+    const bodyShippingAddress: BodyShippingAddress = {
+      ...value,
+      provinceName: province.ProvinceName,
+      districtName: district.DistrictName,
+      wardName: ward.WardName,
+    };
+    await handleSubmit(bodyShippingAddress);
     handleClose();
   };
   return (
@@ -119,14 +140,14 @@ const ShippingAddressModal = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Form.Item<FieldTypeShipping>
             label="Họ và tên"
-            name="recipientName"
+            name="name"
             rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}
           >
             <Input placeholder="Họ tên" />
           </Form.Item>
           <Form.Item<FieldTypeShipping>
             label="Số điện thoại"
-            name="recipientPhoneNumber"
+            name="phoneNumber"
             rules={[
               {
                 required: true,
@@ -144,7 +165,7 @@ const ShippingAddressModal = ({
         <div className="grid md:grid-cols-3 gap-3">
           <Form.Item<FieldTypeShipping>
             label="Tỉnh/Thành phố"
-            name="cityProvince"
+            name="provinceCode"
             initialValue={""}
             rules={[
               { required: true, message: "Vui lòng chọn tỉnh/thành phố!" },
@@ -159,18 +180,19 @@ const ShippingAddressModal = ({
               }
               onSelect={handleChangeSelectCity}
               onChange={handleCity}
+              // defaultValue={"Chọn tỉnh/thành phố"}
               options={[
                 { value: "", label: "Chọn tỉnh/thành phố" },
-                ...cities.map((city) => ({
-                  value: city.name,
-                  label: city.name,
+                ...provinces.map((city) => ({
+                  value: city.ProvinceID,
+                  label: city.ProvinceName,
                 })),
               ]}
             />
           </Form.Item>
           <Form.Item<FieldTypeShipping>
             label="Quận/Huyện"
-            name="district"
+            name="districtCode"
             initialValue={""}
             rules={[{ required: true, message: "Vui lòng chọn quận/huyện!" }]}
           >
@@ -186,15 +208,15 @@ const ShippingAddressModal = ({
               options={[
                 { value: "", label: "Chọn quận/huyện" },
                 ...districts.map((district) => ({
-                  value: district.name,
-                  label: district.name,
+                  value: district.DistrictID,
+                  label: district.DistrictName,
                 })),
               ]}
             />
           </Form.Item>
           <Form.Item<FieldTypeShipping>
             label="Xã/phường"
-            name="wardCommune"
+            name="wardCode"
             initialValue={""}
             rules={[{ required: true, message: "Vui lòng chọn xã/phường!" }]}
           >
@@ -206,11 +228,12 @@ const ShippingAddressModal = ({
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
+              defaultValue={"Chọn xã/phường"}
               options={[
                 { value: "", label: "Chọn xã/phường" },
                 ...wards.map((ward) => ({
-                  value: ward.name,
-                  label: ward.name,
+                  value: ward.WardCode,
+                  label: ward.WardName,
                 })),
               ]}
             />
@@ -218,7 +241,7 @@ const ShippingAddressModal = ({
         </div>
         <Form.Item<FieldTypeShipping>
           label="Địa chỉ cụ thể"
-          name="streetAddress"
+          name="address"
           rules={[
             {
               required: true,

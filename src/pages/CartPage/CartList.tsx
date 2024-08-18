@@ -75,6 +75,7 @@ const CartList = () => {
       dispatch(selectProduct([...selectedProduct, productCart]));
     }
   };
+  console.log(data);
 
   return (
     <div className="my-20">
@@ -114,15 +115,16 @@ const CartList = () => {
               />
             </div>
           ))}
-          {data?.length === 0 && (
-            <div className="text-center">
-              <img className="mx-auto" src={cartEmpty} alt="" width={200} />
-              <span className="font-medium italic">
-                Chưa có sản phẩm nào trong giỏ hàng. Thêm ít nhất 1 sản phẩm để
-                tiến hành thanh toán
-              </span>
-            </div>
-          )}
+          {!data ||
+            (data?.length === 0 && (
+              <div className="text-center">
+                <img className="mx-auto" src={cartEmpty} alt="" width={200} />
+                <span className="font-medium italic">
+                  Chưa có sản phẩm nào trong giỏ hàng. Thêm ít nhất 1 sản phẩm
+                  để tiến hành thanh toán
+                </span>
+              </div>
+            ))}
         </div>
         <div className="border-t lg:border-t-0 lg:border-l border-slate-200 my-10 lg:my-0 lg:mx-10 xl:lg:mx-14 2xl:mx-16" />
         <TotalOrder selectedProduct={selectedProduct} />

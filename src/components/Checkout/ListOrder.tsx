@@ -2,13 +2,15 @@ import { formartCurrency, getNameVariants } from "../../util/util";
 import AtrributeSvgCheckout from "../../assets/svgs/AtrributeSvgCheckout";
 import { memo } from "react";
 import { ICart } from "../../types/cart";
+
 type Props = {
-  productList: ICart[];
+  productCheckout: ICart[];
 };
-const ListOrder = ({ productList }: Props) => {
+
+const ListOrder = ({ productCheckout }: Props) => {
   return (
     <div className="mt-8">
-      {productList.map((item) => (
+      {productCheckout.map((item) => (
         <div
           key={item._id}
           className="relative flex border-b last:border-0 border-[#e5e7eb] py-7 first:pt-0 last:pb-0"

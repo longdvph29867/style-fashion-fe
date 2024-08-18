@@ -111,23 +111,6 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
         variant: variantSelected.id,
         quantity: quantity,
       });
-      // cartService
-      //   .addToCart({
-      //     user: userId,
-      //     product: product.id,
-      //     variant: variantSelected.id,
-      //     quantity: quantity,
-      //   })
-      //   .then(() => {
-      //     queryClient.refetchQueries({
-      //       queryKey: ["carts"],
-      //       type: "active",
-      //     });
-      //     message.success("Thêm sản phẩm thành công!");
-      //   })
-      //   .catch((err) => {
-      //     message.error(err.response.data.message);
-      //   });
       hiddenSpinner();
     }
   };
@@ -139,20 +122,19 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
         <div className="flex items-center mt-5 space-x-4 sm:space-x-5">
           <div className="flex gap-2 items-center text-[#fe385c]">
             {variantSelected ? (
-              <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold">
-                <span className="text-[#fe385c] !leading-none">
-                  {formartCurrency(variantSelected.currentPrice)}
-                </span>
-              </div>
+              <span className="text-[#fe385c] text-xl font-bold !leading-none">
+                {formartCurrency(variantSelected.currentPrice)}
+              </span>
             ) : (
               price.map((amount, index) => (
                 <>
                   {index > 0 && <IoRemoveOutline />}
-                  <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold">
-                    <span className="text-[#fe385c] !leading-none">
-                      {formartCurrency(amount)}
-                    </span>
-                  </div>
+                  <span
+                    key={index}
+                    className="text-[#fe385c] text-xl font-bold !leading-none"
+                  >
+                    {formartCurrency(amount)}
+                  </span>
                 </>
               ))
             )}

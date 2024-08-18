@@ -5,7 +5,7 @@ import { ICart } from "../../types/cart";
 import { HiOutlineTicket, HiOutlineChevronRight } from "react-icons/hi2";
 
 type Props = {
-  productList: ICart[];
+  productCheckout: ICart[];
   shippingfee: number;
   subTotal: number;
   onOpenVoucher: () => void;
@@ -14,7 +14,7 @@ type Props = {
   discountAmount: number;
 };
 const OrderSummary = ({
-  productList,
+  productCheckout,
   shippingfee,
   subTotal,
   onOpenVoucher,
@@ -26,7 +26,7 @@ const OrderSummary = ({
     <div className="w-full lg:w-[36%]">
       <h3 className="text-lg font-semibold">Tóm Tắt Đơn Hàng</h3>
       {/* List Product Order */}
-      <List_Order productList={productList} />
+      <List_Order productCheckout={productCheckout} />
       {/* Discount code */}
       <div className="mt-10 pt-6 text-sm text-slate-500 border-t border-slate-200/70 flex justify-between">
         <div className="flex items-center gap-2">

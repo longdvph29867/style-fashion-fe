@@ -2,10 +2,9 @@ import { Link, useNavigate } from "react-router-dom";
 import OrderSummary from "../../components/Checkout/OrderSummary";
 import PaymentMethod from "../../components/Checkout/PaymentMethod";
 import ShippingAddress from "../../components/Checkout/ShippingAddress";
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { ShippingAddressType } from "../../types/shippingAddress";
 import { majorCities, surroundingProvinces } from "../../constant/constant";
-import { CheckoutType, ProductOrderType } from "../../types/orderType";
 import orderService from "../../services/orderService";
 import OrderNote from "../../components/Checkout/OrderNote";
 import { useSelector } from "react-redux";
@@ -16,6 +15,12 @@ import { Voucher } from "../../types/voucher";
 import "../../assets/css/checkoutPage.css";
 import { hiddenSpinner, showSpinner } from "../../util/util";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  CreateOrder,
+  OrderProduct,
+  OrderShippingAddress,
+} from "../../types/orderType";
+import infoShipping from "../../services/infoShippingService";
 
 const CheckoutPage = () => {
   const user = useSelector((state: RootState) => state.userSlice.userInfo);
@@ -26,18 +31,28 @@ const CheckoutPage = () => {
   const [voucherSelected, setVoucherSelected] = useState<Voucher | null>(null);
   const [addressSelected, setAddressSelected] =
     useState<ShippingAddressType | null>(null);
-  const products = useSelector(
+  const productCheckout = useSelector(
     (state: RootState) => state.checkoutSlice.products
   );
+
+  useEffect(() => {
+    if (productCheckout.length === 0) {
+      navigate("/carts");
+    }
+  }, [navigate, productCheckout.length]);
+
+  useEffect(() => {
+    infoShipping.getShippingFee();
+  });
   const queryClient = useQueryClient();
 
   const subtotal = useMemo(() => {
-    return products.reduce(
+    return productCheckout.reduce(
       (accumulator, currentValue) =>
         accumulator + currentValue.quantity * currentValue.variant.currentPrice,
       0
     );
-  }, [products]);
+  }, [productCheckout]);
 
   const calculateDiscount = useMemo(() => {
     if (voucherSelected && voucherSelected.type === "percentage") {
@@ -46,70 +61,49 @@ const CheckoutPage = () => {
     return voucherSelected?.discount ?? 0;
   }, [subtotal, voucherSelected]);
 
-  const shippingFee = useMemo(() => {
-    if (addressSelected) {
-      if (majorCities.includes(addressSelected.cityProvince)) {
-        return 16000;
-      } else if (surroundingProvinces.includes(addressSelected.cityProvince)) {
-        return 24000;
-      } else {
-        return 28000;
-      }
-    }
-    return 0;
-  }, [addressSelected]);
-
   const handleCreateOrder = () => {
-    // if (carts.length > 0 && addressSelected && user?.id) {
-    //   const productsOrder: ProductOrderType[] = products.map((item) => ({
-    //     productId: item.product.id,
-    //     quantity: item.quantity,
-    //     price: item.attribute.price,
-    //     productName: item.product.name,
-    //     slug: item.product.slug,
-    //     imageProduct: item.product.thumbnail,
-    //     imageAtrribute: item.attribute.image,
-    //     attributeName: item.attribute.name,
-    //     attributeId: item.attribute.id,
-    //   }));
-    //   const shippingAddressOrder = {
-    //     recipientName: addressSelected.recipientName,
-    //     recipientPhoneNumber: addressSelected.recipientPhoneNumber,
-    //     streetAddress: addressSelected.streetAddress,
-    //     wardCommune: addressSelected.wardCommune,
-    //     district: addressSelected.district,
-    //     cityProvince: addressSelected.cityProvince,
-    //   };
-    //   const newOrder: CheckoutType = {
-    //     productsOrder,
-    //     shippingAddress: shippingAddressOrder,
-    //     user: user.id,
-    //     subTotal: subtotal,
-    //     discountAmount: calculateDiscount,
-    //     shippingFee: shippingFee,
-    //     note: orderNote,
-    //     totalPrice: subtotal + shippingFee - calculateDiscount,
-    //     paymentMethod: paymentMethod,
-    //     voucherCode: voucherSelected?.code ?? "",
-    //   };
-    //   showSpinner();
-    //   if (paymentMethod === "VNPAY") {
-    //     orderService.createVNPAY(newOrder).then(async (response) => {
-    //       hiddenSpinner();
-    //       window.location.href = response.data.url;
-    //     });
-    //   } else {
-    //     orderService.createCOD(newOrder).then(() => {
-    //       queryClient.refetchQueries({
-    //         queryKey: ["carts"],
-    //         type: "active",
-    //       });
-    //       hiddenSpinner();
-    //       navigate("/order");
-    //       message.success("Đặt hàng thành công");
-    //     });
-    //   }
-    // }
+    if (addressSelected && user?.id) {
+      // const productsOrder: OrderProduct[] = productCheckout.map((item) => ({
+      //   variant: item._id,
+      //   quantity: item.quantity,
+      // }));
+      // const shippingAddressOrder: OrderShippingAddress = {
+      //   name: addressSelected.recipientName,
+      //   phoneNumber: addressSelected.recipientPhoneNumber,
+      //   address: addressSelected.streetAddress,
+      //   ward: addressSelected.wardCommune,
+      //   district: addressSelected.district,
+      //   province: addressSelected.cityProvince,
+      // };
+      // const newOrder: CreateOrder = {
+      //   products: productsOrder,
+      //   shippingAddress: shippingAddressOrder,
+      //   user: user.id,
+      //   subTotal: subtotal,
+      //   discountAmount: calculateDiscount,
+      //   shippingFee: shippingFee,
+      //   note: orderNote,
+      //   totalPrice: subtotal + shippingFee - calculateDiscount,
+      //   paymentMethod: paymentMethod,
+      // };
+      showSpinner();
+      // if (paymentMethod === "VNPAY") {
+      //   orderService.createVNPAY(newOrder).then(async (response) => {
+      //     hiddenSpinner();
+      //     window.location.href = response.data.url;
+      //   });
+      // } else {
+      //   orderService.createCOD(newOrder).then(() => {
+      //     queryClient.refetchQueries({
+      //       queryKey: ["carts"],
+      //       type: "active",
+      //     });
+      //     hiddenSpinner();
+      //     navigate("/order");
+      //     message.success("Đặt hàng thành công");
+      //   });
+      // }
+    }
   };
 
   const handleChangeOrderNote = () => {
@@ -167,7 +161,7 @@ const CheckoutPage = () => {
             discountAmount={calculateDiscount}
             voucherName={voucherSelected?.name}
             confirmOrder={handleCreateOrder}
-            productList={products}
+            productCheckout={productCheckout}
             shippingfee={shippingFee}
             onOpenVoucher={onOpenVoucherModal}
             subTotal={subtotal}
