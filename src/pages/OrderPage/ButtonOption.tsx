@@ -4,22 +4,25 @@ import { Link } from 'react-router-dom'
 import ReviewForm from './ReviewForm'
 import orderService from '../../services/orderService'
 import { hiddenSpinner, showSpinner } from '../../util/util'
+import { getNameByStatusCodeUser } from '../../util/constant'
 
 type Props = {
     orderStatus: number,
     orderId: string,
-    fetchOrdersList: any
+    fetchOrdersList: any,
+    setOrderList: any
 }
 
-const ButtonOption = ({ orderStatus, orderId, fetchOrdersList }: Props) => {
+const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // const [selectedOrderId, setSelectedOrderId] = useState(null);
-    const [selectedReceivedOrderId, setSelectedReceivedOrderId] = useState(null);
-
-    const { confirm } = Modal;
+    const [selectedOrderId, setSelectedOrderId] = useState<any>(null);
+    const [selectedSatusCode, setSelectedStatusCode] = useState(null);
+    const [selectedSatusName, setSelectedStatusName] = useState(null);
 
     const [reviewFormOpen, setReviewFormOpen] = useState(false);
     const [formReviewValue, setFormReviewValues] = useState(null);
+
+    const userInfo = JSON.parse(localStorage.getItem("USER_INFO_FASHION") || "{}");
 
     useEffect(() => {
         console.log(formReviewValue)
@@ -27,6 +30,15 @@ const ButtonOption = ({ orderStatus, orderId, fetchOrdersList }: Props) => {
             orderService.reviewProduct(formReviewValue).then((res) => {
                 if (res) {
                     message.success('Đánh giá thành công')
+                    setOrderList((prev: any) => {
+                        return prev.map((order: any) => {
+                            if (order._id === selectedOrderId) {
+                                order.orderStatus.code = 9
+                            }
+                            return order
+                        })
+                    })
+                    hiddenSpinner();
                     fetchOrdersList()
                 }
             }).catch((error) => {
@@ -38,16 +50,22 @@ const ButtonOption = ({ orderStatus, orderId, fetchOrdersList }: Props) => {
         }
     }, [formReviewValue])
 
-
-    const handleReceiveOrder = async () => {
+    const handleUpdateStatusOrder = async () => {
         setIsModalOpen(false);
         try {
             showSpinner();
-            if (selectedReceivedOrderId !== null) {
-                const data = await orderService.receivedOrder(selectedReceivedOrderId);
+            if (selectedOrderId && selectedSatusCode) {
+                const data = await orderService.updateStatusOrder(selectedOrderId, selectedSatusCode, userInfo.id);
                 if (data) {
                     message.success('Thao tác thành công');
-                    fetchOrdersList();
+                    setOrderList((prev: any) => {
+                        return prev.map((order: any) => {
+                            if (order._id === selectedOrderId) {
+                                order.orderStatus.code = selectedSatusCode
+                            }
+                            return order
+                        })
+                    })
                     hiddenSpinner();
                 }
             }
@@ -56,54 +74,26 @@ const ButtonOption = ({ orderStatus, orderId, fetchOrdersList }: Props) => {
             console.log(error);
             message.error(error.response.data.message);
         }
-        setSelectedReceivedOrderId(null);
+        setSelectedOrderId(null);
+        setSelectedStatusCode(null);
+        setSelectedStatusName(null);
     };
 
-    const showReceiveModal = (id: any) => {
+    const showUpdateStatusModal = (id: any, orderStatus: any, orderStatusName: any) => {
+        setSelectedOrderId(id);
+        setSelectedStatusCode(orderStatus);
+        setSelectedStatusName(orderStatusName);
         setIsModalOpen(true);
-        setSelectedReceivedOrderId(id);
-    };
-
-    const handleCancelOrder = async (id: string) => {
-        setIsModalOpen(false);
-        try {
-            showSpinner();
-            if (id) {
-                const data = await orderService.cancelOrder(id);
-                if (data) {
-                    message.success('Hủy thành công');
-                    fetchOrdersList();
-                    hiddenSpinner();
-                }
-            }
-        } catch (error) {
-            hiddenSpinner();
-            console.log(error);
-            message.error(error.response.data.message);
-        }
-    };
-
-
-    const showCancelOrder = (id: string) => {
-        confirm({
-            title: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
-            onOk() {
-                handleCancelOrder(id);
-            },
-            onCancel() {
-                console.log('Cancel');
-            },
-            maskClosable: true,
-        });
     };
 
     const handleCancel = () => {
+        setSelectedOrderId(null);
+        setSelectedStatusCode(null);
+        setSelectedStatusName(null);
         setIsModalOpen(false);
-        setSelectedReceivedOrderId(null);
     };
     return (
         <div className="flex space-x-2">
-
             {
                 (orderStatus === 1) &&
                 <Link to={`/order/${orderId}/detail`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#fe385c] text-white uppercase" style={{ borderWidth: "1px" }}>
@@ -115,6 +105,9 @@ const ButtonOption = ({ orderStatus, orderId, fetchOrdersList }: Props) => {
                 <>
                     <Button onClick={() => setReviewFormOpen(true)} className="h-10 btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#fe385c] text-white uppercase" style={{ borderWidth: "1px" }}>
                         Đánh giá
+                    </Button>
+                    <Button onClick={() => showUpdateStatusModal(orderId, 8, getNameByStatusCodeUser(8))} className="h-10 btn1 block text-center rounded-md min-w-[150px] py-2 bg-slate-50  uppercase" style={{ borderWidth: "1px" }}>
+                        Yêu Cầu Trả hàng/Hoàn tiền
                     </Button>
                     <Modal
                         title="Đánh giá sản phẩm"
@@ -132,12 +125,9 @@ const ButtonOption = ({ orderStatus, orderId, fetchOrdersList }: Props) => {
             {
                 orderStatus === 6 &&
                 <>
-                    <Button onClick={() => showReceiveModal(orderId)} className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-[#fe385c] text-white uppercase" style={{ borderWidth: "1px" }}>
+                    <Button onClick={() => showUpdateStatusModal(orderId, 7, getNameByStatusCodeUser(7))} className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-[#fe385c] text-white uppercase" style={{ borderWidth: "1px" }}>
                         Đã nhận được hàng
                     </Button>
-                    <Modal title="Xác nhận đã nhận hàng" open={isModalOpen} onOk={handleReceiveOrder} onCancel={handleCancel}>
-                        <p>Xác nhận đã nhận hàng?</p>
-                    </Modal>
                 </>
             }
             {
@@ -150,7 +140,7 @@ const ButtonOption = ({ orderStatus, orderId, fetchOrdersList }: Props) => {
             {
                 (orderStatus === 1 || orderStatus === 2 || orderStatus === 3) &&
                 <>
-                    <Button onClick={() => showCancelOrder(orderId)} className="btn2 block text-center rounded-md h-10 min-w-[130px] py-2 bg-slate-50 uppercase" style={{ borderWidth: "1px" }}>
+                    <Button onClick={() => showUpdateStatusModal(orderId, 10, getNameByStatusCodeUser(10))} className="btn2 block text-center rounded-md h-10 min-w-[130px] py-2 bg-slate-50 uppercase" style={{ borderWidth: "1px" }}>
                         Huỷ đơn hàng
                     </Button>
                     {/* <Modal title="Xác nhận hủy đơn hàng" open={isModalOpen} onOk={handleDelete} onCancel={handleCancel}>
@@ -161,6 +151,9 @@ const ButtonOption = ({ orderStatus, orderId, fetchOrdersList }: Props) => {
             {/* <Link to={`/order/${order._id}/detail`} className="btn1 block text-center rounded-md min-w-[100px] py-2 uppercase" style={{ borderWidth: "1px" }}>
                                             Chi tiết
                                         </Link> */}
+            <Modal title="Thông báo xác nhận" open={isModalOpen} onOk={handleUpdateStatusOrder} onCancel={handleCancel}>
+                <p>Xác nhận <span className="font-medium">{selectedSatusName}</span></p>
+            </Modal>
         </div>
     )
 }

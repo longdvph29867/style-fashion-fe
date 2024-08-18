@@ -9,10 +9,11 @@ import ButtonOption from './ButtonOption';
 
 type Props = {
     orderList: any,
-    fetchOrdersList: any
+    fetchOrdersList: any,
+    setOrderList: any
 }
 
-const Item = ({ orderList, fetchOrdersList }: Props) => {
+const Item = ({ orderList, fetchOrdersList, setOrderList }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     // const [selectedOrderId, setSelectedOrderId] = useState(null);
     const [selectedReceivedOrderId, setSelectedReceivedOrderId] = useState(null);

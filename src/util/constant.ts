@@ -34,6 +34,21 @@ export const actionAdminOrder = [
     },
 ]
 
+export const actionUserOrder = [
+    {
+        code: 7,
+        name: 'Đã nhận được hàng',
+    },
+    {
+        code: 8,
+        name: 'Trả hàng',
+    },
+    {
+        code: 10,
+        name: 'Hủy đơn hàng',
+    }
+]
+
 
 
 export const getMessageByStatusCode = (code: number) => {
@@ -48,5 +63,9 @@ export const getNameByStatusCode = (code: number) => {
 
 export const getNameByStatusCodeAdmin = (code: number) => {
     const status = actionAdminOrder.find(status => status.code === code);
+    return status ? status.name : '';
+};
+export const getNameByStatusCodeUser = (code: number) => {
+    const status = actionUserOrder.find(status => status.code === code);
     return status ? status.name : '';
 };
