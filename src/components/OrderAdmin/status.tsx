@@ -14,6 +14,10 @@ import { getNameByStatusCode } from "../../util/constant";
 import { FaShippingFast } from "react-icons/fa";
 import { BikeWhiteIcon } from "../Icons/bike-white";
 import { PackageIcon } from "../Icons/package";
+import Icon from "@ant-design/icons";
+import { RefundIcon } from "../Icons/refund-icon";
+
+
 
 
 type OrderStatusProps = {
@@ -26,35 +30,30 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ statusCode }) => {
     let icon;
 
     switch (statusCode) {
-        case 0:
-            // Chờ thanh toán
-            color = "orange";
-            icon = <ClockCircleOutlined />;
-            break;
         case 1:
-            // Đã thanh toán
-            color = "cyan";
-            icon = <FileDoneOutlined />;
-            break;
-        case 2:
             // Thanh toán thất bại
             color = "yellow";
             icon = <InfoCircleOutlined />;
             break;
-        case 3:
+        case 2:
             // Chờ xác nhận
             color = "green";
             icon = <BellOutlined />;
             break;
-        case 4:
+        case 3:
             // Chuẩn bị hàng    
             color = "purple";
             icon = <PackageIcon />;
             break;
-        case 5:
+        case 4:
             // Đang giao hàng
             color = "blue";
             icon = <BikeWhiteIcon />;
+            break;
+        case 5:
+            // Giao hàng không thành công
+            color = "magenta";
+            icon = <CloseCircleOutlined />;
             break;
         case 6:
             // Đã giao hàng
@@ -62,18 +61,23 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ statusCode }) => {
             icon = <BikeWhiteIcon />;
             break;
         case 7:
-            // Giao hàng không thành công
-            color = "magenta";
-            icon = <CloseCircleOutlined />;
-            break;
-        case 8:
             // Đã nhận được hàng
             color = "gold";
             icon = <CheckCircleOutlined />;
             break;
+        case 8:
+            // Trả hàng 
+            color = "red";
+            icon = <RefundIcon />;
+            break;
         case 9:
+            // Hoàn thành
+            color = "green";
+            icon = <CheckCircleOutlined />;
+            break;
+        case 10:
             // Đã hủy
-            color = "brown";
+            color = "gray";
             icon = <CloseCircleOutlined />;
             break;
     }

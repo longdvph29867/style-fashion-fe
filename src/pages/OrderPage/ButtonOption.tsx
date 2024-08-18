@@ -105,13 +105,13 @@ const ButtonOption = ({ orderStatus, orderId, fetchOrdersList }: Props) => {
         <div className="flex space-x-2">
 
             {
-                (orderStatus === 0 || orderStatus === 2) &&
+                (orderStatus === 1) &&
                 <Link to={`/order/${orderId}/detail`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#fe385c] text-white uppercase" style={{ borderWidth: "1px" }}>
                     Thanh toán ngay
                 </Link>
             }
             {
-                orderStatus === 8 &&
+                orderStatus === 9 &&
                 <>
                     <Button onClick={() => setReviewFormOpen(true)} className="h-10 btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#fe385c] text-white uppercase" style={{ borderWidth: "1px" }}>
                         Đánh giá
@@ -141,14 +141,14 @@ const ButtonOption = ({ orderStatus, orderId, fetchOrdersList }: Props) => {
                 </>
             }
             {
-                (orderStatus === 5 || orderStatus === 7) &&
+                (orderStatus === 4 || orderStatus === 5) &&
                 <button className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-gray-200 text-white uppercase" style={{ borderWidth: "1px" }}>
                     Đã nhận được hàng
                 </button>
             }
 
             {
-                (orderStatus === 0 || orderStatus === 1 || orderStatus === 2 || orderStatus === 3 || orderStatus === 4) &&
+                (orderStatus === 1 || orderStatus === 2 || orderStatus === 3) &&
                 <>
                     <Button onClick={() => showCancelOrder(orderId)} className="btn2 block text-center rounded-md h-10 min-w-[130px] py-2 bg-slate-50 uppercase" style={{ borderWidth: "1px" }}>
                         Huỷ đơn hàng

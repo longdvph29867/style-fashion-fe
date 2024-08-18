@@ -14,11 +14,14 @@ const orderService = {
   getAllOrderUser(id: string) {
     return https.get(`/orders/user/${id}`)
   },
+  getAllOrderUserByStatusCode(id: string, statusCode: any) {
+    return https.get(`/orders/user/${id}?orderCode=${statusCode}`)
+  },
   getOrderDetail(orderId: string) {
     return https.get(`/orders/detail/${orderId}`)
   },
-  updateStatusOrder(orderId: string, statusCode: number) {
-    return https.put(`/orders/${orderId}`, { orderStatus: statusCode })
+  updateStatusOrder(orderId: string, statusCode: number, userId: string) {
+    return https.put(`/orders/${orderId}`, { orderStatus: statusCode, user: userId })
   },
   confirmOrder(orderId: string) {
     return https.put(`/orders/${orderId}`, { orderStatus: 4 })

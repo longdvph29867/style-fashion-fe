@@ -14,7 +14,7 @@ const OrderPage = () => {
   // const location = useLocation();
   // const params = new URLSearchParams(location.search);
   // const userId = params.get("user");
-  const userId = '666eaa54b5ee1db4f34bb02c'
+  // const userId = '666eaa54b5ee1db4f34bb02c'
   const [ordersList, setOrdersList] = useState<any>(null);
   const [paymentPendingList, setPaymentPendingList] = useState<any>(null);
   const [confirmPendingList, setConfirmPendingList] = useState<any>(null);
@@ -26,36 +26,59 @@ const OrderPage = () => {
   const [cancelList, setCancelList] = useState<any>(null);
   const [paymentFailedList, setPaymentFailedList] = useState<any>(null);
 
-  const [userInfo, setUserInfo] = useState<any>(null);
+  const [lengthWaitPayment, setLengthWaitPayment] = useState(0);
+  const [lengthWaitConfirm, setLengthWaitConfirm] = useState(0);
+  const [lengthPrepare, setLengthPrepare] = useState(0);
+  const [lengthShipping, setLengthShipping] = useState(0);
+
+  // const [userInfo, setUserInfo] = useState<any>(null);
+  const userInfo = JSON.parse(localStorage.getItem("USER_INFO_FASHION") || "{}");
+
+  // const getLengthStatus = async (userId: any, statusCode: any) => {
+  //   try {
+
+  //     const res = await orderService.getAllOrderUserByStatusCode(userId, statusCode);
+  //     return res.data.totalResults
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // }
 
   const fetchOrdersList = async () => {
     showSpinner();
-    const userData = localStorage.getItem("USER_INFO_FASHION");
+    // const userData = localStorage.getItem("USER_INFO_FASHION");
 
-    if (userData) {
+    if (userInfo) {
       // Chuyển đổi từ chuỗi JSON sang đối tượng
-      const userObject = JSON.parse(userData);
-      setUserInfo(userObject);
+      // const userObject = JSON.parse(userData);
+      // setUserInfo(userObject);
 
       // Lấy id từ đối tượng
-      const userId = userObject.id;
+      const userId = userInfo.id;
 
       orderService
         .getAllOrderUser(userId)
         .then((res) => {
           setOrdersList(res.data.results);
-          setPaymentPendingList(res.data.results.filter((order: any) => order?.orderStatus.code === 0 || order?.orderStatus.code === 2));
-          setConfirmPendingList(res.data.results.filter((order: any) => order?.orderStatus.code === 3 || order?.orderStatus.code === 1));
-          setPrepareList(res.data.results.filter((order: any) => order?.orderStatus.code === 4));
-          setShippingList(res.data.results.filter((order: any) => order?.orderStatus.code === 5 || order?.orderStatus.code === 6 || order?.orderStatus.code === 7));
-          setCompleteList(res.data.results.filter((order: any) => order?.orderStatus.code === 8));
-          setCancelList(res.data.results.filter((order: any) => order?.orderStatus.code === 9));
           hiddenSpinner();
+
+          // setPaymentPendingList(res.data.results.filter((order: any) => order?.orderStatus.code === 0 || order?.orderStatus.code === 2));
+          // setConfirmPendingList(res.data.results.filter((order: any) => order?.orderStatus.code === 3 || order?.orderStatus.code === 1));
+          // setPrepareList(res.data.results.filter((order: any) => order?.orderStatus.code === 4));
+          // setShippingList(res.data.results.filter((order: any) => order?.orderStatus.code === 5 || order?.orderStatus.code === 6 || order?.orderStatus.code === 7));
+          // setCompleteList(res.data.results.filter((order: any) => order?.orderStatus.code === 8));
+          // setCancelList(res.data.results.filter((order: any) => order?.orderStatus.code === 9));
         })
         .catch((err) => {
           hiddenSpinner();
           console.error("Error fetching data:", err);
         });
+
+      // setLengthWaitPayment(await getLengthStatus(userId, 1));
+      // setLengthWaitConfirm(await getLengthStatus(userId, 2));
+      // setLengthPrepare(await getLengthStatus(userId, 3));
+      // setLengthShipping(await getLengthStatus(userId, 4));
+
 
       console.log("User ID:", userId);
     } else {
@@ -67,51 +90,51 @@ const OrderPage = () => {
     fetchOrdersList();
   }, []);
   const onChange = (key: string) => {
-    // console.log(key);
-    // console.log(ordersList, 'ordersList')
+    showSpinner();
+    console.log(key, 'key');
+    if (key === 'all') {
+      fetchOrdersList();
+      return;
+    }
+    orderService.getAllOrderUserByStatusCode(userInfo.id, key).then((res) => {
+      setOrdersList(res.data.results);
+      hiddenSpinner();
+    }).catch((error) => {
+      hiddenSpinner();
+      console.error("Error fetching data:", error);
+    })
+    console.log(ordersList, 'ordersList')
   };
 
-  const label0 = (
+  const label1 = (
     <>
-      Chờ thanh toán <span className="ml-[1px] text-[#fe385c]">{paymentPendingList ? `(${paymentPendingList.length})` : null}</span>
+      Chờ thanh toán <span className="ml-[1px] text-[#fe385c]">{`(${lengthWaitPayment})`}</span>
+    </>
+  );
+
+  const label2 = (
+    <>
+      Chờ xác nhận <span className="ml-[1px] text-[#fe385c]">{`(${lengthWaitConfirm})`}</span>
     </>
   );
 
   const label3 = (
     <>
-      Chờ xác nhận <span className="ml-[1px] text-[#fe385c]">{confirmPendingList ? `(${confirmPendingList.length})` : null}</span>
+      Chuẩn bị hàng <span className="ml-[1px] text-[#fe385c]">{`(${lengthPrepare})`}</span>
     </>
   );
 
   const label4 = (
     <>
-      Chuẩn bị hàng <span className="ml-[1px] text-[#fe385c]">{prepareList ? `(${prepareList.length})` : null}</span>
+      Đang giao hàng <span className="ml-[1px] text-[#fe385c]">{`(${lengthShipping})`}{ }</span>
     </>
   );
 
-  const label5 = (
-    <>
-      Đang giao hàng <span className="ml-[1px] text-[#fe385c]">{shippingList ? `(${shippingList.length})` : null}</span>
-    </>
-  );
-
-  const label6 = (
-    <>
-      Đã giao hàng <span className="ml-[1px] text-[#fe385c]">{deliveredList ? `(${deliveredList.length})` : null}</span>
-    </>
-  );
-
-  const label7 = (
-    <>
-      Giao hàng thành công <span className="ml-[1px] text-[#fe385c]">{successList ? `(${successList.length})` : null}</span>
-    </>
-  );
-
-  const label9 = (
-    <>
-      Hoàn thành <span className="ml-[1px] text-[#fe385c]">{completeList ? `(${completeList.length})` : null}</span>
-    </>
-  );
+  // const label9 = (
+  //   <>
+  //     Hoàn thành <span className="ml-[1px] text-[#fe385c]">{completeList ? `(${completeList.length})` : null}</span>
+  //   </>
+  // );
 
 
   const items: TabsProps['items'] = [
@@ -121,45 +144,40 @@ const OrderPage = () => {
       children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} />,
     },
     {
-      key: '0',
-      label: label0,
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={paymentPendingList} />,
+      key: '1',
+      label: label1,
+      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} />,
+    },
+    {
+      key: '2',
+      label: label2,
+      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} />,
     },
     {
       key: '3',
       label: label3,
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={confirmPendingList} />,
+      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} />,
     },
     {
       key: '4',
       label: label4,
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={prepareList} />,
-    },
-    {
-      key: '5',
-      label: label5,
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={shippingList} />,
-    },
-    // {
-    //   key: '7',
-    //   label: label7,
-    //   children: <Item fetchOrdersList={fetchOrdersList} orderList={successList} />,
-    // },
-    {
-      key: '8',
-      label: label9,
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={completeList} />,
+      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} />,
     },
     {
       key: '9',
-      label: 'Đã hủy',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={cancelList} />,
+      label: 'Hoàn thành',
+      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} />,
     },
-    // {
-    //   key: '2',
-    //   label: 'Thanh toán thất bại',
-    //   children: <Item fetchOrdersList={fetchOrdersList} orderList={paymentFailedList} />,
-    // },
+    {
+      key: '10',
+      label: 'Đã hủy',
+      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} />,
+    },
+    {
+      key: '8',
+      label: 'Trả hàng/Hoàn tiền',
+      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} />,
+    },
   ];
 
   return (

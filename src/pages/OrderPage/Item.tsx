@@ -132,7 +132,7 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                 <div key={order._id} className="shadow rounded  mb-12 bg-white">
                     {order?.products.map((product: any) => (
                         <Link to={`/order/${order._id}`} key={product._id}>
-                            <div className="flex justify-between items-center mb-2 p-6">
+                            <div className="flex justify-between items-center p-4">
                                 <div className="flex gap-4">
                                     <div>
                                         <Image

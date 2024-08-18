@@ -10,30 +10,6 @@ import LogOrder from '../../components/OrderAdmin/LogOrder';
 
 type Props = {}
 
-
-const log = [
-  {
-    "_id": "66bcdb9e882f4ba25813dc2d",
-    "action": "Đặt hàng thành công",
-    "timestamp": "2024-08-14T16:30:12.719Z"
-  },
-  {
-    "_id": "66bcdb9e882f4ba25813dc2d",
-    "action": "Đặt hàng thành công",
-    "timestamp": "2024-08-14T16:30:12.719Z"
-  },
-  {
-    "_id": "66bcdb9e882f4ba25813dc2d",
-    "action": "Đặt hàng thành công",
-    "timestamp": "2024-08-14T16:30:12.719Z"
-  },
-  {
-    "_id": "66bcdb9e882f4ba25813dc2d",
-    "action": "Đặt hàng thành công",
-    "timestamp": "2024-08-14T16:30:12.719Z"
-  }
-]
-
 const OrderDetail = (props: Props) => {
   window.scrollTo(0, 0);
   const { id } = useParams();
@@ -151,6 +127,8 @@ const OrderDetail = (props: Props) => {
             <span className="mx-1">|</span>
             <span className="font-medium text-primary">{order?.orderStatus?.name}</span>
           </div>
+          <div className="font-medium text-primary">{getMessageByStatusCode(order?.orderStatus?.code)}</div>
+
         </div>
 
         <div className="p-4">
@@ -215,7 +193,6 @@ const OrderDetail = (props: Props) => {
                   <LogOrder logs={order?.logs} />
 
                 </div>
-                <div className="font-medium text-primary">{getMessageByStatusCode(order?.orderStatus?.code)}</div>
               </div>
             </div>
             <div className="w-3/5 pl-5 text-sm text-gray-500 normal-case">

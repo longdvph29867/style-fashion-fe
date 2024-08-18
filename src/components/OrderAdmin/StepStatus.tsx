@@ -59,17 +59,17 @@ export const StepStatus = ({ order }: Props) => {
     }, [order]);
 
     const stepsValue = [
-        { code: 3, name: "Chờ xác nhận", message: "Chờ shop xác nhận đơn hàng cho bạn!" },
-        { code: 4, name: "Chuẩn bị hàng", message: "Shop đang chuẩn bị hàng cho bạn!" },
-        { code: 5, name: "Đang giao hàng", message: "Đơn hàng đang trên đường giao đến bạn, vui lòng để ý điện thoại!" },
+        { code: 2, name: "Chờ xác nhận", message: "Chờ shop xác nhận đơn hàng cho bạn!" },
+        { code: 3, name: "Chuẩn bị hàng", message: "Shop đang chuẩn bị hàng cho bạn!" },
+        { code: 4, name: "Đang giao hàng", message: "Đơn hàng đang trên đường giao đến bạn, vui lòng để ý điện thoại!" },
         { code: 6, name: "Đã giao hàng", message: "Giao hàng thành công" },
-        { code: 8, name: "Đã nhận được hàng", message: "Tặng shop 5 sao nhé!" },
+        { code: 7, name: "Đã nhận được hàng", message: "Tặng shop 5 sao nhé!" },
     ]
 
     const getStepStatus = (currentCode: number, stepCode: number) => {
-        if (currentCode === 7) {
-            // Nếu currentCode là 7, tất cả các bước trước đó đều là 'finish', và sau đó là 'wait'
-            return stepCode <= 6 ? 'finish' : 'wait';
+        if (currentCode === 5) {
+            // Nếu currentCode là 5, tất cả các bước trước đó đều là 'finish', và sau đó là 'wait'
+            return stepCode <= 4 ? 'finish' : 'wait';
         }
 
         // if (currentCode === 6 || currentCode === 8) {
@@ -77,7 +77,7 @@ export const StepStatus = ({ order }: Props) => {
         //     return stepCode <= currentCode ? 'finish' : 'wait';
         // }
 
-        if ([0, 1, 2, 9].includes(currentCode)) {
+        if ([1, 8, 9, 10].includes(currentCode)) {
             // Nếu currentCode là 0, 1, 2, hoặc 9, tất cả các bước đều là 'wait'
             return 'wait';
         }
@@ -103,12 +103,12 @@ export const StepStatus = ({ order }: Props) => {
                     let title = step.name;
                     let icon = null;
                     // Thay đổi title và icon khi code = 7
-                    if (order?.orderStatus.code === 7 && step.code === 6) {
+                    if (order?.orderStatus.code === 5 && step.code === 4) {
                         title = "Giao hàng không thành công";
                         icon = <CloseCircleOutlined className="text-red-500" />; // Icon cho 'Giao hàng không thành công'
                     } else if (order?.orderStatus.code === step.code) {
                         // Thêm điều kiện để không hiển thị loading khi code = 6
-                        if ((order?.orderStatus.code === 6 && step.code === 6) || (order?.orderStatus.code === 8 && step.code === 8)) {
+                        if ((order?.orderStatus.code === 6 && step.code === 6) || (order?.orderStatus.code === 7 && step.code === 7)) {
                             icon = <CheckOutlined />; // Không có icon loading cho 'Đã giao hàng'
                         } else if (order?.orderStatus.code !== 6) {
                             icon = <LoadingOutlined />; // Icon loading cho bước hiện tại

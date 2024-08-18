@@ -28,12 +28,14 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
     const [selectedSatusCode, setSelectedStatusCode] = useState(null);
     const [selectedSatusName, setSelectedStatusName] = useState(null);
 
-    const handleReceiveOrder = async () => {
+    const userInfo = JSON.parse(localStorage.getItem("USER_INFO_FASHION") || "{}");
+
+    const handleUpdateStatusOrder = async () => {
         setIsModalOpen(false);
         try {
             showSpinner();
             if (selectedOrderId && selectedSatusCode) {
-                const data = await orderService.updateStatusOrder(selectedOrderId, selectedSatusCode);
+                const data = await orderService.updateStatusOrder(selectedOrderId, selectedSatusCode, userInfo.id);
                 if (data) {
                     message.success('Thao tác thành công');
                     setOrderList((prev: any) => {
@@ -57,7 +59,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
         setSelectedStatusName(null);
     };
 
-    const showReceiveModal = (id: any, orderStatus: any, orderStatusName: any) => {
+    const showUpdateStatusModal = (id: any, orderStatus: any, orderStatusName: any) => {
         setSelectedOrderId(id);
         setSelectedStatusCode(orderStatus);
         setSelectedStatusName(orderStatusName);
@@ -81,14 +83,14 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
 
                 <Menu.Item
                     //  Xác nhận đơn hàng
-                    key="4"
+                    key="3"
                     style={{
                         fontSize: 15,
                         display: "flex",
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record.orderStatus.code !== 3}
+                    disabled={record.orderStatus.code !== 2}
                     icon={
                         <CheckCircleOutlined
                             style={{
@@ -99,7 +101,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                         />
                     }
                     onClick={() => {
-                        showReceiveModal(record._id, 4, getNameByStatusCodeAdmin(4));
+                        showUpdateStatusModal(record._id, 3, getNameByStatusCodeAdmin(3));
                     }}
                 >
                     Xác nhận đơn hàng
@@ -107,14 +109,15 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
 
                 <Menu.Item
                     // Giao hàng
-                    key="5"
+                    key="4"
                     style={{
                         fontSize: 15,
                         display: "flex",
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={(record.orderStatus.code !== 4 && record.orderStatus.code !== 7)}
+                    // disabled={(record.orderStatus.code !== 4 && record.orderStatus.code !== 7)}
+                    disabled={(record.orderStatus.code !== 3)}
                     icon={
                         <TruckIcon
                             style={{
@@ -124,7 +127,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                             }}
                         />
                     }
-                    onClick={() => showReceiveModal(record._id, 5, getNameByStatusCodeAdmin(5))}
+                    onClick={() => showUpdateStatusModal(record._id, 4, getNameByStatusCodeAdmin(4))}
                 >
                     Giao hàng
                 </Menu.Item>
@@ -138,7 +141,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record.orderStatus.code !== 5}
+                    disabled={record.orderStatus.code !== 4}
                     icon={
                         <VerificationIcon
                             style={{
@@ -148,21 +151,21 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                             }}
                         />
                     }
-                    onClick={() => showReceiveModal(record._id, 6, getNameByStatusCodeAdmin(6))}
+                    onClick={() => showUpdateStatusModal(record._id, 6, getNameByStatusCodeAdmin(6))}
                 >
                     Đã giao hàng
                 </Menu.Item>
 
                 <Menu.Item
                     // Giao hàng không thành công
-                    key="7"
+                    key="5"
                     style={{
                         fontSize: 15,
                         display: "flex",
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record.orderStatus.code !== 5}
+                    disabled={record.orderStatus.code !== 4}
                     icon={
                         <InfoCircleOutlined
                             style={{
@@ -172,21 +175,21 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                             }}
                         />
                     }
-                    onClick={() => showReceiveModal(record._id, 7, getNameByStatusCodeAdmin(7))}
+                    onClick={() => showUpdateStatusModal(record._id, 5, getNameByStatusCodeAdmin(5))}
                 >
                     Giao hàng không thành công
                 </Menu.Item>
 
                 <Menu.Item
                     // Hủy đơn hàng
-                    key="9"
+                    key="10"
                     style={{
                         fontSize: 15,
                         display: "flex",
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record.orderStatus.code === 8 || record.orderStatus.code === 9}
+                    disabled={record.orderStatus.code !== 2 && record.orderStatus.code !== 1}
                     icon={
                         <CloseCircleOutlined
                             style={{
@@ -195,7 +198,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                             }}
                         />
                     }
-                    onClick={() => showReceiveModal(record._id, 9, getNameByStatusCodeAdmin(9))}
+                    onClick={() => showUpdateStatusModal(record._id, 10, getNameByStatusCodeAdmin(10))}
                 >
                     Hủy đơn hàng
                 </Menu.Item>
@@ -209,7 +212,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                 <TableActionButton />
 
             </Dropdown>
-            <Modal title="Thông báo xác nhận" open={isModalOpen} onOk={handleReceiveOrder} onCancel={handleCancel}>
+            <Modal title="Thông báo xác nhận" open={isModalOpen} onOk={handleUpdateStatusOrder} onCancel={handleCancel}>
                 <p>Chuyển trạng thái đơn hàng thành: <span className="text-[#fe385c] font-medium">{selectedSatusName}</span></p>
             </Modal>
         </>
