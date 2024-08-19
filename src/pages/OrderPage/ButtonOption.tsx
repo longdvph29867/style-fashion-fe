@@ -22,34 +22,34 @@ const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList, onP
     const [selectedSatusName, setSelectedStatusName] = useState(null);
 
     const [reviewFormOpen, setReviewFormOpen] = useState(false);
-    const [formReviewValue, setFormReviewValues] = useState(null);
+    // const [formReviewValue, setFormReviewValues] = useState(null);
 
 
-    useEffect(() => {
-        console.log(formReviewValue)
-        if (formReviewValue) {
-            orderService.reviewProduct(formReviewValue).then((res) => {
-                if (res) {
-                    message.success('Đánh giá thành công')
-                    setOrderList((prev: any) => {
-                        return prev.map((order: any) => {
-                            if (order._id === selectedOrderId) {
-                                order.orderStatus.code = 9
-                            }
-                            return order
-                        })
-                    })
-                    hiddenSpinner();
-                    fetchOrdersList()
-                }
-            }).catch((error) => {
-                console.log(error)
-                message.error(error.response.data.message)
-            }).finally(() => {
-                setReviewFormOpen(false)
-            })
-        }
-    }, [formReviewValue])
+    // useEffect(() => {
+    //     console.log(formReviewValue)
+    //     if (formReviewValue) {
+    //         orderService.reviewProduct(formReviewValue).then((res) => {
+    //             if (res) {
+    //                 message.success('Đánh giá thành công')
+    //                 setOrderList((prev: any) => {
+    //                     return prev.map((order: any) => {
+    //                         if (order._id === selectedOrderId) {
+    //                             order.orderStatus.code = 9
+    //                         }
+    //                         return order
+    //                     })
+    //                 })
+    //                 hiddenSpinner();
+    //                 fetchOrdersList()
+    //             }
+    //         }).catch((error) => {
+    //             console.log(error)
+    //             message.error(error.response.data.message)
+    //         }).finally(() => {
+    //             setReviewFormOpen(false)
+    //         })
+    //     }
+    // }, [formReviewValue])
 
     const handleUpdateStatusOrder = async () => {
         setIsModalOpen(false);
@@ -123,7 +123,7 @@ const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList, onP
                         onCancel={() => setReviewFormOpen(false)}
                         width={1000}
                     >
-                        <ReviewForm userInfo={userInfo} orderId={orderId} setFormReviewValues={setFormReviewValues}></ReviewForm>
+                        <ReviewForm userInfo={userInfo} orderId={orderId} setOrderList={setOrderList} fetchOrdersList={fetchOrdersList} setReviewFormOpen={setReviewFormOpen} onPage={onPage}></ReviewForm>
                     </Modal>
                 </>
             }

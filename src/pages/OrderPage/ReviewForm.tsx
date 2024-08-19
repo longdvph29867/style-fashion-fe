@@ -20,11 +20,14 @@ const desc = ['Tệ', 'Không hài lòng', 'Bình thường', 'Hài lòng', 'Tuy
 
 type Props = {
     orderId: string;
-    setFormReviewValues: any;
     userInfo: any;
+    setOrderList: any;
+    setReviewFormOpen: any;
+    onPage: string;
+    fetchOrdersList: any;
 };
 
-const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues, userInfo }: Props) => {
+const ReviewForm: React.FC<Props> = ({ orderId, userInfo, setOrderList, setReviewFormOpen, onPage, fetchOrdersList }: Props) => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [starValue, setStarValue] = useState(5);
@@ -62,42 +65,105 @@ const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues, userInfo }:
             // console.log(attributeData, 'attributeData');
             // console.log('123')
 
-            const listFiles = values.gallery;
-            const videoFile: any = values.video;
+            const urlGallery = [];
+            const urlVideo = [];
+
+            if (values.gallery) {
+                const listFiles = values.gallery;
+                const newArrayFiles = listFiles.map((file: any) => file.originFileObj);
+                const formData = new FormData();
+                for (const file of newArrayFiles) {
+                    formData.append("images", file);
+                }
+                try {
+                    const { data: dataGallery } = await https.post("/images", formData);
+                    const url: { url: string; publicId: string }[] = dataGallery.data;
+                    urlGallery.push(...url);
+                    console.log("Gallery upload successful:", urlGallery);
+                } catch (error) {
+                    console.log(error);
+
+                }
 
 
-            const newArrayFiles = listFiles.map((file: any) => file.originFileObj);
-            const newVideoFile = videoFile[0].originFileObj;
-
-            const formData = new FormData();
-            for (const file of newArrayFiles) {
-                formData.append("images", file);
             }
 
-            const formDataVideo = new FormData();
-            formDataVideo.append("videos", newVideoFile);
+            if (values.video) {
+                const videoFile: any = values.video;
+
+
+                const newVideoFile = videoFile[0].originFileObj;
+
+
+                const formDataVideo = new FormData();
+                formDataVideo.append("videos", newVideoFile);
+                try {
+                    const { data: dataVideo } = await https.post("/videos", formDataVideo);
+                    const url: { url: string; publicId: string }[] = dataVideo.data;
+                    urlVideo.push(...url);
+                    console.log("Video upload successful:", urlVideo);
+
+                } catch (error) {
+                    console.log(error);
+
+                }
+
+            }
+
             try {
-                const { data: dataGallery } = await https.post("/images", formData);
-                const urlGallery: { url: string; publicId: string }[] = dataGallery.data;
-                console.log("Gallery upload successful:", urlGallery);
-
-                const { data: dataVideo } = await https.post("/videos", formDataVideo);
-                const urlVideo: { url: string; publicId: string }[] = dataVideo.data;
-                console.log("Video upload successful:", urlVideo);
-
                 const data = {
                     content: values.content,
-                    score: values.score,
-                    images: urlGallery.map((image) => image.url),
+                    score: starValue,
+                    images: urlGallery?.map((image) => image.url),
                     productId: orderDetail.products[0].productId,
-                    video: urlVideo[0].url,
+                    video: urlVideo ? urlVideo?.[0]?.url : "",
                     // thumbnail: urlThumbnail[0].url,
                     email: userInfo.email,
                     name: userInfo.name,
                     // video: urlVideo[0].url,
                 };
 
-                setFormReviewValues(data);
+                console.log(data, 'data');
+                // return
+
+                if (data) {
+                    setReviewFormOpen(false)
+                    orderService.reviewProduct(data).then(async (res) => {
+                        if (res) {
+                            orderService.updateStatusOrder(orderId, 9, userInfo.id)
+                            message.success('Đánh giá thành công')
+                            if (onPage === 'detail') {
+                                // console.log('detail')
+                                // await fetchOrdersList();
+                                setOrderList((prev: any) => {
+                                    return { ...prev, orderStatus: { code: 9 } }
+                                });
+                                hiddenSpinner();
+
+                            } else {
+                                // console.log('list')
+                                setOrderList((prev: any) => {
+                                    return prev.map((order: any) => {
+                                        if (order._id === orderId) {
+                                            order.orderStatus.code = 9
+                                        }
+                                        return order
+                                    })
+                                })
+                                hiddenSpinner();
+
+                            }
+                            // fetchOrdersList()
+                        }
+                    }).catch((error) => {
+                        console.log(error)
+                        message.error(error.response.data.message)
+                    }).finally(() => {
+                        setReviewFormOpen(false)
+                    })
+                }
+
+                // setFormReviewValues(data);
                 return
 
                 // const res = await https.post("/products", data);

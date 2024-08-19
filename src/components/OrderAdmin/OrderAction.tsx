@@ -41,7 +41,10 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList,
                 if (data) {
                     message.success('Thao tác thành công');
                     if (onPage === 'detail') {
-                        await fetchOrder();
+                        // await fetchOrder();
+                        setOrderList((prev: any) => {
+                            return { ...prev, orderStatus: { code: selectedSatusCode } }
+                        });
                     } else {
                         setOrderList((prev: any) => {
                             return prev.map((order: any) => {

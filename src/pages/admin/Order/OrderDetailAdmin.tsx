@@ -68,7 +68,7 @@ const OrderDetailAdmin = (props: Props) => {
           /> */}
           <OrderActions record={order} setOrderList={setOrder} onPage={'detail'} fetchOrder={fetchOrderDetail} />
           <div>
-            <span className='text-xl text-primary2 font-medium'>{order?.orderStatus.name}</span>
+            <span className='text-xl text-primary2 font-medium'>{getNameByStatusCode(order?.orderStatus?.code)}</span>
           </div>
         </div>
 

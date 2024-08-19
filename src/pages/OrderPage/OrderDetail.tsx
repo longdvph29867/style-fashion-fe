@@ -25,6 +25,7 @@ const OrderDetail = (props: Props) => {
       try {
         const res = await orderService.getOrderDetail(id);
         setOrder(res.data);
+        console.log(res.data, 'res.data');
       } catch (err) {
         console.error('Error fetching data:', err);
       } finally {
