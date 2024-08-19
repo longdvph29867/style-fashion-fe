@@ -189,7 +189,7 @@ const OrderAdmin = () => {
       title: 'Hành động',
       dataIndex: "actions",
       key: "actions",
-      render: (_value: any, record: any) => <OrderActions record={record} setOrderList={setOrdersList} />,
+      render: (_value: any, record: any) => <OrderActions record={record} setOrderList={setOrdersList} onPage={'list'} fetchOrder={fetchOrdersList} />,
       width: 110,
     }
 

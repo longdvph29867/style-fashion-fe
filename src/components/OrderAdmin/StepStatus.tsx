@@ -77,7 +77,11 @@ export const StepStatus = ({ order }: Props) => {
         //     return stepCode <= currentCode ? 'finish' : 'wait';
         // }
 
-        if ([1, 8, 9, 10].includes(currentCode)) {
+        if (currentCode === 9) {
+            return 'finish';
+        }
+
+        if ([1, 10].includes(currentCode)) {
             // Nếu currentCode là 0, 1, 2, hoặc 9, tất cả các bước đều là 'wait'
             return 'wait';
         }

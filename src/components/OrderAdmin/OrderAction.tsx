@@ -1,6 +1,6 @@
 // import { useTranslate, useUpdate } from "@refinedev/core";
-import { CheckCircleOutlined, CloseCircleOutlined, InfoCircleOutlined } from "@ant-design/icons";
-import { Dropdown, Menu, message, Modal } from "antd";
+import { CheckCircleOutlined, CloseCircleOutlined, InfoCircleOutlined, DownOutlined } from "@ant-design/icons";
+import { Button, Dropdown, Menu, message, Modal, Space } from "antd";
 import { TableActionButton } from "./tableActionButton";
 import { actionAdminOrder, getNameByStatusCode, getNameByStatusCodeAdmin } from "../../util/constant";
 import { BikeWhiteIcon } from "../Icons/bike-white";
@@ -16,11 +16,13 @@ import { hiddenSpinner, showSpinner } from "../../util/util";
 type OrderActionProps = {
     record: any;
     setOrderList: any;
+    onPage: any;
+    fetchOrder: any;
 };
 
 
 
-export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList }) => {
+export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList, onPage, fetchOrder }) => {
     //   const t = useTranslate();
     //   const { mutate } = useUpdate({ resource: "orders", id: record.id });
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,14 +40,18 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                 const data = await orderService.updateStatusOrder(selectedOrderId, selectedSatusCode, userInfo.id);
                 if (data) {
                     message.success('Thao tác thành công');
-                    setOrderList((prev: any) => {
-                        return prev.map((order: any) => {
-                            if (order._id === selectedOrderId) {
-                                order.orderStatus.code = selectedSatusCode
-                            }
-                            return order
+                    if (onPage === 'detail') {
+                        await fetchOrder();
+                    } else {
+                        setOrderList((prev: any) => {
+                            return prev.map((order: any) => {
+                                if (order._id === selectedOrderId) {
+                                    order.orderStatus.code = selectedSatusCode
+                                }
+                                return order
+                            })
                         })
-                    })
+                    }
                     hiddenSpinner();
                 }
             }
@@ -90,7 +96,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record.orderStatus.code !== 2}
+                    disabled={record?.orderStatus.code !== 2}
                     icon={
                         <CheckCircleOutlined
                             style={{
@@ -117,7 +123,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                         fontWeight: 500,
                     }}
                     // disabled={(record.orderStatus.code !== 4 && record.orderStatus.code !== 7)}
-                    disabled={(record.orderStatus.code !== 3)}
+                    disabled={(record?.orderStatus.code !== 3)}
                     icon={
                         <TruckIcon
                             style={{
@@ -141,7 +147,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record.orderStatus.code !== 4}
+                    disabled={record?.orderStatus.code !== 4}
                     icon={
                         <VerificationIcon
                             style={{
@@ -165,7 +171,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record.orderStatus.code !== 4}
+                    disabled={record?.orderStatus.code !== 4}
                     icon={
                         <InfoCircleOutlined
                             style={{
@@ -189,7 +195,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record.orderStatus.code !== 2 && record.orderStatus.code !== 1}
+                    disabled={record?.orderStatus.code !== 2 && record?.orderStatus.code !== 1}
                     icon={
                         <CloseCircleOutlined
                             style={{
@@ -209,7 +215,13 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList 
     return (
         <>
             <Dropdown overlay={moreMenu(record)} trigger={["click"]}>
-                <TableActionButton />
+                {(onPage === 'list') ? <TableActionButton /> :
+                    <Button className="p-5">
+                        <Space>
+                            Cập nhật trạng thái đơn hàng
+                            <DownOutlined />
+                        </Space>
+                    </Button>}
 
             </Dropdown>
             <Modal title="Thông báo xác nhận" open={isModalOpen} onOk={handleUpdateStatusOrder} onCancel={handleCancel}>

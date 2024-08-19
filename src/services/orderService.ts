@@ -15,7 +15,7 @@ const orderService = {
     return https.get(`/orders/user/${id}`)
   },
   getAllOrderUserByStatusCode(id: string, statusCode: any) {
-    return https.get(`/orders/user/${id}?orderCode=${statusCode}`)
+    return https.get(`/orders/user/${id}?orderStatus=${statusCode}`)
   },
   getOrderDetail(orderId: string) {
     return https.get(`/orders/detail/${orderId}`)

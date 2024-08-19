@@ -10,10 +10,12 @@ type Props = {
     orderStatus: number,
     orderId: string,
     fetchOrdersList: any,
-    setOrderList: any
+    setOrderList: any,
+    onPage: string,
+    userInfo: any
 }
 
-const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList }: Props) => {
+const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList, onPage, userInfo }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedOrderId, setSelectedOrderId] = useState<any>(null);
     const [selectedSatusCode, setSelectedStatusCode] = useState(null);
@@ -22,7 +24,6 @@ const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList }: P
     const [reviewFormOpen, setReviewFormOpen] = useState(false);
     const [formReviewValue, setFormReviewValues] = useState(null);
 
-    const userInfo = JSON.parse(localStorage.getItem("USER_INFO_FASHION") || "{}");
 
     useEffect(() => {
         console.log(formReviewValue)
@@ -58,14 +59,18 @@ const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList }: P
                 const data = await orderService.updateStatusOrder(selectedOrderId, selectedSatusCode, userInfo.id);
                 if (data) {
                     message.success('Thao tác thành công');
-                    setOrderList((prev: any) => {
-                        return prev.map((order: any) => {
-                            if (order._id === selectedOrderId) {
-                                order.orderStatus.code = selectedSatusCode
-                            }
-                            return order
+                    if (onPage === 'detail') {
+                        await fetchOrdersList();
+                    } else {
+                        setOrderList((prev: any) => {
+                            return prev.map((order: any) => {
+                                if (order._id === selectedOrderId) {
+                                    order.orderStatus.code = selectedSatusCode
+                                }
+                                return order
+                            })
                         })
-                    })
+                    }
                     hiddenSpinner();
                 }
             }
@@ -96,12 +101,12 @@ const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList }: P
         <div className="flex space-x-2">
             {
                 (orderStatus === 1) &&
-                <Link to={`/order/${orderId}/detail`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#fe385c] text-white uppercase" style={{ borderWidth: "1px" }}>
+                <Link to={`/order`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#fe385c] text-white uppercase" style={{ borderWidth: "1px" }}>
                     Thanh toán ngay
                 </Link>
             }
             {
-                orderStatus === 9 &&
+                orderStatus === 7 &&
                 <>
                     <Button onClick={() => setReviewFormOpen(true)} className="h-10 btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#fe385c] text-white uppercase" style={{ borderWidth: "1px" }}>
                         Đánh giá
@@ -118,7 +123,7 @@ const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList }: P
                         onCancel={() => setReviewFormOpen(false)}
                         width={1000}
                     >
-                        <ReviewForm orderId={orderId} setFormReviewValues={setFormReviewValues}></ReviewForm>
+                        <ReviewForm userInfo={userInfo} orderId={orderId} setFormReviewValues={setFormReviewValues}></ReviewForm>
                     </Modal>
                 </>
             }
@@ -138,7 +143,7 @@ const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList }: P
             }
 
             {
-                (orderStatus === 1 || orderStatus === 2 || orderStatus === 3) &&
+                (orderStatus === 1 || orderStatus === 2) &&
                 <>
                     <Button onClick={() => showUpdateStatusModal(orderId, 10, getNameByStatusCodeUser(10))} className="btn2 block text-center rounded-md h-10 min-w-[130px] py-2 bg-slate-50 uppercase" style={{ borderWidth: "1px" }}>
                         Huỷ đơn hàng

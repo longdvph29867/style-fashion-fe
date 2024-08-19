@@ -141,42 +141,42 @@ const OrderPage = () => {
     {
       key: 'all',
       label: 'Tất cả',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
+      children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },
     {
       key: '1',
       label: label1,
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
+      children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },
     {
       key: '2',
       label: label2,
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
+      children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },
     {
       key: '3',
       label: label3,
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
+      children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },
     {
       key: '4',
       label: label4,
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
+      children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },
     {
       key: '9',
       label: 'Hoàn thành',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
+      children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },
     {
       key: '10',
       label: 'Đã hủy',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
+      children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },
     {
       key: '8',
       label: 'Trả hàng/Hoàn tiền',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
+      children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },
   ];
 

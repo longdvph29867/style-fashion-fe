@@ -10,10 +10,11 @@ import ButtonOption from './ButtonOption';
 type Props = {
     orderList: any,
     fetchOrdersList: any,
-    setOrderList: any
+    setOrderList: any,
+    userInfo: any
 }
 
-const Item = ({ orderList, fetchOrdersList, setOrderList }: Props) => {
+const Item = ({ orderList, fetchOrdersList, setOrderList, userInfo }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     // const [selectedOrderId, setSelectedOrderId] = useState(null);
     const [selectedReceivedOrderId, setSelectedReceivedOrderId] = useState(null);
@@ -159,7 +160,7 @@ const Item = ({ orderList, fetchOrdersList, setOrderList }: Props) => {
                                     </div>
                                 </div>
                                 <p className="normal-case">
-                                    <span className="text-lg text-[#fe385c]">{formartCurrency(product.price * product.quantity)}</span>
+                                    <span className="text-xl text-[#fe385c] font-medium">{formartCurrency(product.price * product.quantity)}</span>
                                 </p>
                             </div>
                             <div className="h-[1px] bg-gray-100"></div>
@@ -177,10 +178,10 @@ const Item = ({ orderList, fetchOrdersList, setOrderList }: Props) => {
                         <div className="flex justify-between items-end">
                             <div className="text-[#fe385c]">
                                 <i className="fa-solid fa-truck"></i>
-                                <span>{getMessageByStatusCode(order?.orderStatus.code)}</span>
+                                <span className='font-medium'>{getMessageByStatusCode(order?.orderStatus.code)}</span>
                             </div>
                             <div>
-                                <ButtonOption orderId={order._id} orderStatus={order.orderStatus.code} fetchOrdersList={fetchOrdersList} />
+                                <ButtonOption userInfo={userInfo} orderId={order._id} orderStatus={order.orderStatus.code} fetchOrdersList={fetchOrdersList} setOrderList={setOrderList} onPage='all' />
 
                             </div>
                         </div>

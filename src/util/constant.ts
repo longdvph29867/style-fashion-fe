@@ -6,7 +6,7 @@ export const orderStatusValue = [
     { code: 5, name: "Giao hàng không thành công", message: "Giao hàng không thành công" },
     { code: 6, name: "Đã giao hàng", message: "Giao hàng thành công" },
     { code: 7, name: "Đã nhận được hàng", message: "Tặng shop 5 sao nhé!" },
-    { code: 8, name: "Trả hàng", message: "Trả hàng" },
+    { code: 8, name: "Trả hàng", message: "Trả hàng, shop sẽ liên hệ với bạn!" },
     { code: 9, name: "Hoàn thành", message: "Đơn hàng đã hoàn thành!" },
     { code: 10, name: "Đã huỷ", message: "Đơn hàng đã hủy" }
 ]

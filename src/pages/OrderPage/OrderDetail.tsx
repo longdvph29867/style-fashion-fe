@@ -15,10 +15,9 @@ const OrderDetail = (props: Props) => {
   const { id } = useParams();
 
   const [order, setOrder] = useState<any>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedReceivedOrderId, setSelectedReceivedOrderId] = useState(null);
 
-  const { confirm } = Modal;
+  const userInfo = JSON.parse(localStorage.getItem("USER_INFO_FASHION") || "{}");
+
 
   const fetchOrderDetail = async () => {
     showSpinner();
@@ -37,69 +36,6 @@ const OrderDetail = (props: Props) => {
   useEffect(() => {
     fetchOrderDetail();
   }, []);
-
-  const handleReceiveOrder = async () => {
-    setIsModalOpen(false);
-    try {
-      showSpinner();
-      if (selectedReceivedOrderId !== null) {
-        const data = await orderService.receivedOrder(selectedReceivedOrderId);
-        if (data) {
-          message.success('Thao tác thành công');
-          fetchOrderDetail();
-          hiddenSpinner();
-        }
-      }
-    } catch (error) {
-      hiddenSpinner();
-      console.log(error);
-      message.error(error.response.data.message);
-    }
-    setSelectedReceivedOrderId(null);
-  };
-
-  const showReceiveModal = (id: any) => {
-    setIsModalOpen(true);
-    setSelectedReceivedOrderId(id);
-  };
-
-  const handleCancelOrder = async (id: string) => {
-    setIsModalOpen(false);
-    try {
-      showSpinner();
-      if (id) {
-        const data = await orderService.cancelOrder(id);
-        if (data) {
-          message.success('Hủy thành công');
-          fetchOrderDetail();
-          hiddenSpinner();
-        }
-      }
-    } catch (error) {
-      hiddenSpinner();
-      console.log(error);
-      message.error(error.response.data.message);
-    }
-  };
-
-
-  const showCancelOrder = (id: string) => {
-    confirm({
-      title: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
-      onOk() {
-        handleCancelOrder(id);
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
-      maskClosable: true,
-    });
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setSelectedReceivedOrderId(null);
-  };
 
   console.log(order, 'order');
   return (
@@ -222,7 +158,7 @@ const OrderDetail = (props: Props) => {
                 </div>
               </div>
               <div className=' flex justify-end mt-8'>
-                <ButtonOption orderId={order?._id} orderStatus={order?.orderStatus?.code} fetchOrdersList={fetchOrderDetail} />
+                <ButtonOption userInfo={userInfo} orderId={order?._id} orderStatus={order?.orderStatus?.code} fetchOrdersList={fetchOrderDetail} setOrderList={setOrder} onPage='detail' />
               </div>
             </div>
           </div>

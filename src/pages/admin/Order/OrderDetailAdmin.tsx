@@ -8,6 +8,7 @@ import { StepStatus } from '../../../components/OrderAdmin/StepStatus';
 import ProductOrderDetail from '../../../components/OrderAdmin/productOrderDetail';
 import InforUserDetail from '../../../components/OrderAdmin/InforUserDetail';
 import LogOrder from '../../../components/OrderAdmin/LogOrder';
+import { OrderActions } from '../../../components/OrderAdmin/OrderAction';
 
 type Props = {}
 
@@ -17,12 +18,6 @@ const OrderDetailAdmin = (props: Props) => {
   const { id } = useParams();
 
   const [order, setOrder] = useState<any>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedReceivedOrderId, setSelectedReceivedOrderId] = useState(null);
-  const [currentStatus, setCurrentStatus] = useState(null);
-  const [nextStatus, setNextStatus] = useState(null);
-
-  const { confirm } = Modal;
 
   const fetchOrderDetail = async () => {
     showSpinner();
@@ -41,114 +36,6 @@ const OrderDetailAdmin = (props: Props) => {
   useEffect(() => {
     fetchOrderDetail();
   }, []);
-
-  useEffect(() => {
-    if (order) {
-      setCurrentStatus(order?.orderStatus?.code);
-      setNextStatus(order?.orderStatus?.code + 1);
-    }
-  }, [order]);
-
-  const handleReceiveOrder = async () => {
-    setIsModalOpen(false);
-    try {
-      showSpinner();
-      if (selectedReceivedOrderId !== null) {
-        const data = await orderService.receivedOrder(selectedReceivedOrderId);
-        if (data) {
-          message.success('Thao tác thành công');
-          fetchOrderDetail();
-          hiddenSpinner();
-        }
-      }
-    } catch (error) {
-      hiddenSpinner();
-      console.log(error);
-      message.error(error.response.data.message);
-    }
-    setSelectedReceivedOrderId(null);
-  };
-
-  const showReceiveModal = (id: any) => {
-    setIsModalOpen(true);
-    setSelectedReceivedOrderId(id);
-  };
-
-  const handleCancelOrder = async (id: string) => {
-    setIsModalOpen(false);
-    try {
-      showSpinner();
-      if (id) {
-        const data = await orderService.cancelOrder(id);
-        if (data) {
-          message.success('Hủy thành công');
-          fetchOrderDetail();
-          hiddenSpinner();
-        }
-      }
-    } catch (error) {
-      hiddenSpinner();
-      console.log(error);
-      message.error(error.response.data.message);
-    }
-  };
-
-
-  const showCancelOrder = (id: string) => {
-    confirm({
-      title: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
-      onOk() {
-        handleCancelOrder(id);
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
-      maskClosable: true,
-    });
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setSelectedReceivedOrderId(null);
-  };
-
-  // const options = orderStatusValue.map(status => ({
-  //   value: status.code,
-  //   label: <span>{status.name}</span>,
-  //   disabled: status.code !== nextStatus,
-  // }));
-
-  const options = [
-    {
-      value: 4,
-      label: <span className="h-10">Xác nhận đơn hàng</span>,
-      disabled: 4 !== nextStatus,
-    },
-    {
-      value: 5,
-      label: <span className="h-10">Giao hàng</span>,
-      disabled: 5 !== nextStatus,
-    },
-    {
-      value: 6,
-      label: <span className="h-10">Đã giao hàng</span>,
-      disabled: 6 !== nextStatus,
-    },
-    {
-      value: 7,
-      label: <span className="h-10">Giao hàng không thành công</span>,
-      disabled: 7 !== nextStatus,
-    },
-    {
-      value: 9,
-      label: <span className="h-10">Hủy đơn hàng</span>,
-      disabled: 9 !== nextStatus,
-    },
-  ]
-
-  const onUpdateStatus = async (value: any) => {
-    console.log(value, 'value');
-  }
 
   console.log(order, 'order');
   return (
@@ -172,13 +59,14 @@ const OrderDetailAdmin = (props: Props) => {
         </div>
 
         <div className='mb-4 flex justify-between items-center'>
-          <Select
+          {/* <Select
             options={options}
             // value={order?.orderStatus?.code}
             onChange={(value) => onUpdateStatus(value)}
             style={{ width: 250, height: 40 }}
             placeholder="Cập nhật trạng thái đơn hàng"
-          />
+          /> */}
+          <OrderActions record={order} setOrderList={setOrder} onPage={'detail'} fetchOrder={fetchOrderDetail} />
           <div>
             <span className='text-xl text-primary2 font-medium'>{order?.orderStatus.name}</span>
           </div>

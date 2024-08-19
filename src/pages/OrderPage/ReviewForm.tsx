@@ -21,14 +21,16 @@ const desc = ['Tệ', 'Không hài lòng', 'Bình thường', 'Hài lòng', 'Tuy
 type Props = {
     orderId: string;
     setFormReviewValues: any;
+    userInfo: any;
 };
 
-const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues }: Props) => {
+const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues, userInfo }: Props) => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [starValue, setStarValue] = useState(5);
 
     const [orderDetail, setOrderDetail] = useState<any>(null);
+
 
     const fetchOrderDetail = async () => {
         // showSpinner();
@@ -87,10 +89,11 @@ const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues }: Props) =>
                     content: values.content,
                     score: values.score,
                     images: urlGallery.map((image) => image.url),
+                    productId: orderDetail.products[0].productId,
+                    video: urlVideo[0].url,
                     // thumbnail: urlThumbnail[0].url,
-                    email: 'tung123@gmail.com',
-                    productId: '66521a0c4595adbe4d9a04b8',
-                    name: "Tung",
+                    email: userInfo.email,
+                    name: userInfo.name,
                     // video: urlVideo[0].url,
                 };
 
@@ -138,16 +141,16 @@ const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues }: Props) =>
                 Thêm mới
             </h3> */}
             {!orderDetail ? <Skeleton active /> : null}
-            {orderDetail?.productsOrder.map((product: any) => (
-                <>
+            {orderDetail?.products.map((product: any) => (
+                <div key={product.productId}>
                     <div className="flex gap-2">
                         <div className="mb-5">
-                            <img className="w-20 h-20 object-cover" src={product.imageProduct} alt={product.productName} />
+                            <img className="w-20 h-20 object-cover" src={product.image} alt={product.productName} />
                         </div>
                         <div>
                             <h3 className="text-lg uppercase">{product.productName}</h3>
                             <p className="normal-case text-[#757575]">
-                                Phân loại hàng: <span className="">{product.attribute}</span>
+                                Phân loại hàng: <span className="">{product.variantName}</span>
                             </p>
                         </div>
                     </div>
@@ -286,7 +289,7 @@ const ReviewForm: React.FC<Props> = ({ orderId, setFormReviewValues }: Props) =>
                             </Form.Item>
                         </div>
                     </Form>
-                </>
+                </div>
 
             ))}
         </div>
