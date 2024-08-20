@@ -8,7 +8,14 @@ export default {
         padding: "1rem",
         screens: {
           "2xl": "1280px",
-        }, // hoặc bất kỳ giá trị bạn muốn
+        },
+      },
+      colors: {
+        primary: '#fe385c',
+        primary2: '#ff385c',
+        title: '#222222',
+        content: '#6a6a6a',
+        bg: '#f8f9fa',
       },
     },
   },

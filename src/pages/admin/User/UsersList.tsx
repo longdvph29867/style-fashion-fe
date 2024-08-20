@@ -10,15 +10,26 @@ import { https } from "../../../config/axios";
 import { IUser } from "../../../types/userType";
 import { CiCircleAlert } from "react-icons/ci";
 import { IoIosCheckboxOutline } from "react-icons/io";
+import userService from "../../../services/userService";
+import PaginationPage from "../../../components/PaginationPage/PaginationPage";
+import UserListSkeleton from "../../../components/Skeleton/Admin/UserListSkeleton";
 
 const UsersList: React.FC = () => {
+  const params = new URLSearchParams(location.search);
+  const [totalUsers, setTotalUser] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const limitPerPage = 10;
+  const currentPage = params.get("page") ? Number(params.get("page")) : 1;
   const [usersList, setUsersList] = useState<IUser[]>([]);
 
   const fetchData = async () => {
     showSpinner();
     try {
-      const { data } = await https.get("/users?limit=100");
+      const { data } = await userService.getAllUsers(limitPerPage, currentPage);
+      setLoading(false);
       setUsersList(data.results);
+      setTotalUser(data.totalResults);
+      window.scrollTo(0, 0);
       hiddenSpinner();
     } catch (error) {
       hiddenSpinner();
@@ -27,7 +38,7 @@ const UsersList: React.FC = () => {
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [location.search]);
 
   const handleDelete = async (id: string) => {
     showSpinner();
@@ -99,14 +110,20 @@ const UsersList: React.FC = () => {
             </div>
           </div>
           <div>
+            {
+              loading && <div>
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <UserListSkeleton key={index} />
+                ))}
+              </div>
+            }
             {[...usersList].reverse().map((user, index) => {
               return (
                 <div
                   key={index}
-                  className="relative grid lg:grid-cols-10 sm:grid-cols-5 grid-cols-3 gap-2 border-b lg:border-transparent border-slate-300"
+                  className="relative grid lg:grid-cols-10 sm:grid-cols-5 grid-cols-3 gap-2 border-b border-slate-100 py-2"
                 >
-                  <span className='absolute top-10 left-0.5 text-slate-300'>{++index}</span>
-                  <div className="pl-4">
+                  <div className="pl-4 mb-1">
                     <div className="px-2 py-1 min-w-[110px]">
                       <div>
                         <img
@@ -177,6 +194,10 @@ const UsersList: React.FC = () => {
               );
             })}
           </div>
+          <PaginationPage
+            current={1}
+            total={totalUsers}
+            pageSize={limitPerPage} />
         </div>
       </div>
     </div>

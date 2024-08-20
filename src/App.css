@@ -2,11 +2,13 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   /* display: none; <- Crashes Chrome on hover */
   -webkit-appearance: none;
-  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  margin: 0;
+  /* <-- Apparently some margin are still there even though it's hidden */
 }
 
 input[type="number"] {
-  -moz-appearance: textfield; /* Firefox */
+  -moz-appearance: textfield;
+  /* Firefox */
 }
 
 .container {
@@ -191,7 +193,20 @@ header.show-mobile .menu-mobile {
 }
 
 .ant-modal-footer .ant-btn-primary {
-  background-color: #1677ff !important;
+  background-color: #ff385c !important;
+}
+
+.ant-modal-footer .ant-btn-primary:hover {
+  background-color: #cf3350 !important;
+}
+
+body .ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.195) !important;
+  /* Điều chỉnh độ mờ của nền */
+}
+
+.voucher-modal-client .ant-modal-footer .ant-btn-primary {
+  background-color: #ff385c !important;
 }
 
 .ant-modal-content
@@ -223,17 +238,21 @@ header.show-mobile .menu-mobile {
 }
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active {
-  background-color: #FAFAFA;
+  background-color: #fafafa;
   border-bottom: 2px solid #62d2a2 !important;
 }
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active * {
   color: #62d2a2 !important;
-
 }
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab:hover {
   color: black;
+}
+
+.ant-picker-panel-layout .ant-picker-ok .ant-btn-primary {
+  background-color: #1677ff !important;
+  color: white !important;
 }
 
 /* width: 80vh;
@@ -253,4 +272,40 @@ header.show-mobile .menu-mobile {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.button-variant {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  height: 3rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: 1px solid;
+  cursor: pointer;
+  border-radius: 1rem;
+  transition-duration: 0.2s;
+  border: 1px solid #a6a6a6;
+  color: #222;
+}
+
+.button-variant:not(.active-variant):hover {
+  color: #fe385c;
+  /* background-color: #fe385c; */
+  border-color: #fe385c;
+}
+
+.active-variant {
+  border: 1px solid #fe385c;
+  color: white;
+  background: #fe385c;
+}
+
+.button-variant:disabled,
+.button-variant:disabled:hover {
+  cursor: no-drop;
+  opacity: 0.5;
+  background-color: white;
+  color: black;
+  border: 1px solid #a6a6a6;
 }

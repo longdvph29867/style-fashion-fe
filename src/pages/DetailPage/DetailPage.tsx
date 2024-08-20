@@ -1,58 +1,43 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { hiddenSpinner, showSpinner } from "../../util/util";
-import ProductsSame from "../../components/DetailComponent/ProductsSame";
 import DescriptionDetail from "../../components/DetailComponent/DescriptionDetail";
 import ReviewsDetail from "../../components/DetailComponent/ReviewsDetail";
-import productService from "../../services/productService";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import InfoProduct from "./InfoProduct/InfoProduct";
-import { Product } from "../../types/products";
-import SkeletionList from "../../components/Skeletion/Skeletion";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { visilibitySpiner } from "../../util/util";
+import productService from "../../services/productService";
 const DetailPage = () => {
-  const { slug } = useParams();
-  const [product, setProduct] = useState<Product | null>(null);
-  const fetchProduct = async () => {
-    try {
-      showSpinner();
-      const res = await productService.getProductBySlug(slug as string);
-      const productDetail: Product = res.data;
-      const listIdCategories = productDetail.categories.map((item) => item.id);
-      const dataSameProduct = await productService.getProductByCategories(
-        listIdCategories.join(",")
-      );
-      hiddenSpinner();
-      setProduct(productDetail);
-      const dataSameProductFilter = dataSameProduct.data.results.filter(
-        (item: Product) => item.slug !== slug
-      );
-    } catch (error) {
-      hiddenSpinner();
-      console.error("Failed to fetch product:", error);
-    }
-  };
+  const { slug } = useParams<string>();
 
+  const { data, isLoading } = useQuery({
+    queryKey: ["product-detail"],
+    queryFn: () => productService.getProductDetail("66a7bdc7b43a6d74ee316d2b").then((res) => res.data),
+    staleTime: 3 * 60 * 1000, // quá 3 phút sẽ gọi lại api
+    enabled: !!slug, // khi nào có slug thì mới gọi api
+  });
   useEffect(() => {
-    fetchProduct();
-  }, []);
+    visilibitySpiner(isLoading);
+  }, [isLoading]);
 
   const listBreadcrumb = [
     {
       label: "Chi tiết sản phẩm",
     },
   ];
+
   return (
     <div>
       <Breadcrumb list={listBreadcrumb} />
       {/* <SkeletionList value={3} rows={2} height={200} /> */}
       <div className="py-12">
-        <InfoProduct />
+        <InfoProduct product={data} />
 
-        <DescriptionDetail product={product} />
+        <DescriptionDetail product={data} />
         <div className="container mx-auto mt-12">
           <hr />
           <div>
-            <ReviewsDetail product={product} />
+            <ReviewsDetail product={data} />
             <hr />
           </div>
         </div>

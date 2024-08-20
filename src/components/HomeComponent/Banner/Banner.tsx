@@ -106,15 +106,15 @@ const Banner = () => {
                     className="w-full h-full"
                   >
                     <div className="flex flex-col items-start justify-center h-full relative z-10">
-                      <span className="text-sm sm:text-xl text-[#6a6a6a]">
+                      <span className="text-sm sm:text-xl text-content">
                         {item.content}
                       </span>
                       <h1
                         dangerouslySetInnerHTML={{ __html: item.title }}
-                        className="mt-1 text-xl font-semibold ls:leading-10 sm:mt-2 lg:mt-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-[#222]"
+                        className="mt-1 text-xl font-semibold ls:leading-10 sm:mt-2 lg:mt-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-title"
                       ></h1>
                       <a
-                        className="relative inline-flex items-center justify-center h-auto px-6 py-3 mt-2 text-sm font-medium transition-colors rounded-full shadow-xl sm:mt-4 lg:mt-12 sm:text-base sm:py-5 sm:px-9 bg-[#fe385c] text-white"
+                        className="relative inline-flex items-center justify-center h-auto px-6 py-3 mt-2 text-sm font-medium transition-colors rounded-full shadow-xl sm:mt-4 lg:mt-12 sm:text-base sm:py-5 sm:px-9 bg-primary text-white"
                         href="/"
                       >
                         <span>Xem ngay</span>

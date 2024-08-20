@@ -1,78 +1,111 @@
-import { ChangeEvent, useEffect, useState } from "react";
-import { Attribute, Product } from "../../../../types/products";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { message } from "antd";
-import { formartCurrency, formartRating } from "../../../../util/util";
+import {
+  formartCurrency,
+  formartRating,
+  hiddenSpinner,
+  showSpinner,
+} from "../../../../util/util";
 import cartService from "../../../../services/cartService";
 import { useDispatch } from "react-redux";
 import { setCartAll } from "../../../../Toolkits/cartSlice";
 import { localUserService } from "../../../../services/localService";
+import { IoRemoveOutline } from "react-icons/io5";
+import Variant from "../../../../components/DetailComponent/Variant";
+import { IProduct, IVariant } from "../../../../types/productType";
 
 type Props = {
   setCurrentImage: (value: string) => void;
-  product: Product;
+  product: IProduct;
 };
 
 const ContentProduct = ({ setCurrentImage, product }: Props) => {
-  const [attribute, setAttribute] = useState<Attribute | null>(null);
+  const [variantSelected, setVariantSelected] = useState<IVariant | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [price, setPrice] = useState<number[]>([]);
   const [showMaxQuantity, setShowMaxQuantity] = useState<boolean>(false);
   const dispatch = useDispatch();
   const userId = localUserService.get()?.id;
+  const stockRef = useRef(0);
+
+  useEffect(() => {
+    if (product) {
+      const totalStock = product?.variants.reduce(
+        (total, item) => total + item.stock,
+        0
+      );
+      stockRef.current = totalStock;
+    }
+  }, [product]);
+
+  useEffect(() => {
+    if (product) {
+      const minPrice = Math.min(
+        ...product.variants.map((varriant) => varriant.currentPrice)
+      );
+      const maxPrice = Math.max(
+        ...product.variants.map((varriant) => varriant.currentPrice)
+      );
+      if (minPrice === maxPrice) {
+        setPrice([minPrice]);
+      } else {
+        setPrice([minPrice, maxPrice]);
+      }
+    }
+  }, [product]);
+
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    if (!attribute) {
+    const value = parseInt(e.target.value);
+    if (!variantSelected) {
       message.error("Vui lòng chọn loại sản phẩm!");
       return;
     }
-    setQuantity(Number(value) === 0 ? 1 : Number(value));
+    if (isNaN(value)) {
+      setQuantity(0);
+    } else if (value < 0 || value > stockRef.current) {
+      setShowMaxQuantity(true);
+      setQuantity(1);
+    } else {
+      setShowMaxQuantity(false);
+      setQuantity(value);
+    }
   };
 
   const handleChangeQuantity = (value: number) => {
-    if (!attribute) {
+    if (!variantSelected) {
       message.error("Vui lòng chọn loại hàng!");
       return;
     } else if (quantity + value < 1) {
       return;
-    } else if (quantity + value > attribute.stock && value > 0) {
-      return;
-    }
-    setQuantity(quantity + value);
-  };
-
-  useEffect(() => {
-    if (!attribute) {
-      return;
-    } else if (quantity > attribute?.stock) {
+    } else if (quantity + value > stockRef.current && value > 0) {
       setShowMaxQuantity(true);
-    } else {
-      setShowMaxQuantity(false);
+      return;
     }
-  }, [quantity, attribute]);
-
-  const handleChangeAttribute = (attribute: Attribute) => {
-    setCurrentImage(attribute.image);
-    setAttribute(attribute);
+    setShowMaxQuantity(false);
+    setQuantity(quantity + value);
   };
 
   const handleAddtoCart = async () => {
     try {
-      if (!attribute) {
+      if (!variantSelected) {
         message.error("Vui lòng chọn loại sản phẩm!");
       } else if (showMaxQuantity) {
         return;
       } else if (!userId) {
         message.error("Vui lòng đăng nhập để thêm sản phẩm!");
       } else {
+        showSpinner();
         const res = await cartService.addToCart(userId, {
           product: product.id,
-          attribute: attribute.id,
+          variant: variantSelected.id,
           quantity: quantity,
         });
-        console.log(res);
+        hiddenSpinner();
         dispatch(setCartAll(res.data.products_cart));
         message.success("Thêm sản phẩm thành công!");
       }
     } catch (error) {
+      hiddenSpinner();
       console.log(error);
       message.error(error?.response?.data);
     }
@@ -83,14 +116,25 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
       <div>
         <h2 className="text-2xl font-semibold sm:text-3xl">{product?.name}</h2>
         <div className="flex items-center mt-5 space-x-4 sm:space-x-5">
-          <div>
-            <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold">
-              <span className="text-[#fe385c] !leading-none">
-                {formartCurrency(
-                  attribute ? attribute.price : product?.attributes[0].price
-                )}
-              </span>
-            </div>
+          <div className="flex gap-2 items-center text-[#fe385c]">
+            {variantSelected ? (
+              <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold">
+                <span className="text-[#fe385c] !leading-none">
+                  {formartCurrency(variantSelected.currentPrice)}
+                </span>
+              </div>
+            ) : (
+              price.map((amount, index) => (
+                <>
+                  {index > 0 && <IoRemoveOutline />}
+                  <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold">
+                    <span className="text-[#fe385c] !leading-none">
+                      {formartCurrency(amount)}
+                    </span>
+                  </div>
+                </>
+              ))
+            )}
           </div>
           <div className="border-l h-7 border-slate-300" />
           <div className="flex items-center">
@@ -137,31 +181,20 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
       {/* SELECT SIZE FROM ATTRIBUTES */}
       <div className="my-8 space-y-2">
         <div>
-          <div className="font-semibold text-sm text-[#222]">Thuộc Tính:</div>
-          <div className="flex items-center justify-start flex-wrap gap-3 mt-2">
-            {product?.attributes.map((attr, index) => (
-              <div
-                key={index}
-                className={`flex items-center justify-center px-5 h-12 text-[14px] font-semibold uppercase border cursor-pointer rounded-2xl sm:text-base duration-200 ${
-                  attribute?.name === attr.name
-                    ? "border-[#fe385c] text-white bg-[#fe385c]"
-                    : "border-[#a6a6a6] text-[#222]"
-                } hover:text-white hover:bg-[#fe385c] hover:border-[#fe385c]`}
-                onClick={() => handleChangeAttribute(attr)}
-              >
-                {attr.name}
-              </div>
-            ))}
+          <div className="font-semibold text-[#222]">Thuộc Tính:</div>
+          <div className="">
+            <Variant
+              dataAttriubute={product?.attributes ?? []}
+              dataVariant={product?.variants ?? []}
+              setImage={setCurrentImage}
+              setVariant={setVariantSelected}
+            />
           </div>
-        </div>
-        <div>
-          <div className="text-sm text-[#222] italic">
-            {attribute
-              ? attribute.stock
-              : product?.attributes.reduce((total, item) => {
-                  return total + item.stock;
-                }, 0)}{" "}
-            sản phẩm
+          <div className="mt-1 ml-3">
+            <span className="text-sm text-[#222] italic">
+              {variantSelected ? variantSelected.stock : stockRef.current} sản
+              phẩm
+            </span>
           </div>
         </div>
       </div>
@@ -217,7 +250,7 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
             </button>
           </div>
           <p className="text-[#e03] italic text-sm mt-1 h-5">
-            {showMaxQuantity && <span>Tối đa sản {attribute?.stock} phẩm</span>}
+            {showMaxQuantity && <span>Tối đa sản {stockRef.current} phẩm</span>}
           </p>
         </div>
         <button

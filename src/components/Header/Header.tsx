@@ -1,48 +1,41 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import imgLogo from "../../assets/img/sf-logo2.png";
 import Menu from "./Menu";
 import User from "../User/User";
 import Search from "../Search/Search";
+import { Link } from "react-router-dom";
+import cartService from "../../services/cartService";
+import { useQuery } from "@tanstack/react-query";
+import { localUserService } from "../../services/localService";
 import { useDispatch, useSelector } from "react-redux";
 import { setCartAll } from "../../Toolkits/cartSlice";
 import { RootState } from "../../Toolkits/store";
-import { Link } from "react-router-dom";
-import cartService from "../../services/cartService";
 
 const Header = () => {
-  const dispatch = useDispatch();
   const [showMenuMobile, setShowMenuMobile] = useState<boolean>(false);
   const carts = useSelector((state: RootState) => state.cartSlice.carts);
-  const userId = useSelector(
-    (state: RootState) => state.userSlice.userInfo?.id
-  );
-
+  const dispatch = useDispatch();
+  const userId = localUserService.get()?.id;
   const handleShowMenu = () => {
     setShowMenuMobile(!showMenuMobile);
   };
 
-  useEffect(() => {
-    if (userId) {
-      cartService.getCartByUserId(userId).then((response) => {
-        if (response.data !== "") {
-          dispatch(setCartAll(response.data.products_cart));
-        }
-      });
-    }
-  }, [userId]);
+  const { data } = useQuery({
+    queryKey: ["carts"],
+    queryFn: () =>
+      cartService.getCartByUserId(userId!).then((res) => dispatch(setCartAll(res.data.products_cart))),
+    refetchInterval: 3 * 60 * 1000,
+    enabled: !!userId,
+  });
 
   return (
-    <header
-      className={`${
-        showMenuMobile ? "show-mobile" : ""
-      } border-b border-slate-100`}
-    >
+    <header className={`${showMenuMobile ? "show-mobile" : ""} border-b border-slate-100`}>
       <div className="container mx-auto duration-300">
         <div className="flex justify-between h-20">
           <div className="flex items-center lg:hidden flex-1">
             <button
               onClick={handleShowMenu}
-              className="btn-show-menu p-2.5 pl-0 rounded-lg text-[#6a6a6a] flex items-center justify-center"
+              className="btn-show-menu p-2.5 pl-0 rounded-lg text-content flex items-center justify-center"
             >
               {showMenuMobile ? (
                 <>
@@ -87,12 +80,7 @@ const Header = () => {
             <div>
               <Link to={"/carts"}>
                 <button className="lg:w-12 w-10 h-10 lg:h-12 flex justify-center items-center relative text-slate-700 rounded-full hover:bg-slate-100">
-                  <svg
-                    className="w-6 h-6"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M2 2H3.74001C4.82001 2 5.67 2.93 5.58 4L4.75 13.96C4.61 15.59 5.89999 16.99 7.53999 16.99H18.19C19.63 16.99 20.89 15.81 21 14.38L21.54 6.88C21.66 5.22 20.4 3.87 18.73 3.87H5.82001"
                       stroke="currentColor"
@@ -126,8 +114,8 @@ const Header = () => {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  <span className="absolute w-3.5 h-3.5 flex items-center justify-center bg-[#fe385c] top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
-                    {carts.length}
+                  <span className="absolute w-3.5 h-3.5 flex items-center justify-center bg-primary top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
+                    {carts?.length}
                   </span>
                 </button>
               </Link>

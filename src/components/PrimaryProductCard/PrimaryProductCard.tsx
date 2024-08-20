@@ -26,10 +26,10 @@ const PrimaryProductCard = ({ product }: Props) => {
       </div>
       <div className="relative flex justify-between mt-5">
         <div className="flex-1">
-          <h2 className="text-lg font-semibold sm:text-xl my-line-2 text-[#222]">
+          <h2 className="text-lg font-semibold sm:text-xl my-line-2 text-title">
             {name}
           </h2>
-          <div className="flex items-center mt-3 text-[#6a6a6a]">
+          <div className="flex items-center mt-3 text-content">
             <span className="text-sm">
               <span className="line-clamp-1">Orange</span>
             </span>
@@ -53,8 +53,8 @@ const PrimaryProductCard = ({ product }: Props) => {
           </div>
         </div>
         <div className="mt-0.5 sm:mt-1 ml-4">
-          <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium">
-            <span className="text-[#fe385c] !leading-none">$52</span>
+          <div className="flex items-center border-2 border-primary rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium">
+            <span className="text-primary !leading-none">$52</span>
           </div>
         </div>
       </div>

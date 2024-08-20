@@ -14,7 +14,7 @@ const Menu = () => {
     <ul className="flex items-center lg:justify-start justify-center lg:flex-nowrap flex-wrap">
       <li>
         <Link
-          className="py-2.5 px-5 font-medium rounded-full duration-300 text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb]"
+          className="py-2.5 px-5 font-medium rounded-full duration-300 text-content hover:text-title hover:bg-[#ebebeb]"
           to="/"
         >
           Trang chủ
@@ -23,7 +23,7 @@ const Menu = () => {
       <li className="relative group">
         <a
           href="#"
-          className="flex items-center py-2.5 px-5 font-medium rounded-full duration-300 text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb]"
+          className="flex items-center py-2.5 px-5 font-medium rounded-full duration-300 text-content hover:text-title hover:bg-[#ebebeb]"
         >
           Danh mục
           <svg
@@ -59,7 +59,7 @@ const Menu = () => {
       </li>
       <li>
         <Link
-          className="py-2.5 px-5 font-medium rounded-full duration-300 text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb]"
+          className="py-2.5 px-5 font-medium rounded-full duration-300 text-content hover:text-title hover:bg-[#ebebeb]"
           to="/products"
         >
           Sản phẩm
@@ -67,7 +67,7 @@ const Menu = () => {
       </li>
       <li>
         <a
-          className="py-2.5 px-5 font-medium rounded-full duration-300 text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb]"
+          className="py-2.5 px-5 font-medium rounded-full duration-300 text-content hover:text-title hover:bg-[#ebebeb]"
           href="#"
         >
           Khuyến mại

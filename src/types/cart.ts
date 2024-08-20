@@ -1,3 +1,5 @@
+import { IVariant } from "./productType";
+
 export type CartType = {
   _id: string;
   user: string;
@@ -6,21 +8,15 @@ export type CartType = {
   updatedAt: string;
 };
 
+interface ProductType {
+  name: string;
+  slug: string;
+  thumbnail: string;
+  id: string;
+}
 export type ProductCartType = {
-  product: {
-    name: string;
-    slug: string;
-    thumbnail: string;
-    id: string;
-  };
+  product: ProductType;
   quantity: number;
-  attribute: {
-    name: string;
-    price: number;
-    stock: number;
-    discount: number;
-    image: string;
-    id: string;
-  };
+  variant: IVariant;
   _id: string;
 };

@@ -1,6 +1,10 @@
 import { ProductCartType } from "../../types/cart";
 import { useState } from "react";
 import { formartCurrency } from "../../util/util";
+import { Button, Dropdown } from "antd";
+
+import { PiWarningCircleLight } from "react-icons/pi";
+import DropdownVarianContent from "./DropdownVarianContent";
 
 type Props = {
   productCart: ProductCartType;
@@ -10,6 +14,7 @@ type Props = {
 
 const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
   const [quantity, setQuantity] = useState(productCart.quantity);
+  const [dropdownKey, setDropdownKey] = useState<number>(Date.now());
 
   const increaseQuantity = () => {
     const newQuantity = quantity + 1;
@@ -23,6 +28,12 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
     updateItem(productCart._id, newQuantity);
   };
 
+  const handleVisibleChange = (visible: boolean) => {
+    if (!visible) {
+      setDropdownKey(Date.now());
+    }
+  };
+
   return (
     <div className="relative flex py-8 sm:py-10 xl:py-2 first:pt-0 last:pb-0">
       <div className="relative flex-shrink-0 overflow-hidden rounded-xl">
@@ -32,7 +43,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
           decoding="async"
           data-nimg="fill"
           className="object-contain object-center w-20 sm:w-[120px]"
-          src={productCart.attribute.image}
+          src={productCart.product.thumbnail}
         />
         <a className="absolute inset-0" href="/product-detail" />
       </div>
@@ -42,59 +53,86 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
             <h3 className="text-base font-semibold">
               <a href="/product-detail">{productCart.product.name}</a>
             </h3>
-            <div className="mt-1.5 sm:mt-2.5 flex text-sm text-[#334155]">
-              <div className="flex items-center space-x-1.5">
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M7.01 18.0001L3 13.9901C1.66 12.6501 1.66 11.32 3 9.98004L9.68 3.30005L17.03 10.6501C17.4 11.0201 17.4 11.6201 17.03 11.9901L11.01 18.0101C9.69 19.3301 8.35 19.3301 7.01 18.0001Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeMiterlimit={10}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M8.35 1.94995L9.69 3.28992"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeMiterlimit={10}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M2.07 11.92L17.19 11.26"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeMiterlimit={10}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M3 22H16"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeMiterlimit={10}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M18.85 15C18.85 15 17 17.01 17 18.24C17 19.26 17.83 20.09 18.85 20.09C19.87 20.09 20.7 19.26 20.7 18.24C20.7 17.01 18.85 15 18.85 15Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  ></path>
-                </svg>
-                <span>{productCart.attribute.name}</span>
-              </div>
-            </div>
-            <div className="mt-3">
-              <div className="items-center border-2 border-[#ff385c] rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium w-max inline-flex mr-3">
-                <span className="text-[#ff385c] !leading-none ">
-                  {formartCurrency(productCart.attribute.price)}
-                </span>
-              </div>
-              <span className="text-sm italic">Còn: {productCart.attribute.stock} sản phẩm</span>
+            <div className="mt-1.5 sm:mt-2.5 text-sm text-[#334155]">
+              {productCart.variant ? (
+                <div className="mt-2">
+                  <div className="flex items-center space-x-1.5">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M7.01 18.0001L3 13.9901C1.66 12.6501 1.66 11.32 3 9.98004L9.68 3.30005L17.03 10.6501C17.4 11.0201 17.4 11.6201 17.03 11.9901L11.01 18.0101C9.69 19.3301 8.35 19.3301 7.01 18.0001Z"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeMiterlimit={10}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M8.35 1.94995L9.69 3.28992"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeMiterlimit={10}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M2.07 11.92L17.19 11.26"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeMiterlimit={10}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M3 22H16"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeMiterlimit={10}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M18.85 15C18.85 15 17 17.01 17 18.24C17 19.26 17.83 20.09 18.85 20.09C19.87 20.09 20.7 19.26 20.7 18.24C20.7 17.01 18.85 15 18.85 15Z"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      ></path>
+                    </svg>
+                    <span>bvhv</span>
+                  </div>
+                  <div className="items-center border-2 my-2 border-[#ff385c] rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium w-max mr-3">
+                    <span className="text-[#ff385c] !leading-none ">
+                      {formartCurrency(productCart?.variant?.currentPrice)}
+                    </span>
+                  </div>
+                  <span className="text-sm italic">
+                    Còn: {productCart?.variant?.stock} sản phẩm
+                  </span>
+                </div>
+              ) : (
+                <div>
+                  <Dropdown
+                    onOpenChange={handleVisibleChange}
+                    className="bg-white shadow-lg"
+                    arrow={true}
+                    dropdownRender={() => (
+                      <DropdownVarianContent
+                        keyReset={dropdownKey}
+                        idProduct={productCart.product.id}
+                      />
+                    )}
+                    trigger={["click"]}
+                  >
+                    <Button type="primary" danger>
+                      Chọn phân Loại
+                    </Button>
+                  </Dropdown>
+                  <div className="text-red-400 mt-4 flex gap-1">
+                    <PiWarningCircleLight fontSize={20} /> Phân loại hàng này
+                    bán hết, vui lòng lựa chọn một phân loại khác.
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <div className="flex flex-col sm:flex-row justify-between sm:w-52 shrink-0">
@@ -103,9 +141,9 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                 <div className="flex items-center justify-between w-[104px]">
                   <button
                     onClick={decreaseQuantity}
-                    className="flex items-center justify-center w-8 h-8 bg-white border rounded-full border-neutral-400 dark:border-neutral-500 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 dark:disabled:hover:border-neutral-500 disabled:opacity-50 disabled:cursor-default"
+                    className="flex items-center justify-center w-8 h-8 bg-white border rounded-full border-neutral-400 dark:border-neutral-500 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 dark:disabled:hover:border-neutral-500 disabled:opacity-50 disabled:cursor-no-drop"
                     type="button"
-                    disabled={quantity === 1}
+                    disabled={!productCart.variant || quantity === 1}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -126,9 +164,12 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                   </span>
                   <button
                     onClick={increaseQuantity}
-                    className="flex items-center justify-center w-8 h-8 bg-white border rounded-full border-neutral-400 dark:border-neutral-500 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 dark:disabled:hover:border-neutral-500 disabled:opacity-50 disabled:cursor-default"
+                    className="flex items-center justify-center w-8 h-8 bg-white border rounded-full border-neutral-400 dark:border-neutral-500 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 disabled:cursor-no-drop dark:disabled:hover:border-neutral-500 disabled:opacity-50"
                     type="button"
-                    disabled={quantity === productCart.attribute.stock}
+                    disabled={
+                      !productCart.variant ||
+                      quantity === productCart?.variant?.stock
+                    }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

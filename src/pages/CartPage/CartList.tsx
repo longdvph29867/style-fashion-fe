@@ -7,18 +7,20 @@ import { debounce, hiddenSpinner, showSpinner } from "../../util/util";
 import { deleteProductCart, setQuantityCart } from "../../Toolkits/cartSlice";
 import cartEmpty from "../../assets/cart-empty.svg";
 import { Link } from "react-router-dom";
+import { localUserService } from "../../services/localService";
+import { useEffect } from "react";
 
 const CartList = () => {
   const dispatch = useDispatch();
   const carts = useSelector((state: RootState) => state.cartSlice.carts);
-  const user = useSelector((state: RootState) => state.userSlice.userInfo);
+  const userId = localUserService.get()?.id;
 
   const handleUpdateItemProductCart = debounce(
     (idItemCart: string, quantity: number) => {
-      if (user) {
+      if (userId) {
         showSpinner();
         cartService
-          .updateCart(user?.id, idItemCart, quantity)
+          .updateCart(userId, idItemCart, quantity)
           .then(() => dispatch(setQuantityCart({ idItemCart, quantity })))
           .finally(() => {
             hiddenSpinner();
@@ -29,10 +31,10 @@ const CartList = () => {
   );
 
   const handleDelete = (idItemCart: string) => {
-    if (user) {
+    if (userId) {
       showSpinner();
       cartService
-        .deleteCartItem("666eaa54b5ee1db4f34bb02c", idItemCart)
+        .deleteCartItem(userId, idItemCart)
         .then(() => dispatch(deleteProductCart({ idItemCart })))
         .finally(() => {
           hiddenSpinner();
@@ -59,7 +61,7 @@ const CartList = () => {
       </div>
       <div className="w-full lg:flex justify-between container mt-16">
         <div className="lg:w-[80%]">
-          {carts.map((cart) => (
+          {carts?.map((cart) => (
             <CartListItem
               key={cart._id}
               onDelete={handleDelete}
