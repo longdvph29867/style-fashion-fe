@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import cartService from "../../services/cartService";
 import { useQuery } from "@tanstack/react-query";
 import { localUserService } from "../../services/localService";
+import { useDispatch } from "react-redux";
+import { setCart } from "../../Toolkits/cartSlice";
 
 const Header = () => {
   const [showMenuMobile, setShowMenuMobile] = useState<boolean>(false);
@@ -14,11 +16,14 @@ const Header = () => {
   const handleShowMenu = () => {
     setShowMenuMobile(!showMenuMobile);
   };
-
+  const dispatch = useDispatch();
   const { data } = useQuery({
     queryKey: ["carts"],
-    queryFn: () => cartService.getCartByUserId(userId!).then((res) => res.data),
-    refetchInterval: 3 * 60 * 1000,
+    queryFn: () =>
+      cartService.getCartByUserId(userId!).then((res) => {
+        dispatch(setCart(res.data));
+        return res.data.length;
+      }),
     enabled: !!userId,
   });
 
@@ -118,7 +123,7 @@ const Header = () => {
                     />
                   </svg>
                   <span className="absolute w-3.5 h-3.5 flex items-center justify-center bg-primary top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
-                    {data?.length ?? 0}
+                    {data ?? 0}
                   </span>
                 </button>
               </Link>

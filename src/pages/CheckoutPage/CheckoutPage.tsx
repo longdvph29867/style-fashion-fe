@@ -6,8 +6,6 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { ShippingAddressType } from "../../types/shippingAddress";
 import orderService from "../../services/orderService";
 import OrderNote from "../../components/Checkout/OrderNote";
-import { useSelector } from "react-redux";
-import { RootState } from "../../Toolkits/store";
 import { message } from "antd";
 import VoucherModal from "../../components/Checkout/VoucherModal";
 import "../../assets/css/checkoutPage.css";
@@ -20,6 +18,7 @@ import {
 import infoShipping from "../../services/infoShippingService";
 import { localUserService } from "../../services/localService";
 import voucherService from "../../services/voucherService";
+import { useSelectedCarts } from "../../hooks";
 interface SelectedVoucher {
   code: string;
   name: string;
@@ -38,21 +37,22 @@ const CheckoutPage = () => {
   const [shippingFee, setShippingFee] = useState(0);
   const [addressSelected, setAddressSelected] =
     useState<ShippingAddressType | null>(null);
-  const productCheckout = useSelector(
-    (state: RootState) => state.checkoutSlice.products
-  );
+
+  const queryClient = useQueryClient();
+
+  const selectedItem = useSelectedCarts();
 
   useEffect(() => {
-    if (productCheckout.length === 0) {
+    if (selectedItem.length === 0) {
       navigate("/carts");
     }
-  }, [navigate, productCheckout.length]);
+  }, [navigate, selectedItem.length]);
 
   useEffect(() => {
     let subTotalPrice = 0;
     let sumQuantity = 0;
 
-    for (const product of productCheckout) {
+    for (const product of selectedItem) {
       subTotalPrice += product.quantity * product.variant.currentPrice;
       sumQuantity += product.quantity;
     }
@@ -69,12 +69,11 @@ const CheckoutPage = () => {
           setShippingFee(res.data.total);
         });
     }
-  }, [addressSelected, productCheckout]);
-  const queryClient = useQueryClient();
+  }, [addressSelected, selectedItem]);
 
   const createOrder = () => {
     if (addressSelected && user?.id) {
-      const productsOrder: OrderProduct[] = productCheckout.map((item) => ({
+      const productsOrder: OrderProduct[] = selectedItem.map((item) => ({
         variant: item.variant._id,
         quantity: item.quantity,
       }));
@@ -190,7 +189,7 @@ const CheckoutPage = () => {
             discountAmount={discountAmount}
             voucherName={voucherSelected?.name ?? ""}
             confirmOrder={handleCreateOrder}
-            productCheckout={productCheckout}
+            productCheckout={selectedItem}
             shippingfee={shippingFee}
             onOpenVoucher={onOpenVoucherModal}
             subTotal={subTotal}

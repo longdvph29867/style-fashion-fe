@@ -1,25 +1,23 @@
 import { useMemo } from "react";
 import { formartCurrency } from "../../util/util";
 import { Link } from "react-router-dom";
-import { ICart } from "../../types/cart";
+import { useSelectedCarts } from "../../hooks";
 
-type Props = {
-  selectedProduct: ICart[];
-};
+const TotalOrder = () => {
+  const selectedItem = useSelectedCarts();
 
-const TotalOrder = ({ selectedProduct }: Props) => {
   const total = useMemo<number>(() => {
-    return selectedProduct.reduce((accumulator, currentValue) => {
+    return selectedItem.reduce((accumulator, currentValue) => {
       return (
         accumulator + currentValue.quantity * currentValue.variant.currentPrice
       );
     }, 0);
-  }, [selectedProduct]);
+  }, [selectedItem]);
 
   const handleLinkClick = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
-    if (selectedProduct.length === 0) {
+    if (selectedItem.length === 0) {
       e.preventDefault();
     }
   };
@@ -30,7 +28,7 @@ const TotalOrder = ({ selectedProduct }: Props) => {
         <h3 className="text-xl font-semibold">
           Thanh toán{" "}
           <span className="text-sm text-slate-500">
-            ({selectedProduct?.length ?? 0} sản phẩm)
+            ({selectedItem?.length ?? 0} sản phẩm)
           </span>
         </h3>
         <div className="text-sm mt-4 text-slate-800">
@@ -50,7 +48,7 @@ const TotalOrder = ({ selectedProduct }: Props) => {
         <Link
           onClick={handleLinkClick}
           className={`relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 text-slate-50 shadow-xl mt-8 w-full ${
-            selectedProduct.length === 0
+            selectedItem.length === 0
               ? "bg-[#ff385c]/50 cursor-no-drop"
               : "bg-[#ff385c]  hover:bg-[#cf3350]"
           }`}
