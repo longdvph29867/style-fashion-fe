@@ -189,7 +189,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList,
                     Giao hàng không thành công
                 </Menu.Item>
 
-                <Menu.Item
+                {/* <Menu.Item
                     // Hủy đơn hàng
                     key="10"
                     style={{
@@ -210,7 +210,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList,
                     onClick={() => showUpdateStatusModal(record._id, 10, getNameByStatusCodeAdmin(10))}
                 >
                     Hủy đơn hàng
-                </Menu.Item>
+                </Menu.Item> */}
             </Menu>
 
         </>

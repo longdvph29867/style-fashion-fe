@@ -11,9 +11,15 @@ import {
     UserOutlined,
     CloseCircleOutlined,
     CheckOutlined,
-    CheckCircleOutlined
+    CheckCircleOutlined,
+    BellOutlined,
+    ShoppingOutlined,
+    CarryOutOutlined
+
 } from "@ant-design/icons";
 import { useMemo } from "react";
+import { PackageIcon } from "../Icons/package";
+import { BikeWhiteIcon } from "../Icons/bike-white";
 // import { BikeWhiteIcon } from "../../icons";
 // import { useConfigProvider } from "../../../context";
 
@@ -106,18 +112,35 @@ export const StepStatus = ({ order }: Props) => {
                     // Kiểm tra nếu code của order là 7 thì đổi tên bước "Đang giao hàng" thành "Giao hàng không thành công"
                     let title = step.name;
                     let icon = null;
+
+                    if (step.code === 2) {
+                        icon = <BellOutlined />;
+                    }
+                    if (step.code === 3) {
+                        icon = <PackageIcon />;
+                    }
+                    if (step.code === 4) {
+                        icon = <BikeWhiteIcon />;
+                    }
+                    if (step.code === 6) {
+                        icon = <ShoppingOutlined />;
+                    }
+                    if (step.code === 7) {
+                        icon = <CarryOutOutlined />;
+                    }
                     // Thay đổi title và icon khi code = 7
                     if (order?.orderStatus.code === 5 && step.code === 4) {
                         title = "Giao hàng không thành công";
                         icon = <CloseCircleOutlined className="text-red-500" />; // Icon cho 'Giao hàng không thành công'
-                    } else if (order?.orderStatus.code === step.code) {
-                        // Thêm điều kiện để không hiển thị loading khi code = 6
-                        if ((order?.orderStatus.code === 6 && step.code === 6) || (order?.orderStatus.code === 7 && step.code === 7)) {
-                            icon = <CheckOutlined />; // Không có icon loading cho 'Đã giao hàng'
-                        } else if (order?.orderStatus.code !== 6) {
-                            icon = <LoadingOutlined />; // Icon loading cho bước hiện tại
-                        }
                     }
+                    // else if (order?.orderStatus.code === step.code) {
+                    //     // Thêm điều kiện để không hiển thị loading khi code = 6
+                    //     if ((order?.orderStatus.code === 6 && step.code === 6) || (order?.orderStatus.code === 7 && step.code === 7)) {
+                    //         icon = <CheckOutlined />; // Không có icon loading cho 'Đã giao hàng'
+                    //     } else if (order?.orderStatus.code !== 6) {
+                    //         icon = <LoadingOutlined />; // Icon loading cho bước hiện tại
+                    //     }
+                    // }
 
                     return {
                         title,
