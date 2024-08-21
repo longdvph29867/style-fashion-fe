@@ -127,15 +127,13 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
               </span>
             ) : (
               price.map((amount, index) => (
-                <>
+                <span
+                  key={index}
+                  className="text-[#fe385c] text-xl font-bold !leading-none flex gap-1"
+                >
                   {index > 0 && <IoRemoveOutline />}
-                  <span
-                    key={index}
-                    className="text-[#fe385c] text-xl font-bold !leading-none"
-                  >
-                    {formartCurrency(amount)}
-                  </span>
-                </>
+                  {formartCurrency(amount)}
+                </span>
               ))
             )}
           </div>

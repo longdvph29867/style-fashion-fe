@@ -9,15 +9,12 @@ import Checkbox from "../../components/Checkbox.tsx/Checkbox";
 import { message } from "antd";
 import { selectProduct } from "../../Toolkits/cartSlice";
 import { ChangeEvent } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { RootState } from "../../Toolkits/store";
 
 const CartList = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  const { data } = useQuery({
-    queryKey: ["carts"],
-  });
   const { carts, selectItem } = useSelector(
     (state: RootState) => state.cartSlice
   );
@@ -55,17 +52,7 @@ const CartList = () => {
   };
 
   const handleSelectProduct = (e: ChangeEvent<HTMLInputElement>) => {
-    const idProductCart = e.target.value;
-    if (!data) {
-      return;
-    }
-    if (selectItem.some((item) => item === idProductCart)) {
-      dispatch(
-        selectProduct(selectItem.filter((item) => item !== idProductCart))
-      );
-    } else {
-      dispatch(selectProduct([...selectItem, idProductCart]));
-    }
+    dispatch(selectProduct(e.target.value));
   };
 
   return (

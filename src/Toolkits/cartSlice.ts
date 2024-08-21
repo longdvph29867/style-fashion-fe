@@ -11,10 +11,20 @@ const checkoutSlice = createSlice({
   initialState,
   reducers: {
     selectProduct: (state, action) => {
-      state.selectItem = action.payload;
+      const idProductCart = action.payload;
+      if (state.selectItem.includes(idProductCart)) {
+        state.selectItem = state.selectItem.filter(
+          (item) => item !== idProductCart
+        );
+      } else {
+        state.selectItem.push(idProductCart);
+      }
     },
     setCart: (state, action) => {
       state.carts = action.payload;
+      // state.selectItem = state.selectItem.filter((item) =>
+      //   state.carts.some((cartItem) => cartItem._id === item)
+      // );
     },
   },
 });

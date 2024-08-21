@@ -30,27 +30,34 @@ const ListOrder = ({ productCheckout }: Props) => {
                       {item.product.name}
                     </a>
                   </h3>
-                  <div className="mt-1.5 sm:mt-2.5 flex items-center text-sm text-slate-600">
-                    <div className="flex items-center space-x-1.5">
-                      <AtrributeSvgCheckout />
-                      <span>{getNameVariants(item.variant.tier_index)}</span>
-                    </div>
-                    <span className="mx-2 h-5 border-l border-slate-400" />
-                    <div className="flex items-center space-x-1.5">
-                      <p>
-                        Số lượng: <span>{item.quantity}</span>
-                      </p>
-                    </div>
-                    <div className="hidden flex-1 sm:flex justify-end">
-                      <div className="mt-0.5">
-                        <div className="flex items-center border-2 border-primary rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium">
-                          <span className="text-primary !leading-none">
-                            {formartCurrency(item.variant.currentPrice)}
-                          </span>
+                  {item.variant ? (
+                    <div className="mt-1.5 sm:mt-2.5 flex items-center text-sm text-slate-600">
+                      <div className="flex items-center space-x-1.5">
+                        <AtrributeSvgCheckout />
+                        <span>{getNameVariants(item.variant.tier_index)}</span>
+                      </div>
+                      <span className="mx-2 h-5 border-l border-slate-400" />
+                      <div className="flex items-center space-x-1.5">
+                        <p>
+                          Số lượng: <span>{item.quantity}</span>
+                        </p>
+                      </div>
+                      <div className="hidden flex-1 sm:flex justify-end">
+                        <div className="mt-0.5">
+                          <div className="flex items-center border-2 border-primary rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium">
+                            <span className="text-primary !leading-none">
+                              {formartCurrency(item.variant.currentPrice)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="text-red-400 mt-4 flex gap-1">
+                      Phân loại hàng này bán hết, vui lòng lựa chọn một phân
+                      loại khác.
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

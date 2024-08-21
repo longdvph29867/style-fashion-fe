@@ -37,7 +37,7 @@ const CheckoutPage = () => {
   const [shippingFee, setShippingFee] = useState(0);
   const [addressSelected, setAddressSelected] =
     useState<ShippingAddressType | null>(null);
-
+  const [validVariant, setValidVariant] = useState(false);
   const queryClient = useQueryClient();
 
   const selectedItem = useSelectedCarts();
@@ -51,8 +51,11 @@ const CheckoutPage = () => {
   useEffect(() => {
     let subTotalPrice = 0;
     let sumQuantity = 0;
-
     for (const product of selectedItem) {
+      if (!product.variant) {
+        setValidVariant(true);
+        return;
+      }
       subTotalPrice += product.quantity * product.variant.currentPrice;
       sumQuantity += product.quantity;
     }
@@ -193,6 +196,7 @@ const CheckoutPage = () => {
             shippingfee={shippingFee}
             onOpenVoucher={onOpenVoucherModal}
             subTotal={subTotal}
+            isDisable={validVariant}
           />
           <VoucherModal
             totalCartPrice={subTotal}
