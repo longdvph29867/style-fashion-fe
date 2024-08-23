@@ -11,8 +11,8 @@ const orderService = {
   getAllOrders(limit: number, page: number) {
     return https.get(`/orders?limit=${limit}&page=${page}`);
   },
-  getAllOrderUser(id: string) {
-    return https.get(`/orders/user/${id}`)
+  getAllOrderUser(id: string, limit: number, page: number) {
+    return https.get(`/orders/user/${id}?limit=${limit}&page=${page}`);
   },
   getAllOrderUserByStatusCode(id: string, statusCode: any) {
     return https.get(`/orders/user/${id}?orderStatus=${statusCode}`)

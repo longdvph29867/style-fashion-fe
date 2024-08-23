@@ -9,6 +9,7 @@ import { Tabs, TabsProps } from "antd";
 import Item from "./Item";
 import { hiddenSpinner, showSpinner } from "../../util/util";
 import orderService from "../../services/orderService";
+import PaginationPage from "../../components/PaginationPage/PaginationPage";
 
 const OrderPage = () => {
   // const location = useLocation();
@@ -31,8 +32,14 @@ const OrderPage = () => {
   const [lengthPrepare, setLengthPrepare] = useState(0);
   const [lengthShipping, setLengthShipping] = useState(0);
 
+  const params = new URLSearchParams(location.search);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const limitPerPage = 10;
+  const currentPage = params.get("page") ? Number(params.get("page")) : 1;
+
   // const [userInfo, setUserInfo] = useState<any>(null);
   const userInfo = JSON.parse(localStorage.getItem("USER_INFO_FASHION") || "{}");
+
 
   // const getLengthStatus = async (userId: any, statusCode: any) => {
   //   try {
@@ -57,9 +64,10 @@ const OrderPage = () => {
       const userId = userInfo.id;
 
       orderService
-        .getAllOrderUser(userId)
+        .getAllOrderUser(userId, limitPerPage, currentPage)
         .then((res) => {
           setOrdersList(res.data.results);
+          setTotalOrders(res.data.totalResults);
           hiddenSpinner();
 
           // setPaymentPendingList(res.data.results.filter((order: any) => order?.orderStatus.code === 0 || order?.orderStatus.code === 2));
@@ -86,6 +94,11 @@ const OrderPage = () => {
     }
 
   }
+
+  useEffect(() => {
+    fetchOrdersList();
+  }, [location.search]);
+
   useEffect(() => {
     fetchOrdersList();
   }, []);
@@ -108,25 +121,25 @@ const OrderPage = () => {
 
   const label1 = (
     <>
-      Chờ thanh toán <span className="ml-[1px] text-[#fe385c]">{`(${lengthWaitPayment})`}</span>
+      Chờ thanh toán <span className="ml-[1px] text-[#fe385c]"></span>
     </>
   );
 
   const label2 = (
     <>
-      Chờ xác nhận <span className="ml-[1px] text-[#fe385c]">{`(${lengthWaitConfirm})`}</span>
+      Chờ xác nhận <span className="ml-[1px] text-[#fe385c]"></span>
     </>
   );
 
   const label3 = (
     <>
-      Chuẩn bị hàng <span className="ml-[1px] text-[#fe385c]">{`(${lengthPrepare})`}</span>
+      Chuẩn bị hàng <span className="ml-[1px] text-[#fe385c]"></span>
     </>
   );
 
   const label4 = (
     <>
-      Đang giao hàng <span className="ml-[1px] text-[#fe385c]">{`(${lengthShipping})`}{ }</span>
+      Đang giao hàng <span className="ml-[1px] text-[#fe385c]"></span>
     </>
   );
 
@@ -184,6 +197,10 @@ const OrderPage = () => {
     <div className="container pb-16 order-client">
       <h3 className="text-2xl my-8">Danh sách đơn hàng</h3>
       <Tabs type="card" defaultActiveKey="all" items={items} onChange={onChange} />
+      <PaginationPage
+        current={1}
+        total={totalOrders}
+        pageSize={limitPerPage} />
     </div>
 
   );

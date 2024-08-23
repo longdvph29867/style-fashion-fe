@@ -195,67 +195,73 @@ const ReviewForm: React.FC<Props> = ({ orderId, userInfo, setOrderList, setRevie
 
     const onFinish = async (values: any) => {
         console.log("Received values of form:", values);
+        // return
         showSpinner();
 
         setReviewFormOpen(false)
 
-        // Lặp qua từng sản phẩm trong danh sách
-        for (let i = 0; i < values.products.length; i++) {
-            const product = values.products[i];
-            const urlGallery = [];
-            const urlVideo = [];
-
-            // Xử lý gallery nếu có
-            if (product.gallery && product.gallery.length > 0) {
-                const listFiles = product.gallery;
-                const newArrayFiles = listFiles.map((file: any) => file.originFileObj);
-                const formData = new FormData();
-                for (const file of newArrayFiles) {
-                    formData.append("images", file);
-                }
-                try {
-                    const { data: dataGallery } = await https.post("/images", formData);
-                    const url: { url: string; publicId: string }[] = dataGallery.data;
-                    urlGallery.push(...url);
-                    console.log("Gallery upload successful:", urlGallery);
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-
-            // Xử lý video nếu có
-            if (product.video && product.video.length > 0) {
-                const videoFile: any = product.video;
-                const newVideoFile = videoFile[0].originFileObj;
-                const formDataVideo = new FormData();
-                formDataVideo.append("videos", newVideoFile);
-                try {
-                    const { data: dataVideo } = await https.post("/videos", formDataVideo);
-                    const url: { url: string; publicId: string }[] = dataVideo.data;
-                    urlVideo.push(...url);
-                    console.log("Video upload successful:", urlVideo);
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-
-            // Tạo data để gửi lên server
-            const data = {
-                content: product.content,
-                score: product.score,
-                images: urlGallery ? urlGallery?.map((image) => image.url) : [],
-                productId: orderDetail.products[i].productId,
-                video: urlVideo ? urlVideo?.[0]?.url : "",
-                email: userInfo.email,
-                name: userInfo.name,
-            };
-
-            console.log(data, 'data');
-
-            orderService.reviewProduct(data)
-        }
-
         try {
+            // Lặp qua từng sản phẩm trong danh sách
+            for (let i = 0; i < values.products.length; i++) {
+                const product = values.products[i];
+                const urlGallery = [];
+                const urlVideo = [];
+
+                // Xử lý gallery nếu có
+                if (product.gallery && product.gallery.length > 0) {
+                    const listFiles = product.gallery;
+                    const newArrayFiles = listFiles.map((file: any) => file.originFileObj);
+                    const formData = new FormData();
+                    for (const file of newArrayFiles) {
+                        formData.append("images", file);
+                    }
+                    try {
+                        const { data: dataGallery } = await https.post("/images", formData);
+                        const url: { url: string; publicId: string }[] = dataGallery.data;
+                        urlGallery.push(...url);
+                        console.log("Gallery upload successful:", urlGallery);
+                    } catch (error) {
+                        console.log(error);
+                        message.error(error.response.data.message);
+                        hiddenSpinner();
+
+                    }
+                }
+
+                // Xử lý video nếu có
+                if (product.video && product.video.length > 0) {
+                    const videoFile: any = product.video;
+                    const newVideoFile = videoFile[0].originFileObj;
+                    const formDataVideo = new FormData();
+                    formDataVideo.append("videos", newVideoFile);
+                    try {
+                        const { data: dataVideo } = await https.post("/videos", formDataVideo);
+                        const url: { url: string; publicId: string }[] = dataVideo.data;
+                        urlVideo.push(...url);
+                        console.log("Video upload successful:", urlVideo);
+                    } catch (error) {
+                        console.log(error);
+                        message.error(error.response.data.message);
+                        hiddenSpinner();
+                    }
+                }
+
+                // Tạo data để gửi lên server
+                const data = {
+                    // content: product.content ? product.content : "",
+                    score: product.score,
+                    images: urlGallery ? urlGallery?.map((image) => image.url) : [],
+                    productId: orderDetail.products[i].productId,
+                    video: urlVideo ? urlVideo?.[0]?.url : "",
+                    email: userInfo.email,
+                    name: userInfo.name,
+                    ...(product.content && { content: product.content }),
+                };
+
+                console.log(data, 'data');
+                orderService.reviewProduct(data)
+            }
+
             await orderService.updateStatusOrder(orderId, 9, userInfo.id);
             if (onPage === 'detail') {
                 setOrderList((prev: any) => ({
@@ -276,6 +282,7 @@ const ReviewForm: React.FC<Props> = ({ orderId, userInfo, setOrderList, setRevie
         } catch (error) {
             console.log(error);
             message.error(error.response.data.message);
+            hiddenSpinner();
         }
 
 
@@ -293,24 +300,24 @@ const ReviewForm: React.FC<Props> = ({ orderId, userInfo, setOrderList, setRevie
     //   selectedCategories = checkedValues;
     // };
 
-    const onReset = () => {
-        form.setFieldsValue({
-            products: orderDetail.products.map(() => ({
-                content: '', // Khởi tạo với nội dung mặc định cho nhận xét
-                score: 5, // Khởi tạo giá trị đánh giá mặc định
-                gallery: [], // Khởi tạo danh sách hình ảnh trống
-                video: [] // Khởi tạo danh sách video trống
-            }))
-        });
-    };
+    // const onReset = () => {
+    //     form.setFieldsValue({
+    //         products: orderDetail.products.map(() => ({
+    //             content: '', // Khởi tạo với nội dung mặc định cho nhận xét
+    //             score: 5, // Khởi tạo giá trị đánh giá mặc định
+    //             gallery: [], // Khởi tạo danh sách hình ảnh trống
+    //             video: [] // Khởi tạo danh sách video trống
+    //         }))
+    //     });
+    // };
 
-    const handleStarChange = (value: any, fieldName: any) => {
-        console.log(value, 'value');
-        console.log(fieldName, 'fieldName');
-        form.setFieldsValue({ [`products[${fieldName}].score`]: value });
-        setStarValue(value);
-        // console.log(starValue, 'starValue');
-    };
+    // const handleStarChange = (value: any, fieldName: any) => {
+    //     console.log(value, 'value');
+    //     console.log(fieldName, 'fieldName');
+    //     form.setFieldsValue({ [`products[${fieldName}].score`]: value });
+    //     setStarValue(value);
+    //     // console.log(starValue, 'starValue');
+    // };
 
 
     return (
@@ -318,13 +325,23 @@ const ReviewForm: React.FC<Props> = ({ orderId, userInfo, setOrderList, setRevie
             {/* <h3 className=" text-2xl text-slate-700 text-center mt-6 mb-3">
                 Thêm mới
             </h3> */}
-            {!orderDetail ? <Skeleton className="mb-5" active /> : null}
             <Form
                 form={form}
                 layout="vertical"
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
             >
+                <Form.Item className="flex justify-end">
+                    <Space>
+                        <Button type="primary" htmlType="submit" className="text-white bg-primary">
+                            Đánh giá
+                        </Button>
+                        {/* <Button htmlType="button" onClick={onReset}>
+                            Reset
+                            </Button> */}
+                    </Space>
+                </Form.Item>
+                {!orderDetail ? <Skeleton className="mb-5" active /> : null}
                 <Form.List name="products">
                     {(fields) => (
                         <>
@@ -350,13 +367,26 @@ const ReviewForm: React.FC<Props> = ({ orderId, userInfo, setOrderList, setRevie
                                     </div>
                                     {/* <div className="border-[1px] border-gray-100 mb-2"></div> */}
 
-                                    <div className="grid xl:grid-cols-2 xl:gap-10">
+                                    <div className="">
                                         <div>
+                                            <Form.Item
+                                                {...field}
+                                                name={[field.name, 'score']}
+                                                label="Đánh giá"
+                                                rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
+                                                initialValue={5}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    <Rate
+                                                        onChange={(value) => form.setFieldValue(['products', field.name, 'score'], value)}
+                                                        defaultValue={5}
+                                                    />
+                                                </div>
+                                            </Form.Item>
                                             <Form.Item
                                                 {...field}
                                                 label="Nhận xét"
                                                 name={[field.name, 'content']}
-                                                rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
                                             >
                                                 <TextArea rows={4} placeholder="Hãy chia sẻ nhận xét cho sản phẩm này bạn nhé" />
                                             </Form.Item>
@@ -373,25 +403,7 @@ const ReviewForm: React.FC<Props> = ({ orderId, userInfo, setOrderList, setRevie
                                                     {starValue ? <span className="text-orange-400 text-[16px]">{desc[starValue - 1]}</span> : null}
                                                 </div>
                                             </Form.Item> */}
-                                            <Form.Item
-                                                {...field}
-                                                name={[field.name, 'score']}
-                                                label="Đánh giá"
-                                                rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
-                                                initialValue={5}
-                                            >
-                                                <div className="flex items-center gap-2">
-                                                    <Rate
-                                                        onChange={(value) => form.setFieldValue(['products', field.name, 'score'], value)}
-                                                        defaultValue={5}
-                                                    />
-                                                    {form.getFieldValue(['products', field.name, 'score']) ? (
-                                                        <span className="text-orange-400 text-[16px]">
-                                                            {desc[form.getFieldValue(['products', field.name, 'score']) - 1]}
-                                                        </span>
-                                                    ) : null}
-                                                </div>
-                                            </Form.Item>
+
                                         </div>
                                         <div>
                                             <Form.Item
@@ -463,16 +475,7 @@ const ReviewForm: React.FC<Props> = ({ orderId, userInfo, setOrderList, setRevie
                         </>
                     )}
                 </Form.List>
-                <Form.Item>
-                    <Space>
-                        <Button type="primary" htmlType="submit" className="text-white bg-green-500">
-                            Đánh giá
-                        </Button>
-                        <Button htmlType="button" onClick={onReset}>
-                            Reset
-                        </Button>
-                    </Space>
-                </Form.Item>
+
             </Form>
 
         </div>
