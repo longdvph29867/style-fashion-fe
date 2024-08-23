@@ -97,13 +97,30 @@ const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList, onP
         setSelectedStatusName(null);
         setIsModalOpen(false);
     };
+
+    const handlePayment = async () => {
+        showSpinner();
+        try {
+            const data = await orderService.createVnpayV2(orderId);
+            console.log(data)
+            if (data) {
+                window.location.href = data.data.url;
+            }
+            hiddenSpinner();
+        } catch (error) {
+            hiddenSpinner();
+            message.error(error.response.data.message);
+            console.log(error);
+        }
+
+    }
     return (
         <div className="flex space-x-2">
             {
-                (orderStatus === 1) &&
-                <Link to={`/order`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#fe385c] text-white uppercase" style={{ borderWidth: "1px" }}>
+                (orderStatus === 0) &&
+                <Button onClick={handlePayment} className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-[#fe385c] text-white uppercase" style={{ borderWidth: "1px" }}>
                     Thanh toán ngay
-                </Link>
+                </Button>
             }
             {
                 orderStatus === 7 &&

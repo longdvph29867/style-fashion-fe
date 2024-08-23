@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import OrderSummary from "../../components/Checkout/OrderSummary";
 import PaymentMethod from "../../components/Checkout/PaymentMethod";
 import ShippingAddress from "../../components/Checkout/ShippingAddress";
@@ -32,6 +32,8 @@ const OrderPage = () => {
   const [lengthPrepare, setLengthPrepare] = useState(0);
   const [lengthShipping, setLengthShipping] = useState(0);
 
+  const navigate = useNavigate();
+  const location = useLocation();
   const params = new URLSearchParams(location.search);
   const [totalOrders, setTotalOrders] = useState(0);
   const limitPerPage = 10;
@@ -105,6 +107,11 @@ const OrderPage = () => {
   const onChange = (key: string) => {
     showSpinner();
     console.log(key, 'key');
+    params.set("list", key.toString());
+    // console.log(location, 'location')
+    navigate(location.pathname + "?" + params.toString());
+    // console.log(params.toString(), 'params.toString()')
+    // console.log(params.get("list"), 'params.get("list")')
     if (key === 'all') {
       fetchOrdersList();
       return;

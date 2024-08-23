@@ -8,6 +8,9 @@ const orderService = {
   createVNPAY(data: CheckoutType) {
     return https.post(`orders/vnpay`, data);
   },
+  createVnpayV2(orderId: string) {
+    return https.post(`orders/vnpay-order-payment/${orderId}`);
+  },
   getAllOrders(limit: number, page: number) {
     return https.get(`/orders?limit=${limit}&page=${page}`);
   },
