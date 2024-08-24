@@ -1,25 +1,24 @@
 import { useMemo } from "react";
-import { ProductsCart } from "../../types/cartType";
 import { formartCurrency } from "../../util/util";
 import { Link } from "react-router-dom";
+import { useSelectedCarts } from "../../hooks";
 
-type Props = {
-  productCart: ProductsCart[];
-};
+const TotalOrder = () => {
+  const selectedItem = useSelectedCarts();
 
-const TotalOrder = ({ productCart }: Props) => {
   const total = useMemo<number>(() => {
-    return productCart.reduce((accumulator, currentValue) => {
-      accumulator += currentValue.quantity * currentValue.attribute.price;
-      return accumulator;
+    return selectedItem.reduce((accumulator, currentValue) => {
+      return (
+        accumulator + currentValue.quantity * currentValue.variant.currentPrice
+      );
     }, 0);
-  }, [productCart]);
+  }, [selectedItem]);
 
   const handleLinkClick = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
-    if (productCart.length === 0) {
-      e.preventDefault(); // Ngăn chặn hành động nếu bị vô hiệu hóa
+    if (selectedItem.length === 0) {
+      e.preventDefault();
     }
   };
 
@@ -29,7 +28,7 @@ const TotalOrder = ({ productCart }: Props) => {
         <h3 className="text-xl font-semibold">
           Thanh toán{" "}
           <span className="text-sm text-slate-500">
-            ( {productCart.length} sản phẩm)
+            ({selectedItem?.length ?? 0} sản phẩm)
           </span>
         </h3>
         <div className="text-sm mt-4 text-slate-800">
@@ -49,9 +48,9 @@ const TotalOrder = ({ productCart }: Props) => {
         <Link
           onClick={handleLinkClick}
           className={`relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 text-slate-50 shadow-xl mt-8 w-full ${
-            productCart.length === 0
-              ? "bg-primary2/50 cursor-no-drop"
-              : "bg-primary2  hover:bg-[#cf3350]"
+            selectedItem.length === 0
+              ? "bg-[#ff385c]/50 cursor-no-drop"
+              : "bg-[#ff385c]  hover:bg-[#cf3350]"
           }`}
           to="/checkout"
         >

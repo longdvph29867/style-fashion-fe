@@ -1,4 +1,3 @@
-import "./App.css";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AccountPage from "./pages/AccountPage/AccountPage";
 import AccountInfomation from "./components/Accout/AccountInfomation";
@@ -10,7 +9,6 @@ import Register from "./pages/Auth/Register";
 import Spinner from "./components/Spinner/Spinner";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
-import { ToastContainer } from "react-toastify";
 import HomePage from "./pages/Home/HomePage";
 import Layout from "./Layout/Layout";
 import DetailPage from "./pages/DetailPage/DetailPage";
@@ -26,9 +24,6 @@ import UpdateUser from "./pages/admin/User/UpdateUser";
 import UserDetail from "./pages/admin/User/UserDetail";
 import MyShippingAddress from "./components/Accout/ShipingAddress/MyShippingAddress";
 import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
-import { isAccessTokenValid, refreshToken } from "./util/token";
-import { useEffect } from "react";
-import "./custom-input.css";
 import CartList from "./pages/CartPage/CartList";
 import OrderPage from "./pages/OrderPage/OrderPage";
 import OrderDetail from "./pages/OrderPage/OrderDetail";
@@ -41,6 +36,13 @@ import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 import VoucherList from "./pages/admin/Voucher/VoucherList";
 import AddVoucher from "./pages/admin/Voucher/AddVoucher";
 import UpdateVoucher from "./pages/admin/Voucher/UpdateVoucher";
+import { ToastContainer } from "react-toastify";
+import { isAccessTokenValid, refreshToken } from "./util/token";
+import { useEffect } from "react";
+import "./custom-input.css";
+import "./App.css";
+import Dashboard from "./pages/admin/Dashboard/Dashboard";
+import UpdateAttributeProduct from "./pages/admin/Product/UpdateAttributeProduct";
 
 function App() {
   const location = useLocation();
@@ -75,13 +77,10 @@ function App() {
             <Route path="myorder" element={<MyOrderPage />} />
           </Route>
           <Route path="detail/:slug" element={<DetailPage />} />
-          {/* <Route path="details/:slug" element={<DetailProduct />} /> */}
-          {/* <Route path="products" element={<ProductListPage />} /> */}
           <Route path="checkout" element={<CheckoutPage />} />
           <Route path="carts" element={<CartList />} />
           <Route path="order/:id" element={<OrderDetail />} />
           <Route path="order" element={<OrderPage />} />
-          {/* <Route path="detail" element={<DetailProduct />} /> */}
           <Route path="products" element={<ListProductPage />} />
         </Route>
         <Route path="/auth" element={<LoginLayout />}>
@@ -91,10 +90,15 @@ function App() {
           <Route path="forgot-password" element={<ForgotPassword />} />
         </Route>
         <Route path="/admin" element={<LayoutAdmin />}>
+          <Route index element={<Dashboard />} />
           <Route path="products" element={<ProductsList />} />
           <Route path="products/:id" element={<ProductDetail />} />
           <Route path="products/add" element={<AddProduct />} />
           <Route path="products/update/:id" element={<UpdateProduct />} />
+          <Route
+            path="products/update/attributes/:id"
+            element={<UpdateAttributeProduct />}
+          />
           <Route path="reviews/:id" element={<ReviewList />} />
           <Route path="users" element={<UsersList />} />
           <Route path="users/:id" element={<UserDetail />} />

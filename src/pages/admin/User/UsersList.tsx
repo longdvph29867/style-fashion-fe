@@ -5,7 +5,7 @@ import {
   showSpinner,
 } from "../../../util/util";
 import { Link } from "react-router-dom";
-import { Modal, message } from "antd";
+import { Breadcrumb, Button, Image, Modal, Table, message } from "antd";
 import { https } from "../../../config/axios";
 import { IUser } from "../../../types/userType";
 import { CiCircleAlert } from "react-icons/ci";
@@ -71,17 +71,137 @@ const UsersList: React.FC = () => {
     });
   };
 
+  const columns = [
+    {
+      title: 'Hình ảnh',
+      dataIndex: 'image',
+      key: 'image',
+      render: (text, record) => (
+        <Image
+          src={record.image}
+          alt={record.name}
+          width={50}
+          height={50}
+          style={{ borderRadius: '8px' }}
+        />
+      ),
+    },
+    {
+      title: 'Tên',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+      render: (text, record) => (
+        <>
+          <p>{record.email}</p>
+          <div className="flex gap-1 items-center">
+            {record.isEmailVerified ? (
+              <>
+                <IoIosCheckboxOutline color="green" />
+                <span className="text-xs font-semibold text-slate-300">
+                  Đã xác minh
+                </span>
+              </>
+            ) : (
+              <>
+                <CiCircleAlert color="red" />
+                <span className="text-xs font-semibold text-slate-300">
+                  Chưa xác minh
+                </span>
+              </>
+            )}
+          </div>
+        </>
+      ),
+    },
+    {
+      title: 'Số điện thoại',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
+      render: (text, record) => (
+        <>
+          <span>{record.phoneNumber}</span>
+          <div className="flex gap-1 items-center">
+            {record.isPhoneNumberVerified ? (
+              <>
+                <IoIosCheckboxOutline color="green" />
+                <span className="text-xs font-semibold text-slate-300">
+                  Đã xác minh
+                </span>
+              </>
+            ) : (
+              <>
+                <CiCircleAlert color="red" />
+                <span className="text-xs font-semibold text-slate-300">
+                  Chưa xác minh
+                </span>
+              </>
+            )}
+          </div>
+        </>
+      ),
+    },
+    {
+      title: 'Quận/Huyện',
+      dataIndex: 'district',
+      key: 'district',
+      render: (text, record) => (
+        <p>{record.shippingAddress[0]?.district || "..."}</p>
+      ),
+    },
+    {
+      title: 'Tỉnh/Thành phố',
+      dataIndex: 'cityProvince',
+      key: 'cityProvince',
+      render: (text, record) => (
+        <p>{record.shippingAddress[0]?.cityProvince || "..."}</p>
+      ),
+    },
+    {
+      title: 'Vai trò',
+      dataIndex: 'role',
+      key: 'role',
+    },
+    {
+      title: 'Thao tác',
+      key: 'actions',
+      render: (text, record) => (
+        <div className="space-x-2">
+          <Link
+            to={`/admin/users/${record.id}`}
+            className="text-yellow-500 hover:text-yellow-600"
+          >
+            Chi tiết
+          </Link>
+          <Button
+            type="link"
+            className="text-red-500 hover:text-red-600"
+            onClick={() => showConfirm(record.id)}
+          >
+            Xoá
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="">
-      <div className="p-4 pb-0 mb-0 bg-white rounded-t-2xl">
-        <Link
-          to="/admin/users/add"
-          className="text-white text-base font-semibold bg-green-500 py-2 px-2 rounded my-5 hover:bg-green-600"
-        >
-          <span>Thêm mới</span>
-        </Link>
-      </div>
-      <div className="h-full overflow-x-auto">
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Người dùng</Breadcrumb.Item>
+      </Breadcrumb>
+      <Table columns={columns} dataSource={usersList} pagination={false} />
+
+      <PaginationPage
+        current={1}
+        total={totalUsers}
+        pageSize={limitPerPage} />
+      {/* <div className="h-full overflow-x-auto">
         <div className="w-full border-gray-200 text-slate-500">
           <div className="w-full hidden lg:grid lg:grid-cols-10  gap-2">
             <div className="pr-6 pl-4 py-3  text-center font-bold uppercase text-slate-800">
@@ -110,13 +230,6 @@ const UsersList: React.FC = () => {
             </div>
           </div>
           <div>
-            {
-              loading && <div>
-                {Array.from({ length: 10 }).map((_, index) => (
-                  <UserListSkeleton key={index} />
-                ))}
-              </div>
-            }
             {[...usersList].reverse().map((user, index) => {
               return (
                 <div
@@ -194,12 +307,8 @@ const UsersList: React.FC = () => {
               );
             })}
           </div>
-          <PaginationPage
-            current={1}
-            total={totalUsers}
-            pageSize={limitPerPage} />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
