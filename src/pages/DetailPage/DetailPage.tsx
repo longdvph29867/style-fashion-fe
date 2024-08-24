@@ -12,7 +12,8 @@ const DetailPage = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["product-detail"],
-    queryFn: () => productService.getProductDetail("66a7bdc7b43a6d74ee316d2b").then((res) => res.data),
+    queryFn: () =>
+      productService.getProductDetail(slug!).then((res) => res.data),
     staleTime: 3 * 60 * 1000, // quá 3 phút sẽ gọi lại api
     enabled: !!slug, // khi nào có slug thì mới gọi api
   });

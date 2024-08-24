@@ -1,41 +1,31 @@
-export type City = {
-  _id: string;
+export interface FieldTypeShipping {
   name: string;
-  idCity: number;
-};
+  phoneNumber: string;
+  address: string;
+  wardCode: string;
+  districtCode: number;
+  provinceCode: number;
+}
 
-export type District = {
-  _id: string;
-  name: string;
-  idDistrict: number;
-  cityId: string;
-};
+export interface BodyShippingAddress extends FieldTypeShipping {
+  districtName: string;
+  provinceName: string;
+  wardName: string;
+}
 
-export type Ward = {
-  _id: string;
+export interface ShippingAddressType {
   name: string;
-  districtId: number;
-};
-export type FieldTypeShipping = {
-  recipientName: string;
-  recipientPhoneNumber: string;
-  streetAddress: string;
-  wardCommune: string;
-  district: string;
-  cityProvince: string;
+  phoneNumber: string;
+  address: string;
+  wardCode: string;
+  wardName: string;
+  districtCode: number;
+  districtName: string;
+  provinceCode: number;
+  provinceName: string;
   selected: boolean;
-};
-
-export type ShippingAddressType = {
-  recipientName: string;
-  recipientPhoneNumber: string;
-  streetAddress: string;
-  wardCommune: string;
-  district: string;
-  selected: boolean;
-  cityProvince: string;
   _id: string;
-};
+}
 
 export type ShippingActionModal = {
   type: "update" | "create";

@@ -58,16 +58,16 @@ const DrawerShippingAddress = ({
                     <div className="font-semibold text-sm">
                       <div className="flex">
                         <div className="flex items-center space-x-1.5">
-                          <span>{address.recipientName}</span>
+                          <span>{address.name}</span>
                         </div>
                         <span className="mx-2 border-l border-slate-600" />
                         <div className="flex items-center space-x-1.5">
-                          <span>{address.recipientPhoneNumber}</span>
+                          <span>{address.phoneNumber}</span>
                         </div>
                       </div>
                       <span className="sm:w-full text-slate-600 sm:text-xs">
-                        {address.streetAddress},{address.wardCommune},{" "}
-                        {address.district},{address.cityProvince}
+                        {address.address},{address.wardName},{" "}
+                        {address.districtName},{address.provinceName}
                       </span>
                       <div>
                         <span

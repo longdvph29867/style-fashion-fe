@@ -1,32 +1,34 @@
 import List_Order from "./ListOrder";
 import { formartCurrency } from "../../util/util";
 import { memo } from "react";
-import { ProductCartType } from "../../types/cart";
+import { ICart } from "../../types/cart";
 import { HiOutlineTicket, HiOutlineChevronRight } from "react-icons/hi2";
 
 type Props = {
-  productList: ProductCartType[];
+  productCheckout: ICart[];
   shippingfee: number;
   subTotal: number;
   onOpenVoucher: () => void;
   confirmOrder: () => void;
   voucherName: string | undefined;
   discountAmount: number;
+  isDisable: boolean;
 };
 const OrderSummary = ({
-  productList,
+  productCheckout,
   shippingfee,
   subTotal,
   onOpenVoucher,
   confirmOrder,
   voucherName,
   discountAmount,
+  isDisable,
 }: Props) => {
   return (
     <div className="w-full lg:w-[36%]">
       <h3 className="text-lg font-semibold">Tóm Tắt Đơn Hàng</h3>
       {/* List Product Order */}
-      <List_Order productList={productList} />
+      <List_Order productCheckout={productCheckout} />
       {/* Discount code */}
       <div className="mt-10 pt-6 text-sm text-slate-500 border-t border-slate-200/70 flex justify-between">
         <div className="flex items-center gap-2">
@@ -78,8 +80,13 @@ const OrderSummary = ({
         <span>{formartCurrency(subTotal + shippingfee - discountAmount)}</span>
       </div>
       <button
+        disabled={isDisable}
         onClick={confirmOrder}
-        className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 disabled:bg-opacity-90 bg-primary2  hover:bg-[#cf3350] text-slate-50 shadow-xl mt-8 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000"
+        className={`relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 disabled:bg-opacity-90 text-slate-50 shadow-xl mt-8 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000 ${
+          isDisable
+            ? "bg-[#ff385c]/50 cursor-no-drop"
+            : "bg-[#ff385c]  hover:bg-[#cf3350]"
+        }`}
       >
         Xác nhận đơn hàng
       </button>

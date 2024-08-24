@@ -1,30 +1,23 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { formartCurrency } from "../../util/util";
 import { Link } from "react-router-dom";
-import { ProductCartType } from "../../types/cart";
+import { useSelectedCarts } from "../../hooks";
 
-type Props = {
-  productCart: ProductCartType[];
-};
+const TotalOrder = () => {
+  const selectedItem = useSelectedCarts();
 
-const TotalOrder = ({ productCart }: Props) => {
-  const [isProductHasVariant, setIsProductHasVariant] = useState(true);
   const total = useMemo<number>(() => {
-    return productCart.reduce((accumulator, currentValue) => {
-      if (!currentValue?.variant) {
-        setIsProductHasVariant(false);
-        return accumulator; // Bỏ qua nếu variant không tồn tại
-      }
+    return selectedItem.reduce((accumulator, currentValue) => {
       return (
         accumulator + currentValue.quantity * currentValue.variant.currentPrice
       );
     }, 0);
-  }, [productCart]);
+  }, [selectedItem]);
 
   const handleLinkClick = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
-    if (productCart.length === 0 || !isProductHasVariant) {
+    if (selectedItem.length === 0) {
       e.preventDefault();
     }
   };
@@ -35,7 +28,7 @@ const TotalOrder = ({ productCart }: Props) => {
         <h3 className="text-xl font-semibold">
           Thanh toán{" "}
           <span className="text-sm text-slate-500">
-            ( {productCart.length} sản phẩm)
+            ({selectedItem?.length ?? 0} sản phẩm)
           </span>
         </h3>
         <div className="text-sm mt-4 text-slate-800">
@@ -55,7 +48,7 @@ const TotalOrder = ({ productCart }: Props) => {
         <Link
           onClick={handleLinkClick}
           className={`relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 text-slate-50 shadow-xl mt-8 w-full ${
-            productCart.length === 0 || !isProductHasVariant
+            selectedItem.length === 0
               ? "bg-[#ff385c]/50 cursor-no-drop"
               : "bg-[#ff385c]  hover:bg-[#cf3350]"
           }`}
@@ -63,11 +56,6 @@ const TotalOrder = ({ productCart }: Props) => {
         >
           Thanh toán
         </Link>
-        {!isProductHasVariant && (
-          <p className="text-red-500 text-sm mt-3">
-            Vui lòng sử lý sản phẩm lỗi phân loại trước khi thanh toán
-          </p>
-        )}
       </div>
     </>
   );
