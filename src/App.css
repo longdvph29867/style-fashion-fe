@@ -185,7 +185,10 @@ header.show-mobile .menu-mobile {
   content: none !important;
 }
 
-.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-name {
+.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper
+  .ant-upload-list
+  .ant-upload-list-item
+  .ant-upload-list-item-name {
   white-space: normal !important;
 }
 
@@ -206,37 +209,49 @@ body .ant-modal-mask {
   background-color: #ff385c !important;
 }
 
-.ant-modal-content .ant-modal-body .ant-modal-confirm-body-wrapper .ant-modal-confirm-btns .ant-btn-primary {
+.ant-modal-content
+  .ant-modal-body
+  .ant-modal-confirm-body-wrapper
+  .ant-modal-confirm-btns
+  .ant-btn-primary {
   background-color: #ff4d4f !important;
 }
 
-.order-client .ant-tabs-nav-wrap * {
-  display: grid !important;
-  grid-template-columns: repeat(7, 1fr) !important;
-  /* justify-content: center !important; */
-  /* align-items: center !important; */
+.order-client {
+  /* min-width: 1248px; */
 }
 
-.order-client .ant-tabs-nav-list {
-  /* display: contents !important; */
-  /* text-align: center !important; */
+.order-client .ant-tabs-nav * {
+  /* display: flex !important; */
+  /* grid-template-columns: repeat(7, 1fr) !important; */
+  /* width: 100% !important; */
+  /* min-width: 1060px; */
 }
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab {
-  font-size: 14px;
+  display: flex !important;
+  width: calc(1248px / 8) !important;
+  justify-content: center !important;
+  font-size: 17px;
   border: none !important;
   margin: 0 !important;
   border-radius: 0 !important;
   height: 60px;
 }
 
+.ant-tabs-tab-btn {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
 .order-client .ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active {
   background-color: #fafafa;
-  border-bottom: 2px solid #62d2a2 !important;
+  border-bottom: 2px solid #fe385c !important;
 }
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active * {
-  color: #62d2a2 !important;
+  color: #fe385c !important;
 }
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab:hover {
@@ -265,6 +280,10 @@ body .ant-modal-mask {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.ant-table-filter-dropdown-btns .ant-btn-primary {
+  background-color: #1677fe !important;
 }
 
 .button-variant {
@@ -314,6 +333,6 @@ body .ant-modal-mask {
 }
 
 .ant-layout .ant-layout-sider-trigger {
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
   color: gray;
 }

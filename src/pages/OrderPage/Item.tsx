@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { formartCurrency, hiddenSpinner, showSpinner } from '../../util/util'
-import { Button, message, Modal, Skeleton } from 'antd'
-import orderService from '../../services/orderSerivce'
-import { getOrderStatusName, orderStatusValue } from '../../util/constant';
+import { Button, Image, message, Modal, Skeleton } from 'antd'
+import { getMessageByStatusCode } from '../../util/constant';
 import ReviewForm from './ReviewForm'
+import orderService from '../../services/orderService';
+import ButtonOption from './ButtonOption';
 
 type Props = {
     orderList: any,
-    fetchOrdersList: any
+    fetchOrdersList: any,
+    setOrderList: any,
+    userInfo: any
 }
 
-const Item = ({ orderList, fetchOrdersList }: Props) => {
+const Item = ({ orderList, fetchOrdersList, setOrderList, userInfo }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     // const [selectedOrderId, setSelectedOrderId] = useState(null);
     const [selectedReceivedOrderId, setSelectedReceivedOrderId] = useState(null);
@@ -129,17 +132,26 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
             </> : null} */}
             {orderList?.map((order: any) => (
                 <div key={order._id} className="shadow rounded  mb-12 bg-white">
-                    {order?.productsOrder.map((product: any) => (
+                    {order?.products.map((product: any) => (
                         <Link to={`/order/${order._id}`} key={product._id}>
-                            <div className="flex justify-between items-center mb-2 p-6">
-                                <div className="flex">
-                                    <div className="border-gray-400 mr-3" style={{ borderWidth: "1px" }}>
-                                        <img className="w-20 h-20 object-cover" src={product.imageAtrribute} alt={product.productName} />
+                            <div className="flex justify-between items-center p-4">
+                                <div className="flex gap-4">
+                                    <div>
+                                        <Image
+                                            width={80}
+                                            src={product.image}
+                                            alt={product.productName}
+                                            style={{ height: '80px', objectFit: 'cover', marginRight: '8px', borderRadius: '8px' }}
+                                        />
                                     </div>
+                                    {/* <div className="border-gray-400 mr-3" style={{ borderWidth: "1px" }}>
+                                        <img className="w-20 h-20 object-cover" src={product.image} alt={product.productName} />
+                                        
+                                    </div> */}
                                     <div>
                                         <h3 className="text-lg text-[#212121] ">{product.productName}</h3>
                                         <p className="normal-case text-[#757575]">
-                                            Phân loại hàng: <span className="">{product.attribute}</span>
+                                            Phân loại hàng: <span className="">{product.variantName}</span>
                                         </p>
                                         <p className="normal-case text-[#212121] ">
                                             {/* Số lượng: <span className="text-xl">{product.quantity} x </span> Cái */}
@@ -148,7 +160,7 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                                     </div>
                                 </div>
                                 <p className="normal-case">
-                                    <span className="text-lg text-[#62d2a2]">{formartCurrency(product.price * product.quantity)}</span>
+                                    <span className="text-xl text-[#fe385c] font-medium">{formartCurrency(product.price * product.quantity)}</span>
                                 </p>
                             </div>
                             <div className="h-[1px] bg-gray-100"></div>
@@ -159,77 +171,18 @@ const Item = ({ orderList, fetchOrdersList }: Props) => {
                     <div className="h-[1px] bg-gray-200"></div>
                     <div className=' p-6'>
                         <div className="pb-8 text-right">
-                            <i className="fa-solid fa-file-invoice-dollar text-[#62d2a2]"></i>
-                            <span>Thành tiền: </span>
-                            <span className="text-2xl text-[#62d2a2] font-semibold">{formartCurrency(order.totalPrice)}</span>
+                            <i className="fa-solid fa-file-invoice-dollar text-[#fe385c]"></i>
+                            <span className='text-lg'>Thành tiền: </span>
+                            <span className="text-2xl ml-2 text-[#fe385c] font-semibold">{formartCurrency(order.totalPrice)}</span>
                         </div>
                         <div className="flex justify-between items-end">
-                            <div className="text-green-600">
+                            <div className="text-[#fe385c]">
                                 <i className="fa-solid fa-truck"></i>
-                                <span>{getOrderStatusName(order?.orderStatus)}</span>
+                                <span className='font-medium'>{getMessageByStatusCode(order?.orderStatus.code)}</span>
                             </div>
                             <div>
+                                <ButtonOption userInfo={userInfo} orderId={order._id} orderStatus={order.orderStatus.code} fetchOrdersList={fetchOrdersList} setOrderList={setOrderList} onPage='all' />
 
-                                <div className="flex space-x-2">
-
-                                    {
-                                        (order.orderStatus === 0 || order.orderStatus === 2) &&
-                                        <Link to={`/order/${order._id}/detail`} className="btn1 block text-center rounded-md min-w-[150px] py-2 bg-green-600 text-white uppercase" style={{ borderWidth: "1px" }}>
-                                            Thanh toán ngay
-                                        </Link>
-                                    }
-                                    {
-                                        order.orderStatus === 9 &&
-                                        <>
-                                            <Button onClick={() => setReviewFormOpen(true)} className="h-10 btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
-                                                Đánh giá
-                                            </Button>
-                                            <Modal
-                                                title="Đánh giá sản phẩm"
-                                                // centered
-                                                footer={null}
-                                                open={reviewFormOpen}
-                                                onOk={() => setReviewFormOpen(false)}
-                                                onCancel={() => setReviewFormOpen(false)}
-                                                width={1000}
-                                            >
-                                                <ReviewForm orderId={order._id} setFormReviewValues={setFormReviewValues}></ReviewForm>
-                                            </Modal>
-                                        </>
-                                    }
-                                    {
-                                        order.orderStatus === 6 &&
-                                        <>
-                                            <Button onClick={() => showReceiveModal(order._id)} className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-[#EE4D2D] text-white uppercase" style={{ borderWidth: "1px" }}>
-                                                Đã nhận được hàng
-                                            </Button>
-                                            <Modal title="Xác nhận đã nhận hàng" open={isModalOpen} onOk={handleReceiveOrder} onCancel={handleCancel}>
-                                                <p>Xác nhận đã nhận hàng?</p>
-                                            </Modal>
-                                        </>
-                                    }
-                                    {
-                                        (order.orderStatus === 5 || order.orderStatus === 7) &&
-                                        <button className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-gray-200 text-white uppercase" style={{ borderWidth: "1px" }}>
-                                            Đã nhận được hàng
-                                        </button>
-                                    }
-
-                                    {
-                                        (order.orderStatus === 0 || order.orderStatus === 1 || order.orderStatus === 2 || order.orderStatus === 3 || order.orderStatus === 4) &&
-                                        <>
-                                            <Button onClick={() => showCancelOrder(order._id)} className="btn2 block text-center rounded-md h-10 min-w-[130px] py-2 bg-slate-50 uppercase" style={{ borderWidth: "1px" }}>
-                                                Huỷ đơn hàng
-                                            </Button>
-                                            {/* <Modal title="Xác nhận hủy đơn hàng" open={isModalOpen} onOk={handleDelete} onCancel={handleCancel}>
-                                                <p>Bạn có chắc chắn muốn hủy đơn hàng này?</p>
-                                            </Modal> */}
-                                        </>
-                                    }
-                                    {/* <Link to={`/order/${order._id}/detail`} className="btn1 block text-center rounded-md min-w-[100px] py-2 uppercase" style={{ borderWidth: "1px" }}>
-                                            Chi tiết
-                                        </Link> */}
-                                </div>
                             </div>
                         </div>
 
