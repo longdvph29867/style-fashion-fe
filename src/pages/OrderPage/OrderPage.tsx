@@ -64,25 +64,36 @@ const OrderPage = () => {
 
       // Lấy id từ đối tượng
       const userId = userInfo.id;
+      const orderStatus = params.get("orderStatus");
+      console.log(orderStatus, 'orderStatus')
+      // return
 
-      orderService
-        .getAllOrderUser(userId, limitPerPage, currentPage)
-        .then((res) => {
-          setOrdersList(res.data.results);
-          setTotalOrders(res.data.totalResults);
-          hiddenSpinner();
+      if (orderStatus) {
+        orderService
+          .getAllOrderUser(userId, limitPerPage, currentPage, orderStatus)
+          .then((res) => {
+            setOrdersList(res.data.results);
+            setTotalOrders(res.data.totalResults);
+            hiddenSpinner();
+          })
+          .catch((err) => {
+            hiddenSpinner();
+            console.error("Error fetching data:", err);
+          });
+      } else {
+        orderService
+          .getAllOrderUser(userId, limitPerPage, currentPage, null)
+          .then((res) => {
+            setOrdersList(res.data.results);
+            setTotalOrders(res.data.totalResults);
+            hiddenSpinner();
+          })
+          .catch((err) => {
+            hiddenSpinner();
+            console.error("Error fetching data:", err);
+          });
+      }
 
-          // setPaymentPendingList(res.data.results.filter((order: any) => order?.orderStatus.code === 0 || order?.orderStatus.code === 2));
-          // setConfirmPendingList(res.data.results.filter((order: any) => order?.orderStatus.code === 3 || order?.orderStatus.code === 1));
-          // setPrepareList(res.data.results.filter((order: any) => order?.orderStatus.code === 4));
-          // setShippingList(res.data.results.filter((order: any) => order?.orderStatus.code === 5 || order?.orderStatus.code === 6 || order?.orderStatus.code === 7));
-          // setCompleteList(res.data.results.filter((order: any) => order?.orderStatus.code === 8));
-          // setCancelList(res.data.results.filter((order: any) => order?.orderStatus.code === 9));
-        })
-        .catch((err) => {
-          hiddenSpinner();
-          console.error("Error fetching data:", err);
-        });
 
       // setLengthWaitPayment(await getLengthStatus(userId, 1));
       // setLengthWaitConfirm(await getLengthStatus(userId, 2));
@@ -90,7 +101,7 @@ const OrderPage = () => {
       // setLengthShipping(await getLengthStatus(userId, 4));
 
 
-      console.log("User ID:", userId);
+      // console.log("User ID:", userId);
     } else {
       console.log("User data not found in localStorage");
     }
@@ -105,25 +116,19 @@ const OrderPage = () => {
     fetchOrdersList();
   }, []);
   const onChange = (key: string) => {
-    showSpinner();
     console.log(key, 'key');
-    params.set("list", key.toString());
+    params.set("page", "1");
     // console.log(location, 'location')
-    navigate(location.pathname + "?" + params.toString());
     // console.log(params.toString(), 'params.toString()')
     // console.log(params.get("list"), 'params.get("list")')
     if (key === 'all') {
-      fetchOrdersList();
+      params.delete("orderStatus");
+      navigate(location.pathname + "?" + params.toString());
       return;
     }
-    orderService.getAllOrderUserByStatusCode(userInfo.id, key).then((res) => {
-      setOrdersList(res.data.results);
-      hiddenSpinner();
-    }).catch((error) => {
-      hiddenSpinner();
-      console.error("Error fetching data:", error);
-    })
-    console.log(ordersList, 'ordersList')
+    params.set("orderStatus", key.toString());
+    navigate(location.pathname + "?" + params.toString());
+
   };
 
   const label1 = (
@@ -164,12 +169,12 @@ const OrderPage = () => {
       children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },
     {
-      key: '1',
+      key: '0',
       label: label1,
       children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },
     {
-      key: '2',
+      key: '1,2',
       label: label2,
       children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },
@@ -179,12 +184,12 @@ const OrderPage = () => {
       children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },
     {
-      key: '4',
+      key: '4,5,6',
       label: label4,
       children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },
     {
-      key: '9',
+      key: '7,9',
       label: 'Hoàn thành',
       children: <Item userInfo={userInfo} fetchOrdersList={fetchOrdersList} orderList={ordersList} setOrderList={setOrdersList} />,
     },

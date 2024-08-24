@@ -1,5 +1,6 @@
 export const orderStatusValue = [
-    { code: 1, name: "Thanh toán thất bại", message: "Thanh toán thất bại, vui lòng thanh toán lại!" },
+    { code: 0, name: "Thanh toán thất bại", message: "Thanh toán thất bại, vui lòng thanh toán lại!" },
+    { code: 1, name: "Thanh toán thành công", message: "Thanh toán thành công, chờ shop xác nhận đơn hàng cho bạn!" },
     { code: 2, name: "Chờ xác nhận", message: "Chờ shop xác nhận đơn hàng cho bạn!" },
     { code: 3, name: "Chuẩn bị hàng", message: "Shop đang chuẩn bị hàng cho bạn!" },
     { code: 4, name: "Đang giao hàng", message: "Đơn hàng đang trên đường giao đến bạn, vui lòng để ý điện thoại!" },
@@ -13,8 +14,12 @@ export const orderStatusValue = [
 
 export const actionAdminOrder = [
     {
+        code: 2,
+        name: 'Chờ xác nhận',
+    },
+    {
         code: 3,
-        name: 'Xác nhận đơn hàng',
+        name: 'Chuẩn bị hàng',
     },
     {
         code: 4,

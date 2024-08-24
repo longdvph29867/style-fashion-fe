@@ -174,7 +174,7 @@ const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList, onP
                                             Chi tiết
                                         </Link> */}
             <Modal title="Thông báo xác nhận" open={isModalOpen} onOk={handleUpdateStatusOrder} onCancel={handleCancel}>
-                <p>Xác nhận <span className="font-medium">{selectedSatusName}</span></p>
+                <p>Xác nhận <span className="font-medium text-primary">{selectedSatusName}</span></p>
             </Modal>
         </div>
     )

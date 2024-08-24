@@ -10,6 +10,7 @@ import { VerificationIcon } from "../Icons/verification";
 import orderService from "../../services/orderService";
 import { useState } from "react";
 import { hiddenSpinner, showSpinner } from "../../util/util";
+import { PackageIcon } from "../Icons/package";
 // import { TableActionButton } from "../../tableActionButton";
 // import type { IOrder } from "../../../interfaces";
 
@@ -91,15 +92,15 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList,
             >
 
                 <Menu.Item
-                    //  Xác nhận đơn hàng
-                    key="3"
+                    //  Chờ xác nhận
+                    key="2"
                     style={{
                         fontSize: 15,
                         display: "flex",
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record?.orderStatus.code !== 2}
+                    disabled={record?.orderStatus.code !== 1}
                     icon={
                         <CheckCircleOutlined
                             style={{
@@ -110,10 +111,36 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList,
                         />
                     }
                     onClick={() => {
+                        showUpdateStatusModal(record._id, 2, getNameByStatusCodeAdmin(2));
+                    }}
+                >
+                    Chờ xác nhận
+                </Menu.Item>
+
+                <Menu.Item
+                    //  Chuẩn bị hàng
+                    key="3"
+                    style={{
+                        fontSize: 15,
+                        display: "flex",
+                        alignItems: "center",
+                        fontWeight: 500,
+                    }}
+                    disabled={record?.orderStatus.code !== 2}
+                    icon={
+                        <PackageIcon
+                            style={{
+                                color: "purple",
+                                fontSize: 17,
+                                fontWeight: 500,
+                            }}
+                        />
+                    }
+                    onClick={() => {
                         showUpdateStatusModal(record._id, 3, getNameByStatusCodeAdmin(3));
                     }}
                 >
-                    Xác nhận đơn hàng
+                    Chuẩn bị hàng
                 </Menu.Item>
 
                 <Menu.Item

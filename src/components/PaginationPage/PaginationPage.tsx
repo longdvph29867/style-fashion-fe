@@ -22,6 +22,10 @@ const PaginationPage = ({ current, total, pageSize, theme }: Porps) => {
     setCurrentPage(current);
   }, [current]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [params.get("orderStatus")]);
+
   return (
     <div
       className="my-4 flex justify-center"

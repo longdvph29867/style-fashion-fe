@@ -13,24 +13,9 @@ import { OrderActions } from "../../../components/OrderAdmin/OrderAction";
 import PaginationPage from "../../../components/PaginationPage/PaginationPage";
 
 const OrderAdmin = () => {
-  // const location = useLocation();
-  // const params = new URLSearchParams(location.search);
-  // const userId = params.get("user");
-  // const userId = '666eaa54b5ee1db4f34bb02c'
   const [ordersList, setOrdersList] = useState<any>(null);
-  // const [paymentPendingList, setPaymentPendingList] = useState<any>(null);
-  // const [confirmPendingList, setConfirmPendingList] = useState<any>(null);
-  // const [prepareList, setPrepareList] = useState<any>(null);
-  // const [shippingList, setShippingList] = useState<any>(null);
-  // const [deliveredList, setDeliveredList] = useState<any>(null);
-  // const [successList, setSuccessList] = useState<any>(null);
-  // const [unCompleteShippingList, setUnCompleteShippingList] = useState<any>(null);
-  // const [completeList, setCompleteList] = useState<any>(null);
-  // const [cancelList, setCancelList] = useState<any>(null);
-  // const [paymentFailedList, setPaymentFailedList] = useState<any>(null);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [nextStatus, setNextStatus] = useState(null);
 
   const params = new URLSearchParams(location.search);
   const [totalOrders, setTotalOrders] = useState(0);
@@ -44,15 +29,6 @@ const OrderAdmin = () => {
       .getAllOrders(limitPerPage, currentPage)
       .then((res) => {
         setOrdersList(res.data.results);
-        // setPaymentPendingList(res.data.results.filter((order: any) => order.orderStatus === 0));
-        // setConfirmPendingList(res.data.results.filter((order: any) => order.orderStatus === 3 || order.orderStatus === 1));
-        // setPrepareList(res.data.results.filter((order: any) => order.orderStatus === 4));
-        // setShippingList(res.data.results.filter((order: any) => order.orderStatus === 5));
-        // setDeliveredList(res.data.results.filter((order: any) => order.orderStatus === 6));
-        // setUnCompleteShippingList(res.data.results.filter((order: any) => order.orderStatus === 7));
-        // setCompleteList(res.data.results.filter((order: any) => order.orderStatus === 8));
-        // setCancelList(res.data.results.filter((order: any) => order.orderStatus === 9));
-        // setPaymentFailedList(res.data.results.filter((order: any) => order.orderStatus === 2));
         setTotalOrders(res.data.totalResults);
         hiddenSpinner();
       })
@@ -64,11 +40,6 @@ const OrderAdmin = () => {
   useEffect(() => {
     fetchOrdersList();
   }, [location.search]);
-  const onChange = (key: string) => {
-    // console.log(key);
-    // console.log(ordersList, 'ordersList')
-  };
-
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -78,40 +49,6 @@ const OrderAdmin = () => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-
-  const hasSelected = selectedRowKeys.length > 0;
-
-  const options = [
-    {
-      value: 3,
-      label: <span className="h-10">Xác nhận đơn hàng</span>,
-      disabled: 3 !== nextStatus,
-    },
-    {
-      value: 4,
-      label: <span className="h-10">Giao hàng</span>,
-      disabled: 4 !== nextStatus,
-    },
-    {
-      value: 5,
-      label: <span className="h-10">Giao hàng không thành công</span>,
-      disabled: 5 !== nextStatus,
-    },
-    {
-      value: 6,
-      label: <span className="h-10">Đã giao hàng</span>,
-      disabled: 6 !== nextStatus,
-    },
-    {
-      value: 10,
-      label: <span className="h-10">Hủy đơn hàng</span>,
-      disabled: 10 !== nextStatus,
-    },
-  ]
-
-  const onUpdateStatus = async (value: any) => {
-    console.log(value, 'value');
-  }
 
   const statusFilters = orderStatusValue.map((status) => ({
     text: status.name,
@@ -198,22 +135,7 @@ const OrderAdmin = () => {
   return (
     <div className="p-10">
       <h3 className="text-2xl mb-8">Danh sách đơn hàng</h3>
-      {/* <Tabs defaultActiveKey="all" items={items} onChange={onChange} /> */}
-      <div className="mb-4 flex gap-2 items-center">
-        <Select
-          options={options}
-          // value={order?.orderStatus?.code}
-          onChange={(value) => onUpdateStatus(value)}
-          style={{ width: 250, height: 40 }}
-          placeholder="Cập nhật trạng thái đơn hàng"
-        />
-        <span>
-          {hasSelected ? `Chọn ${selectedRowKeys.length} đơn hàng` : null}
-
-        </span>
-
-      </div>
-      <Table pagination={false} rowSelection={rowSelection} dataSource={ordersList} columns={columns} rowKey="_id" />
+      <Table pagination={false} dataSource={ordersList} columns={columns} rowKey="_id" />
       <PaginationPage
         current={1}
         total={totalOrders}

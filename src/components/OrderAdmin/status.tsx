@@ -5,7 +5,8 @@ import {
     CloseCircleOutlined,
     FileDoneOutlined,
     InfoCircleOutlined,
-    CheckOutlined
+    CheckOutlined,
+    CreditCardOutlined
 } from "@ant-design/icons";
 //   import { useTranslate } from "@refinedev/core";
 import { Tag } from "antd";
@@ -30,10 +31,15 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ statusCode }) => {
     let icon;
 
     switch (statusCode) {
-        case 1:
+        case 0:
             // Thanh toán thất bại
             color = "yellow";
             icon = <InfoCircleOutlined />;
+            break;
+        case 1:
+            // Thanh toán thành công
+            color = "green";
+            icon = <CreditCardOutlined />;
             break;
         case 2:
             // Chờ xác nhận

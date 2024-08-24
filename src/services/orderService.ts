@@ -14,8 +14,12 @@ const orderService = {
   getAllOrders(limit: number, page: number) {
     return https.get(`/orders?limit=${limit}&page=${page}`);
   },
-  getAllOrderUser(id: string, limit: number, page: number) {
-    return https.get(`/orders/user/${id}?limit=${limit}&page=${page}`);
+  getAllOrderUser(id: string, limit: number, page: number, orderStatus: any) {
+    if (orderStatus) {
+      return https.get(`/orders/user/${id}?orderStatus=${orderStatus}&limit=${limit}&page=${page}`);
+    } else {
+      return https.get(`/orders/user/${id}?limit=${limit}&page=${page}`);
+    }
   },
   getAllOrderUserByStatusCode(id: string, statusCode: any) {
     return https.get(`/orders/user/${id}?orderStatus=${statusCode}`)
