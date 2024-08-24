@@ -1,5 +1,6 @@
 // type Props = {};
 import {
+    Breadcrumb,
     Button,
     Divider,
     Form,
@@ -231,6 +232,11 @@ const ProductDetail: React.FC = () => {
     return (
         <>
             <div className="w-full px-5 pb-2">
+                <Breadcrumb style={{ margin: '16px 0' }}>
+                    <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to="/admin/products">Sản phẩm</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item>Chi tiết sản phẩm</Breadcrumb.Item>
+                </Breadcrumb>
                 <h3 className="text-2xl text-slate-700 text-center mt-6 mb-3">
                     Chi tiết sản phẩm
                 </h3>

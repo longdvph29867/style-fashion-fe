@@ -3,15 +3,19 @@ import OrderStatus from "./OrderStatus/OrderStatus";
 import Line from "../../../components/Line/Line";
 import SalesAnalysis from "./SalesAnalysis/SalesAnalysis";
 import TopSellingProducts from "./TopSellingProducts/TopSellingProducts";
+import { Breadcrumb } from "antd";
 
 const Dashboard: FC = () => {
   return (
-    <div className="p-6 space-y-10">
+    <div className="space-y-10">
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
+      </Breadcrumb>
       <OrderStatus />
       <Line />
       <SalesAnalysis />
       <Line />
-      <TopSellingProducts/>
+      <TopSellingProducts />
     </div>
   );
 };
