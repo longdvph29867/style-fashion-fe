@@ -116,7 +116,7 @@ const menuItems = [
     children: [
       { key: '4-1', label: <Link to="/admin/users">Xem người dùng</Link> },
       { key: '4-2', label: <Link to="/admin/users/add">Thêm người dùng</Link> },
-      { key: '4-3', label: <Link to="/admin/users">Role</Link> },
+      // { key: '4-3', label: <Link to="/admin/users">Role</Link> },
     ],
   },
   {
@@ -143,8 +143,8 @@ const menuItems = [
     icon: <FaTruckRampBox />,
     children: [
       { key: '7-1', label: <Link to="/admin/order">Xem đơn hàng</Link> },
-      { key: '7-2', label: <Link to="/admin/order">Xử lý đơn hàng</Link> },
-      { key: '7-3', label: <Link to="/admin/order">Cập nhật đơn hàng</Link> },
+      // { key: '7-2', label: <Link to="/admin/order">Xử lý đơn hàng</Link> },
+      // { key: '7-3', label: <Link to="/admin/order">Cập nhật đơn hàng</Link> },
     ],
   },
 ];

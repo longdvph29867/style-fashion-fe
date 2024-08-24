@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  formartCurrency,
   hiddenSpinner,
   showSpinner,
 } from "../../../util/util";
@@ -114,23 +115,27 @@ const ProductsList: React.FC = () => {
       sorter: (a: Product, b: Product) => a.finalScoreReview - b.finalScoreReview,
     },
     {
-      title: "Giá thấp nhất",
-      dataIndex: "minPrice",
-      key: "minPrice",
+      title: "Khoảng giá",
+      key: "priceRange",
+      dataIndex: ["minPrice", "maxPrice"], // Mảng chứa cả minPrice và maxPrice
       sorter: (a: Product, b: Product) => a.minPrice - b.minPrice,
+      render: (_: any, record: Product) => {
+        const { minPrice, maxPrice } = record;
+        return `${formartCurrency(minPrice)} - ${formartCurrency(maxPrice)}`;
+      },
+      // filters: [
+      //   { text: "Dưới 1 triệu", value: 1000000 },
+      //   { text: "1 triệu - 5 triệu", value: 5000000 },
+      //   { text: "Trên 5 triệu", value: 5000001 }
+      // ],
+      onFilter: (value: any, record: Product) => record.minPrice <= value,
     },
-    {
-      title: "Giá cao nhất",
-      dataIndex: "maxPrice",
-      key: "maxPrice",
-      sorter: (a: Product, b: Product) => a.maxPrice - b.maxPrice,
-    },
-    {
-      title: "Danh mục",
-      dataIndex: "maxPrice",
-      key: "maxPrice",
-      sorter: (a: Product, b: Product) => a.maxPrice - b.maxPrice,
-    },
+    // {
+    //   title: "Danh mục",
+    //   dataIndex: "categories",
+    //   key: "categories",
+    //   // sorter: (a: Product, b: Product) => a.maxPrice - b.maxPrice,
+    // },
     {
       // fixed: "right",
       title: "Thao tác",

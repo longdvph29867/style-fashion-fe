@@ -267,6 +267,7 @@ const AddProduct: React.FC = () => {
             columns.push({
                 title: attributes[0].name,
                 dataIndex: 'attribute_0',
+                width: '20%',
                 render: (text: any, _: any, index: number) => {
                     const attributeValue = variants[index]?.attributes ? variants[index].attributes[0] : null;
                     const rowSpan = attributes[1]?.values.length || 1;
@@ -295,17 +296,17 @@ const AddProduct: React.FC = () => {
                                 >
                                     <Upload
                                         onChange={({ fileList }) => handleUploadImageAttributeChange(fileList, attrValueIndex)}
-                                        listType="picture-card"
+                                        listType="picture"
                                         beforeUpload={() => false}
                                         maxCount={1}
                                     // defaultFileList={currentValue.image}
 
                                     >
-                                        {/* <Button icon={<UploadOutlined />}>Tải lên</Button> */}
-                                        <button style={{ border: 0, background: 'none' }} type="button">
+                                        <Button icon={<UploadOutlined />}>Tải lên</Button>
+                                        {/* <button style={{ border: 0, background: 'none' }} type="button">
                                             <PlusOutlined />
                                             <div style={{ marginTop: 8 }}>Upload</div>
-                                        </button>
+                                        </button> */}
                                     </Upload>
                                 </Form.Item>
                             </>

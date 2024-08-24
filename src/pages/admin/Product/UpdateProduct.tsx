@@ -285,7 +285,7 @@ const UpdateProduct: React.FC = () => {
                   beforeUpload={() => false}
                   maxCount={1} // chỉ cho phép tải lên một file duy nhất
                 >
-                  <Button icon={<UploadOutlined />}>Click to upload</Button>
+                  <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
                 </Upload.Dragger>
               </Form.Item>
               {/* gallery */}
@@ -328,7 +328,7 @@ const UpdateProduct: React.FC = () => {
                   listType="picture"
                   beforeUpload={() => false}
                 >
-                  <Button icon={<UploadOutlined />}>Click to upload</Button>
+                  <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
                 </Upload.Dragger>
               </Form.Item>
 
