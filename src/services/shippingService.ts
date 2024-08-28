@@ -1,10 +1,8 @@
 import { https } from "../config/axios";
 import {
-  City,
-  District,
+  BodyShippingAddress,
   FieldTypeShipping,
   ShippingAddressType,
-  Ward,
 } from "../types/shippingAddress";
 
 const shippingService = {
@@ -15,13 +13,13 @@ const shippingService = {
     return response.data;
   },
   async getShipping(userId: string, addressId: string) {
-    const response = await https.get<ShippingAddressType>(
+    const response = await https.get(
       `/shipping-address/?userId=${userId}&addressId=${addressId}`
     );
     return response.data;
   },
-  async postShippingAddress(userId: string, data: FieldTypeShipping) {
-    const response = await https.post<ShippingAddressType[]>(
+  async postShippingAddress(userId: string, data: BodyShippingAddress) {
+    const response = await https.post<[]>(
       `/shipping-address/?userId=${userId}`,
       data
     );
@@ -48,18 +46,6 @@ const shippingService = {
     return await https.delete(
       `/shipping-address/?userId=${userId}&addressId=${addressId}`
     );
-  },
-  async getCities() {
-    const response = await https.get<City[]>(`/cities`);
-    return response.data;
-  },
-  async getDistricts(cityId: string) {
-    const response = await https.get<District[]>(`/districts?cityId=${cityId}`);
-    return response.data;
-  },
-  async getWards(district: string) {
-    const response = await https.get<Ward[]>(`/wards?districtId=${district}`);
-    return response.data;
   },
 };
 

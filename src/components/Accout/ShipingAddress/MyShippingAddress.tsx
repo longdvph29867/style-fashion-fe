@@ -5,6 +5,7 @@ import { localUserService } from "../../../services/localService";
 import shippingService from "../../../services/shippingService";
 import ShippingItem from "./ShippingItem";
 import {
+  BodyShippingAddress,
   ShippingActionModal,
   ShippingAddressType,
 } from "../../../types/shippingAddress";
@@ -13,7 +14,9 @@ import ShippingAddressModal from "./ShippingAddressModal";
 
 const MyShippingAddress = () => {
   const [open, setOpen] = useState(false);
-  const [shippingAddress, setShippingAddress] = useState<ShippingAddressType[]>([]);
+  const [shippingAddress, setShippingAddress] = useState<ShippingAddressType[]>(
+    []
+  );
   const [formAction, setFormAction] = useState<ShippingActionModal>({
     type: "create",
   });
@@ -78,7 +81,7 @@ const MyShippingAddress = () => {
     [user]
   );
   const onFinish = useCallback(
-    async (values: ShippingAddressType) => {
+    async (values: BodyShippingAddress) => {
       if (!user) {
         return;
       }

@@ -1,29 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ProductsCart } from "../types/cartType";
+import { ICart } from "../types/cart";
 
-const initialState: { carts: ProductsCart[] } = { carts: [] };
+const initialState: { selectItem: string[]; carts: ICart[] } = {
+  selectItem: [],
+  carts: [],
+};
 
-const cartSlice = createSlice({
-  name: "cart",
+const checkoutSlice = createSlice({
+  name: "carts",
   initialState,
   reducers: {
-    setCartAll: (state, action) => {
-      state.carts = action.payload;
-    },
-    setQuantityCart: (state, action) => {
-      const { idItemCart, quantity } = action.payload;
-      const existingItem = state.carts.find((item) => item._id === idItemCart);
-      if (existingItem) {
-        existingItem.quantity = quantity;
+    selectProduct: (state, action) => {
+      const idProductCart = action.payload;
+      if (state.selectItem.includes(idProductCart)) {
+        state.selectItem = state.selectItem.filter(
+          (item) => item !== idProductCart
+        );
+      } else {
+        state.selectItem.push(idProductCart);
       }
     },
-    deleteProductCart: (state, action) => {
-      const { idItemCart } = action.payload;
-      state.carts = state.carts.filter((item) => item._id !== idItemCart);
+    setCart: (state, action) => {
+      state.carts = action.payload;
+      // state.selectItem = state.selectItem.filter((item) =>
+      //   state.carts.some((cartItem) => cartItem._id === item)
+      // );
     },
   },
 });
 
-export const { setCartAll, setQuantityCart, deleteProductCart } =
-  cartSlice.actions;
-export default cartSlice.reducer;
+export const { selectProduct, setCart } = checkoutSlice.actions;
+export default checkoutSlice.reducer;

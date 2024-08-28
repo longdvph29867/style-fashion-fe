@@ -3,9 +3,10 @@ import { TbMessageExclamation } from "react-icons/tb";
 
 type Props = {
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  value: string;
 };
 
-const OrderNote = ({ onChange }: Props) => {
+const OrderNote = ({ onChange, value }: Props) => {
   return (
     <div className="scroll-mt-24">
       {/*  */}
@@ -26,6 +27,7 @@ const OrderNote = ({ onChange }: Props) => {
             id=""
             onChange={onChange}
             rows={3}
+            value={value}
             className="w-full resize-none rounded-md block p-2.5 text-gray-900 bg-gray-50 border border-gray-300"
             placeholder="Lời nhắn cho chúng tôi..."
           ></textarea>

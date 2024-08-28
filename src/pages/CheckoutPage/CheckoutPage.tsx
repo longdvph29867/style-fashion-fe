@@ -2,98 +2,105 @@ import { Link, useNavigate } from "react-router-dom";
 import OrderSummary from "../../components/Checkout/OrderSummary";
 import PaymentMethod from "../../components/Checkout/PaymentMethod";
 import ShippingAddress from "../../components/Checkout/ShippingAddress";
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { ShippingAddressType } from "../../types/shippingAddress";
-import { majorCities, surroundingProvinces } from "../../constant/constant";
-import { CheckoutType, ProductOrderType } from "../../types/orderType";
 import orderService from "../../services/orderService";
 import OrderNote from "../../components/Checkout/OrderNote";
-import { useSelector } from "react-redux";
-import { RootState } from "../../Toolkits/store";
 import { message } from "antd";
 import VoucherModal from "../../components/Checkout/VoucherModal";
-import { Voucher } from "../../types/voucher";
 import "../../assets/css/checkoutPage.css";
-import { hiddenSpinner, showSpinner } from "../../util/util";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  CreateOrder,
+  OrderProduct,
+  OrderShippingAddress,
+} from "../../types/orderType";
+import infoShipping from "../../services/infoShippingService";
+import { localUserService } from "../../services/localService";
+import voucherService from "../../services/voucherService";
+import { useSelectedCarts } from "../../hooks";
+interface SelectedVoucher {
+  code: string;
+  name: string;
+}
 
 const CheckoutPage = () => {
-  const user = useSelector((state: RootState) => state.userSlice.userInfo);
+  const user = localUserService.get();
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const navigate = useNavigate();
   const [orderNote, setOrderNote] = useState("");
-  const [voucherSelected, setVoucherSelected] = useState<Voucher | null>(null);
+  const [voucherSelected, setVoucherSelected] =
+    useState<SelectedVoucher | null>(null);
+  const [subTotal, setSubTotal] = useState(0);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [shippingFee, setShippingFee] = useState(0);
   const [addressSelected, setAddressSelected] =
     useState<ShippingAddressType | null>(null);
-  const carts = useSelector((state: RootState) => state.cartSlice.carts);
+  const [validVariant, setValidVariant] = useState(false);
   const queryClient = useQueryClient();
 
-  const subtotal = useMemo(() => {
-    return carts.reduce(
-      (accumulator, currentValue) =>
-        accumulator + currentValue.quantity * currentValue.attribute.price,
-      0
-    );
-  }, [carts]);
+  const selectedItem = useSelectedCarts();
 
-  const calculateDiscount = useMemo(() => {
-    if (voucherSelected && voucherSelected.type === "percentage") {
-      return subtotal * (voucherSelected.discount / 100);
+  useEffect(() => {
+    if (selectedItem.length === 0) {
+      navigate("/carts");
     }
-    return voucherSelected?.discount ?? 0;
-  }, [subtotal, voucherSelected]);
+  }, [navigate, selectedItem.length]);
 
-  const shippingFee = useMemo(() => {
-    if (addressSelected) {
-      if (majorCities.includes(addressSelected.cityProvince)) {
-        return 16000;
-      } else if (surroundingProvinces.includes(addressSelected.cityProvince)) {
-        return 24000;
-      } else {
-        return 28000;
+  useEffect(() => {
+    let subTotalPrice = 0;
+    let sumQuantity = 0;
+    for (const product of selectedItem) {
+      if (!product.variant) {
+        setValidVariant(true);
+        return;
       }
+      subTotalPrice += product.quantity * product.variant.currentPrice;
+      sumQuantity += product.quantity;
     }
-    return 0;
-  }, [addressSelected]);
+    setSubTotal(subTotalPrice);
+    if (addressSelected) {
+      infoShipping
+        .getShippingFee({
+          quantity: sumQuantity,
+          totalPrice: subTotalPrice,
+          toDistrict: addressSelected?.districtCode,
+          toWard: addressSelected?.wardCode,
+        })
+        .then((res) => {
+          setShippingFee(res.data.total);
+        });
+    }
+  }, [addressSelected, selectedItem]);
 
-  const handleCreateOrder = () => {
-    if (carts.length > 0 && addressSelected && user?.id) {
-      const productsOrder: ProductOrderType[] = carts.map((item) => ({
-        productId: item.product.id,
+  const createOrder = () => {
+    if (addressSelected && user?.id) {
+      const productsOrder: OrderProduct[] = selectedItem.map((item) => ({
+        variant: item.variant._id,
         quantity: item.quantity,
-        price: item.attribute.price,
-        productName: item.product.name,
-        slug: item.product.slug,
-        imageProduct: item.product.thumbnail,
-        imageAtrribute: item.attribute.image,
-        attributeName: item.attribute.name,
-        attributeId: item.attribute.id,
       }));
-      const shippingAddressOrder = {
-        recipientName: addressSelected.recipientName,
-        recipientPhoneNumber: addressSelected.recipientPhoneNumber,
-        streetAddress: addressSelected.streetAddress,
-        wardCommune: addressSelected.wardCommune,
-        district: addressSelected.district,
-        cityProvince: addressSelected.cityProvince,
+      const shippingAddressOrder: OrderShippingAddress = {
+        name: addressSelected.name,
+        phoneNumber: addressSelected.phoneNumber,
+        address: addressSelected.address,
+        ward: addressSelected.wardName,
+        district: addressSelected.districtName,
+        province: addressSelected.provinceName,
       };
-      const newOrder: CheckoutType = {
-        productsOrder,
+      const newOrder: CreateOrder = {
+        products: productsOrder,
         shippingAddress: shippingAddressOrder,
         user: user.id,
-        subTotal: subtotal,
-        discountAmount: calculateDiscount,
+        subTotal: subTotal,
+        discountAmount: discountAmount,
         shippingFee: shippingFee,
         note: orderNote,
-        totalPrice: subtotal + shippingFee - calculateDiscount,
+        totalPrice: subTotal + shippingFee - discountAmount,
         paymentMethod: paymentMethod,
-        voucherCode: voucherSelected?.code ?? "",
       };
-      showSpinner();
       if (paymentMethod === "VNPAY") {
         orderService.createVNPAY(newOrder).then(async (response) => {
-          hiddenSpinner();
           window.location.href = response.data.url;
         });
       } else {
@@ -102,7 +109,6 @@ const CheckoutPage = () => {
             queryKey: ["carts"],
             type: "active",
           });
-          hiddenSpinner();
           navigate("/order");
           message.success("Đặt hàng thành công");
         });
@@ -110,18 +116,39 @@ const CheckoutPage = () => {
     }
   };
 
-  const handleChangeOrderNote = () => {
-    (event: ChangeEvent<HTMLTextAreaElement>) => {
-      setOrderNote(event.target.value);
-    };
+  const handleCreateOrder = () => {
+    if (voucherSelected) {
+      voucherService
+        .useVoucher({
+          code: voucherSelected.code,
+          cartPrice: subTotal,
+        })
+        .then(() => {
+          createOrder();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      createOrder();
+    }
+  };
+
+  const handleChangeOrderNote = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setOrderNote(event.target.value);
   };
 
   const onOpenVoucherModal = () => {
     setOpenModalVoucher(true);
   };
 
-  const handleSelectVoucher = (voucher: Voucher) => {
-    setVoucherSelected(voucher);
+  const handleSelectVoucher = (
+    code: string,
+    name: string,
+    discountAmount: number
+  ) => {
+    setDiscountAmount(discountAmount);
+    setVoucherSelected({ code, name });
     setOpenModalVoucher(false);
   };
 
@@ -155,27 +182,28 @@ const CheckoutPage = () => {
                 shippingMethod={paymentMethod}
                 selectShippingMethod={setPaymentMethod}
               />
-              <OrderNote onChange={handleChangeOrderNote} />
+              <OrderNote onChange={handleChangeOrderNote} value={orderNote} />
             </div>
           </div>
           {/* Border */}
           <div className="border border-slate-200 rounded-xl my-10 lg:my-0" />
           {/* Order summary */}
           <OrderSummary
-            discountAmount={calculateDiscount}
-            voucherName={voucherSelected?.name}
+            discountAmount={discountAmount}
+            voucherName={voucherSelected?.name ?? ""}
             confirmOrder={handleCreateOrder}
-            productList={carts}
+            productCheckout={selectedItem}
             shippingfee={shippingFee}
             onOpenVoucher={onOpenVoucherModal}
-            subTotal={subtotal}
+            subTotal={subTotal}
+            isDisable={validVariant}
           />
           <VoucherModal
-            totalCartPrice={subtotal}
+            totalCartPrice={subTotal}
             selectVoucher={handleSelectVoucher}
             openModalVoucher={openModalVoucher}
             setOpenModalVoucher={setOpenModalVoucher}
-            voucherSelectedId={voucherSelected?.id ?? ""}
+            voucherSelectedId={voucherSelected?.code ?? ""}
           />
         </div>
       </main>

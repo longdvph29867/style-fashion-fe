@@ -10,7 +10,7 @@ import { GiConfirmed } from "react-icons/gi";
 type Props = {
   openModalVoucher: boolean;
   setOpenModalVoucher: (open: boolean) => void;
-  selectVoucher: (voucher: Voucher) => void;
+  selectVoucher: (code: string, name: string, discountAmount: number) => void;
   voucherSelectedId: string;
   totalCartPrice: number;
 };
@@ -79,12 +79,21 @@ const VoucherModal = ({
   };
 
   const onSubmitVoucher = () => {
-    const voucher = voucherList.find(
-      (voucher) => voucher.id === selectedVoucherId
-    );
-    if (voucher) {
-      selectVoucher(voucher);
-    }
+    voucherService
+      .checkVoucher({
+        code: selectedVoucherId,
+        cartPrice: totalCartPrice,
+      })
+      .then((res) => {
+        selectVoucher(
+          res.data.voucher.code,
+          res.data.voucher.name,
+          res.data.discountAmount
+        );
+      })
+      .then((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -106,7 +115,7 @@ const VoucherModal = ({
                 key={voucher.id}
                 onClick={
                   voucherValid.isValid
-                    ? () => setSelectedVoucherId(voucher.id)
+                    ? () => setSelectedVoucherId(voucher.code)
                     : undefined
                 }
                 className={`flex justify-between items-center p-5 mb-4 border border-gray-300 rounded-lg shadow-md bg-white hover:shadow-lg ${
@@ -137,7 +146,7 @@ const VoucherModal = ({
                     </p>
                   </div>
                 </div>
-                {selectedVoucherId == voucher.id ? (
+                {selectedVoucherId == voucher.code ? (
                   <GiConfirmed size={22} color="#ff385c" />
                 ) : (
                   <IoIosRadioButtonOff

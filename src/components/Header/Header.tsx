@@ -7,26 +7,24 @@ import { Link } from "react-router-dom";
 import cartService from "../../services/cartService";
 import { useQuery } from "@tanstack/react-query";
 import { localUserService } from "../../services/localService";
-import { useDispatch, useSelector } from "react-redux";
-import { setCartAll } from "../../Toolkits/cartSlice";
-import { RootState } from "../../Toolkits/store";
+import { useDispatch } from "react-redux";
+import { setCart } from "../../Toolkits/cartSlice";
 
 const Header = () => {
   const [showMenuMobile, setShowMenuMobile] = useState<boolean>(false);
-  const carts = useSelector((state: RootState) => state.cartSlice.carts);
-  const dispatch = useDispatch();
   const userId = localUserService.get()?.id;
   const handleShowMenu = () => {
     setShowMenuMobile(!showMenuMobile);
   };
-
+  const dispatch = useDispatch();
   const { data } = useQuery({
     queryKey: ["carts"],
     queryFn: () =>
-      cartService
-        .getCartByUserId(userId!)
-        .then((res) => dispatch(setCartAll(res.data.products_cart))),
-    refetchInterval: 3 * 60 * 1000,
+      cartService.getCartByUserId(userId!).then((res) => {
+        dispatch(setCart(res.data));
+        return res.data.length;
+      }),
+    enabled: !!userId,
   });
 
   return (
@@ -125,7 +123,7 @@ const Header = () => {
                     />
                   </svg>
                   <span className="absolute w-3.5 h-3.5 flex items-center justify-center bg-primary top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
-                    {carts?.length}
+                    {data ?? 0}
                   </span>
                 </button>
               </Link>

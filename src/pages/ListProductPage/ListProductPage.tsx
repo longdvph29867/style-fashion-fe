@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import productService from "../../services/productService";
 import PaginationPage from "../../components/PaginationPage/PaginationPage";
 import categoryService from "../../services/categoryService";
+import "./listProduct.css";
 
 const limit = 12;
 

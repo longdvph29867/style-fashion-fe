@@ -1,5 +1,6 @@
 // type Props = {};
 import {
+  Breadcrumb,
   Button,
   DatePicker,
   Form,
@@ -8,7 +9,7 @@ import {
   message,
 } from "antd";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import voucherService from "../../../services/voucherService";
 import dayjs from "dayjs";
@@ -60,162 +61,169 @@ const AddVoucher: React.FC = () => {
     return Promise.resolve();
   };
   return (
-    <div className="max-w-lg w-full mx-auto px-5 pb-5">
-      <h3 className=" text-2xl text-slate-700 text-center mt-6 mb-3">
-        Thêm mới
-      </h3>
-      <Form
-        form={form}
-        layout="vertical"
-        name="basic"
-        labelCol={{ span: 12 }}
-        wrapperCol={{ span: 24 }}
-        style={{ maxWidth: 600 }}
-        initialValues={{ type: 'amount', exclude_promotions: 'true' }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-        requiredMark={false}
-      >
-        <Form.Item
-          label="Tên mã giảm giá"
-          name="name"
-          rules={[
-            { required: true, message: "Please fill in this field!" },
-            {
-              min: 6,
-              max: 25,
-              message: "Name must be between 6 and 25 characters!",
-            },
-          ]}
+    <>
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
+        <Breadcrumb.Item><Link to="/admin/voucher">Mã giảm giá</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Thêm giảm giá</Breadcrumb.Item>
+      </Breadcrumb>
+      <div className="max-w-lg w-full mx-auto px-5 pb-5">
+        <h3 className=" text-2xl text-slate-700 text-center mt-6 mb-3">
+          Thêm mới
+        </h3>
+        <Form
+          form={form}
+          layout="vertical"
+          name="basic"
+          labelCol={{ span: 12 }}
+          wrapperCol={{ span: 24 }}
+          style={{ maxWidth: 600 }}
+          initialValues={{ type: 'amount', exclude_promotions: 'true' }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+          requiredMark={false}
         >
-          <Input className="" />
-        </Form.Item>
-
-        <Form.Item
-          label="Loại mã giảm giá"
-          name="type"
-          rules={[
-            { required: true, message: "Please fill in this field!" },
-          ]}
-        >
-          <Select
-            // defaultValue="amount"
-            style={{ width: 200 }}
-            options={[
-              { value: 'amount', label: 'Giá trị cố định' },
-              { value: 'percentage', label: 'Phần trăm' },
+          <Form.Item
+            label="Tên mã giảm giá"
+            name="name"
+            rules={[
+              { required: true, message: "Please fill in this field!" },
+              {
+                min: 6,
+                max: 25,
+                message: "Name must be between 6 and 25 characters!",
+              },
             ]}
-          />
-        </Form.Item>
+          >
+            <Input className="" />
+          </Form.Item>
 
-        <Form.Item
-          label="Giảm giá"
-          name="discount"
-          rules={[{ required: true, message: "Vui lòng nhập trường này!" },
-          {
-            pattern: /^[0-9]*$/,
-            message: "Vui lòng nhập số dương!",
-          }
-          ]}
-        >
-          <Input placeholder="" />
-        </Form.Item>
-
-        <Form.Item
-          label="Giá trị đơn hàng tối thiểu"
-          name="minCartPrice"
-          rules={[{ required: true, message: "Vui lòng nhập trường này!" },
-          {
-            pattern: /^[0-9]*$/,
-            message: "Vui lòng nhập số dương!",
-          }
-          ]}
-        >
-          <Input placeholder="" />
-        </Form.Item>
-
-        <Form.Item
-          label="Số lượng mã giảm giá"
-          name="quantity"
-          rules={[{ required: true, message: "Vui lòng nhập trường này!" },
-          {
-            pattern: /^[0-9]*$/,
-            message: "Vui lòng nhập số dương!",
-          }
-          ]}
-        >
-          <Input placeholder="" />
-        </Form.Item>
-
-        <Form.Item
-          // label="Loại bỏ các khuyến mãi khác khi sử dụng voucher"
-          name="exclude_promotions"
-          rules={[
-            { required: true, message: "Please fill in this field!" },
-          ]}
-        >
-          <div>
-            <label className="mb-1">Loại bỏ các khuyến mãi khác khi sử dụng voucher</label>
+          <Form.Item
+            label="Loại mã giảm giá"
+            name="type"
+            rules={[
+              { required: true, message: "Please fill in this field!" },
+            ]}
+          >
             <Select
-              defaultValue="true"
+              // defaultValue="amount"
               style={{ width: 200 }}
-              onChange={handleExcludeChange}
               options={[
-                { value: 'true', label: 'Có' },
-                { value: 'false', label: 'Không' },
+                { value: 'amount', label: 'Giá trị cố định' },
+                { value: 'percentage', label: 'Phần trăm' },
               ]}
             />
-          </div>
-        </Form.Item>
-
-        <div className="flex justify-between">
-          <Form.Item
-            name="validFrom"
-            rules={[{ required: true, message: 'Vui lòng nhập trường này!' }]}
-          >
-            <div>
-              <label className="mb-1">Thời gian bắt đầu</label>
-              <DatePicker
-                showTime
-                onChange={(value) => {
-                  // setTimeStart(value);
-                  form.setFieldsValue({ validFrom: value });
-                }}
-              />
-            </div>
           </Form.Item>
 
           <Form.Item
-            name="validTo"
-            rules={[{ required: true, message: 'Vui lòng nhập trường này!' },
-            { validator: (_, value) => validateDateRange({ validFrom: form.getFieldValue('validFrom'), validTo: value }) }
+            label="Giảm giá"
+            name="discount"
+            rules={[{ required: true, message: "Vui lòng nhập trường này!" },
+            {
+              pattern: /^[0-9]*$/,
+              message: "Vui lòng nhập số dương!",
+            }
+            ]}
+          >
+            <Input placeholder="" />
+          </Form.Item>
+
+          <Form.Item
+            label="Giá trị đơn hàng tối thiểu"
+            name="minCartPrice"
+            rules={[{ required: true, message: "Vui lòng nhập trường này!" },
+            {
+              pattern: /^[0-9]*$/,
+              message: "Vui lòng nhập số dương!",
+            }
+            ]}
+          >
+            <Input placeholder="" />
+          </Form.Item>
+
+          <Form.Item
+            label="Số lượng mã giảm giá"
+            name="quantity"
+            rules={[{ required: true, message: "Vui lòng nhập trường này!" },
+            {
+              pattern: /^[0-9]*$/,
+              message: "Vui lòng nhập số dương!",
+            }
+            ]}
+          >
+            <Input placeholder="" />
+          </Form.Item>
+
+          <Form.Item
+            // label="Loại bỏ các khuyến mãi khác khi sử dụng voucher"
+            name="exclude_promotions"
+            rules={[
+              { required: true, message: "Please fill in this field!" },
             ]}
           >
             <div>
-              <label className="mb-1">Thời gian kết thúc</label>
-              <DatePicker
-                showTime
-                onChange={(value) => {
-                  // setTimeEnd(value);
-                  form.setFieldsValue({ validTo: value });
-                }}
+              <label className="mb-1">Loại bỏ các khuyến mãi khác khi sử dụng voucher</label>
+              <Select
+                defaultValue="true"
+                style={{ width: 200 }}
+                onChange={handleExcludeChange}
+                options={[
+                  { value: 'true', label: 'Có' },
+                  { value: 'false', label: 'Không' },
+                ]}
               />
             </div>
           </Form.Item>
-        </div>
 
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="text-white bg-green-500"
-          >
-            Thêm mới
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
+          <div className="flex justify-between">
+            <Form.Item
+              name="validFrom"
+              rules={[{ required: true, message: 'Vui lòng nhập trường này!' }]}
+            >
+              <div>
+                <label className="mb-1">Thời gian bắt đầu</label>
+                <DatePicker
+                  showTime
+                  onChange={(value) => {
+                    // setTimeStart(value);
+                    form.setFieldsValue({ validFrom: value });
+                  }}
+                />
+              </div>
+            </Form.Item>
+
+            <Form.Item
+              name="validTo"
+              rules={[{ required: true, message: 'Vui lòng nhập trường này!' },
+              { validator: (_, value) => validateDateRange({ validFrom: form.getFieldValue('validFrom'), validTo: value }) }
+              ]}
+            >
+              <div>
+                <label className="mb-1">Thời gian kết thúc</label>
+                <DatePicker
+                  showTime
+                  onChange={(value) => {
+                    // setTimeEnd(value);
+                    form.setFieldsValue({ validTo: value });
+                  }}
+                />
+              </div>
+            </Form.Item>
+          </div>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="text-white bg-green-500"
+            >
+              Thêm mới
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+    </>
   );
 };
 

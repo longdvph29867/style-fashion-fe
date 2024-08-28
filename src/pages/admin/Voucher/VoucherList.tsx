@@ -5,7 +5,7 @@ import {
   showSpinner,
 } from "../../../util/util";
 import { Link } from "react-router-dom";
-import { Modal, message } from "antd";
+import { Breadcrumb, Button, Modal, Table, message } from "antd";
 import { https } from "../../../config/axios";
 import { IUser } from "../../../types/userType";
 import { CiCircleAlert } from "react-icons/ci";
@@ -81,122 +81,92 @@ const VoucherList: React.FC = () => {
     setIsDeleteModalOpen(false);
   };
 
+  const columns = [
+    {
+      title: 'STT',
+      dataIndex: 'index',
+      key: 'index',
+      render: (text, record, index) => <span>{index + 1}</span>,
+    },
+    {
+      title: 'Tên',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Giảm giá',
+      dataIndex: 'discount',
+      key: 'discount',
+    },
+    {
+      title: 'Số lượng',
+      dataIndex: 'quantity',
+      key: 'quantity',
+    },
+    {
+      title: 'Loại',
+      dataIndex: 'type',
+      key: 'type',
+      render: (text, record) => (
+        <span>{record.type === 'amount' ? 'Giá trị cố định' : 'Phần trăm'}</span>
+      ),
+    },
+    {
+      title: 'Bắt đầu',
+      dataIndex: 'validFrom',
+      key: 'validFrom',
+      render: (text) => <span>{formatDateString(text)}</span>,
+    },
+    {
+      title: 'Kết thúc',
+      dataIndex: 'validTo',
+      key: 'validTo',
+      render: (text) => <span>{formatDateString(text)}</span>,
+    },
+    {
+      title: 'Thao tác',
+      key: 'actions',
+      render: (text, record) => (
+        <div className="space-x-2">
+          <Link
+            to={`/admin/voucher/update/${record.id}`}
+            className="text-yellow-500 hover:text-yellow-600"
+          >
+            Sửa
+          </Link>
+          <Button
+            type="link"
+            className="text-red-500 hover:text-red-600"
+            onClick={() => showDeleteModal(record.id)}
+          >
+            Xoá
+          </Button>
+          <Modal
+            title="Xác nhận xóa"
+            open={isDeleteModalOpen}
+            onOk={handleDelete}
+            onCancel={handleCancel}
+          >
+            <p>Bạn có chắc chắn muốn xóa?</p>
+          </Modal>
+        </div>
+      ),
+    },
+  ];
+
+
   return (
     <div className="">
-      <div className="p-4 pb-0 my-4 bg-white rounded-t-2xl">
-        <Link
-          to="/admin/voucher/add"
-          className="text-white text-base font-semibold bg-green-500 py-2 px-2 rounded my-5 hover:bg-green-600"
-        >
-          <span>Thêm mới</span>
-        </Link>
-      </div>
-      <div className="h-full overflow-x-auto">
-        <div className="w-full border-gray-200 text-slate-500">
-          <div className="w-full flex justify-left gap-2 mb-4">
-            <div className="w-10 text-center font-bold uppercase text-slate-800">
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Mã giảm giá</Breadcrumb.Item>
+      </Breadcrumb>
+      <Table columns={columns} dataSource={voucherList} pagination={false} />;
 
-            </div>
-            <div className="  flex-1 text-left font-bold uppercase text-slate-800">
-              Tên
-            </div>
-            <div className=" flex-1 text-left font-bold uppercase text-slate-800">
-              Giảm giá
-            </div>
-            <div className="lg:block flex-1 text-left font-bold uppercase text-slate-800">
-              Số lượng
-            </div>
-            <div className="sm:block flex-1 text-left  font-bold uppercase text-slate-800">
-              Loại
-            </div>
-            <div className="sm:block flex-1 text-left  font-bold uppercase text-slate-800">
-              Bắt đầu
-            </div>
-            <div className="sm:block flex-1 text-left font-bold uppercase text-slate-800">
-              Kết thúc
-            </div>
-            <div className="sm:block flex-1 text-left font-bold uppercase text-slate-800">
-              Thao tác
-            </div>
-            {/* <div className="lg:block hidden  pl-2 py-3  text-left font-bold uppercase text-slate-800">
-              Role
-            </div>
-            <div className="sm:block hidden pl-2 py-3  text-left font-bold uppercase text-slate-800">
-              Thao tác
-            </div> */}
-          </div>
-          <div>
-            {voucherList.map((voucher, index) => {
-              return (
-                <div
-                  key={index}
-                  className="relative flex gap-2 py-2 border-b border-slate-100"
-                >
-                  {/* <span className='absolute top-10 left-0.5 text-slate-300'>{++index}</span> */}
-                  <div className="w-10">
-                    <div className="flex  items-center justify-center">
-                      <h6 className="text-base text-left">{++index}</h6>
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex  items-center justify-left">
-                      <h6 className="text-base text-left">{voucher.name}</h6>
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex  items-center justify-left">
-                      <h6 className="text-base text-left">{voucher.discount}</h6>
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex  items-center justify-left">
-                      <h6 className="text-base text-left">{voucher.quantity}</h6>
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex  items-center justify-left">
-                      <h6 className="text-base text-left">{(voucher.type && (voucher.type === 'amount')) ? 'Giá trị cố định' : 'Phần trăm'}</h6>
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex  items-center justify-left">
-                      <h6 className="text-base text-left">{formatDateString(voucher.validFrom)}</h6>
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex  items-center justify-left">
-                      <h6 className="text-base text-left">{formatDateString(voucher.validTo)}</h6>
-                    </div>
-                  </div>
-                  <div className="flex-1 justify-left absolute right-0 top-4 lg:block p-2 space-x-2 lg:static lg:top-auto lg:right-auto">
-                    <Link
-                      to={`/admin/voucher/update/${voucher.id}`}
-                      className="text-sm font-semibold text-yellow-500 hover:text-yellow-600"
-                    >
-                      Sửa
-                    </Link>
-                    <>
-                      <button
-                        onClick={() => showDeleteModal(voucher.id)}
-                        className="text-sm font-semibold text-red-500 hover:text-red-600"
-                      >
-                        Xoá
-                      </button>
-                      <Modal title="Xác nhận xóa" open={isDeleteModalOpen} onOk={handleDelete} onCancel={handleCancel}>
-                        <p>Bạn có chắc chắn muốn xóa?</p>
-                      </Modal>
-                    </>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          {/* <PaginationPage
+      {/* <PaginationPage
             current={1}
             total={totalVoucher}
             pageSize={limitPerPage} /> */}
-        </div>
-      </div>
     </div>
   );
 };
