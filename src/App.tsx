@@ -33,6 +33,12 @@ import ListProductPage from "./pages/ListProductPage/ListProductPage";
 import CategoryList from "./pages/admin/Category/CategoryList";
 import AddCategory from "./pages/admin/Category/AddCategory";
 import UpdateCategory from "./pages/admin/Category/UpdateCategory";
+import BlogPage from "./components/Blog/BlogPage";
+import PostNews from "./pages/admin/Blog/PostNews";
+import DetailBlog from "./components/Blog/DetailBlog";
+import ListPost from "./pages/admin/Blog/ListPost";
+import UpdateBlog from "./pages/admin/Blog/UpdateBlog";
+import AboutPage from "./components/About/AboutPage";
 import VoucherList from "./pages/admin/Voucher/VoucherList";
 import AddVoucher from "./pages/admin/Voucher/AddVoucher";
 import UpdateVoucher from "./pages/admin/Voucher/UpdateVoucher";
@@ -69,6 +75,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
+          {/* <Route path="about" element={<AboutPage/>}/> */}
           {/* account */}
           <Route path="account" element={<AccountPage />}>
             <Route index element={<AccountInfomation />} />
@@ -82,6 +89,8 @@ function App() {
           <Route path="order/:id" element={<OrderDetail />} />
           <Route path="order" element={<OrderPage />} />
           <Route path="products" element={<ListProductPage />} />
+          <Route path="blog" element={<BlogPage/>}/>
+          <Route path="blog/:id" element={<DetailBlog/>}/>
         </Route>
         <Route path="/auth" element={<LoginLayout />}>
           <Route path="verify-email/:token" element={<ResetPassword />} />
@@ -109,6 +118,9 @@ function App() {
           <Route path="categories" element={<CategoryList />} />
           <Route path="categories/add" element={<AddCategory />} />
           <Route path="categories/update/:id" element={<UpdateCategory />} />
+          <Route path="blog/postnew" element={<PostNews/>}/>
+          <Route path="blog/update/:id" element={<UpdateBlog/>}/>
+          <Route path="blog" element={<ListPost/>}/>
           <Route path="voucher" element={<VoucherList />} />
           <Route path="voucher/add" element={<AddVoucher />} />
           <Route path="voucher/update/:id" element={<UpdateVoucher />} />
