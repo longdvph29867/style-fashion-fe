@@ -1,20 +1,23 @@
-import { ProductCartType } from "../../types/cart";
-import { useState } from "react";
-import { formartCurrency } from "../../util/util";
+import { ICart } from "../../types/cart";
+import { useEffect, useState } from "react";
+import { formartCurrency, getNameVariants } from "../../util/util";
 import { Button, Dropdown } from "antd";
-
 import { PiWarningCircleLight } from "react-icons/pi";
 import DropdownVarianContent from "./DropdownVarianContent";
 
 type Props = {
-  productCart: ProductCartType;
+  productCart: ICart;
   updateItem: (productId: string, quantity: number) => void;
   onDelete: (productId: string) => void;
 };
 
 const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
-  const [quantity, setQuantity] = useState(productCart.quantity);
+  const [quantity, setQuantity] = useState(1);
   const [dropdownKey, setDropdownKey] = useState<number>(Date.now());
+
+  useEffect(() => {
+    setQuantity(productCart.quantity);
+  }, [productCart.quantity]);
 
   const increaseQuantity = () => {
     const newQuantity = quantity + 1;
@@ -35,7 +38,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
   };
 
   return (
-    <div className="relative flex py-8 sm:py-10 xl:py-2 first:pt-0 last:pb-0">
+    <div className="relative flex py-8 sm:py-10 xl:py-2 first:pt-0 last:pb-0 flex-grow">
       <div className="relative flex-shrink-0 overflow-hidden rounded-xl">
         <img
           alt="Rey Nylon Backpack"
@@ -54,7 +57,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
               <a href="/product-detail">{productCart.product.name}</a>
             </h3>
             <div className="mt-1.5 sm:mt-2.5 text-sm text-[#334155]">
-              {productCart.variant ? (
+              {productCart.variant && productCart.variant.stock > 0 ? (
                 <div className="mt-2">
                   <div className="flex items-center space-x-1.5">
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
@@ -98,7 +101,9 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                         strokeLinejoin="round"
                       ></path>
                     </svg>
-                    <span>bvhv</span>
+                    <span>
+                      {getNameVariants(productCart.variant.tier_index)}
+                    </span>
                   </div>
                   <div className="items-center border-2 my-2 border-[#ff385c] rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium w-max mr-3">
                     <span className="text-[#ff385c] !leading-none ">
@@ -118,7 +123,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                     dropdownRender={() => (
                       <DropdownVarianContent
                         keyReset={dropdownKey}
-                        idProduct={productCart.product.id}
+                        idProduct={productCart.product._id}
                       />
                     )}
                     trigger={["click"]}
@@ -135,7 +140,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
               )}
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row justify-between sm:w-52 shrink-0">
+          <div className="flex flex-col sm:flex-row justify-between items-center sm:w-52 shrink-0">
             <div className="relative text-center">
               <div className="relative z-10 flex items-center justify-center space-x-5 nc-NcInputNumber">
                 <div className="flex items-center justify-between w-[104px]">
@@ -188,7 +193,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                 </div>
               </div>
             </div>
-            <div className="mt-10 justify-end sm:mt-0">
+            <div className="h-max justify-end sm:mt-0">
               <button
                 onClick={() => onDelete(productCart._id)}
                 className="relative z-10 flex items-center font-medium text-[#0284C7] hover:text-primary-500 text-sm"

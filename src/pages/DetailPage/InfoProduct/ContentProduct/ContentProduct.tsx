@@ -7,12 +7,12 @@ import {
   showSpinner,
 } from "../../../../util/util";
 import cartService from "../../../../services/cartService";
-import { useDispatch } from "react-redux";
-import { setCartAll } from "../../../../Toolkits/cartSlice";
 import { localUserService } from "../../../../services/localService";
 import { IoRemoveOutline } from "react-icons/io5";
 import Variant from "../../../../components/DetailComponent/Variant";
 import { IProduct, IVariant } from "../../../../types/productType";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AddCartType } from "../../../../types/cart";
 
 type Props = {
   setCurrentImage: (value: string) => void;
@@ -24,9 +24,20 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
   const [quantity, setQuantity] = useState(1);
   const [price, setPrice] = useState<number[]>([]);
   const [showMaxQuantity, setShowMaxQuantity] = useState<boolean>(false);
-  const dispatch = useDispatch();
   const userId = localUserService.get()?.id;
   const stockRef = useRef(0);
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (item: AddCartType) => cartService.addToCart(item),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["carts"] });
+      message.success("Thêm sản phẩm thành công!");
+    },
+    onError: (err) => {
+      message.error(err.message);
+    },
+  });
 
   useEffect(() => {
     if (product) {
@@ -85,29 +96,22 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
     setQuantity(quantity + value);
   };
 
-  const handleAddtoCart = async () => {
-    try {
-      if (!variantSelected) {
-        message.error("Vui lòng chọn loại sản phẩm!");
-      } else if (showMaxQuantity) {
-        return;
-      } else if (!userId) {
-        message.error("Vui lòng đăng nhập để thêm sản phẩm!");
-      } else {
-        showSpinner();
-        const res = await cartService.addToCart(userId, {
-          product: product.id,
-          variant: variantSelected.id,
-          quantity: quantity,
-        });
-        hiddenSpinner();
-        dispatch(setCartAll(res.data.products_cart));
-        message.success("Thêm sản phẩm thành công!");
-      }
-    } catch (error) {
+  const handleAddToCart = async () => {
+    if (!variantSelected) {
+      message.error("Vui lòng chọn loại sản phẩm!");
+    } else if (showMaxQuantity) {
+      return;
+    } else if (!userId) {
+      message.error("Vui lòng đăng nhập để thêm sản phẩm!");
+    } else {
+      showSpinner();
+      mutation.mutate({
+        user: userId,
+        product: product.id,
+        variant: variantSelected.id,
+        quantity: quantity,
+      });
       hiddenSpinner();
-      console.log(error);
-      message.error(error?.response?.data);
     }
   };
 
@@ -118,21 +122,18 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
         <div className="flex items-center mt-5 space-x-4 sm:space-x-5">
           <div className="flex gap-2 items-center text-[#fe385c]">
             {variantSelected ? (
-              <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold">
-                <span className="text-[#fe385c] !leading-none">
-                  {formartCurrency(variantSelected.currentPrice)}
-                </span>
-              </div>
+              <span className="text-[#fe385c] text-xl font-bold !leading-none">
+                {formartCurrency(variantSelected.currentPrice)}
+              </span>
             ) : (
               price.map((amount, index) => (
-                <>
+                <span
+                  key={index}
+                  className="text-[#fe385c] text-xl font-bold !leading-none flex gap-1"
+                >
                   {index > 0 && <IoRemoveOutline />}
-                  <div className="flex items-center border-2 border-[#fe385c] rounded-lg py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold">
-                    <span className="text-[#fe385c] !leading-none">
-                      {formartCurrency(amount)}
-                    </span>
-                  </div>
-                </>
+                  {formartCurrency(amount)}
+                </span>
               ))
             )}
           </div>
@@ -254,7 +255,7 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
           </p>
         </div>
         <button
-          onClick={handleAddtoCart}
+          onClick={handleAddToCart}
           className=" inline-flex items-center justify-center rounded-lg text-sm sm:text-base font-medium py-2 px-3 sm:py-3.5 sm:px-6 bg-[#fc385c] hover:bg-[#f85d79] text-slate-50 shadow-xl h-11"
         >
           <svg

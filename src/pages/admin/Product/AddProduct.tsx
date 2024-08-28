@@ -1,5 +1,6 @@
 // type Props = {};
 import {
+  Breadcrumb,
   Button,
   Divider,
   Form,
@@ -14,7 +15,7 @@ import {
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
 import TextArea from "antd/es/input/TextArea";
@@ -94,6 +95,7 @@ const AddProduct: React.FC = () => {
       columns.push({
         title: attributes[0].name,
         dataIndex: 'attribute_0',
+        width: '20%',
         render: (text: any, _: any, index: any) => {
           const attributeValue = variants[index]?.attributes ? variants[index].attributes[0] : null;
           const rowSpan = attributes[1]?.values.length || 1;
@@ -119,16 +121,16 @@ const AddProduct: React.FC = () => {
                 >
                   <Upload
                     onChange={({ fileList }) => handleUploadImageAttributeChange(fileList, attrValueIndex)}
-                    listType="picture-card"
+                    listType="picture"
                     beforeUpload={() => false}
                     maxCount={1}
                   // defaultFileList={currentValue.image ? [{ thumbUrl: currentValue.image }] : []}
                   >
-                    {/* <Button icon={<UploadOutlined />}>Tải lên</Button> */}
-                    <button style={{ border: 0, background: 'none' }} type="button">
+                    <Button icon={<UploadOutlined />}>Tải lên</Button>
+                    {/* <button style={{ border: 0, background: 'none' }} type="button">
                       <PlusOutlined />
                       <div style={{ marginTop: 8 }}>Upload</div>
-                    </button>
+                    </button> */}
                   </Upload>
                 </Form.Item>
               </>
@@ -579,7 +581,12 @@ const AddProduct: React.FC = () => {
     setVariants(newVariants);
   };
   return (
-    <div className="w-full mx-auto px-5 pb-20">
+    <div className="w-full mx-auto">
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
+        <Breadcrumb.Item><Link to="/admin/products">Sản phẩm</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Thêm sản phẩm</Breadcrumb.Item>
+      </Breadcrumb>
       <h3 className=" text-2xl text-slate-700 text-center mt-6 mb-3">
         Thêm mới
       </h3>
@@ -657,7 +664,7 @@ const AddProduct: React.FC = () => {
                   beforeUpload={() => false}
                   maxCount={1}
                 >
-                  <Button icon={<UploadOutlined />}>Click to upload</Button>
+                  <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
                 </Upload.Dragger>
               </Form.Item>
               <Form.Item
@@ -693,7 +700,7 @@ const AddProduct: React.FC = () => {
                   listType="picture"
                   beforeUpload={() => false}
                 >
-                  <Button icon={<UploadOutlined />}>Click to upload</Button>
+                  <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
                 </Upload.Dragger>
               </Form.Item>
             </div>
@@ -923,7 +930,7 @@ const AddProduct: React.FC = () => {
             </div>
           </div>
 
-          <Form.Item className="absolute bottom-0">
+          <Form.Item className="mt-6">
             <Space>
               <Button
                 type="primary"

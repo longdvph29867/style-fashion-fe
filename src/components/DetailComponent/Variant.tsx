@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { IAttribute, IVariant } from "../../types/productType";
 
 interface VariantProps {
-  dataAttriubute: Attribute[];
-  dataVariant: Variant[];
+  dataAttriubute: IAttribute[];
+  dataVariant: IVariant[];
   setImage: (value: string) => void;
-  setVariant: (value: Variant) => void;
+  setVariant: (value: IVariant | null) => void;
   keyReset?: number;
 }
 
@@ -16,6 +17,7 @@ const Variant = ({ dataAttriubute, dataVariant, setImage, setVariant, keyReset }
 
   useEffect(() => {
     setAttributeSelected({});
+    setVariant(null);
   }, [keyReset]);
 
   useEffect(() => {
@@ -49,7 +51,7 @@ const Variant = ({ dataAttriubute, dataVariant, setImage, setVariant, keyReset }
           return true;
         }
       });
-      setVariant(variant as Variant);
+      setVariant(variant as IVariant);
     }
     if (dataAttriubute.length !== 1) {
       const invalidVariants: string[] = [];

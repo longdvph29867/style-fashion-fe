@@ -1,38 +1,35 @@
 import { useEffect, useState } from "react";
-import { Tabs, TabsProps } from "antd";
+import { Button, Image, Select, Table, Tabs, TabsProps } from "antd";
 import Item from "./Item";
-import { hiddenSpinner, showSpinner } from "../../../util/util";
-import orderService from "../../../services/orderSerivce";
+import { formartCurrency, hiddenSpinner, showSpinner } from "../../../util/util";
+import orderService from "../../../services/orderService";
+import { getNameByStatusCode, orderStatusValue } from "../../../util/constant";
+import { render } from "react-dom";
+import { Link } from "react-router-dom";
+import { TableRowSelection } from "antd/es/table/interface";
+import { OrderStatus } from "../../../components/OrderAdmin/status";
+import { PaymentMethod } from "../../../components/OrderAdmin/paymentMethod";
+import { OrderActions } from "../../../components/OrderAdmin/OrderAction";
+import PaginationPage from "../../../components/PaginationPage/PaginationPage";
 
 const OrderAdmin = () => {
-  // const location = useLocation();
-  // const params = new URLSearchParams(location.search);
-  // const userId = params.get("user");
-  const userId = '666eaa54b5ee1db4f34bb02c'
   const [ordersList, setOrdersList] = useState<any>(null);
-  const [paymentPendingList, setPaymentPendingList] = useState<any>(null);
-  const [confirmPendingList, setConfirmPendingList] = useState<any>(null);
-  const [prepareList, setPrepareList] = useState<any>(null);
-  const [shippingList, setShippingList] = useState<any>(null);
-  const [deliveredList, setDeliveredList] = useState<any>(null);
-  const [successList, setSuccessList] = useState<any>(null);
-  const [completeList, setCompleteList] = useState<any>(null);
-  const [cancelList, setCancelList] = useState<any>(null);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
+  const params = new URLSearchParams(location.search);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const limitPerPage = 15;
+  const currentPage = params.get("page") ? Number(params.get("page")) : 1;
+
 
   const fetchOrdersList = async () => {
     showSpinner();
     orderService
-      .getAllOrders()
+      .getAllOrders(limitPerPage, currentPage)
       .then((res) => {
         setOrdersList(res.data.results);
-        setPaymentPendingList(res.data.results.filter((order: any) => order.orderStatus === 0));
-        setConfirmPendingList(res.data.results.filter((order: any) => order.orderStatus === 1));
-        setPrepareList(res.data.results.filter((order: any) => order.orderStatus === 2));
-        setShippingList(res.data.results.filter((order: any) => order.orderStatus === 3));
-        setDeliveredList(res.data.results.filter((order: any) => order.orderStatus === 4));
-        setSuccessList(res.data.results.filter((order: any) => order.orderStatus === 5));
-        setCompleteList(res.data.results.filter((order: any) => order.orderStatus === 6));
-        setCancelList(res.data.results.filter((order: any) => order.orderStatus === 7));
+        setTotalOrders(res.data.totalResults);
         hiddenSpinner();
       })
       .catch((err) => {
@@ -42,65 +39,107 @@ const OrderAdmin = () => {
   }
   useEffect(() => {
     fetchOrdersList();
-  }, []);
-  const onChange = (key: string) => {
-    // console.log(key);
-    // console.log(ordersList, 'ordersList')
+  }, [location.search]);
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
   };
 
-  const items: TabsProps['items'] = [
-    {
-      key: 'all',
-      label: 'Tất cả',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={ordersList} />,
-    },
-    {
-      key: '0',
-      label: 'Chờ thanh toán',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={paymentPendingList} />,
-    },
-    {
-      key: '1',
-      label: 'Chờ xác nhận',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={confirmPendingList} />,
-    },
-    {
-      key: '2',
-      label: 'Chuẩn bị hàng',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={prepareList} />,
-    },
-    {
-      key: '3',
-      label: 'Đang giao hàng',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={shippingList} />,
-    },
+  const rowSelection: any = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
 
+  const statusFilters = orderStatusValue.map((status) => ({
+    text: status.name,
+    value: status.code,
+  }));
+
+  const columns: any = [
     {
-      key: '4',
-      label: 'Đã giao hàng',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={deliveredList} />,
+      title: 'Mã đơn hàng',
+      dataIndex: 'orderCode',
+      key: 'orderCode',
+      render: (text: any, record: any) => <span className="text-blue-600"><Link to={`/admin/order/${record._id}`}>{text}</Link></span>,
+      width: 100
     },
     {
-      key: '5',
-      label: 'Giao hàng thành công',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={successList} />,
+      title: 'Trạng thái',
+      dataIndex: 'orderStatus',
+      key: 'orderStatus',
+      filters: statusFilters,
+      onFilter: (value: any, record: any) => record.orderStatus.code === value,
+      render: (status: any) => <OrderStatus statusCode={status.code} />,
+      width: 230,
     },
     {
-      key: '6',
-      label: 'Hoàn thành',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={completeList} />,
+      title: 'Sản phẩm',
+      dataIndex: 'products',
+      key: 'imageAtrribute',
+      render: (productsOrder: any) => (
+        <div className="">
+          {productsOrder.map((product: any) => (
+            <Image
+              key={product._id}
+              src={product.image}
+              alt={product.productName}
+              style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: '8px', borderRadius: '8px' }}
+            />
+          ))}
+        </div>
+      ),
+      width: 280, // Chiều rộng tối đa của cột
+      // ellipsis: true, // Sử dụng ellipsis nếu nội dung quá dài
     },
     {
-      key: '7',
-      label: 'Đã hủy',
-      children: <Item fetchOrdersList={fetchOrdersList} orderList={cancelList} />,
+      title: 'Tổng tiền',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
+      render: (price: any) => formartCurrency(price),
+      sorter: (a: any, b: any) => a.totalPrice - b.totalPrice,
     },
+    {
+      title: 'Thanh toán',
+      dataIndex: 'paymentMethod',
+      key: 'paymentMethod',
+      filters: [
+        { text: 'COD', value: 'COD' },
+        { text: 'VNPAY', value: 'VNPAY' },
+      ],
+      onFilter: (value: any, record: any) => record.paymentMethod === value,
+      render: (paymentMethod: 'COD' | 'VNPAY') => <PaymentMethod paymentMethod={paymentMethod} />,
+    },
+    {
+      title: 'Người nhận',
+      dataIndex: ['shippingAddress', 'name'],
+      key: 'recipientName',
+    },
+    {
+      title: 'Ngày tạo',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (text: any) => new Date(text).toLocaleString(),
+      sorter: (a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    },
+    {
+      fixed: "right",
+      title: 'Hành động',
+      dataIndex: "actions",
+      key: "actions",
+      render: (_value: any, record: any) => <OrderActions record={record} setOrderList={setOrdersList} onPage={'list'} fetchOrder={fetchOrdersList} />,
+      width: 110,
+    }
+
   ];
 
   return (
-    <div className="p-4">
-      <h3 className="text-2xl my-8">Danh sách đơn hàng</h3>
-      <Tabs defaultActiveKey="all" items={items} onChange={onChange} />
+    <div className="p-10">
+      <h3 className="text-2xl mb-8">Danh sách đơn hàng</h3>
+      <Table pagination={false} dataSource={ordersList} columns={columns} rowKey="_id" />
+      <PaginationPage
+        current={1}
+        total={totalOrders}
+        pageSize={limitPerPage} />
     </div>
 
   );

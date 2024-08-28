@@ -1,30 +1,25 @@
-import { ShippingAddressType } from "./shippingAddress";
-
-export type ProductOrderType = {
-  productId: string;
+export interface OrderProduct {
+  variant: string;
   quantity: number;
-  price: number;
-  productName: string;
-  slug: string;
-  imageProduct: string;
-  imageAtrribute: string;
-  attributeName: string;
-  attributeId: string;
-};
-export type ShippingAddressCheckoutType = Omit<
-  ShippingAddressType,
-  "_id" | "selected"
->;
-// Khai báo type cho đơn hàng
-export type CheckoutType = {
-  productsOrder: ProductOrderType[];
-  shippingAddress: ShippingAddressCheckoutType;
+}
+
+export interface OrderShippingAddress {
+  name: string;
+  phoneNumber: string;
+  address: string;
+  ward: string;
+  district: string;
+  province: string;
+}
+
+export interface CreateOrder {
+  products: OrderProduct[];
   user: string;
+  shippingAddress: OrderShippingAddress;
+  note?: string;
   subTotal: number;
   discountAmount: number;
   shippingFee: number;
-  note: string;
   totalPrice: number;
   paymentMethod: string;
-  voucherCode: string;
-};
+}

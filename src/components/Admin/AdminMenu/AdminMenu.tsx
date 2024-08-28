@@ -2,10 +2,13 @@ import React from "react";
 import imgLogo from "../../../assets/img/sf-logo2.png";
 import imgLogoIcon from "../../../assets/img/logo_icon_v2.png";
 import { MdDashboard, MdCategory } from "react-icons/md";
-import { FaBoxes, FaUserAlt, FaAngleRight } from "react-icons/fa";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { FaBoxes } from "react-icons/fa";
+import { Link, useLocation } from "react-router-dom";
 import { BiSolidCoupon } from "react-icons/bi";
+import { FaCartArrowDown } from "react-icons/fa";
 import { FaBlog, FaTruckRampBox } from "react-icons/fa6";
+import { Menu } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 
 type Menu = {
   link: string;
@@ -14,149 +17,106 @@ type Menu = {
   active: boolean;
   children?: { link: string; title: string }[];
 };
-const listMenu: Menu[] = [
+
+const menuItems = [
   {
-    link: "/",
-    title: "Tổng quan",
+    key: "1",
+    label: <Link to="/admin">Tổng quan</Link>,
     icon: <MdDashboard />,
-    active: false,
   },
   {
-    link: "/admin/categories",
-    title: "Danh mục",
+    key: "2",
+    label: "Danh mục",
     icon: <MdCategory />,
-    active: false,
     children: [
-      { link: "", title: "Xem danh mục" },
-      { link: "", title: "Thêm danh mục" },
+      { key: "2-1", label: <Link to="/admin/categories">Xem danh mục</Link> },
+      {
+        key: "2-2",
+        label: <Link to="/admin/categories/add">Thêm danh mục</Link>,
+      },
     ],
   },
   {
-    link: "/admin/products",
-    title: "Sản phẩm",
+    key: "3",
+    label: "Sản phẩm",
     icon: <FaBoxes />,
-    active: false,
     children: [
-      { link: "", title: "Xem sản phẩm" },
-      { link: "", title: "Thêm sản phẩm" },
-      { link: "", title: "Quản lý đánh giá" },
+      { key: "3-1", label: <Link to="/admin/products">Xem sản phẩm</Link> },
+      {
+        key: "3-2",
+        label: <Link to="/admin/products/add">Thêm sản phẩm</Link>,
+      },
+      { key: "3-3", label: <Link to="/admin/products">Quản lý đánh giá</Link> },
     ],
   },
   {
-    link: "/admin/users",
-    title: "Người dùng",
-    icon: <FaUserAlt />,
-    active: false,
+    key: "4",
+    label: "Người dùng",
+    icon: <UserOutlined />,
     children: [
-      { link: "", title: "Xem người dùng" },
-      { link: "", title: "Thêm người dùng" },
-      { link: "", title: "Role" },
+      { key: "4-1", label: <Link to="/admin/users">Xem người dùng</Link> },
+      { key: "4-2", label: <Link to="/admin/users/add">Thêm người dùng</Link> },
+      // { key: '4-3', label: <Link to="/admin/users">Role</Link> },
     ],
+  },
+  {
+    link: "/admin/order",
+    title: "Đơn hàng",
+    icon: <FaCartArrowDown />,
+    active: false,
   },
   {
     link: "/admin/voucher",
     title: "Mã giảm giá",
     icon: <BiSolidCoupon />,
-    active: false,
-  },
-  {
-    link: "/admin/voucher",
-    title: "Bài viết",
-    icon: <FaBlog />,
-    active: false,
     children: [
-      { link: "", title: "Xem bài viết" },
-      { link: "", title: "Thêm bài viết" },
+      { key: "5-1", label: <Link to="/admin/voucher">Xem mã giảm giá</Link> },
+      {
+        key: "5-2",
+        label: <Link to="/admin/voucher/add">Thêm mã giảm giá</Link>,
+      },
     ],
   },
   {
-    link: "/admin/voucher",
-    title: "Đơn hàng",
-    icon: <FaTruckRampBox />,
-    active: false,
+    key: "6",
+    label: "Bài viết",
+    icon: <FaBlog />,
     children: [
-      { link: "", title: "Xem đơn hàng" },
-      { link: "", title: "Xử lý đơn hàng" },
-      { link: "", title: "Cập nhật đơn hàng" },
+      { key: "6-1", label: <Link to="/admin">Xem bài viết</Link> },
+      { key: "6-2", label: <Link to="/admin">Thêm bài viết</Link> },
+    ],
+  },
+  {
+    key: "7",
+    label: "Đơn hàng",
+    icon: <FaTruckRampBox />,
+    children: [
+      { key: "7-1", label: <Link to="/admin/order">Xem đơn hàng</Link> },
+      // { key: '7-2', label: <Link to="/admin/order">Xử lý đơn hàng</Link> },
+      // { key: '7-3', label: <Link to="/admin/order">Cập nhật đơn hàng</Link> },
     ],
   },
 ];
 
-const AdminMenu: React.FC = () => {
+type Props = {
+  collapsed: boolean;
+};
+
+const AdminMenu: React.FC<Props> = ({ collapsed }): any => {
   const location = useLocation();
   const fullPath = location.pathname;
   const pathSegments = fullPath.split("/").slice(1, 3); // Chỉ lấy 'admin' và 'products'
   const pathAfterAdmin = "/" + pathSegments.join("/");
 
   return (
-    <div className="lg:w-52 lg:px-4 pl-4 lg:min-w-[200px] duration-500">
-      <div className="h-full w-8 lg:w-full">
-        <Link
-          className="block lg:px-8 lg:py-6 my-6 text-sm text-slate-700"
-          to="/admin/products"
-        >
-          <img src={imgLogo} className="hidden lg:block" />
-          <img src={imgLogoIcon} className="lg:hidden inline-block" />
-        </Link>
-        <hr className="h-px border-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
-        <div className="mt-4">
-          <ul className="flex flex-col">
-            {listMenu.map(({ link, title, icon, active, children }, index) => {
-              return (
-                <li
-                  key={index}
-                  className="relative group hover:bg-gray-200 duration-300 rounded-lg"
-                >
-                  <NavLink
-                    className={`text-sm flex items-center lg:px-2 py-2.5 ${
-                      pathAfterAdmin === link ? "lg:bg-white lg:shadow-xl" : ""
-                    } `}
-                    to={link}
-                  >
-                    <div
-                      className={`lg:mr-2 flex h-8 w-8 items-center justify-center rounded-lg ${
-                        active
-                          ? "lg:bg-transparent lg:shadow-none bg-white shadow-lg"
-                          : ""
-                      } `}
-                    >
-                      {icon}
-                    </div>
-                    <div className="hidden justify-between items-center flex-grow opacity-100 lg:flex">
-                      <span className="ml-1">{title}</span>
-                      {children && <FaAngleRight />}
-                    </div>
-                    {children ? (
-                      <div className="absolute z-10 left-full -top-1 invisible w-40 bg-white opacity-0 group-hover:opacity-100 group-hover:visible duration-300">
-                        <div className="bg-white m-2 p-1 shadow-[rgba(27,31,35,0.15)_0px_0px_0px_1px] rounded-lg w-full">
-                          <span className="font-semibold text-gray-400 p-2">
-                            {title}
-                          </span>
-                          {children?.map((child) => (
-                            <Link
-                              className="text-sm p-2 rounded-md hover:bg-[#e7e7e7] w-full block"
-                              to={child.link}
-                            >
-                              {child.title}
-                            </Link>
-                          ))}
-                        </div>
-                        <span className="absolute border-[8px] border-t-transparent border-b-transparent border-l-transparent top-5 -left-2"></span>
-                      </div>
-                    ) : (
-                      <div className="absolute z-10 left-full -top-1 invisible w-40 bg-white opacity-0 group-hover:visible duration-300 group-hover:opacity-100 lg:hidden cursor-text">
-                        <div className="bg-white m-2 p-1 shadow-[rgba(27,31,35,0.15)_0px_0px_0px_1px] rounded-lg w-full">
-                          <p className="font-semibold p-2">{title}</p>
-                        </div>
-                        <span className="absolute border-[8px] border-t-transparent border-b-transparent border-l-transparent top-5 -left-2"></span>
-                      </div>
-                    )}
-                  </NavLink>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+    <div className="">
+      <Link className="block px-8 py-6 my-6 text-sm text-slate-700" to="/admin">
+        {!collapsed && <img src={imgLogo} className="" />}
+        {collapsed && <img src={imgLogoIcon} className="w-10" />}
+        {/* <img src={imgLogoIcon} className="lg:hidden inline-block" /> */}
+      </Link>
+      <div>
+        <Menu defaultOpenKeys={["1"]} mode="inline" items={menuItems} />
       </div>
     </div>
   );

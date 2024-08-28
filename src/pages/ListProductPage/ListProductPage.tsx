@@ -1,115 +1,67 @@
-import React, { useEffect, useState } from "react";
-import { https } from "../../services/config";
+import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-// import ItemProduct from "../../components/ItemProduct";
-import { hiddenSpinner, showSpinner } from "../../util/util";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import { Product } from "../../types/products";
-import {
-  Button,
-  Checkbox,
-  CheckboxProps,
-  Divider,
-  Form,
-  Input,
-  Select,
-} from "antd";
+import { Checkbox, CheckboxProps, Form, Input } from "antd";
 import { GoDash } from "react-icons/go";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import { useQuery } from "@tanstack/react-query";
+import productService from "../../services/productService";
+import PaginationPage from "../../components/PaginationPage/PaginationPage";
+import categoryService from "../../services/categoryService";
+import "./listProduct.css";
+
+const limit = 12;
+
+const buttonSort = [
+  { label: "Phổ biến", value: "popular" },
+  { label: "Mới nhất", value: "newest" },
+  { label: "Bán chạy", value: "seller" },
+];
 
 const ListProductPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const slugCategory = queryParams.get("category");
+  const slugCategory = queryParams.get("categories")
+    ? queryParams.get("categories")?.split(",")
+    : [];
+  const currentPage = queryParams.get("page")
+    ? Number(queryParams.get("page"))
+    : 1;
 
-  const [productsList, setProductsList] = useState<Product[]>([]);
-  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
-  const [filteredCategory, setFilteredCategory] = useState<any>([]);
+  const { data } = useQuery({
+    queryKey: ["products", location.search],
+    queryFn: () =>
+      productService
+        .getAllProducts(limit, currentPage, queryParams.get("categories"))
+        .then((res) => res.data),
+  });
 
-  const fetchData = async () => {
-    showSpinner();
-    try {
-      // const API = slugCategory
-      //   ? `/products?category=${slugCategory}`
-      //   : "/products";
-      const { data } = await https.get("/products");
-      console.log(data);
-      setProductsList(data.results);
-      hiddenSpinner();
-    } catch (error) {
-      console.log(error);
-      hiddenSpinner();
-    }
-  };
-
-  const fetchCategories = async () => {
-    showSpinner();
-    try {
-      const { data } = await https.get("/categories");
-      setCategoriesList(data.results);
-      hiddenSpinner();
-    } catch (error) {
-      console.log(error);
-      hiddenSpinner();
-    }
-  };
-  useEffect(() => {
-    fetchData();
-    fetchCategories();
-  }, []);
-
-  const callFilterApi = async () => {
-    const paramCategory = queryParams.get("categories");
-    let newUrl = `/products?sortBy=createdAt:asc&limit=18&page=1`;
-    if (paramCategory) {
-      newUrl += `&categories=${paramCategory}`;
-    }
-    return https.get(newUrl);
-  };
+  const { data: categoriesData } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () =>
+      categoryService.getAllCategories().then((res) => res.data.results),
+    refetchInterval: 3 * 60 * 1000,
+  });
 
   const onChange: CheckboxProps["onChange"] = (e) => {
-    console.log(`checked = ${e.target.value} ${e.target.checked}`);
-    if (e.target.checked) {
-      setFilteredCategory([...filteredCategory, e.target.value]);
+    const newCategory = e.target.value;
+    let updatedCategories = slugCategory ? [...slugCategory] : [];
+    if (updatedCategories.includes(newCategory)) {
+      updatedCategories = updatedCategories.filter((c) => c !== newCategory);
     } else {
-      setFilteredCategory(
-        filteredCategory.filter((slug: string) => slug !== e.target.value)
-      );
+      updatedCategories.push(newCategory);
     }
-  };
-
-  const onFilter = async () => {
-    showSpinner();
-    try {
-      if (filteredCategory.length !== 0) {
-        queryParams.set("categories", filteredCategory.join(","));
-      }
-      navigate(location.pathname + "?" + queryParams.toString());
-      // const { data } = await https.get(`/products?categories=${filteredCategory.join(',')}`);
-      const { data } = await callFilterApi();
-      setProductsList(data.results);
-      hiddenSpinner();
-    } catch (error) {
-      console.log(error);
-      hiddenSpinner();
-    }
-  };
-
-  useEffect(() => {
-    console.log(filteredCategory, "filteredCategory");
-    if (filteredCategory.length === 0) {
+    if (updatedCategories.length === 0) {
       queryParams.delete("categories");
-      onFilter();
     } else {
-      onFilter();
+      queryParams.set("categories", updatedCategories.join(","));
     }
-  }, [filteredCategory]);
+    navigate(location.pathname + "?" + queryParams.toString());
+  };
 
   const onSubmitPriceRangeFilter = (values: any) => {};
-  const onFinishFailed = (errorInfo: unknown) => {
-    console.log("Failed:", errorInfo);
-  };
 
   const listBreadcrumb = [
     {
@@ -128,9 +80,14 @@ const ListProductPage: React.FC = () => {
             <div>
               <div className="relative flex flex-col py-8 space-y-4 border-b border-slate-300">
                 <h3 className="font-semibold ">Danh mục</h3>
-                <div className="grid grid-flow-row gap-1">
-                  {categoriesList.map((category: Category, index) => (
-                    <Checkbox value={category.slug} onChange={onChange}>
+                <div className="grid grid-flow-row gap-1 filter-product">
+                  {categoriesData?.map((category: Category) => (
+                    <Checkbox
+                      key={category.id}
+                      checked={slugCategory?.includes(category.slug)}
+                      value={category.slug}
+                      onChange={onChange}
+                    >
                       {category.name}
                     </Checkbox>
                   ))}
@@ -143,10 +100,8 @@ const ListProductPage: React.FC = () => {
                   name="basic"
                   labelCol={{ span: 12 }}
                   wrapperCol={{ span: 24 }}
-                  style={{}}
                   initialValues={{ remember: true }}
                   onFinish={onSubmitPriceRangeFilter}
-                  onFinishFailed={onFinishFailed}
                   autoComplete="off"
                   requiredMark={false}
                 >
@@ -177,25 +132,39 @@ const ListProductPage: React.FC = () => {
                       <Input placeholder="₫ Đến" />
                     </Form.Item>
                   </div>
+                  <button className="relative inline-flex items-center justify-center h-auto w-full px-6 py-3 mt-2 text-sm font-medium transition-colors rounded-full shadow-xl bg-primary hover:bg-[#dc2c4c] text-white">
+                    Áp dụng
+                  </button>
                 </Form>
               </div>
             </div>
           </div>
           <div className="col-span-3">
-            <div className="mb-2 h-[62px] w-full bg-slate-50 flex items-center gap-4 pl-10">
+            <div className="mb-5 h-[62px] w-full bg-slate-50 flex items-center gap-4 pl-2">
               <span className="font-normal">Sắp xếp theo</span>
-              <Button className="w-[90px] h-[34px]" type="primary" danger>
-                Phổ biến
-              </Button>
-              <Button className="bg-white w-[90px] h-[34px]">Mới nhất</Button>
-              <Button className="bg-white w-[90px] h-[34px]">Bán chạy</Button>
+              {buttonSort.map((button) => (
+                <button
+                  key={button.value}
+                  className="px-6 py-2 text-sm font-medium rounded-md border border-primary hover:bg-primary hover:text-white text-primary"
+                >
+                  {button.label}
+                </button>
+              ))}
             </div>
             {/* list */}
-            <div className="lg:col-span-3 md:col-span-2 grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10 ">
+            <div className="lg:col-span-3 md:col-span-2 grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10">
               {/* item */}
-              {productsList.map((product, index) => (
-                <ProductCard key={index} product={product} />
+              {data?.results.map((product: Product) => (
+                <ProductCard key={product.id} product={product} />
               ))}
+            </div>
+            <div className="mt-10">
+              <PaginationPage
+                current={currentPage}
+                total={data?.totalResults}
+                pageSize={limit}
+                theme="dark"
+              />
             </div>
           </div>
         </div>

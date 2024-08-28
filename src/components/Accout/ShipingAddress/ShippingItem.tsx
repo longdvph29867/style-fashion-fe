@@ -26,21 +26,17 @@ const ShippingItem = ({
       <div className="flex justify-between sm:block">
         <div>
           <div className="flex gap-3 h-max items-stretch">
-            <div className="text-black font-medium">
-              {shipping.recipientName}
-            </div>
+            <div className="text-black font-medium">{shipping.name}</div>
             <div className="border border-gray-300"></div>
             <div>
-              <span className="text-gray-600">
-                {shipping.recipientPhoneNumber}
-              </span>
+              <span className="text-gray-600">{shipping.phoneNumber}</span>
             </div>
           </div>
           <div className="text-gray-600 text-sm mt-1">
-            <p>{shipping.streetAddress}</p>
+            <p>{shipping.address}</p>
             <p>
-              {shipping.wardCommune}, {shipping.district},{" "}
-              {shipping.cityProvince}
+              {shipping.wardName}, {shipping.districtName},{" "}
+              {shipping.provinceName}
             </p>
           </div>
         </div>
