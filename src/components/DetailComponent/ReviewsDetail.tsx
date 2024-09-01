@@ -16,7 +16,7 @@ const ReviewsDetail = ({ product }: ReviewDetailProps) => {
   const fetchReviews = async () => {
     try {
       showSpinner();
-      const API = `/reviews/v2?productId=${product?.id}&limit=${
+      const API = `/reviews?productId=${product?.id}&limit=${
         totalReview ?? 10
       }`;
       const { data } = await https.get(API);
