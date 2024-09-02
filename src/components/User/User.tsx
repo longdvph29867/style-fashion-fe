@@ -108,15 +108,6 @@ const User = () => {
                     Đăng ký
                   </Link>
                 </li>
-            
-                <li className="px-2">
-                  <Link
-                    className="flex items-center px-4 py-2 font-normal rounded-md text-content hover:text-title hover:bg-[#ebebeb] duration-300"
-                    to="/account"
-                  >
-                    My Account
-                  </Link>
-                </li>
               </>
             )}
           </ul>

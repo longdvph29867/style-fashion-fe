@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { message } from "antd";
+import { message, Rate } from "antd";
 import {
   formartCurrency,
   formartRating,
@@ -140,18 +140,13 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
           <div className="border-l h-7 border-slate-300" />
           <div className="flex items-center">
             <a href="#" className="flex items-center text-base font-medium">
-              <div className="relative w-20 h-6">
-                <div className="absolute bottom-0 left-0 w-20 h-full text-slate-200">
-                  ★★★★★
-                </div>
-                <div
-                  className={`absolute text-[#fbbf24] left-0 bottom-0 h-full overflow-hidden`}
-                  style={{
-                    width: `${formartRating(product?.scoreReview)}%`,
-                  }}
-                >
-                  ★★★★★
-                </div>
+              <div className="relative h-6">
+                <Rate
+                  className="text-sm"
+                  disabled
+                  defaultValue={product?.scoreReview}
+                  count={5}
+                />
               </div>
               <div className="ml-1.5 flex text-sm">
                 <span>{product?.scoreReview}</span>
