@@ -26,7 +26,7 @@ const ListComment = ({ idProduct }: Props) => {
   };
   useEffect(() => {
     fetchComments();
-  }, []);
+  }, [idProduct]);
 
   const addComment = (data: PostComment) => {
     commentService
