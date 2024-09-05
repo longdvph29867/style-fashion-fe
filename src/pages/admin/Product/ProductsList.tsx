@@ -4,28 +4,75 @@ import {
   hiddenSpinner,
   showSpinner,
 } from "../../../util/util";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Breadcrumb, Button, Image, Modal, Table, message } from "antd";
 import { https } from "../../../config/axios";
 // import { Product } from "../../../types/productType";
 import PaginationPage from "../../../components/PaginationPage/PaginationPage";
 import productService from "../../../services/productService";
-import ProductListSkeleton from "../../../components/Skeleton/Admin/ProductListSkeleton";
 import { Product } from "../../../types/products";
-import { Content } from "antd/es/layout/layout";
+import React, { useRef } from 'react';
+import { SearchOutlined } from '@ant-design/icons';
+import type { InputRef, TableColumnsType, TableColumnType } from 'antd';
+import { Input, Space } from 'antd';
+import type { FilterDropdownProps } from 'antd/es/table/interface';
 
 const ProductsList: React.FC = () => {
+  const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
   const [totalProducts, setTotalProducts] = useState(0);
   const [loading, setLoading] = useState(true);
   const limitPerPage = 10;
   const currentPage = params.get("page") ? Number(params.get("page")) : 1;
   const [productList, setProductList] = useState<Product[]>([]);
+  const [currentSorter, setCurrentSorter] = useState<any>({}); // Lưu thông tin sorter hiện tại
 
-  const fetchData = async () => {
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const [categories, setCategories] = useState<any[]>([]);
+  const searchInput = useRef<InputRef>(null);
+
+  const fetchCategories = async () => {
+    const { data } = await https.get("/categories?limit=100&page=1");
+    setCategories(data.results.map((category: any) => ({
+      text: category.name,
+      value: category.id,
+    })));
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchData = async (filters: any = {}, sorter: any = {}) => {
+    console.log("filters", filters);
+    console.log("sorter", sorter);
     showSpinner();
     try {
-      const { data } = await productService.getAllProducts(limitPerPage, currentPage);
+      // const { data } = await productService.getAllProducts(limitPerPage, currentPage);
+      // const queryParams = new URLSearchParams();
+      // Nếu có thông tin sorter, thêm vào queryParams
+      if (sorter.field) {
+        const sortOrder = sorter.order === 'ascend' ? 'asc' : 'desc';
+        params.set('sortBy', `${sorter.field}:${sortOrder}`);
+        // setCurrentSorter(sorter); // Lưu sorter vào state
+      }
+
+      // Thêm filters vào queryParams
+      for (const key in filters) {
+        if (filters[key]) {
+          params.set(key, filters[key]);
+        }
+      }
+
+      // navigate(location.pathname + "?" + params.toString());
+
+      // Biến queryUrl chứa tất cả các tham số
+      const queryUrl = `${params.toString()}`;
+
+      // Gọi API với queryUrl
+      const { data } = await productService.getAllProductsV2(queryUrl);
+
       setLoading(false);
       setProductList(data.results);
       setTotalProducts(data.totalResults);
@@ -36,6 +83,8 @@ const ProductsList: React.FC = () => {
       console.log(error);
     }
   };
+
+
   useEffect(() => {
     fetchData();
   }, [location.search]);
@@ -71,6 +120,79 @@ const ProductsList: React.FC = () => {
     });
   };
 
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: FilterDropdownProps['confirm'],
+    dataIndex: any,
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText('');
+  };
+
+
+  const getColumnSearchProps = (dataIndex: any): TableColumnType<any> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          className="input-search-product"
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            className="btn-search-product"
+            type="primary"
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+          {/* <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            Close
+          </Button> */}
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+  });
+
   // Define columns for the Table
   const columns = [
     {
@@ -78,47 +200,57 @@ const ProductsList: React.FC = () => {
       dataIndex: "index",
       key: "index",
       render: (_: any, __: Product, index: number) => ((currentPage - 1) * limitPerPage + (index + 1)),
+      width: "3%",
     },
     {
       title: "Ảnh",
       dataIndex: "thumbnail",
       key: "thumbnail",
       render: (text: string) => <Image src={text} width={50} height={50} style={{ borderRadius: '8px' }} />,
+      width: "4%",
     },
     {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
+      width: "20%",
+      ...getColumnSearchProps('name'),
     },
     {
       title: "Tồn kho",
       dataIndex: "countInStock",
       key: "countInStock",
-      sorter: (a: Product, b: Product) => a.countInStock - b.countInStock,
+      // sorter: (a: Product, b: Product) => a.countInStock - b.countInStock,
+      sorter: true
     },
     {
       title: "Lượt mua",
       dataIndex: "purchases",
       key: "purchases",
-      sorter: (a: Product, b: Product) => a.purchases - b.purchases,
+      // sorter: (a: Product, b: Product) => a.purchases - b.purchases,
+      sorter: true
     },
     {
       title: "Lượt thích",
       dataIndex: "likes",
       key: "likes",
-      sorter: (a: Product, b: Product) => a.likes - b.likes,
+      // sorter: (a: Product, b: Product) => a.likes - b.likes,
+      sorter: true
     },
     {
       title: "Đánh giá",
       dataIndex: "finalScoreReview",
       key: "finalScoreReview",
-      sorter: (a: Product, b: Product) => a.finalScoreReview - b.finalScoreReview,
+      // sorter: (a: Product, b: Product) => a.finalScoreReview - b.finalScoreReview,
+      sorter: true,
+      // defaultSortOrder: "descend",
     },
     {
       title: "Khoảng giá",
       key: "priceRange",
-      dataIndex: ["minPrice", "maxPrice"], // Mảng chứa cả minPrice và maxPrice
-      sorter: (a: Product, b: Product) => a.minPrice - b.minPrice,
+      dataIndex: ["minPrice"], // Mảng chứa cả minPrice và maxPrice
+      // sorter: (a: Product, b: Product) => a.minPrice - b.minPrice,
+      sorter: true,
       render: (_: any, record: Product) => {
         const { minPrice, maxPrice } = record;
         return `${formartCurrency(minPrice)} - ${formartCurrency(maxPrice)}`;
@@ -130,12 +262,16 @@ const ProductsList: React.FC = () => {
       // ],
       onFilter: (value: any, record: Product) => record.minPrice <= value,
     },
-    // {
-    //   title: "Danh mục",
-    //   dataIndex: "categories",
-    //   key: "categories",
-    //   // sorter: (a: Product, b: Product) => a.maxPrice - b.maxPrice,
-    // },
+    {
+      title: "Danh mục",
+      key: "categories",
+      dataIndex: "categories", // Không cần chỉ định ["categories", "name"], chỉ lấy toàn bộ mảng categories
+      width: "12%",
+      filters: categories, // Giả sử `categories` là danh sách bộ lọc có sẵn
+      render: (categories: any[]) => (
+        categories.map((category) => category.name).join(", ")
+      ),
+    },
     {
       // fixed: "right",
       title: "Thao tác",
@@ -165,14 +301,6 @@ const ProductsList: React.FC = () => {
 
   return (
     <div className="">
-      {/* <div className="p-6 pb-0 mb-0 bg-white rounded-t-2xl">
-        <Link
-          to="/admin/products/add"
-          className="text-white text-base font-semibold bg-green-500 py-2 px-2 rounded my-5 hover:bg-green-600"
-        >
-          <span>Thêm mới</span>
-        </Link>
-      </div> */}
       <Breadcrumb style={{ margin: '16px 0' }}>
         <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
         <Breadcrumb.Item>Sản phẩm</Breadcrumb.Item>
@@ -183,6 +311,7 @@ const ProductsList: React.FC = () => {
           dataSource={productList}
           rowKey="id"
           pagination={false}
+          onChange={(pagination, filters, sorter) => fetchData(filters, sorter)}
         />
         {/* )} */}
         <PaginationPage

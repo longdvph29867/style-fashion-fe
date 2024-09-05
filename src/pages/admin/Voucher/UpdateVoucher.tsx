@@ -174,7 +174,16 @@ const UpdateVoucher: React.FC = () => {
                         {
                             pattern: /^[0-9]*$/,
                             message: "Vui lòng nhập số dương!",
-                        }
+                        },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                const type = getFieldValue('type');
+                                if (type === 'percentage' && value > 100) {
+                                    return Promise.reject(new Error("Giá trị giảm giá không được lớn hơn 100%"));
+                                }
+                                return Promise.resolve();
+                            },
+                        }),
                         ]}
                     >
                         <Input placeholder="" />
@@ -250,7 +259,16 @@ const UpdateVoucher: React.FC = () => {
                         <Form.Item
                             name="validTo"
                             rules={[{ required: true, message: 'Vui lòng nhập trường này!' },
-                            { validator: (_, value) => validateDateRange({ validFrom: form.getFieldValue('validFrom'), validTo: value }) }
+                            // { validator: (_, value) => validateDateRange({ validFrom: form.getFieldValue('validFrom'), validTo: value }) }
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    const validFrom = getFieldValue('validFrom');
+                                    if (validFrom && value && value <= validFrom) {
+                                        return Promise.reject(new Error('Thời gian kết thúc phải lớn hơn thời gian bắt đầu!'));
+                                    }
+                                    return Promise.resolve();
+                                },
+                            }),
                             ]}
                         >
                             <div>
@@ -258,9 +276,15 @@ const UpdateVoucher: React.FC = () => {
                                 <DatePicker
                                     defaultValue={dayjs(voucherDetail?.validTo)}
                                     showTime
+                                    // onChange={(value) => {
+                                    //     // setTimeEnd(value);
+                                    //     form.setFieldsValue({ validTo: value });
+                                    // }}
                                     onChange={(value) => {
-                                        // setTimeEnd(value);
                                         form.setFieldsValue({ validTo: value });
+
+                                        // Trigger validation immediately
+                                        form.validateFields(['validTo']);
                                     }}
                                 />
 
