@@ -17,11 +17,12 @@ import type { InputRef, TableColumnsType, TableColumnType } from 'antd';
 import { Input, Space } from 'antd';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 
+
 const ProductsList: React.FC = () => {
   const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
   const [totalProducts, setTotalProducts] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const limitPerPage = 10;
   const currentPage = params.get("page") ? Number(params.get("page")) : 1;
   const [productList, setProductList] = useState<Product[]>([]);
@@ -45,39 +46,70 @@ const ProductsList: React.FC = () => {
   }, []);
 
   const fetchData = async (filters: any = {}, sorter: any = {}) => {
+    setLoading(true);
     console.log("filters", filters);
     console.log("sorter", sorter);
-    showSpinner();
+    // showSpinner();
     try {
       // const { data } = await productService.getAllProducts(limitPerPage, currentPage);
       // const queryParams = new URLSearchParams();
       // Nếu có thông tin sorter, thêm vào queryParams
       if (sorter.field) {
-        const sortOrder = sorter.order === 'ascend' ? 'asc' : 'desc';
-        params.set('sortBy', `${sorter.field}:${sortOrder}`);
+        let sortOrder = '';
+        if (sorter.order === 'ascend') {
+          sortOrder = 'asc';
+          params.set('sortBy', `${sorter.field}:${sortOrder}`);
+        } else if (sorter.order === 'descend') {
+          sortOrder = 'desc';
+          params.set('sortBy', `${sorter.field}:${sortOrder}`);
+        } else if (sorter.order === undefined) {
+          sortOrder = '';
+          params.delete('sortBy');
+        }
         // setCurrentSorter(sorter); // Lưu sorter vào state
       }
 
       // Thêm filters vào queryParams
       for (const key in filters) {
         if (filters[key]) {
-          params.set(key, filters[key]);
+          console.log("key", key);
+          console.log("filters[key]", filters[key]);
+          if (key === 'priceRange') {
+            if (filters[key][0] === 'under1m') {
+              console.log("under1m");
+              params.set('toPrice', '1000000');
+            } else if (filters[key][0] === '1to5m') {
+              params.set('fromPrice', '1000000');
+              params.set('toPrice', '5000000');
+            } else if (filters[key][0] === 'over5m') {
+              params.set('fromPrice', '5000000');
+            }
+          } else if (key === 'categories') {
+            params.set(key, filters[key]);
+          }
+        } else {
+          params.delete(key);
+          params.delete('toPrice');
         }
       }
 
       // navigate(location.pathname + "?" + params.toString());
+      window.history.replaceState(null, '', location.pathname + "?" + params.toString());
+
 
       // Biến queryUrl chứa tất cả các tham số
       const queryUrl = `${params.toString()}`;
+      console.log("queryUrl", queryUrl);
 
       // Gọi API với queryUrl
       const { data } = await productService.getAllProductsV2(queryUrl);
 
-      setLoading(false);
+      console.log("data.results", data.results);
       setProductList(data.results);
       setTotalProducts(data.totalResults);
+      setLoading(false);
       window.scrollTo(0, 0);
-      hiddenSpinner();
+      // hiddenSpinner();
     } catch (error) {
       hiddenSpinner();
       console.log(error);
@@ -86,8 +118,9 @@ const ProductsList: React.FC = () => {
 
 
   useEffect(() => {
+    console.log("useeffect location.search", location.search);
     fetchData();
-  }, [location.search]);
+  }, [params.get('search'), currentPage]);
 
   const handleDelete = async (id: string) => {
     showSpinner();
@@ -125,9 +158,13 @@ const ProductsList: React.FC = () => {
     confirm: FilterDropdownProps['confirm'],
     dataIndex: any,
   ) => {
-    confirm();
+    // confirm();
+    params.set('search', selectedKeys[0]);
+    window.history.replaceState(null, '', location.pathname + "?" + params.toString());
+    console.log('params search: ', params.toString());
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
+    console.log("searchText", searchText);
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -255,11 +292,11 @@ const ProductsList: React.FC = () => {
         const { minPrice, maxPrice } = record;
         return `${formartCurrency(minPrice)} - ${formartCurrency(maxPrice)}`;
       },
-      // filters: [
-      //   { text: "Dưới 1 triệu", value: 1000000 },
-      //   { text: "1 triệu - 5 triệu", value: 5000000 },
-      //   { text: "Trên 5 triệu", value: 5000001 }
-      // ],
+      filters: [
+        { text: "Dưới 1 triệu", value: "under1m" },
+        { text: "1 triệu - 5 triệu", value: "1to5m" },
+        { text: "Trên 5 triệu", value: "over5m" }
+      ],
       onFilter: (value: any, record: Product) => record.minPrice <= value,
     },
     {
@@ -307,6 +344,7 @@ const ProductsList: React.FC = () => {
       </Breadcrumb>
       <div className="h-full">
         <Table
+          loading={loading}
           columns={columns}
           dataSource={productList}
           rowKey="id"
