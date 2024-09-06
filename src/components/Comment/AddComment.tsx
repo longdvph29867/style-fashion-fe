@@ -11,6 +11,7 @@ type Props = {
 const AddComment = ({ idProduct, addComment }: Props) => {
   const [content, setContent] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const user = localUserService.get();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -23,16 +24,16 @@ const AddComment = ({ idProduct, addComment }: Props) => {
   };
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!localUserService.get()) {
+    if (user) {
       message.error("Vui lòng đăng nhập để bình luận san phẩm");
     }
     if (content.trim() === "") {
       return;
     }
-    const userId = localUserService.get()?.id;
+
     const data = {
       productsId: idProduct,
-      userId: userId as string,
+      userId: user?.id as string,
       content,
     };
     addComment(data);
@@ -40,12 +41,8 @@ const AddComment = ({ idProduct, addComment }: Props) => {
   };
   return (
     <div className="flex items-start gap-4 mt-4">
-      <div className="img-user-comment">
-        <img
-          width={40}
-          src="https://cdn-icons-png.flaticon.com/512/219/219969.png"
-          alt=""
-        />
+      <div className="img-user-comment rounded-full overflow-hidden">
+        <img width={40} src={user?.image} alt="" />
       </div>
       <form className="flex-grow" onSubmit={handleSubmit}>
         <input

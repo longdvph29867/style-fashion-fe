@@ -5,26 +5,27 @@ export type RegisterType = {
   phoneNumber: string;
   rePassword?: string;
 };
-export type ObjString = { [key: string]: string }
+export type ObjString = { [key: string]: string };
 
-export type LoginType = Pick<RegisterType, 'email' | 'password'>;
+export type LoginType = Pick<RegisterType, "email" | "password">;
 
 export type InforUserType = {
-  name: string,
-  email: string,
-  role: string,
-  isEmailVerified: boolean,
-  active: boolean,
-  id: string
-}
+  name: string;
+  email: string;
+  role: string;
+  image: string;
+  isEmailVerified: boolean;
+  active: boolean;
+  id: string;
+};
 
 export type UserTokenType = {
   access: {
-    token: string,
-    expires: string
-  },
+    token: string;
+    expires: string;
+  };
   refresh: {
-    token: string,
-    expires: string,
-  }
-}
+    token: string;
+    expires: string;
+  };
+};

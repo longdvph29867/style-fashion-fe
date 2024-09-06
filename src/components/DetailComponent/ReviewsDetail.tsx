@@ -10,7 +10,6 @@ type ReviewDetailProps = {
 };
 
 const LIMIT = 10;
-const arrayStartReivew = [5, 4, 3, 2, 1];
 
 const ReviewsDetail = ({ product }: ReviewDetailProps) => {
   const [reviews, setReviews] = useState<Review[]>([]);
