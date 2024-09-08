@@ -16,6 +16,7 @@ const PaginationPage = ({ current, total, pageSize, theme }: Porps) => {
   const onChange = (page: number) => {
     setCurrentPage(page);
     params.set("page", page.toString());
+    // window.history.replaceState(null, '', location.pathname + "?" + params.toString());
     navigate(location.pathname + "?" + params.toString());
   };
   useEffect(() => {
