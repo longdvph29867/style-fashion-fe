@@ -7,17 +7,33 @@ type Porps = {
   total: number;
   pageSize: number;
   theme?: string;
+  currentUrl: string;
 };
-const PaginationPage = ({ current, total, pageSize, theme }: Porps) => {
+const PaginationPage = ({ current, total, pageSize, theme, currentUrl }: Porps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const params = new URLSearchParams(location.search);
+  // const params = new URLSearchParams(location.search);
+  const url = new URL(currentUrl);
+  const params = new URLSearchParams(url.search);
   const [currentPage, setCurrentPage] = useState(current);
   const onChange = (page: number) => {
-    setCurrentPage(page);
+    if (!currentUrl) { }
+    // setCurrentPage(page);
+    // params.set("page", page.toString());
+    // console.log(location.pathname + "?" + params.toString());
+    // // window.history.replaceState(null, '', location.pathname + "?" + params.toString());
+    // navigate(location.pathname + "?" + params.toString());
+    // // Điều hướng đến URL mới với các tham số giữ nguyên
+    // // navigate(`${location.pathname}?${params.toString()}`);
+
+    // const url = new URL(currentUrl);
+    // const params = new URLSearchParams(url.search);
+
+    // Cập nhật tham số page
     params.set("page", page.toString());
-    // window.history.replaceState(null, '', location.pathname + "?" + params.toString());
-    navigate(location.pathname + "?" + params.toString());
+
+    // Điều hướng đến URL mới với các tham số giữ nguyên
+    navigate(`${url.pathname}?${params.toString()}`);
   };
   useEffect(() => {
     setCurrentPage(current);

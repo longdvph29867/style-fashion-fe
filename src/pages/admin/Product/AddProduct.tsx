@@ -173,6 +173,14 @@ const AddProduct: React.FC = () => {
             {
               pattern: /^[0-9]*$/,
               message: "Vui lòng nhập số dương!",
+            },
+            {
+              validator: (_, value) => {
+                if (value && Number(value) <= 0) {
+                  return Promise.reject(new Error("Giá phải lớn hơn 0!"));
+                }
+                return Promise.resolve();
+              }
             }
             ]}
           >
@@ -197,6 +205,9 @@ const AddProduct: React.FC = () => {
             },
             {
               validator: (_, value) => {
+                if (value && Number(value) <= 0) {
+                  return Promise.reject(new Error("Giá phải lớn hơn 0!"));
+                }
                 const originalPrice = variants[index]?.originalPrice;
                 if (value && originalPrice && Number(value) > Number(originalPrice)) {
                   return Promise.reject(new Error("Giá khuyến mãi không được lớn hơn giá gốc!"));

@@ -18,9 +18,10 @@ import { Input, Space } from 'antd';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 
 const priceRanges = [
-  { text: "Dưới 500k", value: '500' },
-  { text: "Từ 500k - 2 triệu", value: '500000' },
-  { text: "Trên 2 triệu", value: '2000000' },
+  { text: "Dưới 100k", value: 'under100' },
+  { text: "Từ 100k - 500k", value: '100to500' },
+  { text: "Từ 500k - 2 triệu", value: '500to2m' },
+  { text: "Trên 2 triệu", value: 'over2m' },
 ];
 
 const ProductsList: React.FC = () => {
@@ -81,52 +82,36 @@ const ProductsList: React.FC = () => {
       if (filters[key]) {
         console.log("key", key);
         console.log("filters[key]", filters[key]);
-        if (key === 'minPrice') {
-          // if (filters[key][0] === '0') {
-          //   console.log("dươi 500k");
-          //   params.set('fromPrice', filters[key][0]);
-          //   params.set('toPrice', '500000');
-          // } else if (filters[key][0] === '500000') {
-          //   params.set('fromPrice', '1000000');
-          //   params.set('toPrice', '5000000');
-          // } else if (filters[key][0] === '2000000') {
-          //   params.set('fromPrice', '5000000');
-          // }
-          // params.set('toPrice', filters[key][0]);
-          // params.set('fromPrice', '50');
-          // params.set('fromPrice', filters[key][0]);
+        if (key === 'defaultPrice') {
           switch (filters[key][0]) {
-            case '0':
-              console.log("dưới 500k");
-              params.set('toPrice', filters[key][0]);
-
+            case 'under100':
+              params.set('toPrice', '100000');
+              break;
+            case '100to500':
+              params.set('fromPrice', '100000');
+              params.set('toPrice', '500000');
               break;
 
-            case '500':
-              console.log("Từ 500k - 2 triệu");
-              params.set('toPrice', filters[key][0]);
-
-              // params.set('fromPrice', '500000');
-              // params.set('toPrice', '2000000');
+            case '500to2m':
+              params.set('fromPrice', '500000');
+              params.set('toPrice', '2000000');
               break;
 
-            case '2000000':
-              console.log("Trên 2 triệu");
+            case 'over2m':
               params.set('fromPrice', '2000000');
-              // Không cần thiết đặt `toPrice` nếu bạn chỉ muốn lọc từ 2 triệu trở lên
-              break;
-
-            default:
-              console.log("Không khớp với bất kỳ giá trị nào");
               break;
           }
         } else if (key === 'categories') {
           params.set(key, filters[key]);
         }
       } else {
-        params.delete(key);
-        params.delete('toPrice');
-        params.delete('fromPrice');
+        console.log("key", key);
+        if (key === 'categories') {
+          params.delete(key);
+        } else {
+          params.delete('toPrice');
+          params.delete('fromPrice');
+        }
       }
     }
 
@@ -218,6 +203,10 @@ const ProductsList: React.FC = () => {
     }
     fetchData();
   }, [params.get('search'), currentPage]);
+
+  useEffect(() => {
+    console.log("productList updated: ", productList);
+  }, [productList]);
 
   const handleDelete = async (id: string) => {
     showSpinner();
@@ -347,8 +336,22 @@ const ProductsList: React.FC = () => {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
-      width: "40%",
-      ...getColumnSearchProps('name'),
+      width: "15%",
+      render: (text: string, record: any) => (
+        <Link to={`/admin/products/${record.id}`}>
+          {text}
+        </Link>
+      ),
+    },
+    {
+      title: "Mô tả",
+      dataIndex: "description",
+      key: "description",
+      width: "28%",
+      render: (text: string) => {
+        const maxLength = 50; // Độ dài tối đa của mô tả trước khi thêm dấu '...'
+        return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+      },
     },
     // {
     //   title: "Tồn kho",
@@ -372,7 +375,7 @@ const ProductsList: React.FC = () => {
     //   sorter: true
     // },
     {
-      title: "Đánh giá",
+      title: "Điểm đánh giá",
       dataIndex: "finalScoreReview",
       key: "finalScoreReview",
       // sorter: (a: Product, b: Product) => a.finalScoreReview - b.finalScoreReview,
@@ -382,13 +385,13 @@ const ProductsList: React.FC = () => {
     },
     {
       title: "Khoảng giá",
-      key: "minPrice",
-      dataIndex: ["minPrice"], // Mảng chứa cả minPrice và maxPrice
+      key: "defaultPrice",
+      dataIndex: ["defaultPrice"], // Mảng chứa cả minPrice và maxPrice
       // sorter: (a: Product, b: Product) => a.minPrice - b.minPrice,
       sorter: true,
-      render: (_: any, record: Product) => {
-        const { minPrice, maxPrice } = record;
-        return `${formartCurrency(minPrice)} - ${formartCurrency(maxPrice)}`;
+      render: (_: any, record: any) => {
+        const { defaultPrice, maxPrice } = record;
+        return `${formartCurrency(defaultPrice)} - ${formartCurrency(maxPrice)}`;
       },
       filterDropdown: (props: any) => {
         const { setSelectedKeys, selectedKeys, confirm, clearFilters } = props;
@@ -416,8 +419,61 @@ const ProductsList: React.FC = () => {
           </div>
         );
       },
+      // filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => {
+      //   const [minPrice, setMinPrice] = useState(selectedKeys[0]?.min || "");
+      //   const [maxPrice, setMaxPrice] = useState(selectedKeys[0]?.max || "");
+
+      //   const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      //     setMinPrice(e.target.value);
+      //   };
+
+      //   const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      //     setMaxPrice(e.target.value);
+      //   };
+
+      //   const handleOK = () => {
+      //     if (!minPrice || !maxPrice || parseFloat(minPrice) > parseFloat(maxPrice)) {
+      //       // Thông báo lỗi hoặc hiển thị message
+      //       console.error("Giá trị không hợp lệ");
+      //       return;
+      //     }
+      //     setSelectedKeys([{ min: minPrice, max: maxPrice }]);
+      //     confirm();
+      //   };
+
+      //   return (
+      //     <div style={{ padding: 8 }}>
+      //       <Input
+      //         placeholder="Giá Min"
+      //         value={minPrice}
+      //         onChange={handleMinPriceChange}
+      //         style={{ marginBottom: 8, display: "block" }}
+      //       />
+      //       <Input
+      //         placeholder="Giá Max"
+      //         value={maxPrice}
+      //         onChange={handleMaxPriceChange}
+      //         style={{ marginBottom: 8, display: "block" }}
+      //       />
+      //       <div className="flex justify-between">
+      //         <button
+      //           className="bg-blue-500 text-white px-2 py-1 w-18 rounded-lg mr-2"
+      //           onClick={clearFilters}
+      //         >
+      //           Reset
+      //         </button>
+      //         <button
+      //           className="bg-primary text-white px-2 py-1 w-18 rounded-lg"
+      //           onClick={handleOK}
+      //         >
+      //           OK
+      //         </button>
+      //       </div>
+      //     </div>
+      //   );
+      // },
       filters: priceRanges,
-      onFilter: (value: any, record: Product) => record.minPrice <= value,
+      // onFilter: (value: any, record: Product) => record.minPrice <= value,
       width: "10%",
     },
     {
@@ -505,6 +561,7 @@ const ProductsList: React.FC = () => {
           current={currentPage}
           total={totalProducts}
           pageSize={limitPerPage}
+          currentUrl={window.location.href} // Truyền URL hiện tại vào
         />
       </div>
     </div>
