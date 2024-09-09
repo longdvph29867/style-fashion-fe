@@ -30,7 +30,7 @@ const ProductsList: React.FC = () => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const limitPerPage = 1;
+  const limitPerPage = 2;
   const currentPage = params.get("page") ? Number(params.get("page")) : 1;
   params.set("limit", limitPerPage.toString());
   params.set("page", currentPage.toString());
