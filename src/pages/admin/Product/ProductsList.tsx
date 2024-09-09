@@ -29,9 +29,9 @@ const ProductsList: React.FC = () => {
   const params = new URLSearchParams(location.search);
   const [totalProducts, setTotalProducts] = useState(0);
   const [loading, setLoading] = useState(false);
-  const limitPerPage = 10;
-  const currentPage = params.get("page") ? Number(params.get("page")) : 1;
 
+  const limitPerPage = 1;
+  const currentPage = params.get("page") ? Number(params.get("page")) : 1;
   params.set("limit", limitPerPage.toString());
   params.set("page", currentPage.toString());
   // window.history.replaceState(null, '', location.pathname + "?" + params.toString());
@@ -122,55 +122,7 @@ const ProductsList: React.FC = () => {
 
   const fetchData = async () => {
     setLoading(true);
-    // console.log("filters", filters);
-    // console.log("sorter", sorter);
-    // showSpinner();
     try {
-      // const { data } = await productService.getAllProducts(limitPerPage, currentPage);
-      // const queryParams = new URLSearchParams();
-      // Nếu có thông tin sorter, thêm vào queryParams
-      // if (sorter.field) {
-      //   let sortOrder = '';
-      //   if (sorter.order === 'ascend') {
-      //     sortOrder = 'asc';
-      //     params.set('sortBy', `${sorter.field}:${sortOrder}`);
-      //   } else if (sorter.order === 'descend') {
-      //     sortOrder = 'desc';
-      //     params.set('sortBy', `${sorter.field}:${sortOrder}`);
-      //   } else if (sorter.order === undefined) {
-      //     sortOrder = '';
-      //     params.delete('sortBy');
-      //   }
-      //   // setCurrentSorter(sorter); // Lưu sorter vào state
-      // }
-
-      // Thêm filters vào queryParams
-      // for (const key in filters) {
-      //   if (filters[key]) {
-      //     console.log("key", key);
-      //     console.log("filters[key]", filters[key]);
-      //     if (key === 'minPrice') {
-      //       if (filters[key][0] === 'under1m') {
-      //         console.log("under1m");
-      //         params.set('toPrice', '1000000');
-      //       } else if (filters[key][0] === '1to5m') {
-      //         params.set('fromPrice', '1000000');
-      //         params.set('toPrice', '5000000');
-      //       } else if (filters[key][0] === 'over5m') {
-      //         params.set('fromPrice', '5000000');
-      //       }
-      //     } else if (key === 'categories') {
-      //       params.set(key, filters[key]);
-      //     }
-      //   } else {
-      //     params.delete(key);
-      //     params.delete('toPrice');
-      //   }
-      // }
-
-      // navigate(location.pathname + "?" + params.toString());
-      // window.history.replaceState(null, '', location.pathname + "?" + params.toString());
-
 
       // Biến queryUrl chứa tất cả các tham số
       const queryUrl = `${params.toString()}`;
@@ -188,8 +140,9 @@ const ProductsList: React.FC = () => {
       window.scrollTo(0, 0);
       // hiddenSpinner();
     } catch (error) {
-      hiddenSpinner();
+      setLoading(false);
       console.log(error);
+      message.error("Lỗi khi lấy dữ liệu");
     }
   };
 
@@ -204,9 +157,9 @@ const ProductsList: React.FC = () => {
     fetchData();
   }, [params.get('search'), currentPage]);
 
-  useEffect(() => {
-    console.log("productList updated: ", productList);
-  }, [productList]);
+  // useEffect(() => {
+  //   console.log("productList updated: ", productList);
+  // }, [productList]);
 
   const handleDelete = async (id: string) => {
     showSpinner();
@@ -243,6 +196,7 @@ const ProductsList: React.FC = () => {
     selectedKeys: string[],
     confirm: FilterDropdownProps['confirm'],
     dataIndex: any,
+    close: () => void
   ) => {
     // confirm();
     params.set('search', selectedKeys[0]);
@@ -251,6 +205,7 @@ const ProductsList: React.FC = () => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
     console.log("searchText", searchText);
+    close(); // Ẩn dropdown sau khi search
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -268,14 +223,16 @@ const ProductsList: React.FC = () => {
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex, close)}
           style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
           <Button
             className="btn-search-product"
             type="primary"
-            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            onClick={() => {
+              handleSearch(selectedKeys as string[], confirm, dataIndex, close);
+            }}
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
@@ -342,6 +299,7 @@ const ProductsList: React.FC = () => {
           {text}
         </Link>
       ),
+      ...getColumnSearchProps('name'),
     },
     {
       title: "Mô tả",
@@ -414,7 +372,10 @@ const ProductsList: React.FC = () => {
             </Select>
             <div className="flex justify-between">
               <button className="bg-blue-500 text-white px-2 py-1 w-18 rounded-lg mr-2" onClick={clearFilters}>Reset</button>
-              <button className="bg-primary text-white px-2 py-1 w-18 rounded-lg" onClick={confirm}>OK</button>
+              <button className="bg-primary text-white px-2 py-1 w-18 rounded-lg" onClick={() => {
+                confirm(); // Áp dụng bộ lọc
+                props.setVisible(false); // Ẩn dropdown sau khi lọc
+              }}>OK</button>
             </div>
           </div>
         );
@@ -506,7 +467,10 @@ const ProductsList: React.FC = () => {
             </Select>
             <div className="flex justify-between">
               <button className="bg-blue-500 text-white px-2 py-1 w-18 rounded-lg mr-2" onClick={clearFilters}>Reset</button>
-              <button className="bg-primary text-white px-2 py-1 w-18 rounded-lg" onClick={confirm}>OK</button>
+              <button className="bg-primary text-white px-2 py-1 w-18 rounded-lg" onClick={() => {
+                confirm(); // Áp dụng bộ lọc
+                props.setVisible(false); // Ẩn dropdown sau khi lọc
+              }}>OK</button>
             </div>
 
           </div>

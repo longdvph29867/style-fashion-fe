@@ -14,6 +14,13 @@ const orderService = {
   getAllOrders(limit: number, page: number) {
     return https.get(`/orders?limit=${limit}&page=${page}`);
   },
+  getAllOrdersV2(queryUrl: string) {
+    if (queryUrl) {
+      return https.get(`/orders?${queryUrl}`);
+    } else {
+      return https.get(`/orders`);
+    }
+  },
   getAllOrderUser(id: string, limit: number, page: number, orderStatus: any) {
     if (orderStatus) {
       return https.get(`/orders/user/${id}?orderStatus=${orderStatus}&limit=${limit}&page=${page}`);

@@ -20,7 +20,7 @@ const productService = {
     if (queryUrl) {
       return https.get(`/products?${queryUrl}`);
     } else {
-      return https.get(`/products${queryUrl}`);
+      return https.get(`/products`);
     }
   }
 };

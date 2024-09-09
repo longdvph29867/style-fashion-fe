@@ -85,16 +85,16 @@ const menuItems = [
       { key: "7-2", label: <Link to="/admin">Thêm bài viết</Link> },
     ],
   },
-  {
-    key: "8",
-    label: "Đơn hàng",
-    icon: <FaTruckRampBox />,
-    children: [
-      { key: "8-1", label: <Link to="/admin/order">Xem đơn hàng</Link> },
-      // { key: '7-2', label: <Link to="/admin/order">Xử lý đơn hàng</Link> },
-      // { key: '7-3', label: <Link to="/admin/order">Cập nhật đơn hàng</Link> },
-    ],
-  },
+  // {
+  //   key: "8",
+  //   label: "Đơn hàng",
+  //   icon: <FaTruckRampBox />,
+  //   children: [
+  //     { key: "8-1", label: <Link to="/admin/order">Xem đơn hàng</Link> },
+  //     // { key: '7-2', label: <Link to="/admin/order">Xử lý đơn hàng</Link> },
+  //     // { key: '7-3', label: <Link to="/admin/order">Cập nhật đơn hàng</Link> },
+  //   ],
+  // },
 ];
 
 type Props = {
