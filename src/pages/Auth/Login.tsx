@@ -1,6 +1,6 @@
 // type Props = {};
 
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Button, Form, Input, message } from "antd";
 import { LoginType } from "../../types/login";
@@ -10,8 +10,11 @@ import {
   localTokenService,
   localUserService,
 } from "../../services/localService";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const Login: React.FC = () => {
+  const { setUserRole }: any = useContext(AuthContext);
+
   const onFinish = (values: LoginType) => {
     const data = {
       email: values.email,
@@ -27,6 +30,7 @@ const Login: React.FC = () => {
           };
           localUserService.set(res.data.user);
           localTokenService.set(res.data.tokens);
+          setUserRole(infoUser.role); // Cập nhật userRole trong AuthContext
           hiddenSpinner();
           message.success("Đăng nhập thành công!");
           if (infoUser.role === "admin") {

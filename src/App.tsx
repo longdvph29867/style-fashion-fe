@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AccountPage from "./pages/AccountPage/AccountPage";
 import AccountInfomation from "./components/Accout/AccountInfomation";
 import ChangePassword from "./components/Accout/ChangePassword";
@@ -49,6 +49,7 @@ import "./custom-input.css";
 import "./App.css";
 import Dashboard from "./pages/admin/Dashboard/Dashboard";
 import UpdateAttributeProduct from "./pages/admin/Product/UpdateAttributeProduct";
+import ProtectedRoute from "./contexts/ProtectedRoute";
 
 function App() {
   const location = useLocation();
@@ -89,8 +90,8 @@ function App() {
           <Route path="order/:id" element={<OrderDetail />} />
           <Route path="order" element={<OrderPage />} />
           <Route path="products" element={<ListProductPage />} />
-          <Route path="blog" element={<BlogPage/>}/>
-          <Route path="blog/:id" element={<DetailBlog/>}/>
+          <Route path="blog" element={<BlogPage />} />
+          <Route path="blog/:id" element={<DetailBlog />} />
         </Route>
         <Route path="/auth" element={<LoginLayout />}>
           <Route path="verify-email/:token" element={<ResetPassword />} />
@@ -99,6 +100,49 @@ function App() {
           <Route path="forgot-password" element={<ForgotPassword />} />
         </Route>
         <Route path="/admin" element={<LayoutAdmin />}>
+          {/* Các route mà cả admin và staff đều có thể truy cập */}
+          <Route
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'staff']}>
+                <Outlet />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Dashboard />} />
+            <Route path="order" element={<OrderAdmin />} />
+            <Route path="order/:id" element={<OrderDetailAdmin />} />
+            <Route path="reviews/:id" element={<ReviewList />} />
+            <Route path="blog/postnew" element={<PostNews />} />
+            <Route path="blog/update/:id" element={<UpdateBlog />} />
+            <Route path="blog" element={<ListPost />} />
+          </Route>
+
+          {/* Các route chỉ dành riêng cho admin */}
+          <Route
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Outlet />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="products" element={<ProductsList />} />
+            <Route path="products/:id" element={<ProductDetail />} />
+            <Route path="products/add" element={<AddProduct />} />
+            <Route path="products/update/:id" element={<UpdateProduct />} />
+            <Route path="products/update/attributes/:id" element={<UpdateAttributeProduct />} />
+            <Route path="users" element={<UsersList />} />
+            <Route path="users/:id" element={<UserDetail />} />
+            <Route path="users/add" element={<AddUser />} />
+            <Route path="users/update/:id" element={<UpdateUser />} />
+            <Route path="categories" element={<CategoryList />} />
+            <Route path="categories/add" element={<AddCategory />} />
+            <Route path="categories/update/:id" element={<UpdateCategory />} />
+            <Route path="voucher" element={<VoucherList />} />
+            <Route path="voucher/add" element={<AddVoucher />} />
+            <Route path="voucher/update/:id" element={<UpdateVoucher />} />
+          </Route>
+        </Route>
+        {/* <Route path="/admin" element={<LayoutAdmin />}>
           <Route index element={<Dashboard />} />
           <Route path="products" element={<ProductsList />} />
           <Route path="products/:id" element={<ProductDetail />} />
@@ -124,7 +168,7 @@ function App() {
           <Route path="voucher" element={<VoucherList />} />
           <Route path="voucher/add" element={<AddVoucher />} />
           <Route path="voucher/update/:id" element={<UpdateVoucher />} />
-        </Route>
+        </Route> */}
         {/* Các route khác nếu có */}
       </Routes>
     </>

@@ -1,39 +1,28 @@
-// src/contexts/AuthContext.ts
-import { createContext, useContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
+import { localUserService } from '../services/localService';
 
-// Định nghĩa các role có thể có
-type UserRole = 'admin' | 'staff';
+type AuthContextType = {
+  userRole: string | null;
+  setUserRole: React.Dispatch<React.SetStateAction<string | null>>;
+};
 
-// Định nghĩa kiểu dữ liệu cho giá trị của AuthContext
-interface AuthContextType {
-  userRole: UserRole;
-  setUserRole: (role: UserRole) => void;
-}
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Tạo context với kiểu dữ liệu AuthContextType
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [userRole, setUserRole] = useState<string | null>(null);
 
-// Định nghĩa kiểu dữ liệu cho AuthProvider props
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
-
-// Tạo AuthProvider để cung cấp context cho các component con
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [userRole, setUserRole] = useState<UserRole>('staff'); // Giá trị mặc định là 'staff'
+  useEffect(() => {
+    const user = localUserService.get();
+    console.log("user", user);
+    if (user && user.role) {
+      setUserRole(user.role);
+      console.log("user.role", user.role);
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ userRole, setUserRole }}>
       {children}
     </AuthContext.Provider>
   );
-};
-
-// Custom hook để sử dụng AuthContext
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };
