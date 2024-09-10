@@ -22,6 +22,13 @@ const productService = {
     } else {
       return https.get(`/products`);
     }
+  },
+  getAllProductsDeleted(queryUrl: string) {
+    if (queryUrl) {
+      return https.get(`/products/products-deleted?${queryUrl}`);
+    } else {
+      return https.get(`/products/products-deleted`);
+    }
   }
 };
 

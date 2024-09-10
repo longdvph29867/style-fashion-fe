@@ -35,9 +35,14 @@ const Login: React.FC = () => {
           message.success("Đăng nhập thành công!");
           if (infoUser.role === "admin") {
             setTimeout(() => {
-              window.location.href = "/admin/products";
+              window.location.href = "/admin";
             }, 1200);
-          } else {
+          } else if (infoUser.role === "staff") {
+            setTimeout(() => {
+              window.location.href = "/admin/order";
+            }, 1200);
+          }
+          else {
             setTimeout(() => {
               window.location.href = "/";
             }, 1200);

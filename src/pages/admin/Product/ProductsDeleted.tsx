@@ -24,7 +24,7 @@ const priceRanges = [
   { text: "Trên 2 triệu", value: 'over2m' },
 ];
 
-const ProductsList: React.FC = () => {
+const ProductsDeleted: React.FC = () => {
   const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
   const [totalProducts, setTotalProducts] = useState(0);
@@ -129,7 +129,7 @@ const ProductsList: React.FC = () => {
       console.log("queryUrl", queryUrl);
 
       // Gọi API với queryUrl
-      const { data } = await productService.getAllProductsV2(queryUrl);
+      const { data } = await productService.getAllProductsDeleted(queryUrl);
 
       console.log("data.results", data.results);
       setProductList(data.results);
@@ -161,12 +161,12 @@ const ProductsList: React.FC = () => {
   //   console.log("productList updated: ", productList);
   // }, [productList]);
 
-  const handleDelete = async (id: string) => {
+  const handleRestore = async (id: string) => {
     showSpinner();
     try {
-      const data = await https.delete(`/products/${id}`);
+      const data = await https.put(`/products/${id}`, { active: true });
       if (data) {
-        message.success(data.data.message);
+        message.success('Khôi phục sản phẩm thành công');
         fetchData();
         hiddenSpinner();
       }
@@ -181,9 +181,9 @@ const ProductsList: React.FC = () => {
 
   const showConfirm = (id: string) => {
     confirm({
-      title: 'Bạn có chắc chắn muốn xóa?',
+      title: 'Bạn có chắc chắn muốn khôi phục?',
       onOk() {
-        handleDelete(id);
+        handleRestore(id);
       },
       onCancel() {
         console.log('Cancel');
@@ -484,18 +484,18 @@ const ProductsList: React.FC = () => {
       key: "actions",
       render: (text: any, record: Product) => (
         <>
-          <Link
+          {/* <Link
             to={`/admin/products/${record.id}`}
             className="text-sm font-semibold text-yellow-500 hover:text-yellow-600"
           >
             Chi tiết
-          </Link>
+          </Link> */}
           <Button
             type="link"
             onClick={() => showConfirm(record.id)}
             className="text-sm font-semibold text-red-500 hover:text-red-600"
           >
-            Xoá
+            Khôi phục
           </Button>
         </>
       ),
@@ -509,7 +509,8 @@ const ProductsList: React.FC = () => {
     <div className="">
       <Breadcrumb style={{ margin: '16px 0' }}>
         <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
-        <Breadcrumb.Item>Sản phẩm</Breadcrumb.Item>
+        <Breadcrumb.Item><Link to="/admin/products">Sản phẩm</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Khôi phục sản phẩm</Breadcrumb.Item>
       </Breadcrumb>
       <div className="h-full">
         <Table
@@ -532,4 +533,4 @@ const ProductsList: React.FC = () => {
   );
 };
 
-export default ProductsList;
+export default ProductsDeleted;

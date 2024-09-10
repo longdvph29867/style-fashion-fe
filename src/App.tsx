@@ -50,6 +50,7 @@ import "./App.css";
 import Dashboard from "./pages/admin/Dashboard/Dashboard";
 import UpdateAttributeProduct from "./pages/admin/Product/UpdateAttributeProduct";
 import ProtectedRoute from "./contexts/ProtectedRoute";
+import ProductsDeleted from "./pages/admin/Product/ProductsDeleted";
 
 function App() {
   const location = useLocation();
@@ -108,7 +109,6 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<Dashboard />} />
             <Route path="order" element={<OrderAdmin />} />
             <Route path="order/:id" element={<OrderDetailAdmin />} />
             <Route path="reviews/:id" element={<ReviewList />} />
@@ -125,11 +125,13 @@ function App() {
               </ProtectedRoute>
             }
           >
+            <Route index element={<Dashboard />} />
             <Route path="products" element={<ProductsList />} />
             <Route path="products/:id" element={<ProductDetail />} />
             <Route path="products/add" element={<AddProduct />} />
             <Route path="products/update/:id" element={<UpdateProduct />} />
             <Route path="products/update/attributes/:id" element={<UpdateAttributeProduct />} />
+            <Route path="products/products-deleted" element={<ProductsDeleted />} />
             <Route path="users" element={<UsersList />} />
             <Route path="users/:id" element={<UserDetail />} />
             <Route path="users/add" element={<AddUser />} />

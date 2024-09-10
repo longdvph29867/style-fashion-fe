@@ -10,7 +10,7 @@ type ProtectedRouteProps = {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
     const authContext = useContext(AuthContext);
 
-    console.log("authContext", authContext);
+    // console.log("authContext", authContext);
 
     // if (!authContext) {
     //     return <Navigate to="/" replace />;
@@ -23,7 +23,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
 
     const { userRole } = authContext;
     // const { userRole } = 'admin';
-    console.log("userRole", userRole);
+    // console.log("userRole", userRole);
 
     if (!allowedRoles.includes(userRole as string)) {
         return <Navigate to="/" replace />;

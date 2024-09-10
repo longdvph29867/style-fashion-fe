@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import imgLogo from "../../../assets/img/sf-logo2.png";
 import imgLogoIcon from "../../../assets/img/logo_icon_v2.png";
 import { MdDashboard, MdCategory } from "react-icons/md";
@@ -9,6 +9,7 @@ import { FaCartArrowDown } from "react-icons/fa";
 import { FaBlog, FaTruckRampBox } from "react-icons/fa6";
 import { Menu } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 type Menu = {
   link: string;
@@ -46,7 +47,8 @@ const menuItems = [
         key: "3-2",
         label: <Link to="/admin/products/add">Thêm sản phẩm</Link>,
       },
-      { key: "3-3", label: <Link to="/admin/products">Quản lý đánh giá</Link> },
+      // { key: "3-3", label: <Link to="/admin/products">Quản lý đánh giá</Link> },
+      { key: "3-3", label: <Link to="/admin/products/products-deleted">Khôi phục sản phẩm</Link> },
     ],
   },
   {
@@ -107,6 +109,20 @@ const AdminMenu: React.FC<Props> = ({ collapsed }): any => {
   const pathSegments = fullPath.split("/").slice(1, 3); // Chỉ lấy 'admin' và 'products'
   const pathAfterAdmin = "/" + pathSegments.join("/");
 
+  const { userRole }: any = useContext(AuthContext);
+
+
+  // Lọc menu items dựa trên userRole
+  const filteredMenuItems = menuItems.filter((item) => {
+    if (userRole === "admin") {
+      return true; // Hiển thị tất cả các menu cho admin
+    }
+    if (userRole === "staff") {
+      // Lọc để chỉ hiển thị một số menu cho staff
+      return ["5", "7"].includes(item.key); // Ví dụ: chỉ hiển thị "Đơn hàng" và "Bài viết" cho staff
+    }
+    return false; // Không hiển thị menu nếu userRole không khớp
+  });
   return (
     <div className="">
       <Link className="block px-8 py-6 my-6 text-sm text-slate-700" to="/admin">
@@ -115,7 +131,7 @@ const AdminMenu: React.FC<Props> = ({ collapsed }): any => {
         {/* <img src={imgLogoIcon} className="lg:hidden inline-block" /> */}
       </Link>
       <div>
-        <Menu defaultOpenKeys={["1"]} mode="inline" items={menuItems} />
+        <Menu defaultOpenKeys={["1"]} mode="inline" items={filteredMenuItems} />
       </div>
     </div>
   );
