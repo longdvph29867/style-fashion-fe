@@ -107,23 +107,27 @@ const ReviewsDetail = ({ product }: ReviewDetailProps) => {
                   <p className="text-slate-600">{item.content}</p>
                   <div className="mt-2">
                     {item.video && (
-                      <Image
-                        width={50}
-                        preview={{
-                          destroyOnClose: true,
-                          imageRender: () => (
-                            <video
-                              muted
-                              width="60%"
-                              controls
-                              autoPlay
-                              src={item.video}
-                            />
-                          ),
-                          toolbarRender: () => null,
-                        }}
-                        src="https://m.media-amazon.com/images/I/317JnWlo4kL.png"
-                      />
+                      <>
+                        <Image
+                          width={50}
+                          preview={{
+                            destroyOnClose: true,
+                            imageRender: () => (
+                              <video
+                                muted
+                                width="60%"
+                                controls
+                                autoPlay
+                                src={item.video}
+                              />
+                            ),
+                            toolbarRender: () => null,
+                          }}
+                          src={
+                            "https://play-lh.googleusercontent.com/jjWKq3LEc2DidrFRfaGWb7QO2d9wwYjkUYd5lTiFhgARXcStdQ0eYa6HBrYhFtOWFQ6P=w240-h480-rw"
+                          }
+                        />
+                      </>
                     )}
                     <Image.PreviewGroup items={item.images}>
                       {item.images.map((img) => (
