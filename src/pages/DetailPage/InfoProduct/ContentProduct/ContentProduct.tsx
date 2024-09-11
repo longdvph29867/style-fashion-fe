@@ -70,10 +70,7 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
     if (!variantSelected) {
       message.error("Vui lòng chọn loại sản phẩm!");
       return;
-    }
-    if (isNaN(value)) {
-      setQuantity(0);
-    } else if (value < 0 || value > stockRef.current) {
+    } else if (value < 0 || value > variantSelected.stock) {
       setShowMaxQuantity(true);
       setQuantity(1);
     } else {
@@ -88,7 +85,7 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
       return;
     } else if (quantity + value < 1) {
       return;
-    } else if (quantity + value > stockRef.current && value > 0) {
+    } else if (quantity + value > variantSelected.stock && value > 0) {
       setShowMaxQuantity(true);
       return;
     }
@@ -97,6 +94,8 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
   };
 
   const handleAddToCart = async () => {
+    console.log("add to cart");
+
     if (!variantSelected) {
       message.error("Vui lòng chọn loại sản phẩm!");
     } else if (showMaxQuantity) {
@@ -113,6 +112,13 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
       });
       hiddenSpinner();
     }
+  };
+
+  const handleChangeVariant = (value: IVariant | null) => {
+    if (showMaxQuantity) {
+      setShowMaxQuantity(false);
+    }
+    setVariantSelected(value);
   };
 
   return (
@@ -183,7 +189,7 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
               dataAttriubute={product?.attributes ?? []}
               dataVariant={product?.variants ?? []}
               setImage={setCurrentImage}
-              setVariant={setVariantSelected}
+              setVariant={handleChangeVariant}
             />
           </div>
           <div className="mt-1 ml-3">
@@ -245,8 +251,10 @@ const ContentProduct = ({ setCurrentImage, product }: Props) => {
               </svg>
             </button>
           </div>
-          <p className="text-[#e03] italic text-sm mt-1 h-5">
-            {showMaxQuantity && <span>Tối đa sản {stockRef.current} phẩm</span>}
+          <p className="text-[#e03] italic text-xs mt-1 h-5">
+            {showMaxQuantity && (
+              <span>Chọn tối đa {variantSelected?.stock} sản phẩm</span>
+            )}
           </p>
         </div>
         <button
