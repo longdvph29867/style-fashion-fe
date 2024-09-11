@@ -51,6 +51,11 @@ import Dashboard from "./pages/admin/Dashboard/Dashboard";
 import UpdateAttributeProduct from "./pages/admin/Product/UpdateAttributeProduct";
 import ProtectedRoute from "./contexts/ProtectedRoute";
 import ProductsDeleted from "./pages/admin/Product/ProductsDeleted";
+import NotFoundPage from "./components/NotFoundPage/NotFoundPage";
+import ProductReviewList from "./pages/admin/Review/ProductReviewList";
+import ProductCommentList from "./pages/admin/Comment/ProductCommentList";
+import ProductCommentDetail from "./pages/admin/Comment/ProductCommentDetail";
+import BlogDetail from "./pages/admin/Blog/BlogDetail";
 
 function App() {
   const location = useLocation();
@@ -115,6 +120,10 @@ function App() {
             <Route path="blog/postnew" element={<PostNews />} />
             <Route path="blog/update/:id" element={<UpdateBlog />} />
             <Route path="blog" element={<ListPost />} />
+            <Route path="blog/:id" element={<BlogDetail />} />
+            <Route path="reviews" element={<ProductReviewList />} />
+            <Route path="comments" element={<ProductCommentList />} />
+            <Route path="comments/:id" element={<ProductCommentDetail />} />
           </Route>
 
           {/* Các route chỉ dành riêng cho admin */}
@@ -144,34 +153,8 @@ function App() {
             <Route path="voucher/update/:id" element={<UpdateVoucher />} />
           </Route>
         </Route>
-        {/* <Route path="/admin" element={<LayoutAdmin />}>
-          <Route index element={<Dashboard />} />
-          <Route path="products" element={<ProductsList />} />
-          <Route path="products/:id" element={<ProductDetail />} />
-          <Route path="products/add" element={<AddProduct />} />
-          <Route path="products/update/:id" element={<UpdateProduct />} />
-          <Route
-            path="products/update/attributes/:id"
-            element={<UpdateAttributeProduct />}
-          />
-          <Route path="reviews/:id" element={<ReviewList />} />
-          <Route path="users" element={<UsersList />} />
-          <Route path="users/:id" element={<UserDetail />} />
-          <Route path="users/add" element={<AddUser />} />
-          <Route path="users/update/:id" element={<UpdateUser />} />
-          <Route path="order" element={<OrderAdmin />} />
-          <Route path="order/:id" element={<OrderDetailAdmin />} />
-          <Route path="categories" element={<CategoryList />} />
-          <Route path="categories/add" element={<AddCategory />} />
-          <Route path="categories/update/:id" element={<UpdateCategory />} />
-          <Route path="blog/postnew" element={<PostNews/>}/>
-          <Route path="blog/update/:id" element={<UpdateBlog/>}/>
-          <Route path="blog" element={<ListPost/>}/>
-          <Route path="voucher" element={<VoucherList />} />
-          <Route path="voucher/add" element={<AddVoucher />} />
-          <Route path="voucher/update/:id" element={<UpdateVoucher />} />
-        </Route> */}
         {/* Các route khác nếu có */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );

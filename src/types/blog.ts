@@ -1,26 +1,26 @@
 export type Blog = {
-    id:string;
-    title:string;
-    image:string;
-    user:User;
-    content:string,
-    view?:number
+    _id: string;
+    title: string;
+    image: string;
+    user: User;
+    content: string,
+    view?: number
 }
 
 export type FormPostNews = {
-    title:string;
-    image:string;
-    user:string;
-    content:string,
+    title: string;
+    image: string;
+    user: string;
+    content: string,
 }
 
 export type User = {
-    id:string;
-    name:string
+    id: string;
+    name: string
 }
 export type FormUpdateBlog = {
-    title:string;
-    image:string;
-    content:string,
-    user:string;
+    title: string;
+    image: string;
+    content: string,
+    user: string;
 };

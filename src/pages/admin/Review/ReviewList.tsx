@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { Link, useParams } from "react-router-dom";
-import { Image, Tabs, TabsProps, message } from "antd";
+import { Breadcrumb, Image, Tabs, TabsProps, message } from "antd";
 import { https } from "../../../config/axios";
 import ChildrenTab from "./ChildrenTab";
 
@@ -87,6 +87,11 @@ const ReviewList: React.FC = () => {
 
   return (
     <div className="p-4">
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
+        <Breadcrumb.Item><Link to="/admin/reviews">Đánh giá</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Chi tiết</Breadcrumb.Item>
+      </Breadcrumb>
       <div className="relative">
         <div className="lg:absolute lg:right-0 flex items-center justify-end gap-5 z-10">
           <Image className="" height={40} width={40} src={product?.thumbnail} />

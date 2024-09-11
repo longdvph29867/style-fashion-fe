@@ -86,7 +86,7 @@ const VoucherList: React.FC = () => {
       title: 'STT',
       dataIndex: 'index',
       key: 'index',
-      render: (text, record, index) => <span>{index + 1}</span>,
+      render: (text: any, record: any, index: any) => <span>{index + 1}</span>,
     },
     {
       title: 'Tên',
@@ -107,7 +107,7 @@ const VoucherList: React.FC = () => {
       title: 'Loại',
       dataIndex: 'type',
       key: 'type',
-      render: (text, record) => (
+      render: (text: any, record: any) => (
         <span>{record.type === 'amount' ? 'Giá trị cố định' : 'Phần trăm'}</span>
       ),
     },
@@ -115,18 +115,18 @@ const VoucherList: React.FC = () => {
       title: 'Bắt đầu',
       dataIndex: 'validFrom',
       key: 'validFrom',
-      render: (text) => <span>{formatDateString(text)}</span>,
+      render: (text: any) => <span>{formatDateString(text)}</span>,
     },
     {
       title: 'Kết thúc',
       dataIndex: 'validTo',
       key: 'validTo',
-      render: (text) => <span>{formatDateString(text)}</span>,
+      render: (text: any) => <span>{formatDateString(text)}</span>,
     },
     {
       title: 'Thao tác',
       key: 'actions',
-      render: (text, record) => (
+      render: (text: any, record: any) => (
         <div className="space-x-2">
           <Link
             to={`/admin/voucher/update/${record.id}`}

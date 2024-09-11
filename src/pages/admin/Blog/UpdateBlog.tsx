@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
-import { useNavigate, useParams } from "react-router-dom";
-import { Button, Form, Image, Input, message, Upload, UploadProps } from "antd";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Breadcrumb, Button, Form, Image, Input, message, Upload, UploadProps } from "antd";
 import { FormPostNews, FormUpdateBlog } from "../../../types/blog";
 import { UploadOutlined } from "@ant-design/icons";
 import { Editor } from "@tinymce/tinymce-react";
@@ -124,14 +124,19 @@ const UpdateBlog: React.FC = () => {
       ]);
     }
   };
-  
+
 
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
 
   return (
-    <div className="bg-gray-100 p-6">
+    <div className="">
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
+        <Breadcrumb.Item><Link to="/admin/blog">Blog</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Cập nhật</Breadcrumb.Item>
+      </Breadcrumb>
       <div className=" mx-auto bg-white p-8 rounded shadow">
         <h1 className="text-2xl font-bold mb-6">Sửa Tin Tức</h1>
         <Form

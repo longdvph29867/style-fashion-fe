@@ -233,7 +233,7 @@ const OrderAdmin = () => {
   ];
 
   return (
-    <div className="p-10">
+    <div className="">
       <Breadcrumb style={{ margin: '16px 0' }}>
         <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
         <Breadcrumb.Item>Đơn hàng</Breadcrumb.Item>

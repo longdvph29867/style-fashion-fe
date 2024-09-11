@@ -9,6 +9,7 @@ import Sider from "antd/es/layout/Sider";
 import { useContext, useEffect, useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { AuthContext } from "../contexts/AuthContext";
+import NotFoundPage from "../components/NotFoundPage/NotFoundPage";
 
 function LayoutAdmin() {
   // if (localUserService.get()?.role !== "admin") {
@@ -61,11 +62,11 @@ function LayoutAdmin() {
         </Sider>
 
         <Layout>
-          <Header className="flex items-center justify-between sm:flex-row flex-col-reverse h-20"
+          <Header className="flex items-center justify-end sm:flex-row flex-col-reverse h-20"
             style={{ backgroundColor: 'white' }}>
-            <div>
+            {/* <div>
               <Search className="border rounded-lg " />
-            </div>
+            </div> */}
             <User />
           </Header>
           <Content style={{
@@ -76,13 +77,13 @@ function LayoutAdmin() {
                 {!collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               </Button>
             </div>
-            <div className="py-4 px-8">
+            <div className="px-8">
               <Outlet />
             </div>
           </Content>
         </Layout>
       </Layout>
-    ) : null
+    ) : (<NotFoundPage />)
   );
 }
 

@@ -8,7 +8,7 @@ import { BiSolidCoupon } from "react-icons/bi";
 import { FaCartArrowDown } from "react-icons/fa";
 import { FaBlog, FaTruckRampBox } from "react-icons/fa6";
 import { Menu } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { CommentOutlined, StarOutlined, UserOutlined } from "@ant-design/icons";
 import { AuthContext } from "../../../contexts/AuthContext";
 
 type Menu = {
@@ -83,9 +83,19 @@ const menuItems = [
     label: "Bài viết",
     icon: <FaBlog />,
     children: [
-      { key: "7-1", label: <Link to="/admin">Xem bài viết</Link> },
-      { key: "7-2", label: <Link to="/admin">Thêm bài viết</Link> },
+      { key: "7-1", label: <Link to="/admin/blog">Xem bài viết</Link> },
+      { key: "7-2", label: <Link to="/admin/blog/postnew">Thêm bài viết</Link> },
     ],
+  },
+  {
+    key: "8",
+    label: <Link to="/admin/reviews">Đánh giá</Link>,
+    icon: <StarOutlined />,
+  },
+  {
+    key: "9",
+    label: <Link to="/admin/comments">Bình luận</Link>,
+    icon: <CommentOutlined />,
   },
   // {
   //   key: "8",

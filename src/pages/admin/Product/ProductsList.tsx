@@ -166,7 +166,7 @@ const ProductsList: React.FC = () => {
     try {
       const data = await https.delete(`/products/${id}`);
       if (data) {
-        message.success(data.data.message);
+        message.success("Xóa thành công");
         fetchData();
         hiddenSpinner();
       }
@@ -479,7 +479,7 @@ const ProductsList: React.FC = () => {
       width: "15%",
     },
     {
-      // fixed: "right",
+      fixed: "right" as any,
       title: "Thao tác",
       key: "actions",
       render: (text: any, record: Product) => (

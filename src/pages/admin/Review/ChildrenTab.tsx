@@ -25,7 +25,7 @@ const ChildrenTab = ({ reviewsList, fetchData }: Props) => {
             if (data) {
                 message.success('Duyệt thành công');
                 fetchData();
-                hiddenSpinner();
+                // hiddenSpinner();
             }
         } catch (error) {
             hiddenSpinner();
