@@ -129,7 +129,7 @@ const AdminMenu: React.FC<Props> = ({ collapsed }): any => {
     }
     if (userRole === "staff") {
       // Lọc để chỉ hiển thị một số menu cho staff
-      return ["5", "7"].includes(item.key); // Ví dụ: chỉ hiển thị "Đơn hàng" và "Bài viết" cho staff
+      return ["5", "7", "8", "9"].includes(item.key); // Ví dụ: chỉ hiển thị "Đơn hàng" và "Bài viết" cho staff
     }
     return false; // Không hiển thị menu nếu userRole không khớp
   });

@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
+import NotAuthorizedPage from '../components/NotFoundPage/NotAuthorizedPage';
 
 type ProtectedRouteProps = {
     children: JSX.Element;
@@ -18,7 +19,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
 
     // Nếu authContext không tồn tại hoặc userRole không xác định, chờ cho đến khi có giá trị
     if (!authContext || authContext.userRole === null) {
-        return <div>Loading...</div>; // Hoặc có thể redirect đến trang login hoặc thông báo
+        return <NotAuthorizedPage />; // Hoặc có thể redirect đến trang login hoặc thông báo
     }
 
     const { userRole } = authContext;
@@ -26,7 +27,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
     // console.log("userRole", userRole);
 
     if (!allowedRoles.includes(userRole as string)) {
-        return <Navigate to="/" replace />;
+        // return <Navigate to="/" replace />;
+        return <NotAuthorizedPage />;
     }
 
     return children;

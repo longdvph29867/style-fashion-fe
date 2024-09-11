@@ -28,7 +28,7 @@ const ProductCommentDetail: React.FC = () => {
 
     const { id }: any = useParams();
 
-    const fetchVoucher = async () => {
+    const fetchComments = async () => {
         showSpinner()
         try {
             // const { data } = await voucherService.getVoucherAll(limitPerPage, currentPage);
@@ -46,7 +46,7 @@ const ProductCommentDetail: React.FC = () => {
     }
 
     useEffect(() => {
-        fetchVoucher();
+        fetchComments();
     }, [location.search])
 
     const formatDateString = (dateString: string) => {
@@ -68,7 +68,8 @@ const ProductCommentDetail: React.FC = () => {
                 const data = await commentService.deleteComment(selectedCommentId);
                 if (data) {
                     message.success('Xóa thành công');
-                    fetchVoucher();
+                    setCommentsList(commentsList.filter((comment: any) => comment._id !== selectedCommentId));
+                    // fetchComments();
                     hiddenSpinner();
                 }
             }
