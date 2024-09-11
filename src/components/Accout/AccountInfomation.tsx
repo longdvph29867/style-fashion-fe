@@ -1,6 +1,6 @@
 import ChangeImage from "./ChangeImage";
 import { useParams } from "react-router-dom";
-import { Button, Form, Input, message } from "antd";
+import { Form, Input, message } from "antd";
 import { hiddenSpinner, showSpinner } from "../../util/util";
 import { https } from "../../config/axios";
 import { useEffect, useState } from "react";
@@ -133,6 +133,17 @@ const AccountInfomation = () => {
                 requiredMark={false}
               >
                 <Form.Item
+                  label="Email"
+                  className=" text-base font-medium text-neutral-900"
+                  name="email"
+                >
+                  <Input
+                    disabled
+                    className="block w-full border-neutral-200  bg-white disabled:bg-neutral-200 rounded-2xl text-sm font-normal h-11 px-4 py-3 mt-1.5"
+                  />
+                </Form.Item>
+
+                <Form.Item
                   label="Tên người dùng"
                   className=" text-base font-medium text-neutral-900"
                   name="name"
@@ -142,22 +153,6 @@ const AccountInfomation = () => {
                       min: 6,
                       max: 25,
                       message: "Name must be between 6 and 25 characters!",
-                    },
-                  ]}
-                >
-                  <Input className="block w-full border-neutral-200  bg-white disabled:bg-neutral-200 rounded-2xl text-sm font-normal h-11 px-4 py-3 mt-1.5" />
-                </Form.Item>
-
-                <Form.Item
-                  label="Email"
-                  className=" text-base font-medium text-neutral-900"
-                  name="email"
-                  rules={[
-                    { required: true, message: "Please fill in this field!" },
-                    {
-                      pattern:
-                        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                      message: "Invalid email address!",
                     },
                   ]}
                 >
