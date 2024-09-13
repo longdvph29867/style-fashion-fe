@@ -333,3 +333,11 @@ body .ant-modal-mask {
 .btn-search-product {
   background-color: #fe385c !important;
 }
+
+.ant-switch {
+  background-color: gray !important;
+}
+
+.ant-switch-checked {
+  background-color: #1677ff !important;
+}

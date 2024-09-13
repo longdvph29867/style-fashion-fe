@@ -192,13 +192,16 @@ const UserDetail: React.FC = () => {
                             to={`/admin/users/update/${user.id}`}
                             className=""
                         >
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                className="text-white bg-green-500"
-                            >
-                                Cập nhật người dùng
-                            </Button>
+                            {user.role !== 'admin' && (
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    className="text-white bg-green-500"
+                                >
+                                    Cập nhật người dùng
+                                </Button>
+                            )}
+
                         </Link>
                     </Form.Item>
                 </Form>

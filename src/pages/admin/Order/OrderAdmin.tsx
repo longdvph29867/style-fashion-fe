@@ -209,9 +209,10 @@ const OrderAdmin = () => {
       render: (paymentMethod: 'COD' | 'VNPAY') => <PaymentMethod paymentMethod={paymentMethod} />,
     },
     {
-      title: 'Người nhận',
+      title: 'Người dùng',
       dataIndex: ['shippingAddress', 'name'],
       key: 'recipientName',
+      render: (text: any, record: any) => <Link to={`/admin/users/${record.user}`}>{record.shippingAddress.name}</Link>,
     },
     {
       title: 'Ngày tạo',

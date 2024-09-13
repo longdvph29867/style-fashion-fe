@@ -41,7 +41,7 @@ const OrderDetailAdmin = (props: Props) => {
   return (
     <>
 
-      <div className='p-10'>
+      <div className='min-w-[600px]'>
         <div className='my-6'>
           <div className='my-4'>
             <Link to='/admin/order'>

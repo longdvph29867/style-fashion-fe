@@ -7,6 +7,7 @@ import {
   Input,
   Select,
   Space,
+  Switch,
   Upload,
   message,
 } from "antd";
@@ -26,6 +27,8 @@ const UpdateProduct: React.FC = () => {
   const navigate = useNavigate();
   const [checkboxCategoriesList, setCheckboxCategoriesList] = useState<any[]>([]);
   const [form] = Form.useForm();
+  const [featured, setFeatured] = useState(false);
+
 
   let selectedCategories: any = [];
 
@@ -42,6 +45,9 @@ const UpdateProduct: React.FC = () => {
         shortDescription: product.shortDescription,
       });
       selectedCategories = product.categories.map((category: any) => category._id);
+
+      setFeatured(product.featured);
+
       form.setFieldsValue({ categories: selectedCategories });
 
       form.setFieldValue('thumbnail', [{
@@ -50,11 +56,13 @@ const UpdateProduct: React.FC = () => {
         status: 'done',
         url: product.thumbnail,
         type: `image/${product?.thumbnail?.split('.')?.pop()}`,
-        // thumbUrl: product.thumbnail,
-        // originFileObj: new File(
-        //   [product.thumbnail],
-        //   product.thumbnail,
-        //   { type: `image/${product.thumbnail.split('.').pop()}` })
+      }]);
+      form.setFieldValue('video', [{
+        uid: '-1',
+        name: `video.${product?.video?.split('.')?.pop()}`,
+        status: 'done',
+        url: product.video,
+        type: `video/${product?.video?.split('.')?.pop()}`,
       }]);
       form.setFieldsValue({
         gallery: product.gallery.map((url: string, index: number) => ({
@@ -251,6 +259,14 @@ const UpdateProduct: React.FC = () => {
                   options={checkboxCategoriesList}
                 />
               </Form.Item>
+              <div className="mb-1">
+                <h3 className="font-normal mb-1">Sản phẩm hot</h3>
+                <Switch checked={featured} onChange={(checked: boolean) => {
+                  setFeatured(checked);
+                  // console.log(checked, 'checked')
+                  // console.log(featured, 'featured')
+                }} />
+              </div>
             </div>
 
             <div className="">
@@ -285,7 +301,7 @@ const UpdateProduct: React.FC = () => {
                   beforeUpload={() => false}
                   maxCount={1} // chỉ cho phép tải lên một file duy nhất
                 >
-                  <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
+                  <Button icon={<UploadOutlined />}>Tải lên</Button>
                 </Upload.Dragger>
               </Form.Item>
               {/* gallery */}
@@ -328,10 +344,37 @@ const UpdateProduct: React.FC = () => {
                   listType="picture"
                   beforeUpload={() => false}
                 >
-                  <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
+                  <Button icon={<UploadOutlined />}>Tải lên</Button>
                 </Upload.Dragger>
               </Form.Item>
 
+              <Form.Item
+                label="Thêm video"
+                name="video"
+                valuePropName="fileList"
+                getValueFromEvent={(e) => Array.isArray(e) ? e : e && e.fileList}
+                rules={[
+                  {
+                    validator(_, fileList) {
+                      if (fileList && fileList.length > 0) {
+                        const file = fileList[0];
+                        if (file.size > 1024 * 1024 * 10) { // Giới hạn kích thước file là 10MB
+                          return Promise.reject("File tối đa 10MB");
+                        }
+                        if (!["video/mp4", "video/avi", "video/mov"].includes(file.type)) { // Các định dạng video được phép
+                          return Promise.reject("File phải có định dạng mp4, avi, mov!");
+                        }
+                        return Promise.resolve();
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
+                <Upload.Dragger listType="picture" beforeUpload={() => false} maxCount={1}>
+                  <Button icon={<UploadOutlined />}>Tải lên</Button>
+                </Upload.Dragger>
+              </Form.Item>
             </div>
 
           </div>

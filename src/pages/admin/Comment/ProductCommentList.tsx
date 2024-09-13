@@ -311,27 +311,6 @@ const ProductCommentList: React.FC = () => {
                 return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
             },
         },
-        // {
-        //   title: "Tồn kho",
-        //   dataIndex: "countInStock",
-        //   key: "countInStock",
-        //   // sorter: (a: Product, b: Product) => a.countInStock - b.countInStock,
-        //   sorter: true
-        // },
-        // {
-        //   title: "Lượt mua",
-        //   dataIndex: "purchases",
-        //   key: "purchases",
-        //   // sorter: (a: Product, b: Product) => a.purchases - b.purchases,
-        //   sorter: true
-        // },
-        // {
-        //   title: "Lượt thích",
-        //   dataIndex: "likes",
-        //   key: "likes",
-        //   // sorter: (a: Product, b: Product) => a.likes - b.likes,
-        //   sorter: true
-        // },
         {
             title: "Điểm đánh giá",
             dataIndex: "finalScoreReview",

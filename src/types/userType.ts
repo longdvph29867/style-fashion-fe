@@ -30,4 +30,4 @@ export type AddUserType = {
 
 export type UpdateUserTypeWithoutPassword = Omit<AddUserType, 'password'>;
 
-export type Role = 'admin' | 'user';
+export type Role = 'customer' | 'staff';

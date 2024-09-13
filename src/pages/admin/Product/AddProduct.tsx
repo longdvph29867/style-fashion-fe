@@ -9,6 +9,7 @@ import {
   Radio,
   Select,
   Space,
+  Switch,
   Table,
   Upload,
   message,
@@ -34,6 +35,7 @@ const AddProduct: React.FC = () => {
   const [variants, setVariants] = useState<Variant[]>([]);
   const [columns, setColumns] = useState<any[]>([]);
   const [attributeImages, setAttributeImages] = useState([]);
+  const [featured, setFeatured] = useState(false);
 
   const [form] = Form.useForm();
 
@@ -495,6 +497,7 @@ const AddProduct: React.FC = () => {
       // Chuyển object gồm các mảng sang mảng gồm các object
       const listFilesAttributeImage = [...attributeImages];
       const thumbnail: any = values.thumbnail;
+      const videoFile: any = values.video;
 
       // Lấy originFileObj
       // console.log(listFiles, 'listFiles');
@@ -502,6 +505,7 @@ const AddProduct: React.FC = () => {
       // console.log(listFilesAttributeImage, 'listFilesAttributeImage');
       const fileOriginAttributeImages = listFilesAttributeImage.map((imageFile: any) => imageFile[0].originFileObj);
       const thumbnailFile = thumbnail[0].originFileObj;
+      const newVideoFile = videoFile[0].originFileObj;
 
       const formData = new FormData();
       for (const file of newArrayFiles) {
@@ -514,6 +518,9 @@ const AddProduct: React.FC = () => {
       const formDataThumbnail = new FormData();
       formDataThumbnail.append("images", thumbnailFile);
 
+      const formDataVideo = new FormData();
+      formDataVideo.append("videos", newVideoFile);
+
       try {
         const { data: dataGallery } = await https.post("/images", formData);
         const urlGallery: { url: string; publicId: string }[] = dataGallery.data;
@@ -523,6 +530,9 @@ const AddProduct: React.FC = () => {
 
         const { data: dataThumbnail } = await https.post("/images", formDataThumbnail);
         const urlThumbnail: { url: string; publicId: string }[] = dataThumbnail.data;
+
+        const { data: dataVideo } = await https.post("/videos", formDataVideo);
+        const urlVideo: { url: string; publicId: string }[] = dataVideo.data;
 
         // console.log(urlGallery, 'urlGallery');
         // console.log(urlAttributeImage, 'urlAttributeImage');
@@ -549,8 +559,8 @@ const AddProduct: React.FC = () => {
           categories: values.categories,
           attributes: attributeData,
           shortDescription: "product shortDescription",
-          video: "video.mp4",
-          featured: true,
+          video: urlVideo[0].url,
+          featured: featured,
           variants: convertVariant
         };
 
@@ -653,6 +663,14 @@ const AddProduct: React.FC = () => {
                   options={checkboxCategoriesList}
                 />
               </Form.Item>
+              <div className="mb-1">
+                <h3 className="font-normal mb-1">Sản phẩm hot</h3>
+                <Switch onChange={(checked: boolean) => {
+                  setFeatured(checked);
+                  // console.log(checked, 'checked')
+                  // console.log(featured, 'featured')
+                }} />
+              </div>
             </div>
             <div>
               <Form.Item
@@ -684,7 +702,7 @@ const AddProduct: React.FC = () => {
                   beforeUpload={() => false}
                   maxCount={1}
                 >
-                  <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
+                  <Button icon={<UploadOutlined />}>Tải lên</Button>
                 </Upload.Dragger>
               </Form.Item>
               <Form.Item
@@ -720,7 +738,34 @@ const AddProduct: React.FC = () => {
                   listType="picture"
                   beforeUpload={() => false}
                 >
-                  <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
+                  <Button icon={<UploadOutlined />}>Tải lên</Button>
+                </Upload.Dragger>
+              </Form.Item>
+              <Form.Item
+                label="Thêm video"
+                name="video"
+                valuePropName="fileList"
+                getValueFromEvent={(e) => Array.isArray(e) ? e : e && e.fileList}
+                rules={[
+                  {
+                    validator(_, fileList) {
+                      if (fileList && fileList.length > 0) {
+                        const file = fileList[0];
+                        if (file.size > 1024 * 1024 * 10) { // Giới hạn kích thước file là 10MB
+                          return Promise.reject("File tối đa 10MB");
+                        }
+                        if (!["video/mp4", "video/avi", "video/mov"].includes(file.type)) { // Các định dạng video được phép
+                          return Promise.reject("File phải có định dạng mp4, avi, mov!");
+                        }
+                        return Promise.resolve();
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
+                <Upload.Dragger listType="picture" beforeUpload={() => false} maxCount={1}>
+                  <Button icon={<UploadOutlined />}>Tải lên</Button>
                 </Upload.Dragger>
               </Form.Item>
             </div>

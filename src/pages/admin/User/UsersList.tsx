@@ -218,6 +218,29 @@ const UsersList: React.FC = () => {
       title: 'Vai trò',
       dataIndex: 'role',
       key: 'role',
+      render: (role: string) => {
+        let color = '';
+        switch (role) {
+          case 'admin':
+            color = 'bg-orange-500 text-white'; // Màu cho admin
+            break;
+          case 'staff':
+            color = 'bg-blue-500 text-white'; // Màu cho nhân viên (staff)
+            break;
+          case 'customer':
+            color = 'bg-green-500 text-white'; // Màu cho khách hàng (customer)
+            break;
+          default:
+            color = 'bg-gray-300 text-black'; // Mặc định nếu không khớp
+            break;
+        }
+
+        return (
+          <span className={`px-2 py-1 rounded ${color}`}>
+            {role.charAt(0).toUpperCase() + role.slice(1)}
+          </span>
+        );
+      },
       filterDropdown: ({
         setSelectedKeys,
         selectedKeys,
@@ -264,13 +287,15 @@ const UsersList: React.FC = () => {
           >
             Chi tiết
           </Link>
-          <Button
-            type="link"
-            className="text-red-500 hover:text-red-600"
-            onClick={() => showConfirm(record.id)}
-          >
-            Xoá
-          </Button>
+          {record.role !== 'admin' && (
+            <Button
+              type="link"
+              className="text-red-500 hover:text-red-600"
+              onClick={() => showConfirm(record.id)}
+            >
+              Xoá
+            </Button>
+          )}
         </div>
       ),
     },

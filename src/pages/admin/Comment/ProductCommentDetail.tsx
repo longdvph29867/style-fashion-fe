@@ -15,6 +15,7 @@ import { Voucher } from "../../../types/voucher";
 import { format, set } from 'date-fns';
 import PaginationPage from "../../../components/PaginationPage/PaginationPage";
 import commentService from "../../../services/commentService";
+import { render } from "react-dom";
 
 const ProductCommentDetail: React.FC = () => {
     // const params = new URLSearchParams(location.search);
@@ -92,9 +93,10 @@ const ProductCommentDetail: React.FC = () => {
             render: (text: any, record: any, index: any) => <span>{index + 1}</span>,
         },
         {
-            title: 'Tên',
+            title: 'Người dùng',
             dataIndex: ['userId', 'name'],
             key: 'name',
+            render: (text: any, record: any) => <Link to={`/admin/users/${record.userId._id}`}>{record.userId.name}</Link>,
         },
         {
             title: 'Nội dung',
@@ -102,10 +104,6 @@ const ProductCommentDetail: React.FC = () => {
             key: 'content',
         },
         {
-            title: 'Lượt thích',
-            dataIndex: 'like',
-            key: 'like',
-        }, {
             title: 'Ngày tạo',
             dataIndex: 'createdAt',
             key: 'createdAt',
