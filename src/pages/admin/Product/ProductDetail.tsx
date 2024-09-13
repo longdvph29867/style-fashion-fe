@@ -16,6 +16,7 @@ import TextArea from "antd/es/input/TextArea";
 import { BsDot } from "react-icons/bs";
 import { Attribute } from "../../../types/products";
 import ReactPlayer from 'react-player'
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 
 
 const ProductDetail: React.FC = () => {
@@ -339,6 +340,9 @@ const ProductDetail: React.FC = () => {
                                     ))}
                                 </div>
 
+                                <div className="my-4">
+                                    <span className="ml-2 font-normal">Sản phẩm hot: {product.featured ? <CheckOutlined /> : <CloseOutlined />}</span>
+                                </div>
                                 <div className="my-4">
                                     <span className="ml-2 font-medium">Tồn kho: {calculateTotalStock(product)}</span>
                                 </div>

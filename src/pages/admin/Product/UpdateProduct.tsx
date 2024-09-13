@@ -147,6 +147,26 @@ const UpdateProduct: React.FC = () => {
         }
       }
 
+      let urlVideo: any = [];
+      if (values.video?.length > 0 && values.video[0].status === 'done') {
+        urlVideo.push({ url: values.video[0].url });
+      } else if (values.video?.length > 0) {
+        const videoFile = values.video[0].originFileObj;
+        const formDataVideo = new FormData();
+        formDataVideo.append("videos", videoFile);
+        try {
+          const { data: dataVideo } = await https.post("/videos", formDataVideo);
+          const urlArray: { url: string; publicId: string }[] = dataVideo.data;
+          urlVideo = urlArray;
+        } catch (error) {
+          hiddenSpinner();
+          console.log(error);
+          message.error(error.response.data.message);
+        }
+      } else {
+        urlVideo = '';
+      }
+
       try {
         const data = {
           name: values.name,
@@ -155,8 +175,8 @@ const UpdateProduct: React.FC = () => {
           gallery: urlGallery.map((image) => image.url),
           thumbnail: urlThumbnail[0].url,
           categories: values.categories,
-          video: "video.mp4",
-          featured: true,
+          video: urlVideo ? urlVideo[0].url : '',
+          featured: featured,
         };
 
         // console.log(data, 'data');
