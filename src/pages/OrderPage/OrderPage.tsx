@@ -212,7 +212,9 @@ const OrderPage = () => {
       <PaginationPage
         current={1}
         total={totalOrders}
-        pageSize={limitPerPage} />
+        pageSize={limitPerPage}
+        currentUrl={null} // Page không có filter, sort nên truyền null
+      />
     </div>
 
   );

@@ -16,6 +16,13 @@ const productService = {
     // }
     return https.get(urlQuery);
   },
+  getFilterProducts(limit: number, page: number, categories: string) {
+    let urlQuery = `/products?limit=${limit}&page=${page}`;
+    if (categories) {
+      urlQuery += `&categories=${categories}`;
+    }
+    return https.get(urlQuery);
+  },
   getAllProductsV2(queryUrl: string) {
     if (queryUrl) {
       return https.get(`/products?${queryUrl}`);

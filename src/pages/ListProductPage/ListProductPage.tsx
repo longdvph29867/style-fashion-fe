@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import { Product } from "../../types/products";
-import { Checkbox, CheckboxProps, Form, Input } from "antd";
+import { Checkbox, CheckboxProps, Form, Input, Radio, Select } from "antd";
 import { GoDash } from "react-icons/go";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import { useQuery } from "@tanstack/react-query";
@@ -10,19 +10,22 @@ import productService from "../../services/productService";
 import PaginationPage from "../../components/PaginationPage/PaginationPage";
 import categoryService from "../../services/categoryService";
 import "./listProduct.css";
+import { hiddenSpinner, showSpinner } from "../../util/util";
 
 const limit = 12;
 
 const buttonSort = [
-  { label: "Phổ biến", value: "popular" },
   { label: "Mới nhất", value: "newest" },
-  { label: "Bán chạy", value: "seller" },
 ];
 
 const ListProductPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const [valueRadio, setValueRadio] = useState(null);
+  const [categoriesList, setCategoriesList] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+
   const slugCategory = queryParams.get("categories")
     ? queryParams.get("categories")?.split(",")
     : [];
@@ -30,20 +33,49 @@ const ListProductPage: React.FC = () => {
     ? Number(queryParams.get("page"))
     : 1;
 
-  const { data } = useQuery({
-    queryKey: ["products", location.search],
-    queryFn: () =>
-      productService
-        .getAllProducts(limit, currentPage, queryParams.get("categories"))
-        .then((res) => res.data),
-  });
+  // const { data } = useQuery({
+  //   queryKey: ["products", location.search],
+  //   queryFn: () =>
+  //     productService
+  //       .getFilterProducts(limit, currentPage, queryParams.get("categories"))
+  //       .then((res) => res.data),
+  // });
 
-  const { data: categoriesData } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () =>
-      categoryService.getAllCategories().then((res) => res.data.results),
-    refetchInterval: 3 * 60 * 1000,
-  });
+  // const { data: categoriesData } = useQuery({
+  //   queryKey: ["categories"],
+  //   queryFn: () =>
+  //     categoryService.getAllCategories().then((res) => res.data.results),
+  //   refetchInterval: 3 * 60 * 1000,
+  // });
+
+  const fetchData = async () => {
+    showSpinner();
+    try {
+      const { data } = await productService.getFilterProducts(limit, currentPage, queryParams.get("categories"));
+      setProducts(data.results);
+      window.scrollTo(0, 0);
+      hiddenSpinner();
+    } catch (error) {
+      console.log(error);
+      hiddenSpinner();
+    }
+  }
+
+  const fetchCategories = async () => {
+    const { data } = await categoryService.getAllCategories();
+    setCategoriesList(data.results.map((category: any) => ({
+      label: category.name,
+      value: category.id,
+    })));
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [location.search]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const onChange: CheckboxProps["onChange"] = (e) => {
     const newCategory = e.target.value;
@@ -61,7 +93,7 @@ const ListProductPage: React.FC = () => {
     navigate(location.pathname + "?" + queryParams.toString());
   };
 
-  const onSubmitPriceRangeFilter = (values: any) => {};
+  const onSubmitPriceRangeFilter = (values: any) => { };
 
   const listBreadcrumb = [
     {
@@ -81,20 +113,22 @@ const ListProductPage: React.FC = () => {
               <div className="relative flex flex-col py-8 space-y-4 border-b border-slate-300">
                 <h3 className="font-semibold ">Danh mục</h3>
                 <div className="grid grid-flow-row gap-1 filter-product">
-                  {categoriesData?.map((category: Category) => (
-                    <Checkbox
-                      key={category.id}
-                      checked={slugCategory?.includes(category.slug)}
-                      value={category.slug}
-                      onChange={onChange}
-                    >
-                      {category.name}
-                    </Checkbox>
-                  ))}
+                  <Select
+                    // mode="multiple"
+                    style={{ height: '36px' }}
+                    placeholder="Chọn danh mục"
+                    options={categoriesList}
+                    loading={!categoriesList.length}
+                    onChange={(value) => {
+                      console.log(value, 'value');
+                      queryParams.set("categories", value);
+                      navigate(location.pathname + "?" + queryParams.toString());
+                    }}
+                  />
                 </div>
               </div>
-              <div>
-                <h3 className="font-semibold my-4">Khoảng Giá</h3>
+              <div className="border-b border-slate-300 py-8">
+                <h3 className="font-semibold mb-4">Khoảng Giá</h3>
                 <Form
                   layout="vertical"
                   name="basic"
@@ -137,33 +171,34 @@ const ListProductPage: React.FC = () => {
                   </button>
                 </Form>
               </div>
+              <div className="mb-5 h-[62px] w-full flex items-center gap-4 mt-4">
+                <h3 className="font-semibold ">Sắp xếp theo</h3>
+                {buttonSort.map((button) => (
+                  <button
+                    key={button.value}
+                    className="px-6 py-2 text-sm font-medium rounded-md border border-primary hover:bg-primary hover:text-white text-primary"
+                  >
+                    {button.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
           <div className="col-span-3">
-            <div className="mb-5 h-[62px] w-full bg-slate-50 flex items-center gap-4 pl-2">
-              <span className="font-normal">Sắp xếp theo</span>
-              {buttonSort.map((button) => (
-                <button
-                  key={button.value}
-                  className="px-6 py-2 text-sm font-medium rounded-md border border-primary hover:bg-primary hover:text-white text-primary"
-                >
-                  {button.label}
-                </button>
-              ))}
-            </div>
             {/* list */}
             <div className="lg:col-span-3 md:col-span-2 grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10">
               {/* item */}
-              {data?.results.map((product: Product) => (
+              {products.map((product: Product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
             <div className="mt-10">
               <PaginationPage
                 current={currentPage}
-                total={data?.totalResults}
+                total={products?.totalResults}
                 pageSize={limit}
                 theme="dark"
+                currentUrl={null} // Page không có filter, sort nên truyền nullx
               />
             </div>
           </div>
