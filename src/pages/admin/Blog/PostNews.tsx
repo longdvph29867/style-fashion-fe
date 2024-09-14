@@ -169,7 +169,7 @@ const PostNews = () => {
                 apiKey="2ag9f5652gfh8wi0m8g4ll6hb65iw6ldqyujk4ytt2ubto8n"
                 value={content}
                 init={{
-                  width: 850,
+                  // width: "100%",
                   height: 500,
                   menubar: true,
                   // style_formats:,

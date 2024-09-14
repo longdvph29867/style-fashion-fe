@@ -123,6 +123,13 @@ const UsersList: React.FC = () => {
 
   const columns = [
     {
+      title: "STT",
+      dataIndex: "index",
+      key: "index",
+      render: (_: any, __: any, index: number) => ((currentPage - 1) * limitPerPage + (index + 1)),
+      width: "3%",
+    },
+    {
       title: 'Hình ảnh',
       dataIndex: 'image',
       key: 'image',

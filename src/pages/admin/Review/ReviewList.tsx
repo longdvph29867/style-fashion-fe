@@ -4,8 +4,15 @@ import { Link, useParams } from "react-router-dom";
 import { Breadcrumb, Image, Tabs, TabsProps, message } from "antd";
 import { https } from "../../../config/axios";
 import ChildrenTab from "./ChildrenTab";
+import PaginationPage from "../../../components/PaginationPage/PaginationPage";
+import reviewService from "../../../services/reviewService";
 
 const ReviewList: React.FC = () => {
+  const params = new URLSearchParams(location.search);
+  const [totalReviews, setTotalReviews] = useState(0);
+  const limitPerPage = 10;
+  const currentPage = params.get("page") ? Number(params.get("page")) : 1;
+
   const { id } = useParams();
   const productId = id as string;
 
@@ -28,13 +35,14 @@ const ReviewList: React.FC = () => {
   const fetchData = async () => {
     window.scrollTo(0, 0);
     showSpinner();
-    const api = `/reviews/v2?productId=${productId}`;
+    // const api = `/reviews/v2?productId=${productId}`;
     try {
-      const { data } = await https.get(api);
+      const { data } = await reviewService.getAllReviews(productId, limitPerPage, currentPage);
       setAllReviewsList(data.results);
       setNotApproveList(data.results.filter((review: any) => review.status === "offline"));
       setApproveList(data.results.filter((review: any) => review.status === "reviewed"));
       setDeletedList(data.results.filter((review: any) => review.status === "deleted"));
+      setTotalReviews(data.totalResults);
       hiddenSpinner();
     } catch (error) {
       hiddenSpinner();
@@ -44,10 +52,7 @@ const ReviewList: React.FC = () => {
   useEffect(() => {
     fetchData();
     fetchProductDetail();
-  }, []);
-  useEffect(() => {
-    console.log(allReviewsList);
-  }, [allReviewsList]);
+  }, [location.search]);
 
   const onChange = (key: string) => {
     console.log(key);
@@ -66,27 +71,27 @@ const ReviewList: React.FC = () => {
     {
       key: "all",
       label: "Tất cả",
-      children: <ChildrenTab reviewsList={allReviewsList} fetchData={fetchData} />,
+      children: <ChildrenTab currentPage={currentPage} limitPerPage={limitPerPage} reviewsList={allReviewsList} fetchData={fetchData} />,
     },
     {
       key: "offline",
       label: "Chưa duyệt",
-      children: <ChildrenTab reviewsList={notApproveList} fetchData={fetchData} />,
+      children: <ChildrenTab currentPage={currentPage} limitPerPage={limitPerPage} reviewsList={notApproveList} fetchData={fetchData} />,
     },
     {
       key: "reviewed",
       label: "Đã duyệt",
-      children: <ChildrenTab reviewsList={approveList} fetchData={fetchData} />,
+      children: <ChildrenTab currentPage={currentPage} limitPerPage={limitPerPage} reviewsList={approveList} fetchData={fetchData} />,
     },
     {
       key: "deleted",
       label: "Đã xóa",
-      children: <ChildrenTab reviewsList={deletedList} fetchData={fetchData} />,
+      children: <ChildrenTab currentPage={currentPage} limitPerPage={limitPerPage} reviewsList={deletedList} fetchData={fetchData} />,
     },
   ];
 
   return (
-    <div className="p-4">
+    <div className="min-w-[800px]">
       <Breadcrumb style={{ margin: '16px 0' }}>
         <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
         <Breadcrumb.Item><Link to="/admin/reviews">Đánh giá</Link></Breadcrumb.Item>
@@ -98,6 +103,13 @@ const ReviewList: React.FC = () => {
           <span className="">{product?.name}</span>
         </div>
         <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+        <PaginationPage
+          current={1}
+          total={totalReviews}
+          pageSize={limitPerPage}
+          currentUrl={null} // Page không có filter, sort nên truyền null
+
+        />
       </div>
     </div>
   );

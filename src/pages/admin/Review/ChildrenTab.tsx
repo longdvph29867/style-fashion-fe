@@ -6,10 +6,12 @@ import { Button, Modal, Popconfirm, Rate, message } from 'antd';
 
 type Props = {
     reviewsList: any,
-    fetchData: () => void
+    fetchData: () => void,
+    currentPage: number,
+    limitPerPage: number
 }
 
-const ChildrenTab = ({ reviewsList, fetchData }: Props) => {
+const ChildrenTab = ({ reviewsList, fetchData, currentPage, limitPerPage }: Props) => {
     // const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
@@ -128,8 +130,8 @@ const ChildrenTab = ({ reviewsList, fetchData }: Props) => {
                 <div>
                     {
                         reviewsList.map((review: any, index: number) => (
-                            <div key={review.id} className="relative w-full grid md:grid-cols-10 sm:grid-cols-6 grid-cols-6 gap-2 items-center border-t border-slate-100">
-                                <span className='absolute text-slate-300'>{++index}</span>
+                            <div key={review.id} className="relative w-full grid md:grid-cols-10 sm:grid-cols-6 grid-cols-6 gap-2 items-center border-t border-slate-100 pl-2">
+                                <span className='absolute text-slate-300'>{((currentPage - 1) * limitPerPage + (index + 1))}</span>
                                 <div className="md:block xl:col-span-2 col-span-2 text-center pr-6 pl-4 py-3 text-slate-800">
                                     {review.name}
                                     <span className='block'>

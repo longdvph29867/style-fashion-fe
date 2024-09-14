@@ -34,6 +34,10 @@ export const actionAdminOrder = [
         name: 'Đã giao hàng',
     },
     {
+        code: 7,
+        name: 'Đã nhận hàng',
+    },
+    {
         code: 10,
         name: 'Hủy đơn hàng',
     },

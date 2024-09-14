@@ -95,17 +95,19 @@ const ListPost = (props: Props) => {
       key: "content",
       render: (text: string) => {
         const maxLength = 50; // Độ dài tối đa của mô tả trước khi thêm dấu '...'
-        return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+        // return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+        return <h4 className="my-line-1"
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }}></h4>
       },
     },
-    {
-      title: "View",
-      dataIndex: "view",
-      key: "view",
-      render: (text: number) => (
-        <span className="text-green-500">{text}</span>
-      ),
-    },
+    // {
+    //   title: "View",
+    //   dataIndex: "view",
+    //   key: "view",
+    //   render: (text: number) => (
+    //     <span className="text-green-500">{text}</span>
+    //   ),
+    // },
     {
       title: "Thao tác",
       key: "action",

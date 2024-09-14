@@ -6,13 +6,16 @@ import {
     Form,
     Image,
     Input,
+    message,
+    Modal,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
 
 const UserDetail: React.FC = () => {
+    const navigate = useNavigate();
     const { id } = useParams();
     const [user, setUser] = useState<any>({}); // product detail
     const [form] = Form.useForm();
@@ -54,6 +57,37 @@ const UserDetail: React.FC = () => {
     useEffect(() => {
         fetchProductDetail();
     }, [id]);
+
+    const handleDelete = async (id: string) => {
+        showSpinner();
+        try {
+            const data = await https.delete(`/users/${id}`);
+            if (data) {
+                message.success("Thao tác thành công");
+                hiddenSpinner();
+                navigate('/admin/users');
+            }
+        } catch (error) {
+            hiddenSpinner();
+            console.log(error);
+            message.error(error.response.data.message);
+        }
+    };
+
+    const { confirm } = Modal;
+
+    const showConfirm = (id: string) => {
+        confirm({
+            title: 'Bạn có chắc chắn muốn xóa?',
+            onOk() {
+                handleDelete(id);
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+            maskClosable: true,
+        });
+    };
 
     return (
         <>
@@ -118,7 +152,7 @@ const UserDetail: React.FC = () => {
                                     <Input readOnly />
                                 </Form.Item>
                                 <Form.Item
-                                    label="Role"
+                                    label="Vai trò"
                                     name="role"
                                 >
                                     <Input readOnly />
@@ -188,21 +222,31 @@ const UserDetail: React.FC = () => {
                         </div>
                     </div>
                     <Form.Item>
-                        <Link
-                            to={`/admin/users/update/${user.id}`}
-                            className=""
-                        >
-                            {user.role !== 'admin' && (
-                                <Button
-                                    type="primary"
-                                    htmlType="submit"
-                                    className="text-white bg-green-500"
+                        {user.role !== 'admin' && (
+                            <div className="flex gap-2">
+                                <Link
+                                    to={`/admin/users/update/${user.id}`}
+                                    className=""
                                 >
-                                    Cập nhật người dùng
+                                    <Button
+                                        type="primary"
+                                        htmlType="submit"
+                                        className="text-white bg-green-500"
+                                    >
+                                        Cập nhật người dùng
+                                    </Button>
+                                </Link>
+                                <Button
+                                    type="link"
+                                    className="text-white bg-red-500"
+                                    onClick={() => showConfirm(user.id)}
+                                >
+                                    Xoá
                                 </Button>
-                            )}
 
-                        </Link>
+                            </div>
+                        )}
+
                     </Form.Item>
                 </Form>
             </div>

@@ -154,7 +154,9 @@ const CategoryList: React.FC = () => {
             <PaginationPage
                 current={1}
                 total={totalCategory}
-                pageSize={limitPerPage} />
+                pageSize={limitPerPage}
+                currentUrl={null} // Page không có filter, sort nên truyền null
+            />
         </div>
     );
 };
