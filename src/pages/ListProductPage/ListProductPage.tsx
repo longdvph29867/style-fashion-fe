@@ -12,7 +12,6 @@ import categoryService from "../../services/categoryService";
 import "./listProduct.css";
 import { hiddenSpinner, showSpinner } from "../../util/util";
 
-const limit = 12;
 
 const buttonSort = [
   { label: "Mới nhất", value: "newest" },
@@ -25,13 +24,20 @@ const ListProductPage: React.FC = () => {
   const [valueRadio, setValueRadio] = useState(null);
   const [categoriesList, setCategoriesList] = useState<any[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [form] = Form.useForm();
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const slugCategory = queryParams.get("categories")
     ? queryParams.get("categories")?.split(",")
     : [];
+
+  const limit = 12;
   const currentPage = queryParams.get("page")
     ? Number(queryParams.get("page"))
     : 1;
+  queryParams.set("limit", limit.toString());
+  queryParams.set("page", currentPage.toString());
 
   // const { data } = useQuery({
   //   queryKey: ["products", location.search],
@@ -49,10 +55,14 @@ const ListProductPage: React.FC = () => {
   // });
 
   const fetchData = async () => {
+    console.log('location.search', location.search);
+    console.log('queryParams', queryParams.toString());
+    // return
     showSpinner();
     try {
-      const { data } = await productService.getFilterProducts(limit, currentPage, queryParams.get("categories"));
+      const { data } = await productService.getFilterProducts(queryParams.toString());
       setProducts(data.results);
+      setTotalProducts(data.totalResults);
       window.scrollTo(0, 0);
       hiddenSpinner();
     } catch (error) {
@@ -71,35 +81,42 @@ const ListProductPage: React.FC = () => {
 
   useEffect(() => {
     fetchData();
+    // console.log(location.search, 'location.search');
   }, [location.search]);
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
-  const onChange: CheckboxProps["onChange"] = (e) => {
-    const newCategory = e.target.value;
-    let updatedCategories = slugCategory ? [...slugCategory] : [];
-    if (updatedCategories.includes(newCategory)) {
-      updatedCategories = updatedCategories.filter((c) => c !== newCategory);
-    } else {
-      updatedCategories.push(newCategory);
-    }
-    if (updatedCategories.length === 0) {
-      queryParams.delete("categories");
-    } else {
-      queryParams.set("categories", updatedCategories.join(","));
-    }
+  // const onChange: CheckboxProps["onChange"] = (e) => {
+  //   const newCategory = e.target.value;
+  //   let updatedCategories = slugCategory ? [...slugCategory] : [];
+  //   if (updatedCategories.includes(newCategory)) {
+  //     updatedCategories = updatedCategories.filter((c) => c !== newCategory);
+  //   } else {
+  //     updatedCategories.push(newCategory);
+  //   }
+  //   if (updatedCategories.length === 0) {
+  //     queryParams.delete("categories");
+  //   } else {
+  //     queryParams.set("categories", updatedCategories.join(","));
+  //   }
+  //   navigate(location.pathname + "?" + queryParams.toString());
+  // };
+
+  const onSubmitPriceRangeFilter = (values: any) => {
+    console.log(values, 'values');
+    queryParams.set("fromPrice", values.fromPrice);
+    queryParams.set("toPrice", values.toPrice);
     navigate(location.pathname + "?" + queryParams.toString());
   };
-
-  const onSubmitPriceRangeFilter = (values: any) => { };
 
   const listBreadcrumb = [
     {
       label: "Danh sách sản phẩm",
     },
   ];
+
 
   return (
     <div className="py-20">
@@ -119,8 +136,10 @@ const ListProductPage: React.FC = () => {
                     placeholder="Chọn danh mục"
                     options={categoriesList}
                     loading={!categoriesList.length}
-                    onChange={(value) => {
+                    value={selectedCategory}
+                    onChange={(value: any) => {
                       console.log(value, 'value');
+                      setSelectedCategory(value);
                       queryParams.set("categories", value);
                       navigate(location.pathname + "?" + queryParams.toString());
                     }}
@@ -130,6 +149,7 @@ const ListProductPage: React.FC = () => {
               <div className="border-b border-slate-300 py-8">
                 <h3 className="font-semibold mb-4">Khoảng Giá</h3>
                 <Form
+                  form={form}
                   layout="vertical"
                   name="basic"
                   labelCol={{ span: 12 }}
@@ -142,7 +162,7 @@ const ListProductPage: React.FC = () => {
                   <div className="flex gap-2">
                     <Form.Item
                       label=""
-                      name="minPrice"
+                      name="fromPrice"
                       rules={[
                         {
                           required: true,
@@ -155,7 +175,7 @@ const ListProductPage: React.FC = () => {
                     <GoDash className="text-3xl text-slate-500 col-span-1" />
                     <Form.Item
                       label=""
-                      name="maxPrice"
+                      name="toPrice"
                       rules={[
                         {
                           required: true,
@@ -171,16 +191,32 @@ const ListProductPage: React.FC = () => {
                   </button>
                 </Form>
               </div>
-              <div className="mb-5 h-[62px] w-full flex items-center gap-4 mt-4">
+              {/* <div className="mb-5 h-[62px] w-full flex items-center gap-4 mt-4">
                 <h3 className="font-semibold ">Sắp xếp theo</h3>
-                {buttonSort.map((button) => (
-                  <button
-                    key={button.value}
-                    className="px-6 py-2 text-sm font-medium rounded-md border border-primary hover:bg-primary hover:text-white text-primary"
-                  >
-                    {button.label}
-                  </button>
-                ))}
+                <button
+                  className="px-6 py-2 text-sm font-medium rounded-md border border-primary hover:bg-primary hover:text-white text-primary"
+                >
+                  Mới nhất
+                </button>
+              </div> */}
+              <div className="mb-5 h-[62px] w-full flex items-center gap-4 mt-4">
+                <button
+                  className="px-6 py-2 text-sm font-medium rounded-md border bg-orange-400 text-white"
+                  onClick={() => {
+                    // Reset Select
+                    setSelectedCategory(null);
+
+                    // Reset Form fields
+                    form.resetFields();
+
+                    queryParams.delete("categories");
+                    queryParams.delete("fromPrice");
+                    queryParams.delete("toPrice");
+                    navigate(location.pathname + "?" + queryParams.toString());
+                  }}
+                >
+                  Đặt lại
+                </button>
               </div>
             </div>
           </div>
@@ -195,10 +231,12 @@ const ListProductPage: React.FC = () => {
             <div className="mt-10">
               <PaginationPage
                 current={currentPage}
-                total={products?.totalResults}
+                total={totalProducts}
                 pageSize={limit}
                 theme="dark"
-                currentUrl={null} // Page không có filter, sort nên truyền nullx
+                currentUrl={window.location.href} // Truyền URL hiện tại vào
+
+              // currentUrl={null} // Page không có filter, sort nên truyền nullx
               />
             </div>
           </div>
