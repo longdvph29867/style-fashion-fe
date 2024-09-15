@@ -497,7 +497,6 @@ const AddProduct: React.FC = () => {
       // Chuyển object gồm các mảng sang mảng gồm các object
       const listFilesAttributeImage = [...attributeImages];
       const thumbnail: any = values.thumbnail;
-      const videoFile: any = values.video;
 
       // Lấy originFileObj
       // console.log(listFiles, 'listFiles');
@@ -505,7 +504,6 @@ const AddProduct: React.FC = () => {
       // console.log(listFilesAttributeImage, 'listFilesAttributeImage');
       const fileOriginAttributeImages = listFilesAttributeImage.map((imageFile: any) => imageFile[0].originFileObj);
       const thumbnailFile = thumbnail[0].originFileObj;
-      const newVideoFile = videoFile[0].originFileObj;
 
       const formData = new FormData();
       for (const file of newArrayFiles) {
@@ -518,8 +516,6 @@ const AddProduct: React.FC = () => {
       const formDataThumbnail = new FormData();
       formDataThumbnail.append("images", thumbnailFile);
 
-      const formDataVideo = new FormData();
-      formDataVideo.append("videos", newVideoFile);
 
       try {
         const { data: dataGallery } = await https.post("/images", formData);
@@ -531,8 +527,7 @@ const AddProduct: React.FC = () => {
         const { data: dataThumbnail } = await https.post("/images", formDataThumbnail);
         const urlThumbnail: { url: string; publicId: string }[] = dataThumbnail.data;
 
-        const { data: dataVideo } = await https.post("/videos", formDataVideo);
-        const urlVideo: { url: string; publicId: string }[] = dataVideo.data;
+
 
         // console.log(urlGallery, 'urlGallery');
         // console.log(urlAttributeImage, 'urlAttributeImage');
@@ -547,9 +542,26 @@ const AddProduct: React.FC = () => {
           return value; // Trả về giá trị ban đầu nếu không có ảnh tương ứng
         });
 
+        console.log(values, 'values');
+        let urlVideo: any = null;
+
+        if (values.video && values.video.length > 0) {
+          const videoFile: any = values.video;
+          const newVideoFile = videoFile[0].originFileObj;
+
+          const formDataVideo = new FormData();
+          formDataVideo.append("videos", newVideoFile);
+
+          const { data: dataVideo } = await https.post("/videos", formDataVideo);
+          const url: { url: string; publicId: string }[] = dataVideo.data;
+          urlVideo = url;
+        }
+
         // console.log(attributeData, 'atrtibuteData');
 
         // return;
+
+        console.log(urlVideo, 'urlVideo')
 
         const data = {
           name: values.name,
@@ -558,13 +570,14 @@ const AddProduct: React.FC = () => {
           thumbnail: urlThumbnail[0].url,
           categories: values.categories,
           attributes: attributeData,
-          shortDescription: "product shortDescription",
-          video: urlVideo[0].url,
+          shortDescription: values.shortDescription,
+          // video: urlVideo[0].url,
           featured: featured,
-          variants: convertVariant
+          variants: convertVariant,
+          ...(urlVideo ? { video: urlVideo[0].url } : {}), // Chỉ thêm trường video nếu urlVideo tồn tại
         };
 
-        // console.log(data, 'dataFinal');
+        console.log(data, 'dataFinal');
 
         // return;
 
@@ -645,7 +658,14 @@ const AddProduct: React.FC = () => {
                 <Input />
               </Form.Item>
               <Form.Item
-                label="Mô tả"
+                label="Mô tả ngắn"
+                name="shortDescription"
+                rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
+              >
+                <TextArea rows={4} />
+              </Form.Item>
+              <Form.Item
+                label="Mô tả đầy đủ"
                 name="description"
                 rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
               >
@@ -687,8 +707,8 @@ const AddProduct: React.FC = () => {
                         if (file.size > 1024 * 1024) {
                           return Promise.reject("File tối đa 1MB");
                         }
-                        if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
-                          return Promise.reject("File phải có định dạng png, jpg, jpeg!");
+                        if (!["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(file.type)) {
+                          return Promise.reject("File phải có định dạng png, jpg, jpeg, webp!");
                         }
                         return Promise.resolve();
                       }
@@ -722,8 +742,8 @@ const AddProduct: React.FC = () => {
                           if (file.size > 1024 * 1024) {
                             return Promise.reject("File tối đa 1MB");
                           }
-                          if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
-                            return Promise.reject("File phải có định dạng png, jpg, jpeg!");
+                          if (!["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(file.type)) {
+                            return Promise.reject("File phải có định dạng png, jpg, jpeg, webp!");
                           }
                         }
                         return Promise.resolve();

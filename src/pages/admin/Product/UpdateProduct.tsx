@@ -57,13 +57,16 @@ const UpdateProduct: React.FC = () => {
         url: product.thumbnail,
         type: `image/${product?.thumbnail?.split('.')?.pop()}`,
       }]);
-      form.setFieldValue('video', [{
-        uid: '-1',
-        name: `video.${product?.video?.split('.')?.pop()}`,
-        status: 'done',
-        url: product.video,
-        type: `video/${product?.video?.split('.')?.pop()}`,
-      }]);
+
+      if (product.video) {
+        form.setFieldValue('video', [{
+          uid: '-1',
+          name: `video.${product?.video?.split('.')?.pop()}`,
+          status: 'done',
+          url: product.video,
+          type: `video/${product?.video?.split('.')?.pop()}`,
+        }]);
+      }
       form.setFieldsValue({
         gallery: product.gallery.map((url: string, index: number) => ({
           uid: index,
@@ -148,9 +151,9 @@ const UpdateProduct: React.FC = () => {
       }
 
       let urlVideo: any = [];
-      if (values.video?.length > 0 && values.video[0].status === 'done') {
+      if (values?.video?.length > 0 && values?.video[0].status === 'done') {
         urlVideo.push({ url: values.video[0].url });
-      } else if (values.video?.length > 0) {
+      } else if (values?.video && values?.video?.length > 0) {
         const videoFile = values.video[0].originFileObj;
         const formDataVideo = new FormData();
         formDataVideo.append("videos", videoFile);
@@ -175,9 +178,12 @@ const UpdateProduct: React.FC = () => {
           gallery: urlGallery.map((image) => image.url),
           thumbnail: urlThumbnail[0].url,
           categories: values.categories,
-          video: urlVideo ? urlVideo[0].url : '',
+          // video: urlVideo ? urlVideo[0].url : '',
           featured: featured,
+          ...((urlVideo.length > 0) ? { video: urlVideo[0].url } : {}), // Chỉ thêm trường video nếu urlVideo tồn tại
         };
+
+        console.log(data, 'data');
 
         // console.log(data, 'data');
         // return;
@@ -305,8 +311,8 @@ const UpdateProduct: React.FC = () => {
                         if (file.size > 1024 * 1024) {
                           return Promise.reject("File tối đa 1MB");
                         }
-                        if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
-                          return Promise.reject("File phải có định dạng png, jpg, jpeg!");
+                        if (!["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(file.type)) {
+                          return Promise.reject("File phải có định dạng png, jpg, jpeg, webp!");
                         }
                         return Promise.resolve();
                       }
@@ -343,12 +349,12 @@ const UpdateProduct: React.FC = () => {
                             return Promise.reject("File tối đa 1MB");
                           }
                           if (
-                            !["image/jpeg", "image/jpg", "image/png"].includes(
+                            !["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
                               file.type
                             )
                           ) {
                             return Promise.reject(
-                              "File phải có định dạng png, jpg, jpeg!"
+                              "File phải có định dạng png, jpg, jpeg, webp!"
                             );
                           }
                         }
