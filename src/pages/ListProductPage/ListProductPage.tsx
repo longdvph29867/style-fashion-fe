@@ -214,14 +214,30 @@ const ListProductPage: React.FC = () => {
                 </button>
               </Form>
             </div>
-            {/* <div className="mb-5 h-[62px] w-full flex items-center gap-4 mt-4">
-                <h3 className="font-semibold ">Sắp xếp theo</h3>
+            <div className="mb-5 h-[62px] w-full gap-4 mt-4 ">
+              <h3 className="font-semibold ">Sắp xếp theo</h3>
+              <div className="flex gap-2 mt-2 justify-between">
                 <button
-                  className="px-6 py-2 text-sm font-medium rounded-md border border-primary hover:bg-primary hover:text-white text-primary"
+                  className="px-4 py-2 text-sm font-medium rounded-md border border-primary hover:bg-primary hover:text-white text-primary"
+                  onClick={() => {
+                    queryParams.set("sortBy", "defaultPrice:asc");
+                    navigate(location.pathname + "?" + queryParams.toString());
+                  }}
                 >
-                  Mới nhất
+                  Giá tăng dần
                 </button>
-              </div> */}
+                <button
+                  className="px-4 py-2 text-sm font-medium rounded-md border border-primary hover:bg-primary hover:text-white text-primary"
+                  onClick={() => {
+                    queryParams.set("sortBy", "defaultPrice:desc");
+                    navigate(location.pathname + "?" + queryParams.toString());
+                  }}
+                >
+                  Giá giảm dần
+                </button>
+
+              </div>
+            </div>
             <div className="mb-5 h-[62px] w-full flex items-center gap-4 mt-4">
               <button
                 className="px-6 py-2 text-sm font-medium rounded-md border bg-orange-400 hover:bg-orange-500 text-white"
@@ -235,6 +251,7 @@ const ListProductPage: React.FC = () => {
                   queryParams.delete("categories");
                   queryParams.delete("fromPrice");
                   queryParams.delete("toPrice");
+                  queryParams.delete("sortBy");
                   navigate(location.pathname + "?" + queryParams.toString());
                 }}
               >
