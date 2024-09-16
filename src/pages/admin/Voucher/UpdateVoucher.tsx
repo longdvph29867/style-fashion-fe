@@ -44,7 +44,10 @@ const UpdateVoucher: React.FC = () => {
             if (id) {
                 const { data } = await voucherService.getDetailVoucher(id);
                 if (data) {
+                    console.log(data, 'data');
                     setVoucherDetail(data);
+                    console.log(data.validFrom, 'validFrom');
+                    console.log(data.validTo, 'validTo');
                     form.setFieldsValue({
                         ...data,
                         validFrom: data.validFrom ? dayjs(data.validFrom) : null,
@@ -71,8 +74,8 @@ const UpdateVoucher: React.FC = () => {
         // return;
         const data = {
             ...values,
-            validFrom: values.validFrom ? values.validFrom.format('YYYY-MM-DDTHH:mm:ssZ') : null,
-            validTo: values.validTo ? values.validTo.format('YYYY-MM-DDTHH:mm:ssZ') : null,
+            // validFrom: values.validFrom ? values.validFrom.format('YYYY-MM-DDTHH:mm:ssZ') : null,
+            // validTo: values.validTo ? values.validTo.format('YYYY-MM-DDTHH:mm:ssZ') : null,
         };
         const updateVoucher = async () => {
             showSpinner();
@@ -174,7 +177,16 @@ const UpdateVoucher: React.FC = () => {
                         {
                             pattern: /^[0-9]*$/,
                             message: "Vui lòng nhập số dương!",
-                        }
+                        },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                const type = getFieldValue('type');
+                                if (type === 'percentage' && value > 100) {
+                                    return Promise.reject(new Error("Giá trị giảm giá không được lớn hơn 100%"));
+                                }
+                                return Promise.resolve();
+                            },
+                        }),
                         ]}
                     >
                         <Input placeholder="" />
@@ -227,15 +239,57 @@ const UpdateVoucher: React.FC = () => {
                         </div>
                     </Form.Item>
 
-                    <div className="flex justify-between">
-                        <Form.Item
+                    {/* <div className="flex justify-between"> */}
+                    {/* <Form.Item
                             name="validFrom"
                             rules={[{ required: true, message: 'Vui lòng nhập trường này!' }]}
                         >
                             <div>
                                 <label className="mb-1">Thời gian bắt đầu</label>
                                 <DatePicker
-                                    defaultValue={dayjs(voucherDetail?.validFrom)}
+                                    value={form.getFieldValue('validFrom')} // Lấy giá trị từ form
+                                    showTime
+                                    onChange={(value) => {
+                                        form.setFieldsValue({ validFrom: value });
+                                    }}
+                                />
+                            </div>
+                        </Form.Item>
+
+                        <Form.Item
+                            name="validTo"
+                            rules={[{ required: true, message: 'Vui lòng nhập trường này!' },
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    const validFrom = getFieldValue('validFrom');
+                                    if (validFrom && value && value <= validFrom) {
+                                        return Promise.reject(new Error('Thời gian kết thúc phải lớn hơn thời gian bắt đầu!'));
+                                    }
+                                    return Promise.resolve();
+                                },
+                            })]}
+                        >
+                            <div>
+                                <label className="mb-1">Thời gian kết thúc</label>
+                                <DatePicker
+                                    value={form.getFieldValue('validTo')} // Lấy giá trị từ form
+                                    showTime
+                                    onChange={(value) => {
+                                        form.setFieldsValue({ validTo: value });
+                                        form.validateFields(['validTo']);
+                                    }}
+                                />
+                            </div>
+                        </Form.Item> */}
+
+                    {/* <Form.Item
+                            name="validFrom"
+                            rules={[{ required: true, message: 'Vui lòng nhập trường này!' }]}
+                        >
+                            <div>
+                                <label className="mb-1">Thời gian bắt đầu</label>
+                                <DatePicker
+                                    // defaultValue={dayjs(voucherDetail?.validFrom)}
                                     // value={dayjs(dataFake.validFrom)}
                                     showTime
                                     onChange={(value) => {
@@ -250,23 +304,38 @@ const UpdateVoucher: React.FC = () => {
                         <Form.Item
                             name="validTo"
                             rules={[{ required: true, message: 'Vui lòng nhập trường này!' },
-                            { validator: (_, value) => validateDateRange({ validFrom: form.getFieldValue('validFrom'), validTo: value }) }
+                            // { validator: (_, value) => validateDateRange({ validFrom: form.getFieldValue('validFrom'), validTo: value }) }
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    const validFrom = getFieldValue('validFrom');
+                                    if (validFrom && value && value <= validFrom) {
+                                        return Promise.reject(new Error('Thời gian kết thúc phải lớn hơn thời gian bắt đầu!'));
+                                    }
+                                    return Promise.resolve();
+                                },
+                            }),
                             ]}
                         >
                             <div>
                                 <label className="mb-1">Thời gian kết thúc</label>
                                 <DatePicker
-                                    defaultValue={dayjs(voucherDetail?.validTo)}
+                                    // defaultValue={dayjs(voucherDetail?.validTo)}
                                     showTime
+                                    // onChange={(value) => {
+                                    //     // setTimeEnd(value);
+                                    //     form.setFieldsValue({ validTo: value });
+                                    // }}
                                     onChange={(value) => {
-                                        // setTimeEnd(value);
                                         form.setFieldsValue({ validTo: value });
+
+                                        // Trigger validation immediately
+                                        form.validateFields(['validTo']);
                                     }}
                                 />
 
                             </div>
-                        </Form.Item>
-                    </div>
+                        </Form.Item> */}
+                    {/* </div> */}
 
                     <Form.Item>
                         <Button

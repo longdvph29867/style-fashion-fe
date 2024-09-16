@@ -73,7 +73,19 @@ const User = () => {
                   <li className="px-2">
                     <Link
                       className="flex items-center px-4 py-2 font-normal rounded-md text-content hover:text-title hover:bg-[#ebebeb] duration-300"
-                      to="/admin/products"
+                      to="/admin"
+                    >
+                      Quản trị
+                    </Link>
+                  </li>
+                ) : (
+                  <></>
+                )}
+                {infoUser.role === "staff" ? (
+                  <li className="px-2">
+                    <Link
+                      className="flex items-center px-4 py-2 font-normal rounded-md text-content hover:text-title hover:bg-[#ebebeb] duration-300"
+                      to="/admin/order"
                     >
                       Quản trị
                     </Link>

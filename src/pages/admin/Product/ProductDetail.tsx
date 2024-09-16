@@ -15,6 +15,9 @@ import { https } from "../../../config/axios";
 import TextArea from "antd/es/input/TextArea";
 import { BsDot } from "react-icons/bs";
 import { Attribute } from "../../../types/products";
+import ReactPlayer from 'react-player'
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+
 
 const ProductDetail: React.FC = () => {
     window.scrollTo(0, 0);
@@ -28,38 +31,38 @@ const ProductDetail: React.FC = () => {
 
     let selectedCategories: any = [];
 
-    const columns = [
-        {
-            title: "Tồn kho",
-            dataIndex: "countInStock",
-            key: "countInStock",
-        },
-        {
-            title: "Lượt mua",
-            dataIndex: "purchases",
-            key: "purchases",
-        },
-        {
-            title: "Lượt thích",
-            dataIndex: "likes",
-            key: "likes",
-        },
-        {
-            title: "Lượt đánh giá",
-            dataIndex: "numReviews",
-            key: "numReviews",
-        },
-        {
-            title: "Điểm đánh giá",
-            dataIndex: "scoreReview",
-            key: "scoreReview",
-        },
-        {
-            title: "Điểm đánh giá cuối cùng",
-            dataIndex: "finalScoreReview",
-            key: "finalScoreReview",
-        }
-    ];
+    // const columns = [
+    //     {
+    //         title: "Tồn kho",
+    //         dataIndex: "countInStock",
+    //         key: "countInStock",
+    //     },
+    //     {
+    //         title: "Lượt mua",
+    //         dataIndex: "purchases",
+    //         key: "purchases",
+    //     },
+    //     {
+    //         title: "Lượt thích",
+    //         dataIndex: "likes",
+    //         key: "likes",
+    //     },
+    //     {
+    //         title: "Lượt đánh giá",
+    //         dataIndex: "numReviews",
+    //         key: "numReviews",
+    //     },
+    //     {
+    //         title: "Điểm đánh giá",
+    //         dataIndex: "scoreReview",
+    //         key: "scoreReview",
+    //     },
+    //     {
+    //         title: "Điểm đánh giá cuối cùng",
+    //         dataIndex: "finalScoreReview",
+    //         key: "finalScoreReview",
+    //     }
+    // ];
 
     const createColumnsAttribute = (attributes: Attribute[]) => {
         const columns = [];
@@ -229,6 +232,20 @@ const ProductDetail: React.FC = () => {
         fetchProductDetail();
     }, [id]);
 
+    function calculateTotalStock(product: any) {
+        // Kiểm tra xem có tồn tại variants trong product hay không
+        if (!product.variants || product.variants.length === 0) {
+            return 0; // Không có biến thể, trả về 0
+        }
+
+        // Sử dụng reduce để tính tổng tồn kho
+        const totalStock = product.variants.reduce((total: any, variant: any) => {
+            return total + variant.stock;
+        }, 0);
+
+        return totalStock;
+    }
+
     return (
         <>
             <div className="w-full px-5 pb-2">
@@ -323,13 +340,20 @@ const ProductDetail: React.FC = () => {
                                     ))}
                                 </div>
 
-                                <Table
+                                <div className="my-4">
+                                    <span className="ml-2 font-normal">Sản phẩm hot: {product.featured ? <CheckOutlined /> : <CloseOutlined />}</span>
+                                </div>
+                                <div className="my-4">
+                                    <span className="ml-2 font-medium">Tồn kho: {calculateTotalStock(product)}</span>
+                                </div>
+
+                                {/* <Table
                                     columns={columns}
                                     dataSource={[product]}
                                     rowKey="id"
                                     pagination={false}
                                     bordered
-                                />
+                                /> */}
                             </div>
                             <div>
                                 {/* thumbnail */}
@@ -356,7 +380,7 @@ const ProductDetail: React.FC = () => {
                                         ))}
                                     </div>
                                 </div>
-                                {/* <div>
+                                <div>
                                     <div className="mb-2">
                                         <label htmlFor="">Video</label>
                                     </div>
@@ -364,7 +388,8 @@ const ProductDetail: React.FC = () => {
                                         <source src={product.video} type="video/mp4" />
                                         Your browser does not support the video tag.
                                     </video>
-                                </div> */}
+                                    {/* <ReactPlayer url={product.video} /> */}
+                                </div>
                             </div>
                         </div>
 

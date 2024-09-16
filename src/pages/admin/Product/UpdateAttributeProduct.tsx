@@ -370,6 +370,15 @@ const AddProduct: React.FC = () => {
                         {
                             pattern: /^[0-9]*$/,
                             message: "Vui lòng nhập số dương!",
+                        },
+                        {
+                            validator: (_, value) => {
+                                const originalPrice = variants[index]?.originalPrice;
+                                if (value && originalPrice && Number(value) > Number(originalPrice)) {
+                                    return Promise.reject(new Error("Giá khuyến mãi không được lớn hơn giá gốc!"));
+                                }
+                                return Promise.resolve();
+                            }
                         }
                         ]}
                     >

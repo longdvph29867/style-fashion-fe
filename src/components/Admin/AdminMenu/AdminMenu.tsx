@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import imgLogo from "../../../assets/img/sf-logo2.png";
 import imgLogoIcon from "../../../assets/img/logo_icon_v2.png";
 import { MdDashboard, MdCategory } from "react-icons/md";
@@ -8,7 +8,8 @@ import { BiSolidCoupon } from "react-icons/bi";
 import { FaCartArrowDown } from "react-icons/fa";
 import { FaBlog, FaTruckRampBox } from "react-icons/fa6";
 import { Menu } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { CommentOutlined, StarOutlined, UserOutlined } from "@ant-design/icons";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 type Menu = {
   link: string;
@@ -46,7 +47,8 @@ const menuItems = [
         key: "3-2",
         label: <Link to="/admin/products/add">Thêm sản phẩm</Link>,
       },
-      { key: "3-3", label: <Link to="/admin/products">Quản lý đánh giá</Link> },
+      // { key: "3-3", label: <Link to="/admin/products">Quản lý đánh giá</Link> },
+      { key: "3-3", label: <Link to="/admin/products/products-deleted">Khôi phục sản phẩm</Link> },
     ],
   },
   {
@@ -60,42 +62,51 @@ const menuItems = [
     ],
   },
   {
-    link: "/admin/order",
-    title: "Đơn hàng",
+    key: "5",
+    label: <Link to="/admin/order">Đơn hàng</Link>,
     icon: <FaCartArrowDown />,
-    active: false,
   },
   {
-    link: "/admin/voucher",
-    title: "Mã giảm giá",
+    key: "6",
+    label: "Mã giảm giá",
     icon: <BiSolidCoupon />,
     children: [
-      { key: "5-1", label: <Link to="/admin/voucher">Xem mã giảm giá</Link> },
+      { key: "6-1", label: <Link to="/admin/voucher">Xem mã giảm giá</Link> },
       {
-        key: "5-2",
+        key: "6-2",
         label: <Link to="/admin/voucher/add">Thêm mã giảm giá</Link>,
       },
     ],
   },
   {
-    key: "6",
+    key: "7",
     label: "Bài viết",
     icon: <FaBlog />,
     children: [
-      { key: "6-1", label: <Link to="/admin">Xem bài viết</Link> },
-      { key: "6-2", label: <Link to="/admin">Thêm bài viết</Link> },
+      { key: "7-1", label: <Link to="/admin/blog">Xem bài viết</Link> },
+      { key: "7-2", label: <Link to="/admin/blog/postnew">Thêm bài viết</Link> },
     ],
   },
   {
-    key: "7",
-    label: "Đơn hàng",
-    icon: <FaTruckRampBox />,
-    children: [
-      { key: "7-1", label: <Link to="/admin/order">Xem đơn hàng</Link> },
-      // { key: '7-2', label: <Link to="/admin/order">Xử lý đơn hàng</Link> },
-      // { key: '7-3', label: <Link to="/admin/order">Cập nhật đơn hàng</Link> },
-    ],
+    key: "8",
+    label: <Link to="/admin/reviews">Đánh giá</Link>,
+    icon: <StarOutlined />,
   },
+  {
+    key: "9",
+    label: <Link to="/admin/comments">Bình luận</Link>,
+    icon: <CommentOutlined />,
+  },
+  // {
+  //   key: "8",
+  //   label: "Đơn hàng",
+  //   icon: <FaTruckRampBox />,
+  //   children: [
+  //     { key: "8-1", label: <Link to="/admin/order">Xem đơn hàng</Link> },
+  //     // { key: '7-2', label: <Link to="/admin/order">Xử lý đơn hàng</Link> },
+  //     // { key: '7-3', label: <Link to="/admin/order">Cập nhật đơn hàng</Link> },
+  //   ],
+  // },
 ];
 
 type Props = {
@@ -108,6 +119,20 @@ const AdminMenu: React.FC<Props> = ({ collapsed }): any => {
   const pathSegments = fullPath.split("/").slice(1, 3); // Chỉ lấy 'admin' và 'products'
   const pathAfterAdmin = "/" + pathSegments.join("/");
 
+  const { userRole }: any = useContext(AuthContext);
+
+
+  // Lọc menu items dựa trên userRole
+  const filteredMenuItems = menuItems.filter((item) => {
+    if (userRole === "admin") {
+      return true; // Hiển thị tất cả các menu cho admin
+    }
+    if (userRole === "staff") {
+      // Lọc để chỉ hiển thị một số menu cho staff
+      return ["5", "7", "8", "9"].includes(item.key); // Ví dụ: chỉ hiển thị "Đơn hàng" và "Bài viết" cho staff
+    }
+    return false; // Không hiển thị menu nếu userRole không khớp
+  });
   return (
     <div className="">
       <Link className="block px-8 py-6 my-6 text-sm text-slate-700" to="/admin">
@@ -116,7 +141,7 @@ const AdminMenu: React.FC<Props> = ({ collapsed }): any => {
         {/* <img src={imgLogoIcon} className="lg:hidden inline-block" /> */}
       </Link>
       <div>
-        <Menu defaultOpenKeys={["1"]} mode="inline" items={menuItems} />
+        <Menu defaultOpenKeys={["1"]} mode="inline" items={filteredMenuItems} />
       </div>
     </div>
   );

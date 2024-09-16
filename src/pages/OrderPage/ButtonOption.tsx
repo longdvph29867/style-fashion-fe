@@ -128,9 +128,6 @@ const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList, onP
                     <Button onClick={() => setReviewFormOpen(true)} className="h-10 btn1 block text-center rounded-md min-w-[150px] py-2 bg-[#fe385c] text-white uppercase" style={{ borderWidth: "1px" }}>
                         Đánh giá
                     </Button>
-                    <Button onClick={() => showUpdateStatusModal(orderId, 8, getNameByStatusCodeUser(8))} className="h-10 btn1 block text-center rounded-md min-w-[150px] py-2 bg-slate-50  uppercase" style={{ borderWidth: "1px" }}>
-                        Yêu Cầu Trả hàng/Hoàn tiền
-                    </Button>
                     <Modal
                         title="Đánh giá sản phẩm"
                         // centered
@@ -149,6 +146,9 @@ const ButtonOption = ({ orderStatus, orderId, setOrderList, fetchOrdersList, onP
                 <>
                     <Button onClick={() => showUpdateStatusModal(orderId, 7, getNameByStatusCodeUser(7))} className="h-10 btn1 block text-center rounded-md min-w-[180px] py-2 bg-[#fe385c] text-white uppercase" style={{ borderWidth: "1px" }}>
                         Đã nhận được hàng
+                    </Button>
+                    <Button onClick={() => showUpdateStatusModal(orderId, 8, getNameByStatusCodeUser(8))} className="h-10 btn1 block text-center rounded-md min-w-[150px] py-2 bg-slate-50  uppercase" style={{ borderWidth: "1px" }}>
+                        Yêu Cầu Trả hàng/Hoàn tiền
                     </Button>
                 </>
             }

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import { Button, Form, Input, message, Upload, UploadProps } from "antd";
+import { Breadcrumb, Button, Form, Input, message, Upload, UploadProps } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FormPostNews } from "../../../types/blog";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
@@ -79,7 +79,12 @@ const PostNews = () => {
     console.log("Failed:", errorInfo);
   };
   return (
-    <div className="bg-gray-100 p-6">
+    <div className="">
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
+        <Breadcrumb.Item><Link to="/admin/blog">Blog</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Thêm bài viết</Breadcrumb.Item>
+      </Breadcrumb>
       <div className="mx-auto bg-white p-8 rounded shadow">
         <h1 className="text-2xl font-bold mb-6">Đăng Tin Tức</h1>
         <Form
@@ -164,7 +169,7 @@ const PostNews = () => {
                 apiKey="2ag9f5652gfh8wi0m8g4ll6hb65iw6ldqyujk4ytt2ubto8n"
                 value={content}
                 init={{
-                  width: 850,
+                  // width: "100%",
                   height: 500,
                   menubar: true,
                   // style_formats:,

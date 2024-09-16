@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AccountPage from "./pages/AccountPage/AccountPage";
 import AccountInfomation from "./components/Accout/AccountInfomation";
 import ChangePassword from "./components/Accout/ChangePassword";
@@ -49,6 +49,13 @@ import "./custom-input.css";
 import "./App.css";
 import Dashboard from "./pages/admin/Dashboard/Dashboard";
 import UpdateAttributeProduct from "./pages/admin/Product/UpdateAttributeProduct";
+import ProtectedRoute from "./contexts/ProtectedRoute";
+import ProductsDeleted from "./pages/admin/Product/ProductsDeleted";
+import NotFoundPage from "./components/NotFoundPage/NotFoundPage";
+import ProductReviewList from "./pages/admin/Review/ProductReviewList";
+import ProductCommentList from "./pages/admin/Comment/ProductCommentList";
+import ProductCommentDetail from "./pages/admin/Comment/ProductCommentDetail";
+import BlogDetail from "./pages/admin/Blog/BlogDetail";
 
 function App() {
   const location = useLocation();
@@ -89,43 +96,66 @@ function App() {
           <Route path="order/:id" element={<OrderDetail />} />
           <Route path="order" element={<OrderPage />} />
           <Route path="products" element={<ListProductPage />} />
-          <Route path="blog" element={<BlogPage/>}/>
-          <Route path="blog/:id" element={<DetailBlog/>}/>
+          <Route path="blog" element={<BlogPage />} />
+          <Route path="blog/:id" element={<DetailBlog />} />
         </Route>
+        <Route path="forgot-password/:token" element={<ResetPassword />} />
         <Route path="/auth" element={<LoginLayout />}>
-          <Route path="verify-email/:token" element={<ResetPassword />} />
+          {/* <Route path="verify-email/:token" element={<ResetPassword />} /> */}
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
         </Route>
         <Route path="/admin" element={<LayoutAdmin />}>
-          <Route index element={<Dashboard />} />
-          <Route path="products" element={<ProductsList />} />
-          <Route path="products/:id" element={<ProductDetail />} />
-          <Route path="products/add" element={<AddProduct />} />
-          <Route path="products/update/:id" element={<UpdateProduct />} />
+          {/* Các route mà cả admin và staff đều có thể truy cập */}
           <Route
-            path="products/update/attributes/:id"
-            element={<UpdateAttributeProduct />}
-          />
-          <Route path="reviews/:id" element={<ReviewList />} />
-          <Route path="users" element={<UsersList />} />
-          <Route path="users/:id" element={<UserDetail />} />
-          <Route path="users/add" element={<AddUser />} />
-          <Route path="users/update/:id" element={<UpdateUser />} />
-          <Route path="order" element={<OrderAdmin />} />
-          <Route path="order/:id" element={<OrderDetailAdmin />} />
-          <Route path="categories" element={<CategoryList />} />
-          <Route path="categories/add" element={<AddCategory />} />
-          <Route path="categories/update/:id" element={<UpdateCategory />} />
-          <Route path="blog/postnew" element={<PostNews/>}/>
-          <Route path="blog/update/:id" element={<UpdateBlog/>}/>
-          <Route path="blog" element={<ListPost/>}/>
-          <Route path="voucher" element={<VoucherList />} />
-          <Route path="voucher/add" element={<AddVoucher />} />
-          <Route path="voucher/update/:id" element={<UpdateVoucher />} />
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'staff']}>
+                <Outlet />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="order" element={<OrderAdmin />} />
+            <Route path="order/:id" element={<OrderDetailAdmin />} />
+            <Route path="reviews/:id" element={<ReviewList />} />
+            <Route path="blog/postnew" element={<PostNews />} />
+            <Route path="blog/update/:id" element={<UpdateBlog />} />
+            <Route path="blog" element={<ListPost />} />
+            <Route path="blog/:id" element={<BlogDetail />} />
+            <Route path="reviews" element={<ProductReviewList />} />
+            <Route path="comments" element={<ProductCommentList />} />
+            <Route path="comments/:id" element={<ProductCommentDetail />} />
+          </Route>
+
+          {/* Các route chỉ dành riêng cho admin */}
+          <Route
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Outlet />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Dashboard />} />
+            <Route path="products" element={<ProductsList />} />
+            <Route path="products/:id" element={<ProductDetail />} />
+            <Route path="products/add" element={<AddProduct />} />
+            <Route path="products/update/:id" element={<UpdateProduct />} />
+            <Route path="products/update/attributes/:id" element={<UpdateAttributeProduct />} />
+            <Route path="products/products-deleted" element={<ProductsDeleted />} />
+            <Route path="users" element={<UsersList />} />
+            <Route path="users/:id" element={<UserDetail />} />
+            <Route path="users/add" element={<AddUser />} />
+            <Route path="users/update/:id" element={<UpdateUser />} />
+            <Route path="categories" element={<CategoryList />} />
+            <Route path="categories/add" element={<AddCategory />} />
+            <Route path="categories/update/:id" element={<UpdateCategory />} />
+            <Route path="voucher" element={<VoucherList />} />
+            <Route path="voucher/add" element={<AddVoucher />} />
+            <Route path="voucher/update/:id" element={<UpdateVoucher />} />
+          </Route>
         </Route>
         {/* Các route khác nếu có */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );
