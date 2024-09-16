@@ -42,7 +42,7 @@ const ReviewsDetail = ({ product }: ReviewDetailProps) => {
   return (
     <>
       <h2 className="text-3xl font-semibold mb-3">Đánh giá sản phẩm</h2>
-      <div className="my-4 ml-6 flex gap-3">
+      <div className="my-4 ml-6 lg:flex gap-3">
         <div className="flex gap-2 items-baseline mr-5">
           <div className="text-3xl">
             <span className="mr-1.5 text-[#fadb14] font-semibold">
@@ -55,20 +55,22 @@ const ReviewsDetail = ({ product }: ReviewDetailProps) => {
             - {totalReview} Đánh giá
           </span>
         </div>
-        <div className="py-2 px-4 border border-[#ffbace] rounded-md ">
-          <span>5 Sao ({product?.starCount[5]})</span>
-        </div>
-        <div className="py-2 px-4 border border-[#ffbace] rounded-md ">
-          <span>4 Sao ({product?.starCount[4]})</span>
-        </div>
-        <div className="py-2 px-4 border border-[#ffbace] rounded-md ">
-          <span>3 Sao ({product?.starCount[3]})</span>
-        </div>
-        <div className="py-2 px-4 border border-[#ffbace] rounded-md ">
-          <span>2 Sao ({product?.starCount[2]})</span>
-        </div>
-        <div className="py-2 px-4 border border-[#ffbace] rounded-md ">
-          <span>1 Sao ({product?.starCount[1]})</span>
+        <div className="flex flex-wrap gap-5">
+          <div className="py-2 px-4 border border-[#ffbace] rounded-md ">
+            <span>5 Sao ({product?.starCount[5]})</span>
+          </div>
+          <div className="py-2 px-4 border border-[#ffbace] rounded-md ">
+            <span>4 Sao ({product?.starCount[4]})</span>
+          </div>
+          <div className="py-2 px-4 border border-[#ffbace] rounded-md ">
+            <span>3 Sao ({product?.starCount[3]})</span>
+          </div>
+          <div className="py-2 px-4 border border-[#ffbace] rounded-md ">
+            <span>2 Sao ({product?.starCount[2]})</span>
+          </div>
+          <div className="py-2 px-4 border border-[#ffbace] rounded-md ">
+            <span>1 Sao ({product?.starCount[1]})</span>
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-1 mt-10 md:grid-cols-2 gap-y-11 gap-x-28">

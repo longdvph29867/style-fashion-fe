@@ -45,7 +45,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
           loading="lazy"
           decoding="async"
           data-nimg="fill"
-          className="object-contain object-center w-20 sm:w-[120px]"
+          className="object-contain object-center w-14 lg:w-20 sm:w-[120px]"
           src={productCart.product.thumbnail}
         />
         <a className="absolute inset-0" href="/product-detail" />
@@ -54,7 +54,9 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
         <div className="flex justify-between items-center gap-3 sm:gap-10">
           <div className="">
             <h3 className="text-base font-semibold">
-              <a href="/product-detail">{productCart.product.name}</a>
+              <a className="line-clamp-1" href="/product-detail">
+                {productCart.product.name}
+              </a>
             </h3>
             <div className="mt-1.5 sm:mt-2.5 text-sm text-[#334155]">
               {productCart.variant && productCart.variant.stock > 0 ? (

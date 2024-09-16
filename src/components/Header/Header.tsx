@@ -34,7 +34,7 @@ const Header = () => {
       } border-b border-slate-100`}
     >
       <div className="container mx-auto duration-300">
-        <div className="flex justify-between h-20">
+        <div className="flex gap-5 h-20">
           <div className="flex items-center lg:hidden flex-1">
             <button
               onClick={handleShowMenu}
@@ -70,7 +70,7 @@ const Header = () => {
             </button>
           </div>
           <div className="lg:flex-1 flex items-center">
-            <img src={imgLogo} alt="logo" className="w-48" />
+            <img src={imgLogo} alt="logo" className="w-40" />
           </div>
           <nav className="hidden lg:flex items-center">
             <Menu />

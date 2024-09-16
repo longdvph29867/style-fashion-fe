@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import categoryService from "../../services/categoryService";
 import { useQuery } from "@tanstack/react-query";
-import { CategoryTpype } from "../../types/categoryType";
+import { CategoryType } from "../../types/categoryType";
 
 const Menu = () => {
   const { data } = useQuery({
@@ -41,9 +41,9 @@ const Menu = () => {
             />
           </svg>
         </a>
-        <div className="group-hover:visible group-hover:opacity-100 invisible duration-300 absolute transform z-10 w-56 top-full left-0 opacity-0 translate-y-0">
+        <div className="group-hover:visible group-hover:opacity-100 invisible duration-300 absolute transform z-10 top-full left-0 opacity-0 translate-y-0">
           <ul className="rounded-lg shadow-lg border border-neutral-100 text-sm relative bg-white py-4 grid gap-1">
-            {data?.map((category: CategoryTpype) => {
+            {data?.map((category: CategoryType) => {
               return (
                 <li key={category.id} className="px-2">
                   <Link

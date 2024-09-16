@@ -54,3 +54,12 @@
   background-color: rgb(240, 240, 240);
   cursor: no-drop;
 }
+
+@media screen and (max-width: 680px) {
+  .label-tick {
+    height: 18px;
+    width: 18px;
+  }
+  .label-tick::after {
+  }
+}
