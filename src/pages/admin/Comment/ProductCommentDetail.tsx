@@ -9,6 +9,8 @@ import { Voucher } from "../../../types/voucher";
 import commentService from "../../../services/commentService";
 
 const ProductCommentDetail: React.FC = () => {
+    console.log(123);
+    
     // const params = new URLSearchParams(location.search);
     // const [totalVoucher, setTotalVoucher] = useState(0);
     // const [loading, setLoading] = useState(true);
