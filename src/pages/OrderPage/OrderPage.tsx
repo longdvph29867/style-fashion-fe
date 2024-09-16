@@ -10,6 +10,7 @@ import Item from "./Item";
 import { hiddenSpinner, showSpinner } from "../../util/util";
 import orderService from "../../services/orderService";
 import PaginationPage from "../../components/PaginationPage/PaginationPage";
+import { localUserService } from "../../services/localService";
 
 const OrderPage = () => {
   // const location = useLocation();
@@ -42,6 +43,14 @@ const OrderPage = () => {
   // const [userInfo, setUserInfo] = useState<any>(null);
   const userInfo = JSON.parse(localStorage.getItem("USER_INFO_FASHION") || "{}");
 
+  const infoUser = localUserService.get();
+
+  useEffect(() => {
+    if (!infoUser) {
+      window.location.href = "/auth/login";
+    }
+  }, [infoUser]);
+
 
   // const getLengthStatus = async (userId: any, statusCode: any) => {
   //   try {
@@ -65,7 +74,7 @@ const OrderPage = () => {
       // Lấy id từ đối tượng
       const userId = userInfo.id;
       const orderStatus = params.get("orderStatus");
-      console.log(orderStatus, 'orderStatus')
+      // console.log(orderStatus, 'orderStatus')
       // return
 
       if (orderStatus) {
@@ -116,7 +125,7 @@ const OrderPage = () => {
     fetchOrdersList();
   }, []);
   const onChange = (key: string) => {
-    console.log(key, 'key');
+    // console.log(key, 'key');
     params.set("page", "1");
     // console.log(location, 'location')
     // console.log(params.toString(), 'params.toString()')

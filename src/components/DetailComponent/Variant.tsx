@@ -9,7 +9,13 @@ interface VariantProps {
   keyReset?: number;
 }
 
-const Variant = ({ dataAttriubute, dataVariant, setImage, setVariant, keyReset }: VariantProps) => {
+const Variant = ({
+  dataAttriubute,
+  dataVariant,
+  setImage,
+  setVariant,
+  keyReset,
+}: VariantProps) => {
   const [attributeSelected, setAttributeSelected] = useState<{
     [key: string]: string;
   }>({});
@@ -36,7 +42,11 @@ const Variant = ({ dataAttriubute, dataVariant, setImage, setVariant, keyReset }
     };
   }, [dataAttriubute.length, dataVariant]);
 
-  const handleChangeAttribute = (key: string, idAttribute: string, image: undefined | string) => {
+  const handleChangeAttribute = (
+    key: string,
+    idAttribute: string,
+    image: undefined | string
+  ) => {
     const newAttribute = { ...attributeSelected };
     if (newAttribute[key] === idAttribute) {
       delete newAttribute[key];
@@ -52,6 +62,8 @@ const Variant = ({ dataAttriubute, dataVariant, setImage, setVariant, keyReset }
         }
       });
       setVariant(variant as IVariant);
+    } else {
+      setVariant(null);
     }
     if (dataAttriubute.length !== 1) {
       const invalidVariants: string[] = [];
@@ -90,9 +102,12 @@ const Variant = ({ dataAttriubute, dataVariant, setImage, setVariant, keyReset }
                 disabled={varinatIdInvalid.includes(variant._id)}
                 key={variant._id}
                 className={`button-variant ${
-                  attributeSelected[attr.name] === variant._id && "active-variant"
+                  attributeSelected[attr.name] === variant._id &&
+                  "active-variant"
                 }`}
-                onClick={() => handleChangeAttribute(attr.name, variant._id, variant.image)}
+                onClick={() =>
+                  handleChangeAttribute(attr.name, variant._id, variant.image)
+                }
               >
                 {variant.name}
               </button>

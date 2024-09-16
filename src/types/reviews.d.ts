@@ -3,7 +3,7 @@ type Review = {
   email: string;
   name: string;
   images: string[];
-  video: string;
+  video?: string;
   score: number;
   content: string;
   status: string;

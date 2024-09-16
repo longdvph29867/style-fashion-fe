@@ -58,8 +58,8 @@ const ListProductPage: React.FC = () => {
   // });
 
   const fetchData = async () => {
-    console.log('location.search', location.search);
-    console.log('queryParams', queryParams.toString());
+    // console.log('location.search', location.search);
+    // console.log('queryParams', queryParams.toString());
     // return
     showSpinner();
     try {
@@ -117,7 +117,7 @@ const ListProductPage: React.FC = () => {
   // };
 
   const onSubmitPriceRangeFilter = (values: any) => {
-    console.log(values, 'values');
+    // console.log(values, 'values');
     queryParams.set("fromPrice", values.fromPrice);
     queryParams.set("toPrice", values.toPrice);
     navigate(location.pathname + "?" + queryParams.toString());

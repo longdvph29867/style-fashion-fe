@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { visilibitySpiner } from "../../util/util";
 import productService from "../../services/productService";
+import ListComment from "../../components/Comment/ListComment";
 const DetailPage = () => {
   const { slug } = useParams<string>();
 
@@ -37,10 +38,11 @@ const DetailPage = () => {
         <DescriptionDetail product={data} />
         <div className="container mx-auto mt-12">
           <hr />
-          <div>
+          <div className="py-16">
             <ReviewsDetail product={data} />
-            <hr />
           </div>
+          <hr />
+          <ListComment idProduct={data?.id ?? ""} />
         </div>
       </div>
 

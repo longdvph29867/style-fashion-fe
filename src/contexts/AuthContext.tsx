@@ -13,10 +13,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const user = localUserService.get();
-    console.log("user", user);
+    // console.log("user", user);
     if (user && user.role) {
       setUserRole(user.role);
-      console.log("user.role", user.role);
+      // console.log("user.role", user.role);
     }
   }, []);
 

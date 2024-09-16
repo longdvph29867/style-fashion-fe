@@ -19,6 +19,14 @@ export type IVariant = {
   id: string;
 };
 
+export interface IStartCount {
+  "1": number;
+  "2": number;
+  "3": number;
+  "4": number;
+  "5": number;
+}
+
 export type IProduct = {
   name: string;
   slug: string;
@@ -38,4 +46,5 @@ export type IProduct = {
   likes: number;
   id: string;
   variants: IVariant[];
+  starCount: IStartCount;
 };
