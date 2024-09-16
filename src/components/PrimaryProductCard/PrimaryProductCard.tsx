@@ -14,7 +14,7 @@ const PrimaryProductCard = ({ product }: Props) => {
         />
       </div>
       <div className="grid grid-cols-3 gap-2.5 mt-2.5">
-        {gallery?.slice(0, 3).map((item, index) => (
+        {gallery?.slice(0, 3).map((item: any, index: any) => (
           <div key={index} className="relative pb-[100%]">
             <img
               className="object-cover w-full h-full rounded-2xl absolute left-0 top-0"

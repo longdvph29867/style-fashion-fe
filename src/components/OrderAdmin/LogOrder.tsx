@@ -1,6 +1,5 @@
 import { List } from 'antd';
 import dayjs from 'dayjs';
-import React from 'react'
 
 type Log = {
     _id: string;

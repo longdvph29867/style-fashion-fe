@@ -2,7 +2,6 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { message, Rate } from "antd";
 import {
   formartCurrency,
-  formartRating,
   hiddenSpinner,
   showSpinner,
 } from "../../../../util/util";

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { Link, useParams } from "react-router-dom";
-import { Breadcrumb, Image, Tabs, TabsProps, message } from "antd";
+import { Breadcrumb, Image, Tabs, TabsProps } from "antd";
 import { https } from "../../../config/axios";
 import ChildrenTab from "./ChildrenTab";
 import PaginationPage from "../../../components/PaginationPage/PaginationPage";

@@ -6,7 +6,6 @@ import { Link, useParams } from "react-router-dom";
 import { LoginType } from "../../types/login";
 import { hiddenSpinner, showSpinner } from "../../util/spinner";
 import { https } from "../../config/axios";
-import Header from "../../components/Header/Header";
 import imgBg from "../../assets/img/bg-login1.jpg";
 
 

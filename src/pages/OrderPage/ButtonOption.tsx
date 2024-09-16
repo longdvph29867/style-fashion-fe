@@ -1,6 +1,5 @@
 import { Button, message, Modal } from 'antd'
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import ReviewForm from './ReviewForm'
 import orderService from '../../services/orderService'
 import { hiddenSpinner, showSpinner } from '../../util/util'

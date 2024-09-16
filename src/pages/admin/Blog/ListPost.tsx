@@ -1,25 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Blog } from "../../../types/blog";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
 import { Link } from "react-router-dom";
-import { Breadcrumb, Image, message, Modal, Pagination, Table } from "antd";
+import { Breadcrumb, Image, message, Modal, Table } from "antd";
 import DOMPurify from "dompurify";
 
-type Props = {};
 
-const ListPost = (props: Props) => {
+const ListPost = () => {
   const [blogList, setBlogList] = useState<Blog[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const fetchData = async (page = 1) => {
+  const fetchData = async () => {
     try {
       showSpinner();
       const API = `/blogs`;
       const { data } = await https.get(API);
       setBlogList(data.results);
-      setTotalResults(data.totalResults);
       hiddenSpinner();
       setBlogList(data.results);
     } catch (error) {
@@ -28,18 +23,8 @@ const ListPost = (props: Props) => {
     }
   };
   useEffect(() => {
-    fetchData(currentPage);
-  }, [currentPage]);
-
-  const handlePageChange = (page: any) => {
-    setCurrentPage(page);
-    fetchData(page);
-  };
-
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
-  };
+    fetchData();
+  }, []);
 
   const handleDelete = async (id: string) => {
     showSpinner();
@@ -94,24 +79,14 @@ const ListPost = (props: Props) => {
       dataIndex: "content",
       key: "content",
       render: (text: string) => {
-        const maxLength = 50; // Độ dài tối đa của mô tả trước khi thêm dấu '...'
-        // return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
         return <h4 className="my-line-1"
           dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }}></h4>
       },
     },
-    // {
-    //   title: "View",
-    //   dataIndex: "view",
-    //   key: "view",
-    //   render: (text: number) => (
-    //     <span className="text-green-500">{text}</span>
-    //   ),
-    // },
     {
       title: "Thao tác",
       key: "action",
-      render: (text: string, record: Blog) => (
+      render: (_: string, record: Blog) => (
         <span>
           <Link to={`/admin/blog/${record._id}`} className="text-yellow-500">Chi tiết</Link>
           <button

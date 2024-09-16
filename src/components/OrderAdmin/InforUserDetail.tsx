@@ -1,14 +1,8 @@
 import React from 'react'
-import { Flex, Grid, List, Space, Steps, Typography, theme } from "antd";
-// import type { IEvent, IOrder } from "../../../interfaces";
-// import { useTranslate } from "@refinedev/core";
-import dayjs from "dayjs";
+import { List } from "antd";
 import {
-    ClockCircleOutlined,
     HistoryOutlined,
-    LoadingOutlined,
     PhoneOutlined,
-    ShopOutlined,
     UserOutlined,
 } from "@ant-design/icons";
 import { useMemo } from "react";

@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import {
     formartCurrency,
-    hiddenSpinner,
-    showSpinner,
 } from "../../../util/util";
-import { Link, useNavigate } from "react-router-dom";
-import { Breadcrumb, Button, Image, Modal, Select, Table, message } from "antd";
+import { Link } from "react-router-dom";
+import { Breadcrumb, Button, Image, Select, Table, message } from "antd";
 import { https } from "../../../config/axios";
 // import { Product } from "../../../types/productType";
 import PaginationPage from "../../../components/PaginationPage/PaginationPage";
@@ -13,9 +11,8 @@ import productService from "../../../services/productService";
 import { Product } from "../../../types/products";
 import React, { useRef } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
-import type { InputRef, TableColumnsType, TableColumnType } from 'antd';
+import type { InputRef, TableColumnType } from 'antd';
 import { Input, Space } from 'antd';
-import type { FilterDropdownProps } from 'antd/es/table/interface';
 
 const priceRanges = [
     { text: "Dưới 100k", value: 'under100' },
@@ -25,7 +22,6 @@ const priceRanges = [
 ];
 
 const ProductCommentList: React.FC = () => {
-    const navigate = useNavigate();
     const params = new URLSearchParams(location.search);
     const [totalProducts, setTotalProducts] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -38,10 +34,8 @@ const ProductCommentList: React.FC = () => {
 
 
     const [productList, setProductList] = useState<Product[]>([]);
-    const [currentSorter, setCurrentSorter] = useState<any>({}); // Lưu thông tin sorter hiện tại
 
     const [searchText, setSearchText] = useState('');
-    const [searchedColumn, setSearchedColumn] = useState('');
     const [categories, setCategories] = useState<any[]>([]);
     const searchInput = useRef<InputRef>(null);
 
@@ -157,45 +151,10 @@ const ProductCommentList: React.FC = () => {
         fetchData();
     }, [params.get('search'), currentPage]);
 
-    // useEffect(() => {
-    //   console.log("productList updated: ", productList);
-    // }, [productList]);
 
-    const handleDelete = async (id: string) => {
-        showSpinner();
-        try {
-            const data = await https.delete(`/products/${id}`);
-            if (data) {
-                message.success(data.data.message);
-                fetchData();
-                hiddenSpinner();
-            }
-        } catch (error) {
-            hiddenSpinner();
-            console.log(error);
-            message.error(error.response.data.message);
-        }
-    };
-
-    const { confirm } = Modal;
-
-    const showConfirm = (id: string) => {
-        confirm({
-            title: 'Bạn có chắc chắn muốn xóa?',
-            onOk() {
-                handleDelete(id);
-            },
-            onCancel() {
-                console.log('Cancel');
-            },
-            maskClosable: true,
-        });
-    };
 
     const handleSearch = (
         selectedKeys: string[],
-        confirm: FilterDropdownProps['confirm'],
-        dataIndex: any,
         close: () => void
     ) => {
         // confirm();
@@ -203,7 +162,6 @@ const ProductCommentList: React.FC = () => {
         window.history.replaceState(null, '', location.pathname + "?" + params.toString());
         console.log('params search: ', params.toString());
         setSearchText(selectedKeys[0]);
-        setSearchedColumn(dataIndex);
         console.log("searchText", searchText);
         close(); // Ẩn dropdown sau khi search
     };
@@ -215,7 +173,7 @@ const ProductCommentList: React.FC = () => {
 
 
     const getColumnSearchProps = (dataIndex: any): TableColumnType<any> => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+        filterDropdown: ({ setSelectedKeys, selectedKeys, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
                 <Input
                     className="input-search-product"
@@ -223,7 +181,7 @@ const ProductCommentList: React.FC = () => {
                     placeholder={`Search ${dataIndex}`}
                     value={selectedKeys[0]}
                     onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                    onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex, close)}
+                    onPressEnter={() => handleSearch(selectedKeys as string[], close)}
                     style={{ marginBottom: 8, display: 'block' }}
                 />
                 <Space>
@@ -231,7 +189,7 @@ const ProductCommentList: React.FC = () => {
                         className="btn-search-product"
                         type="primary"
                         onClick={() => {
-                            handleSearch(selectedKeys as string[], confirm, dataIndex, close);
+                            handleSearch(selectedKeys as string[], close);
                         }}
                         icon={<SearchOutlined />}
                         size="small"
@@ -461,7 +419,7 @@ const ProductCommentList: React.FC = () => {
             fixed: "right" as any,
             title: "Thao tác",
             key: "actions",
-            render: (text: any, record: Product) => (
+            render: (_: any, record: Product) => (
                 <>
                     <Link
                         to={`/admin/comments/${record.id}`}
@@ -490,7 +448,7 @@ const ProductCommentList: React.FC = () => {
                     dataSource={productList}
                     rowKey="id"
                     pagination={false}
-                    onChange={(pagination, filters, sorter) => handleTableChange(filters, sorter)}
+                    onChange={(_, filters, sorter) => handleTableChange(filters, sorter)}
                 />
                 {/* )} */}
                 <PaginationPage

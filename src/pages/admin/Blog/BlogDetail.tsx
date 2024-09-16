@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Blog } from "../../../types/blog";
 import { https } from "../../../config/axios";
-import { Spin, Typography, Image, Breadcrumb, Button } from "antd";
+import { Typography, Image, Breadcrumb, Button } from "antd";
 import DOMPurify from "dompurify";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 
@@ -11,7 +11,6 @@ const { Title, Paragraph } = Typography;
 const BlogDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [blog, setBlog] = useState<Blog | null>(null);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchBlogDetail = async () => {
@@ -24,7 +23,6 @@ const BlogDetail: React.FC = () => {
                 console.error("Error fetching blog detail:", error);
             } finally {
                 hiddenSpinner();
-                setLoading(false);
             }
         };
 

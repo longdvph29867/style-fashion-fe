@@ -5,7 +5,6 @@ import {
     Divider,
     Form,
     Image,
-    Input,
     Table,
 } from "antd";
 import React, { useEffect, useState } from "react";
@@ -69,12 +68,11 @@ const ProductDetail: React.FC = () => {
             columns.push({
                 title: attributes[0].name,  // "Màu"
                 dataIndex: 'attribute_0',
-                render: (text: any, _: any, index: number) => {
+                render: (_: any, __: any, index: number) => {
                     // Determine the row span for merging cells
                     const rowSpan = attributes[1]?.values.length || 1;
 
                     // Calculate the correct attribute value index based on the row span
-                    const attrValueIndex = Math.floor(index / rowSpan);
 
                     // Safely access the variant and its tier_index
                     const variant = variants[index];
@@ -112,7 +110,7 @@ const ProductDetail: React.FC = () => {
             columns.push({
                 title: attributes[1].name,  // "Size"
                 dataIndex: 'attribute_1',
-                render: (text: any, _: any, index: number) => {
+                render: (_: any, __: any, index: number) => {
                     // Safely access the variant and its tier_index
                     const variant = variants[index];
                     const tierIndex = variant?.tier_index;
@@ -139,7 +137,7 @@ const ProductDetail: React.FC = () => {
             {
                 title: 'Giá gốc',
                 dataIndex: 'originalPrice',
-                render: (text: any, _: any, index: number) => (
+                render: (_: any, __: any, index: number) => (
                     <div className="flex justify-left items-center">
                         <span className="text-xl">{variants[index]?.originalPrice}</span>
                     </div>
@@ -148,7 +146,7 @@ const ProductDetail: React.FC = () => {
             {
                 title: 'Giá khuyến mãi',
                 dataIndex: 'currentPrice',
-                render: (text: any, _: any, index: number) => (
+                render: (_: any, __: any, index: number) => (
                     <div className="flex justify-left items-center">
                         <span className="text-xl">{variants[index]?.currentPrice}</span>
                     </div>
@@ -157,7 +155,7 @@ const ProductDetail: React.FC = () => {
             {
                 title: 'Kho hàng',
                 dataIndex: 'stock',
-                render: (text: any, _: any, index: number) => (
+                render: (_: any, __: any, index: number) => (
                     <div className="flex justify-left items-center">
                         <span className="text-xl">{variants[index]?.stock}</span>
                     </div>
@@ -393,7 +391,7 @@ const ProductDetail: React.FC = () => {
                         </div>
 
 
-                        <div className="">
+                        {/* <div className="">
                             <Form.List name="fields">
                                 {(fields) => {
                                     return (
@@ -449,7 +447,7 @@ const ProductDetail: React.FC = () => {
                                 }}
                             </Form.List>
 
-                        </div>
+                        </div> */}
                     </div>
 
 

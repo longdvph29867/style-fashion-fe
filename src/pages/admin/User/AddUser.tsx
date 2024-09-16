@@ -4,18 +4,13 @@ import {
   Button,
   Form,
   Input,
-  InputNumber,
-  Radio,
   Select,
-  Upload,
   message,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
-import TextArea from "antd/es/input/TextArea";
 import { AddUserType } from "../../../types/userType";
 import { roleList } from "../../../constant/constant";
 

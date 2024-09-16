@@ -9,12 +9,10 @@ import { https } from "../../../config/axios";
 import { CategoryTpype } from "../../../types/categoryType";
 import PaginationPage from "../../../components/PaginationPage/PaginationPage";
 import categoryService from "../../../services/categoryService";
-import CategoriesListSkeleton from "../../../components/Skeleton/Admin/CategoriesListSkeleton";
 
 const CategoryList: React.FC = () => {
     const params = new URLSearchParams(location.search);
     const [totalCategory, setTotalCategory] = useState(0);
-    const [loading, setLoading] = useState(true);
     const limitPerPage = 10;
     const currentPage = params.get("page") ? Number(params.get("page")) : 1;
     const [categoriesList, setCategoriesList] = useState<CategoryTpype[]>([]);
@@ -23,7 +21,6 @@ const CategoryList: React.FC = () => {
         showSpinner();
         try {
             const { data } = await categoryService.getCategoryByPage(limitPerPage, currentPage);
-            setLoading(false);
             setCategoriesList(data.results);
             setTotalCategory(data.totalResults);
             window.scrollTo(0, 0);
@@ -57,7 +54,7 @@ const CategoryList: React.FC = () => {
             title: 'STT',
             dataIndex: 'index',
             key: 'index',
-            render: (text: any, record: any, index: number) => <span>{index + 1}</span>,
+            render: (_: any, __: any, index: number) => <span>{index + 1}</span>,
         },
         {
             title: 'Tên danh mục',
@@ -67,7 +64,7 @@ const CategoryList: React.FC = () => {
         {
             title: 'Thao tác',
             key: 'actions',
-            render: (text: any, record: any) => (
+            render: (_: any, record: any) => (
                 <div>
                     <Link to={`/admin/categories/update/${record.id}`} className="text-yellow-500">
                         Sửa

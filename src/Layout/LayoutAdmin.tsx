@@ -1,10 +1,8 @@
 import User from "../components/User/User";
-import Search from "../components/Admin/AdminMenu/Search/Search";
 import AdminMenu from "../components/Admin/AdminMenu/AdminMenu";
-import { localUserService } from "../services/localService";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
-import { Button, Drawer, DrawerProps, Layout, RadioChangeEvent } from "antd";
-import { Content, Footer, Header } from "antd/es/layout/layout";
+import { Outlet } from "react-router-dom";
+import { Button, Layout, } from "antd";
+import { Content, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import { useContext, useEffect, useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
@@ -16,16 +14,11 @@ function LayoutAdmin() {
   //   window.location.href = "/";
   // }
   const [collapsed, setCollapsed] = useState(false);
-  const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(true);
-  const [hasAccess, setHasAccess] = useState(false);
 
   const { userRole }: any = useContext(AuthContext);
 
-  const toggleCollapsed = () => {
-    setCollapsed((prevCollapsed) => !prevCollapsed);
-  };
+
   useEffect(() => {
     // responsive
     const handleResize = () => {

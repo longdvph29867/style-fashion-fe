@@ -1,8 +1,4 @@
-import React from "react";
-
-type Props = {};
-
-const ItemMyOrder = (props: Props) => {
+const ItemMyOrder = () => {
   return (
     <div className="sm:p-8 p-4">
       <div className="flex justify-between items-center">

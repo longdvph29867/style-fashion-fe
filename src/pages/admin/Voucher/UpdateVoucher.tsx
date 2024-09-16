@@ -2,7 +2,6 @@
 import {
     Breadcrumb,
     Button,
-    DatePicker,
     Form,
     Input,
     Select,
@@ -12,9 +11,7 @@ import React, { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import voucherService from "../../../services/voucherService";
-import { Voucher } from "../../../types/voucher";
 import dayjs from "dayjs";
-import { toZonedTime } from 'date-fns-tz'
 
 // const dataFake: Voucher = {
 //     "name": "Mã giảm giá 10%",
@@ -31,7 +28,6 @@ import { toZonedTime } from 'date-fns-tz'
 
 const UpdateVoucher: React.FC = () => {
     const navigate = useNavigate();
-    const [voucherDetail, setVoucherDetail] = React.useState<Voucher | null>(null);
     const { id } = useParams();
     // console.log(id);
     // console.log(dataFake);
@@ -45,7 +41,6 @@ const UpdateVoucher: React.FC = () => {
                 const { data } = await voucherService.getDetailVoucher(id);
                 if (data) {
                     console.log(data, 'data');
-                    setVoucherDetail(data);
                     console.log(data.validFrom, 'validFrom');
                     console.log(data.validTo, 'validTo');
                     form.setFieldsValue({
@@ -105,15 +100,6 @@ const UpdateVoucher: React.FC = () => {
         form.setFieldsValue({ exclude_promotions: value });
     };
 
-    const validateDateRange = (values: any) => {
-        const validFrom = values.validFrom ? dayjs(values.validFrom) : null;
-        const validTo = values.validTo ? dayjs(values.validTo) : null;
-
-        if (validFrom && validTo && validTo.isBefore(validFrom)) {
-            return Promise.reject('Thời gian kết thúc phải lớn hơn thời gian bắt đầu.');
-        }
-        return Promise.resolve();
-    };
     return (
         <>
             <Breadcrumb style={{ margin: '16px 0' }}>

@@ -7,9 +7,6 @@ import {
     Form,
     Image,
     Input,
-    InputNumber,
-    Radio,
-    Select,
     Space,
     Table,
     Upload,
@@ -20,26 +17,16 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
-import TextArea from "antd/es/input/TextArea";
-import { Checkbox } from 'antd';
-import type { GetProp } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import axios from "axios";
-import { FaRegTrashCan } from "react-icons/fa6";
-import { set } from "date-fns";
-import { v4 as uuidv4 } from 'uuid';
 import { Attribute, TieredVariant } from "../../../types/products";
-import { Variant } from "antd/es/form/hooks/useVariants";
 
 const AddProduct: React.FC = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const [checkboxCategoriesList, setCheckboxCategoriesList] = useState<any[]>([]);
     let [attributes, setAttributes] = useState([
     ]);
     // const [showPriceAndStock, setShowPriceAndStock] = useState(true);
     let [variants, setVariants] = useState<any>([]);
-    const [columns, setColumns] = useState<any[]>([]);
     const [attributeImages, setAttributeImages] = useState([]);
     const [product, setProduct] = useState<any>({}); // product detail
     const [originalVariants, setOriginalVariants] = useState([]);
@@ -47,8 +34,6 @@ const AddProduct: React.FC = () => {
 
     const [form] = Form.useForm();
 
-    const attributeDetail = product.attributes;
-    const variantsDetail = product.variants;
 
     const fetchProductDetail = async () => {
         showSpinner();
@@ -269,14 +254,13 @@ const AddProduct: React.FC = () => {
                 title: attributes[0].name,
                 dataIndex: 'attribute_0',
                 width: '20%',
-                render: (text: any, _: any, index: number) => {
+                render: (_: any, __: any, index: number) => {
                     const attributeValue = variants[index]?.attributes ? variants[index].attributes[0] : null;
                     const rowSpan = attributes[1]?.values.length || 1;
                     // console.log(rowSpan, 'rowSpan')
                     // const attrValueIndex = index % rowSpan;
                     // Calculate the correct attribute value index
                     const attrValueIndex = Math.floor(index / (attributes[1]?.values.length || 1));
-                    const currentValue = attributes[0]?.values[attrValueIndex] || {};
                     // const attrValueIndex = Math.floor(index / rowSpan);
 
                     return {
@@ -324,7 +308,7 @@ const AddProduct: React.FC = () => {
             columns.push({
                 title: attributes[1].name,
                 dataIndex: 'attribute_1',
-                render: (text: any, _: any, index: number) => {
+                render: (_: any, __: any, index: number) => {
                     const attributeValue = variants[index]?.attributes ? variants[index].attributes[1] : null;
 
                     return (
@@ -342,7 +326,7 @@ const AddProduct: React.FC = () => {
             {
                 title: 'Giá gốc',
                 dataIndex: 'originalPrice',
-                render: (text: any, _: any, index: number) => (
+                render: (_: any, __: any, index: number) => (
                     <Form.Item
                         name={['variants', index, 'originalPrice']}
                         initialValue={variants[index]?.originalPrice}
@@ -363,7 +347,7 @@ const AddProduct: React.FC = () => {
             {
                 title: 'Giá khuyến mãi',
                 dataIndex: 'currentPrice',
-                render: (text: any, _: any, index: number) => (
+                render: (_: any, __: any, index: number) => (
                     <Form.Item
                         name={['variants', index, 'currentPrice']}
                         initialValue={variants[index]?.currentPrice}
@@ -393,7 +377,7 @@ const AddProduct: React.FC = () => {
             {
                 title: 'Kho hàng',
                 dataIndex: 'stock',
-                render: (text: any, _: any, index: number) => (
+                render: (_: any, __: any, index: number) => (
                     <Form.Item
                         name={['variants', index, 'stock']}
                         initialValue={variants[index]?.stock}
@@ -483,14 +467,13 @@ const AddProduct: React.FC = () => {
             setIsInputChanged(true);
         }
         // console.log(variants, 'handleInputChange')
-        let updatedVariants; // Tạo biến để lưu trữ giá trị của newVariants
         // console.log(variants, 'variants')
 
         setVariants((prevVariants: any) => {
             const newVariants = [...prevVariants];
             // console.log()
             newVariants[index][field] = value;
-            updatedVariants = newVariants; // Lưu giá trị của newVariants vào biến updatedVariants
+            // updatedVariants = newVariants; // Lưu giá trị của newVariants vào biến updatedVariants
             return newVariants;
         });
 
@@ -506,13 +489,13 @@ const AddProduct: React.FC = () => {
             return updatedImages;
         });
     };
-    const fetchCategoryes = async () => {
-        const { data } = await https.get("/categories");
-        setCheckboxCategoriesList(data.results.map((category: any) => ({
-            label: category.name,
-            value: category.id,
-        })));
-    };
+    // const fetchCategoryes = async () => {
+    //     const { data } = await https.get("/categories");
+    //     // setCheckboxCategoriesList(data.results.map((category: any) => ({
+    //     //     label: category.name,
+    //     //     value: category.id,
+    //     // })));
+    // };
 
     const mergeVariantsByOldTierIndex = (oldVariants: any, newVariants: any) => {
         return newVariants.map((newVariant: any) => {
@@ -635,10 +618,10 @@ const AddProduct: React.FC = () => {
 
     };
 
-    useEffect(() => {
-        fetchCategoryes();
-        // form.setFieldsValue({ fields: [{ name: "", price: "", stock: "", discount: "", image: "" }] });
-    }, []);
+    // useEffect(() => {
+    //     fetchCategoryes();
+    //     // form.setFieldsValue({ fields: [{ name: "", price: "", stock: "", discount: "", image: "" }] });
+    // }, []);
 
     // Cập nhật variants và columns khi attributes thay đổi
     useEffect(() => {
@@ -647,8 +630,8 @@ const AddProduct: React.FC = () => {
             // console.log('!inputChanged')
             // console.log(variants, 'variants-useeffect-!inputChanged')
             // console.log(attributes, 'attributes-useeffect-!inputChanged')
-            const newColumns = createColumns(attributes);
-            setColumns(newColumns);
+            // const newColumns = createColumns(attributes);
+            // setColumns(newColumns);
             form.setFieldsValue({ variants: originalVariants });
             return;
         }
@@ -660,8 +643,8 @@ const AddProduct: React.FC = () => {
         form.setFieldsValue({ variants: mergedVariants });
         // form.setFieldsValue({ variants: newVariants });
         // console.log(variants, 'after-useeffect')
-        const newColumns = createColumns(attributes);
-        setColumns(newColumns);
+        // const newColumns = createColumns(attributes);
+        // setColumns(newColumns);
     }, [attributes]);
 
 
@@ -669,7 +652,7 @@ const AddProduct: React.FC = () => {
         // console.log('Form values:', values);
         // console.log('attribute image', attributeImages);
         // console.log(attributeImages, 'attributeImages')
-        let convertVariant = [];
+        let convertVariant: any[] = [];
         if (variants) {
             // console.log(variants, 'variants')
             const convertDataToDesiredFormat = (data: any, attributes: any) => {

@@ -1,11 +1,10 @@
-import { CheckoutType } from "../types/orderType";
 import { https } from "../config/axios";
 
 const orderService = {
-  createCOD(data: CheckoutType) {
+  createCOD(data: any) {
     return https.post(`orders`, data);
   },
-  createVNPAY(data: CheckoutType) {
+  createVNPAY(data: any) {
     return https.post(`orders/vnpay`, data);
   },
   createVnpayV2(orderId: string) {

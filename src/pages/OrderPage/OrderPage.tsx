@@ -1,10 +1,5 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import OrderSummary from "../../components/Checkout/OrderSummary";
-import PaymentMethod from "../../components/Checkout/PaymentMethod";
-import ShippingAddress from "../../components/Checkout/ShippingAddress";
-import cartService from "../../services/cartService";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { CartType } from "../../types/cartType";
 import { Tabs, TabsProps } from "antd";
 import Item from "./Item";
 import { hiddenSpinner, showSpinner } from "../../util/util";
@@ -18,20 +13,6 @@ const OrderPage = () => {
   // const userId = params.get("user");
   // const userId = '666eaa54b5ee1db4f34bb02c'
   const [ordersList, setOrdersList] = useState<any>(null);
-  const [paymentPendingList, setPaymentPendingList] = useState<any>(null);
-  const [confirmPendingList, setConfirmPendingList] = useState<any>(null);
-  const [prepareList, setPrepareList] = useState<any>(null);
-  const [shippingList, setShippingList] = useState<any>(null);
-  const [deliveredList, setDeliveredList] = useState<any>(null);
-  const [successList, setSuccessList] = useState<any>(null);
-  const [completeList, setCompleteList] = useState<any>(null);
-  const [cancelList, setCancelList] = useState<any>(null);
-  const [paymentFailedList, setPaymentFailedList] = useState<any>(null);
-
-  const [lengthWaitPayment, setLengthWaitPayment] = useState(0);
-  const [lengthWaitConfirm, setLengthWaitConfirm] = useState(0);
-  const [lengthPrepare, setLengthPrepare] = useState(0);
-  const [lengthShipping, setLengthShipping] = useState(0);
 
   const navigate = useNavigate();
   const location = useLocation();

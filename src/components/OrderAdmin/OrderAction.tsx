@@ -1,9 +1,8 @@
 // import { useTranslate, useUpdate } from "@refinedev/core";
-import { CheckCircleOutlined, CloseCircleOutlined, InfoCircleOutlined, DownOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, InfoCircleOutlined, DownOutlined } from "@ant-design/icons";
 import { Button, Dropdown, Menu, message, Modal, Space } from "antd";
 import { TableActionButton } from "./tableActionButton";
-import { actionAdminOrder, getNameByStatusCode, getNameByStatusCodeAdmin } from "../../util/constant";
-import { BikeWhiteIcon } from "../Icons/bike-white";
+import { getNameByStatusCodeAdmin } from "../../util/constant";
 import { MdDomainVerification } from "react-icons/md";
 import { TruckIcon } from "../Icons/truck";
 import { VerificationIcon } from "../Icons/verification";
@@ -24,7 +23,7 @@ type OrderActionProps = {
 
 
 
-export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList, onPage, fetchOrder }) => {
+export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList, onPage }) => {
     //   const t = useTranslate();
     //   const { mutate } = useUpdate({ resource: "orders", id: record.id });
     const [isModalOpen, setIsModalOpen] = useState(false);

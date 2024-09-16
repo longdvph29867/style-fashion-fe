@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
 import {
-  formartCurrency,
   hiddenSpinner,
   showSpinner,
 } from "../../../util/util";
 import { Link } from "react-router-dom";
 import { Breadcrumb, Button, Modal, Table, message } from "antd";
-import { https } from "../../../config/axios";
-import { IUser } from "../../../types/userType";
-import { CiCircleAlert } from "react-icons/ci";
-import { IoIosCheckboxOutline } from "react-icons/io";
 import voucherService from "../../../services/voucherService";
 import { Voucher } from "../../../types/voucher";
-import { format, set } from 'date-fns';
-import PaginationPage from "../../../components/PaginationPage/PaginationPage";
+import { format } from 'date-fns';
 
 const VoucherList: React.FC = () => {
   // const params = new URLSearchParams(location.search);
@@ -86,7 +80,7 @@ const VoucherList: React.FC = () => {
       title: 'STT',
       dataIndex: 'index',
       key: 'index',
-      render: (text: any, record: any, index: any) => <span>{index + 1}</span>,
+      render: (_: any, __: any, index: any) => <span>{index + 1}</span>,
     },
     {
       title: 'Tên',
@@ -107,7 +101,7 @@ const VoucherList: React.FC = () => {
       title: 'Loại',
       dataIndex: 'type',
       key: 'type',
-      render: (text: any, record: any) => (
+      render: (_: any, record: any) => (
         <span>{record.type === 'amount' ? 'Giá trị cố định' : 'Phần trăm'}</span>
       ),
     },
@@ -126,7 +120,7 @@ const VoucherList: React.FC = () => {
     {
       title: 'Thao tác',
       key: 'actions',
-      render: (text: any, record: any) => (
+      render: (_: any, record: any) => (
         <div className="space-x-2">
           <Link
             to={`/admin/voucher/update/${record.id}`}

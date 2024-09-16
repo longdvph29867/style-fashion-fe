@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import ProductCard from "./ProductCard/ProductCard";
 
 type Props = {
-  productsSame: Product[];
+  productsSame: any[];
 };
 
 const ProductsSame: React.FC<Props> = ({ productsSame }) => {

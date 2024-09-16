@@ -163,9 +163,9 @@ header.show-mobile .menu-mobile {
   border-radius: 9999px;
 }
 
-.slider-product .swiper {
-  /* overflow: visible; */
-}
+/* .slider-product .swiper { */
+/* overflow: visible; */
+/* } */
 
 .slider-product .swiper-pagination-horizontal {
   opacity: 0;
@@ -210,16 +210,16 @@ body .ant-modal-mask {
   background-color: #ff4d4f !important;
 }
 
-.order-client {
-  /* min-width: 1248px; */
-}
+/* .order-client { */
+/* min-width: 1248px; */
+/* } */
 
-.order-client .ant-tabs-nav * {
-  /* display: flex !important; */
-  /* grid-template-columns: repeat(7, 1fr) !important; */
-  /* width: 100% !important; */
-  /* min-width: 1060px; */
-}
+/* .order-client .ant-tabs-nav * { */
+/* display: flex !important; */
+/* grid-template-columns: repeat(7, 1fr) !important; */
+/* width: 100% !important; */
+/* min-width: 1060px; */
+/* } */
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab {
   display: flex !important;
@@ -348,4 +348,8 @@ body .ant-modal-mask {
 
 .ant-steps-icon {
   color: #fe385c !important;
+}
+
+.ant-steps .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title::after {
+  background-color: #fe385c !important;
 }

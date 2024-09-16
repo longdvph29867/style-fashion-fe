@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { hiddenSpinner, showSpinner } from '../../../util/util'
 import { https } from "../../../config/axios";
-import { Button, Modal, Popconfirm, Rate, message } from 'antd';
+import { Button, Modal, Rate, message } from 'antd';
 
 
 type Props = {

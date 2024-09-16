@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
-import { Breadcrumb, Button, Image, message, Select, Table, Tabs, TabsProps } from "antd";
-import Item from "./Item";
-import { formartCurrency, hiddenSpinner, showSpinner } from "../../../util/util";
+import { Breadcrumb, Image, message, Select, Table } from "antd";
+import { formartCurrency } from "../../../util/util";
 import orderService from "../../../services/orderService";
-import { getNameByStatusCode, orderStatusValue } from "../../../util/constant";
-import { render } from "react-dom";
+import { orderStatusValue } from "../../../util/constant";
 import { Link } from "react-router-dom";
-import { TableRowSelection } from "antd/es/table/interface";
 import { OrderStatus } from "../../../components/OrderAdmin/status";
 import { PaymentMethod } from "../../../components/OrderAdmin/paymentMethod";
 import { OrderActions } from "../../../components/OrderAdmin/OrderAction";
@@ -14,8 +11,6 @@ import PaginationPage from "../../../components/PaginationPage/PaginationPage";
 
 const OrderAdmin = () => {
   const [ordersList, setOrdersList] = useState<any>(null);
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const params = new URLSearchParams(location.search);
   const [totalOrders, setTotalOrders] = useState(0);
@@ -110,15 +105,6 @@ const OrderAdmin = () => {
   useEffect(() => {
     fetchOrdersList();
   }, [currentPage]);
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection: any = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
 
   const statusFilters = orderStatusValue.map((status) => ({
     text: status.name,
@@ -212,7 +198,7 @@ const OrderAdmin = () => {
       title: 'Người dùng',
       dataIndex: ['shippingAddress', 'name'],
       key: 'recipientName',
-      render: (text: any, record: any) => <Link to={`/admin/users/${record.user}`}>{record.shippingAddress.name}</Link>,
+      render: (_: any, record: any) => <Link to={`/admin/users/${record.user}`}>{record.shippingAddress.name}</Link>,
     },
     {
       title: 'Ngày tạo',
@@ -246,7 +232,7 @@ const OrderAdmin = () => {
         dataSource={ordersList}
         columns={columns}
         rowKey="_id"
-        onChange={(pagination, filters, sorter) => handleTableChange(filters, sorter)}
+        onChange={(_, filters, sorter) => handleTableChange(filters, sorter)}
       />
       <PaginationPage
         current={currentPage}

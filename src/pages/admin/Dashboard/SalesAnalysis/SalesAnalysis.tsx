@@ -1,5 +1,5 @@
 import { FC, useEffect, useMemo, useState } from "react";
-import { DatePicker, DatePickerProps, Divider, Skeleton } from "antd";
+import { Skeleton } from "antd";
 import TitleDashboard from "../../../../components/Common/Admin/TitleDashboard/TitleDashboard";
 import { Chart } from "react-google-charts";
 import { IOrderStatistic } from "../../../../types/admin/dashboard";
@@ -85,10 +85,10 @@ const SalesAnalysis: FC = () => {
   const onChangeTime = (type: string, time: string) => {
     const year = moment(time, "DD-MM-YYYY").year();
     let timeFomart;
-    if(type == "week") {
+    if (type == "week") {
       timeFomart = moment(time, "DD-MM-YYYY").week();
     }
-    else if(type == "month") {
+    else if (type == "month") {
       timeFomart = moment(time, "DD-MM-YYYY").month() + 1;
     }
     else {
@@ -123,9 +123,9 @@ const SalesAnalysis: FC = () => {
                 options={options}
               />
             ) : <Skeleton.Button
-            active
-            className="!w-full !h-80 !rounded-2xl"
-          />}
+              active
+              className="!w-full !h-80 !rounded-2xl"
+            />}
           </div>
         </div>
         <div className="border" />
