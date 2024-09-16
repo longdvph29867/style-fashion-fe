@@ -18,6 +18,8 @@ import commentService from "../../../services/commentService";
 import { render } from "react-dom";
 
 const ProductCommentDetail: React.FC = () => {
+    console.log(123);
+    
     // const params = new URLSearchParams(location.search);
     // const [totalVoucher, setTotalVoucher] = useState(0);
     // const [loading, setLoading] = useState(true);

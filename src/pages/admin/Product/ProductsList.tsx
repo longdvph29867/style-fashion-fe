@@ -25,6 +25,7 @@ const priceRanges = [
 ];
 
 const ProductsList: React.FC = () => {
+  
   const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
   const [totalProducts, setTotalProducts] = useState(0);

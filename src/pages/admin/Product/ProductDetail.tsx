@@ -15,7 +15,6 @@ import { https } from "../../../config/axios";
 import TextArea from "antd/es/input/TextArea";
 import { BsDot } from "react-icons/bs";
 import { Attribute } from "../../../types/products";
-import ReactPlayer from 'react-player'
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 
 

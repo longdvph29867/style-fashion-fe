@@ -38,7 +38,6 @@ import PostNews from "./pages/admin/Blog/PostNews";
 import DetailBlog from "./components/Blog/DetailBlog";
 import ListPost from "./pages/admin/Blog/ListPost";
 import UpdateBlog from "./pages/admin/Blog/UpdateBlog";
-import AboutPage from "./components/About/AboutPage";
 import VoucherList from "./pages/admin/Voucher/VoucherList";
 import AddVoucher from "./pages/admin/Voucher/AddVoucher";
 import UpdateVoucher from "./pages/admin/Voucher/UpdateVoucher";

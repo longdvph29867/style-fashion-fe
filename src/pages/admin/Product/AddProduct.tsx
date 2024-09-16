@@ -5,8 +5,6 @@ import {
   Divider,
   Form,
   Input,
-  InputNumber,
-  Radio,
   Select,
   Space,
   Switch,
@@ -20,11 +18,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
 import TextArea from "antd/es/input/TextArea";
-import { Checkbox } from 'antd';
-import type { GetProp } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import axios from "axios";
-import { Attribute, AttributeValue, TieredVariant, Variant } from "../../../types/products";
+import { Attribute, AttributeValue, Variant } from "../../../types/products";
 
 const AddProduct: React.FC = () => {
   const navigate = useNavigate();
