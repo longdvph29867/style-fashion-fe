@@ -99,8 +99,9 @@ function App() {
           <Route path="blog" element={<BlogPage />} />
           <Route path="blog/:id" element={<DetailBlog />} />
         </Route>
+        <Route path="forgot-password/:token" element={<ResetPassword />} />
         <Route path="/auth" element={<LoginLayout />}>
-          <Route path="verify-email/:token" element={<ResetPassword />} />
+          {/* <Route path="verify-email/:token" element={<ResetPassword />} /> */}
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
