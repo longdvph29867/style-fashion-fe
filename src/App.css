@@ -349,3 +349,7 @@ body .ant-modal-mask {
 .ant-steps-icon {
   color: #fe385c !important;
 }
+
+.ant-steps .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title::after {
+  background-color: #fe385c !important;
+}
