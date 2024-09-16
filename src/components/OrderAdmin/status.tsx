@@ -1,21 +1,16 @@
 import {
     BellOutlined,
     CheckCircleOutlined,
-    ClockCircleOutlined,
     CloseCircleOutlined,
-    FileDoneOutlined,
     InfoCircleOutlined,
-    CheckOutlined,
     CreditCardOutlined
 } from "@ant-design/icons";
 //   import { useTranslate } from "@refinedev/core";
 import { Tag } from "antd";
 import { getNameByStatusCode } from "../../util/constant";
 //   import { BikeIcon, BikeWhiteIcon } from "../../icons";
-import { FaShippingFast } from "react-icons/fa";
 import { BikeWhiteIcon } from "../Icons/bike-white";
 import { PackageIcon } from "../Icons/package";
-import Icon from "@ant-design/icons";
 import { RefundIcon } from "../Icons/refund-icon";
 
 

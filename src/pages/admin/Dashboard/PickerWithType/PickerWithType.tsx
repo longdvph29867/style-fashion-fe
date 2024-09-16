@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
-import type { DatePickerProps, TimePickerProps } from "antd";
-import { DatePicker, Select, Space, TimePicker } from "antd";
-import moment from "moment";
+import { useEffect, useState } from "react";
+import { DatePicker, Select, Space } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 
 const { Option } = Select;
@@ -39,7 +37,7 @@ const PickerWithType = ({ onChange }: Props) => {
   // const handleChange = (date: Dayjs | null, dateString: string) => {
   //   onChange(type, dateString);
   // };
-  const handleChange = (date: Dayjs | null, dateString: string | string[]) => {
+  const handleChange = (date: Dayjs | null,) => {
     setSelectedDate(date);
   };
 

@@ -9,7 +9,7 @@ type Porps = {
   theme?: string;
   currentUrl: null | string;
 };
-const PaginationPage = ({ current, total, pageSize, theme, currentUrl }: Porps) => {
+const PaginationPage = ({ current, total, pageSize, currentUrl }: Porps) => {
   const navigate = useNavigate();
   const location = useLocation();
   let params = new URLSearchParams(location.search);

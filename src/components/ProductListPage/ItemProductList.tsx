@@ -1,8 +1,5 @@
-import React from "react";
 
-type Props = {};
-
-const ItemProductList = (props: Props) => {
+const ItemProductList = () => {
   return (
     <div className="relative cursor-pointer bg-transparent duration-200 hover:-translate-y-4 h-full justify-between">
       <div className="relative flex-shrink-0 bg-slate-50 rounded-3xl overflow-hidden z-1">

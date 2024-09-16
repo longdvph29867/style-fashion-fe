@@ -1,13 +1,12 @@
 import { Skeleton } from "antd";
-import React from "react";
 
 type Props = {
   value: number;
-  rows: number;
+  // rows: number;
   height: number;
 };
 
-const SkeletionList = ({ value, rows, height }: Props) => {
+const SkeletionList = ({ value, height }: Props) => {
   const array = new Array(value).fill(0);
   return array.map((item, index) => (
     <div key={item + index} className="flex flex-col w-full">

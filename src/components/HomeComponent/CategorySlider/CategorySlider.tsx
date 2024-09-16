@@ -3,7 +3,6 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import Title from "../../Title/Title";
 import "./customSlide.css";
-type Props = {};
 const listData: {
   content: string;
   title: string;
@@ -11,37 +10,37 @@ const listData: {
   img: string;
   color: string;
 }[] = [
-  {
-    content: "Explore new arrivals",
-    title: `Explore new arrivals <br />from top brands`,
-    link: "#",
-    img: "https://ciseco-nextjs.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F1.fa5c86b4.png&w=750&q=75",
-    color: "bg-yellow-50",
-  },
-  {
-    content: "Digital gift cards",
-    title: `Give the gift <br /> of choice`,
-    link: "#",
-    img: "https://ciseco-nextjs.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F5.fcd9d1db.png&w=750&q=75",
-    color: "bg-red-50",
-  },
-  {
-    content: "Sale collection",
-    title: `Up to <br /> 80% off retail`,
-    link: "#",
-    img: "https://ciseco-nextjs.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F4.0ee67265.png&w=750&q=75",
-    color: "bg-blue-50",
-  },
-  {
-    content: "Sale collection",
-    title: `Up to <br /> 80% off retail`,
-    link: "#",
-    img: "https://ciseco-nextjs.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F3.8cfc0955.png&w=750&q=75",
-    color: "bg-green-50",
-  },
-];
+    {
+      content: "Explore new arrivals",
+      title: `Explore new arrivals <br />from top brands`,
+      link: "#",
+      img: "https://ciseco-nextjs.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F1.fa5c86b4.png&w=750&q=75",
+      color: "bg-yellow-50",
+    },
+    {
+      content: "Digital gift cards",
+      title: `Give the gift <br /> of choice`,
+      link: "#",
+      img: "https://ciseco-nextjs.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F5.fcd9d1db.png&w=750&q=75",
+      color: "bg-red-50",
+    },
+    {
+      content: "Sale collection",
+      title: `Up to <br /> 80% off retail`,
+      link: "#",
+      img: "https://ciseco-nextjs.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F4.0ee67265.png&w=750&q=75",
+      color: "bg-blue-50",
+    },
+    {
+      content: "Sale collection",
+      title: `Up to <br /> 80% off retail`,
+      link: "#",
+      img: "https://ciseco-nextjs.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F3.8cfc0955.png&w=750&q=75",
+      color: "bg-green-50",
+    },
+  ];
 
-const CategorySlider = (props: Props) => {
+const CategorySlider = () => {
   const settings = {
     dots: false,
     infinite: true,
@@ -87,7 +86,7 @@ const CategorySlider = (props: Props) => {
       <Title
         title="Danh mục"
         content="Các sản phẩm tuyệt vời đang chờ bạn"
-        // className="mb-10"
+      // className="mb-10"
       />
       <div className="mx-[-12px]">
         <Slider {...settings}>

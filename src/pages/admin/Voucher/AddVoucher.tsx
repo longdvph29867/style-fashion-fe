@@ -12,7 +12,6 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import voucherService from "../../../services/voucherService";
-import dayjs from "dayjs";
 
 const AddVoucher: React.FC = () => {
   const navigate = useNavigate();
@@ -51,15 +50,7 @@ const AddVoucher: React.FC = () => {
     console.log("Failed:", errorInfo);
   };
 
-  const validateDateRange = (values: any) => {
-    const validFrom = values.validFrom ? dayjs(values.validFrom) : null;
-    const validTo = values.validTo ? dayjs(values.validTo) : null;
 
-    if (validFrom && validTo && validTo.isBefore(validFrom)) {
-      return Promise.reject('Thời gian kết thúc phải lớn hơn thời gian bắt đầu.');
-    }
-    return Promise.resolve();
-  };
   return (
     <>
       <Breadcrumb style={{ margin: '16px 0' }}>

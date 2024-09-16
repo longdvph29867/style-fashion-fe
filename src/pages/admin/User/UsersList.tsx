@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  formartCurrency,
   hiddenSpinner,
   showSpinner,
 } from "../../../util/util";
@@ -12,13 +11,11 @@ import { CiCircleAlert } from "react-icons/ci";
 import { IoIosCheckboxOutline } from "react-icons/io";
 import userService from "../../../services/userService";
 import PaginationPage from "../../../components/PaginationPage/PaginationPage";
-import UserListSkeleton from "../../../components/Skeleton/Admin/UserListSkeleton";
 
 const UsersList: React.FC = () => {
   const params = new URLSearchParams(location.search);
   const [totalUsers, setTotalUser] = useState(0);
 
-  const [loading, setLoading] = useState(true);
   const limitPerPage = 15;
   const currentPage = params.get("page") ? Number(params.get("page")) : 1;
   params.set("limit", limitPerPage.toString());
@@ -76,7 +73,6 @@ const UsersList: React.FC = () => {
       console.log("queryUrl", queryUrl);
 
       const { data } = await userService.getAllUsersV2(queryUrl);
-      setLoading(false);
       setUsersList(data.results);
       setTotalUser(data.totalResults);
       window.scrollTo(0, 0);
@@ -133,7 +129,7 @@ const UsersList: React.FC = () => {
       title: 'Hình ảnh',
       dataIndex: 'image',
       key: 'image',
-      render: (text: any, record: any) => (
+      render: (_: any, record: any) => (
         <Image
           src={record.image}
           alt={record.name}
@@ -153,7 +149,7 @@ const UsersList: React.FC = () => {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
-      render: (text: any, record: any) => (
+      render: (_: any, record: any) => (
         <>
           <p>{record.email}</p>
           <div className="flex gap-1 items-center">
@@ -180,7 +176,7 @@ const UsersList: React.FC = () => {
       title: 'Số điện thoại',
       dataIndex: 'phoneNumber',
       key: 'phoneNumber',
-      render: (text: any, record: any) => (
+      render: (_: any, record: any) => (
         <>
           <span>{record.phoneNumber}</span>
           <div className="flex gap-1 items-center">
@@ -207,7 +203,7 @@ const UsersList: React.FC = () => {
       title: 'Quận/Huyện',
       dataIndex: 'shippingAddress',
       key: 'districtName',
-      render: (text: any, record: any) => (
+      render: (_: any, record: any) => (
         <p>{record.shippingAddress[0]?.districtName || "..."}</p>
       ),
       // sorter: true,
@@ -216,7 +212,7 @@ const UsersList: React.FC = () => {
       title: 'Tỉnh/Thành phố',
       dataIndex: 'shippingAddress',
       key: 'provinceName',
-      render: (text: any, record: any) => (
+      render: (_: any, record: any) => (
         <p>{record.shippingAddress[0]?.provinceName || "..."}</p>
       ),
       // sorter: true,
@@ -286,7 +282,7 @@ const UsersList: React.FC = () => {
     {
       title: 'Thao tác',
       key: 'actions',
-      render: (text: any, record: any) => (
+      render: (_: any, record: any) => (
         <div className="space-x-2">
           <Link
             to={`/admin/users/${record.id}`}
@@ -315,7 +311,7 @@ const UsersList: React.FC = () => {
         <Breadcrumb.Item>Người dùng</Breadcrumb.Item>
       </Breadcrumb>
       <Table columns={columns} dataSource={usersList} pagination={false}
-        onChange={(pagination, filters, sorter) => handleTableChange(filters, sorter)}
+        onChange={(_, filters, sorter) => handleTableChange(filters, sorter)}
 
       />
 

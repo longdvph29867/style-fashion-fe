@@ -12,13 +12,11 @@ import {
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
 import { https } from "../../config/axios";
 import { hiddenSpinner, showSpinner } from "../../util/util";
 import orderService from "../../services/orderService";
 
-const desc = ['Tệ', 'Không hài lòng', 'Bình thường', 'Hài lòng', 'Tuyệt vời'];
 
 type Props = {
     orderId: string;
@@ -29,10 +27,8 @@ type Props = {
     fetchOrdersList: any;
 };
 
-const ReviewForm: React.FC<Props> = ({ orderId, userInfo, setOrderList, setReviewFormOpen, onPage, fetchOrdersList }: Props) => {
-    const navigate = useNavigate();
+const ReviewForm: React.FC<Props> = ({ orderId, userInfo, setOrderList, setReviewFormOpen, onPage }: Props) => {
     const [form] = Form.useForm();
-    const [starValue, setStarValue] = useState(5);
 
     const [orderDetail, setOrderDetail] = useState<any>(null);
 

@@ -2,7 +2,6 @@
 import {
   Breadcrumb,
   Button,
-  Divider,
   Form,
   Input,
   Select,
@@ -19,7 +18,6 @@ import { https } from "../../../config/axios";
 import TextArea from "antd/es/input/TextArea";
 import { Checkbox } from 'antd';
 import type { GetProp } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import "../../../App.css";
 
 const UpdateProduct: React.FC = () => {

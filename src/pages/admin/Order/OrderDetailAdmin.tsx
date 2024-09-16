@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Button, message, Modal, Select } from 'antd';
 import { formartCurrency, hiddenSpinner, showSpinner } from '../../../util/util';
 import orderService from '../../../services/orderService';
-import { getNameByStatusCode, orderStatusValue } from '../../../util/constant';
+import { getNameByStatusCode, } from '../../../util/constant';
 import { StepStatus } from '../../../components/OrderAdmin/StepStatus';
 import ProductOrderDetail from '../../../components/OrderAdmin/productOrderDetail';
 import InforUserDetail from '../../../components/OrderAdmin/InforUserDetail';
 import LogOrder from '../../../components/OrderAdmin/LogOrder';
 import { OrderActions } from '../../../components/OrderAdmin/OrderAction';
 
-type Props = {}
 
-
-const OrderDetailAdmin = (props: Props) => {
+const OrderDetailAdmin = () => {
   window.scrollTo(0, 0);
   const { id } = useParams();
 

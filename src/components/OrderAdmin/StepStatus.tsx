@@ -1,23 +1,13 @@
-import { Flex, Grid, List, Space, Steps, Typography, theme } from "antd";
+import { Flex, Steps } from "antd";
 // import type { IEvent, IOrder } from "../../../interfaces";
 // import { useTranslate } from "@refinedev/core";
-import dayjs from "dayjs";
 import {
-    ClockCircleOutlined,
-    HistoryOutlined,
-    LoadingOutlined,
-    PhoneOutlined,
-    ShopOutlined,
-    UserOutlined,
     CloseCircleOutlined,
-    CheckOutlined,
-    CheckCircleOutlined,
     BellOutlined,
     ShoppingOutlined,
     CarryOutOutlined
 
 } from "@ant-design/icons";
-import { useMemo } from "react";
 import { PackageIcon } from "../Icons/package";
 import { BikeWhiteIcon } from "../Icons/bike-white";
 // import { BikeWhiteIcon } from "../../icons";
@@ -28,41 +18,6 @@ type Props = {
 };
 
 export const StepStatus = ({ order }: Props) => {
-    //   const t = useTranslate();
-    const { token } = theme.useToken();
-    const breakpoints = Grid.useBreakpoint();
-    // const { mode } = useConfigProvider();
-
-    const details = useMemo(() => {
-        const list: {
-            icon: React.ReactNode;
-            title: string;
-            description: string;
-        }[] = [
-                {
-                    icon: <UserOutlined />,
-                    title: "Khách hàng",
-                    description: order?.shippingAddress?.name,
-                },
-                {
-                    icon: <PhoneOutlined />,
-                    title: "Số điện thoại",
-                    description: order?.shippingAddress?.phoneNumber,
-                },
-                {
-                    icon: <UserOutlined />,
-                    title: "Địa chỉ giao hàng",
-                    description: `${order?.user.firstName} ${order?.user.lastName}`,
-                },
-                {
-                    icon: <HistoryOutlined />,
-                    title: "Ngày tạo",
-                    description: order?.createdAt,
-                },
-            ];
-
-        return list;
-    }, [order]);
 
     const stepsValue = [
         { code: 2, name: "Chờ xác nhận", message: "Chờ shop xác nhận đơn hàng cho bạn!" },

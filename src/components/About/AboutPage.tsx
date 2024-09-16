@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   FaSmile,
   FaChartLine,
@@ -11,7 +10,6 @@ import CountUp from "react-countup";
 import { useInView } from "react-intersection-observer";
 import "./About.css";
 const AboutPage = () => {
-  const [hoveredStep, setHoveredStep] = useState<number | null>(null);
   const { ref: ref1, inView: inView1 } = useInView({
     triggerOnce: true,
     threshold: 0.5,
@@ -28,17 +26,6 @@ const AboutPage = () => {
     triggerOnce: true,
     threshold: 0.5,
   });
-  const images = [
-    {
-      src1: "https://samar-ruddy.vercel.app/Samar/pic1_2.jpg",
-      title: "Software Landing",
-    },
-    { src1: "https://samar-ruddy.vercel.app/Samar/pic2_1.jpg" },
-    { src1: "https://samar-ruddy.vercel.app/Samar/pic3_1.jpg" },
-    { src1: "https://samar-ruddy.vercel.app/Samar/pic4.jpg" },
-    { src1: "https://samar-ruddy.vercel.app/Samar/pic5.jpg" },
-    { src1: "https://samar-ruddy.vercel.app/Samar/pic6.jpg" },
-  ];
   return (
     <div>
       <div className="p-8">
@@ -250,9 +237,8 @@ const AboutPage = () => {
         <div className="space-y-8">
           <div
             ref={ref1}
-            className={`transition-transform duration-700 ease-in-out transform ${
-              inView1 ? "translate-x-0 opacity-100" : "translate-x-20 opacity-0"
-            } p-6 bg-white text-black rounded-lg shadow-lg w-full lg:w-96 hover:bg-gradient-to-r hover:from-pink-500 hover:to-orange-400 hover:text-white`}
+            className={`transition-transform duration-700 ease-in-out transform ${inView1 ? "translate-x-0 opacity-100" : "translate-x-20 opacity-0"
+              } p-6 bg-white text-black rounded-lg shadow-lg w-full lg:w-96 hover:bg-gradient-to-r hover:from-pink-500 hover:to-orange-400 hover:text-white`}
           >
             <div className="flex items-center mb-4">
               <FaLightbulb className="text-3xl text-pink-500 mr-4" />
@@ -268,9 +254,8 @@ const AboutPage = () => {
 
           <div
             ref={ref2}
-            className={`transition-transform duration-700 ease-in-out transform ${
-              inView2 ? "translate-x-0 opacity-100" : "translate-x-20 opacity-0"
-            } p-6 bg-white text-black rounded-lg shadow-lg w-full lg:w-96 hover:bg-gradient-to-r hover:from-pink-500 hover:to-orange-400 hover:text-white`}
+            className={`transition-transform duration-700 ease-in-out transform ${inView2 ? "translate-x-0 opacity-100" : "translate-x-20 opacity-0"
+              } p-6 bg-white text-black rounded-lg shadow-lg w-full lg:w-96 hover:bg-gradient-to-r hover:from-pink-500 hover:to-orange-400 hover:text-white`}
           >
             <div className="flex items-center mb-4">
               <FaCode className="text-3xl text-pink-500 mr-4" />
@@ -284,9 +269,8 @@ const AboutPage = () => {
 
           <div
             ref={ref3}
-            className={`transition-transform duration-700 ease-in-out transform ${
-              inView3 ? "translate-x-0 opacity-100" : "translate-x-20 opacity-0"
-            } p-6 bg-white text-black rounded-lg shadow-lg w-full lg:w-96 hover:bg-gradient-to-r hover:from-pink-500 hover:to-orange-400 hover:text-white`}
+            className={`transition-transform duration-700 ease-in-out transform ${inView3 ? "translate-x-0 opacity-100" : "translate-x-20 opacity-0"
+              } p-6 bg-white text-black rounded-lg shadow-lg w-full lg:w-96 hover:bg-gradient-to-r hover:from-pink-500 hover:to-orange-400 hover:text-white`}
           >
             <div className="flex items-center mb-4">
               <FaRocket className="text-3xl text-pink-500 mr-4" />
@@ -309,66 +293,66 @@ const AboutPage = () => {
       </div>
 
       <div className="p-6">
-      <h2 className="text-3xl font-bold text-center mb-6">Our Latest Work</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        
-        {/* Large Image */}
-        <div className="relative group overflow-hidden col-span-2 row-span-2">
-          <img src="https://samar-ruddy.vercel.app/Samar/pic1_2.jpg"  alt="Project 1" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <span className="text-white text-lg">Software Landing</span>
+        <h2 className="text-3xl font-bold text-center mb-6">Our Latest Work</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+          {/* Large Image */}
+          <div className="relative group overflow-hidden col-span-2 row-span-2">
+            <img src="https://samar-ruddy.vercel.app/Samar/pic1_2.jpg" alt="Project 1" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <span className="text-white text-lg">Software Landing</span>
+            </div>
+            <div className="absolute inset-0">
+              <div className="absolute w-full h-20 bg-slate-100 opacity-20 transform rotate-45 -translate-x-full translate-y-full group-hover:animate-light-sweep"></div>
+            </div>
           </div>
-          <div className="absolute inset-0">
-            <div className="absolute w-full h-20 bg-slate-100 opacity-20 transform rotate-45 -translate-x-full translate-y-full group-hover:animate-light-sweep"></div>
+
+          {/* Small Image 1 */}
+          <div className="relative group overflow-hidden">
+            <img src="https://samar-ruddy.vercel.app/Samar/pic1_2.jpg" alt="Project 2" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <span className="text-white text-lg">Project 2</span>
+            </div>
+            <div className="absolute inset-0">
+              <div className="absolute w-full h-[70px] bg-white opacity-20 transform rotate-45 -translate-x-full translate-y-full group-hover:animate-light-sweep"></div>
+            </div>
           </div>
+
+          {/* Small Image 2 */}
+          <div className="relative group overflow-hidden">
+            <img src="https://samar-ruddy.vercel.app/Samar/pic1_2.jpg" alt="Project 3" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <span className="text-white text-lg">Project 3</span>
+            </div>
+            <div className="absolute inset-0">
+              <div className="absolute w-full h-[70px] bg-white opacity-20 transform rotate-45 -translate-x-full translate-y-full group-hover:animate-light-sweep"></div>
+            </div>
+          </div>
+
+          {/* Small Image 3 */}
+          <div className="relative group overflow-hidden">
+            <img src="https://samar-ruddy.vercel.app/Samar/pic1_2.jpg" alt="Project 4" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <span className="text-white text-lg">Project 4</span>
+            </div>
+            <div className="absolute inset-0">
+              <div className="absolute w-full h-[70px] bg-white opacity-20 transform rotate-45 -translate-x-full translate-y-full group-hover:animate-light-sweep"></div>
+            </div>
+          </div>
+
+          {/* Small Image 4 */}
+          <div className="relative group overflow-hidden">
+            <img src="https://samar-ruddy.vercel.app/Samar/pic1_2.jpg" alt="Project 5" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <span className="text-white text-lg">Project 5</span>
+            </div>
+            <div className="absolute inset-0">
+              <div className="absolute w-full h-[70px] bg-white opacity-20 transform rotate-45 -translate-x-full translate-y-full group-hover:animate-light-sweep"></div>
+            </div>
+          </div>
+
         </div>
-        
-        {/* Small Image 1 */}
-        <div className="relative group overflow-hidden">
-          <img src="https://samar-ruddy.vercel.app/Samar/pic1_2.jpg"  alt="Project 2" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <span className="text-white text-lg">Project 2</span>
-          </div>
-          <div className="absolute inset-0">
-            <div className="absolute w-full h-[70px] bg-white opacity-20 transform rotate-45 -translate-x-full translate-y-full group-hover:animate-light-sweep"></div>
-          </div>
-        </div>
-        
-        {/* Small Image 2 */}
-        <div className="relative group overflow-hidden">
-          <img src="https://samar-ruddy.vercel.app/Samar/pic1_2.jpg"  alt="Project 3" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <span className="text-white text-lg">Project 3</span>
-          </div>
-          <div className="absolute inset-0">
-            <div className="absolute w-full h-[70px] bg-white opacity-20 transform rotate-45 -translate-x-full translate-y-full group-hover:animate-light-sweep"></div>
-          </div>
-        </div>
-        
-        {/* Small Image 3 */}
-        <div className="relative group overflow-hidden">
-          <img src="https://samar-ruddy.vercel.app/Samar/pic1_2.jpg"  alt="Project 4" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <span className="text-white text-lg">Project 4</span>
-          </div>
-          <div className="absolute inset-0">
-            <div className="absolute w-full h-[70px] bg-white opacity-20 transform rotate-45 -translate-x-full translate-y-full group-hover:animate-light-sweep"></div>
-          </div>
-        </div>
-        
-        {/* Small Image 4 */}
-        <div className="relative group overflow-hidden">
-          <img src="https://samar-ruddy.vercel.app/Samar/pic1_2.jpg"  alt="Project 5" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <span className="text-white text-lg">Project 5</span>
-          </div>
-          <div className="absolute inset-0">
-            <div className="absolute w-full h-[70px] bg-white opacity-20 transform rotate-45 -translate-x-full translate-y-full group-hover:animate-light-sweep"></div>
-          </div>
-        </div>
-        
       </div>
-    </div>
     </div>
   );
 };

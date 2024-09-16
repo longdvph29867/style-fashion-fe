@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import { Product } from "../../types/products";
-import { Checkbox, CheckboxProps, Form, Input, Radio, Select } from "antd";
+import { Form, Input, Select } from "antd";
 import { GoDash } from "react-icons/go";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
-import { useQuery } from "@tanstack/react-query";
 import productService from "../../services/productService";
 import PaginationPage from "../../components/PaginationPage/PaginationPage";
 import categoryService from "../../services/categoryService";
@@ -14,15 +13,10 @@ import { hiddenSpinner, showSpinner } from "../../util/util";
 import { FilterOutlined } from "@ant-design/icons";
 
 
-const buttonSort = [
-  { label: "Mới nhất", value: "newest" },
-];
-
 const ListProductPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const [valueRadio, setValueRadio] = useState(null);
   const [categoriesList, setCategoriesList] = useState<any[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [totalProducts, setTotalProducts] = useState(0);
@@ -30,10 +24,6 @@ const ListProductPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [openFilter, setOpenFilter] = useState(false);
-
-  const slugCategory = queryParams.get("categories")
-    ? queryParams.get("categories")?.split(",")
-    : [];
 
   const limit = 12;
   const currentPage = queryParams.get("page")

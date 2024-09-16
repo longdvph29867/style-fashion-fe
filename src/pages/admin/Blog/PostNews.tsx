@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import { Breadcrumb, Button, Form, Input, message, Upload, UploadProps } from "antd";
+import { Breadcrumb, Button, Form, Input, message, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { FormPostNews } from "../../../types/blog";

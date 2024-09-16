@@ -1,28 +1,10 @@
 import { useEffect, useState } from "react";
-import {
-    formartCurrency,
-    hiddenSpinner,
-    showSpinner,
-} from "../../../util/util";
-import { Link, useNavigate } from "react-router-dom";
-import { Breadcrumb, Button, Image, Modal, Select, Table, message } from "antd";
+import { Link } from "react-router-dom";
+import { Breadcrumb, Table, message } from "antd";
 import { https } from "../../../config/axios";
 // import { Product } from "../../../types/productType";
-import PaginationPage from "../../../components/PaginationPage/PaginationPage";
-import productService from "../../../services/productService";
 import { Product } from "../../../types/products";
-import React, { useRef } from 'react';
-import { SearchOutlined } from '@ant-design/icons';
-import type { InputRef, TableColumnsType, TableColumnType } from 'antd';
-import { Input, Space } from 'antd';
-import type { FilterDropdownProps } from 'antd/es/table/interface';
-
-const priceRanges = [
-    { text: "Dưới 100k", value: 'under100' },
-    { text: "Từ 100k - 500k", value: '100to500' },
-    { text: "Từ 500k - 2 triệu", value: '500to2m' },
-    { text: "Trên 2 triệu", value: 'over2m' },
-];
+import React from 'react';
 
 const ProductReviewList: React.FC = () => {
     const [loading, setLoading] = useState(false);

@@ -1,8 +1,4 @@
-import React from "react";
-
-type Props = {};
-
-const Filter = (props: Props) => {
+const Filter = () => {
   return (
     <div className="flex-shrink-0">
       <button className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium pl-4 py-2.5 sm:pl-6 bg-slate-900 hover:bg-slate-800 text-slate-50 shadow-xl w-full !pr-16">

@@ -5,8 +5,6 @@ import {
   Divider,
   Form,
   Input,
-  InputNumber,
-  Radio,
   Select,
   Space,
   Switch,
@@ -20,11 +18,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
 import TextArea from "antd/es/input/TextArea";
-import { Checkbox } from 'antd';
-import type { GetProp } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import axios from "axios";
-import { Attribute, AttributeValue, TieredVariant, Variant } from "../../../types/products";
+import { Attribute, AttributeValue, Variant } from "../../../types/products";
 
 const AddProduct: React.FC = () => {
   const navigate = useNavigate();
@@ -33,7 +28,6 @@ const AddProduct: React.FC = () => {
     { name: "", values: [{ name: "" }] }
   ]);
   const [variants, setVariants] = useState<Variant[]>([]);
-  const [columns, setColumns] = useState<any[]>([]);
   const [attributeImages, setAttributeImages] = useState([]);
   const [featured, setFeatured] = useState(false);
 
@@ -98,7 +92,7 @@ const AddProduct: React.FC = () => {
         title: attributes[0].name,
         dataIndex: 'attribute_0',
         width: '20%',
-        render: (text: any, _: any, index: any) => {
+        render: (_: any, __: any, index: any) => {
           const attributeValue = variants[index]?.attributes ? variants[index].attributes[0] : null;
           const rowSpan = attributes[1]?.values.length || 1;
           // const attrValueIndex = index % rowSpan;
@@ -149,7 +143,7 @@ const AddProduct: React.FC = () => {
       columns.push({
         title: attributes[1].name,
         dataIndex: 'attribute_1',
-        render: (text: any, _: any, index: any) => {
+        render: (_: any, __: any, index: any) => {
           const attributeValue = variants[index]?.attributes ? variants[index].attributes[1] : null;
 
           return (
@@ -167,7 +161,7 @@ const AddProduct: React.FC = () => {
       {
         title: 'Giá gốc',
         dataIndex: 'originalPrice',
-        render: (text: any, _: any, index: any) => (
+        render: (_: any, __: any, index: any) => (
           <Form.Item
             name={['variants', index, 'originalPrice']}
             initialValue={variants[index]?.originalPrice}
@@ -196,7 +190,7 @@ const AddProduct: React.FC = () => {
       {
         title: 'Giá khuyến mãi',
         dataIndex: 'currentPrice',
-        render: (text: any, _: any, index: any) => (
+        render: (_: any, __: any, index: any) => (
           <Form.Item
             name={['variants', index, 'currentPrice']}
             initialValue={variants[index]?.currentPrice}
@@ -229,7 +223,7 @@ const AddProduct: React.FC = () => {
       {
         title: 'Kho hàng',
         dataIndex: 'stock',
-        render: (text: any, _: any, index: any) => (
+        render: (_: any, __: any, index: any) => (
           <Form.Item
             name={['variants', index, 'stock']}
             initialValue={variants[index]?.stock}
@@ -308,14 +302,14 @@ const AddProduct: React.FC = () => {
 
   const handleInputChange = (value: any, index: any, field: any) => {
     // console.log(variants, 'handleInputChange')
-    let updatedVariants; // Tạo biến để lưu trữ giá trị của newVariants
+    // let updatedVariants; // Tạo biến để lưu trữ giá trị của newVariants
     // console.log(variants, 'variants')
 
     setVariants(prevVariants => {
       const newVariants: any = [...prevVariants];
       // console.log()
       newVariants[index][field] = value;
-      updatedVariants = newVariants; // Lưu giá trị của newVariants vào biến updatedVariants
+      // updatedVariants = newVariants; // Lưu giá trị của newVariants vào biến updatedVariants
       return newVariants;
     });
 
@@ -454,8 +448,8 @@ const AddProduct: React.FC = () => {
     form.setFieldsValue({ variants: mergedVariants });
     // form.setFieldsValue({ variants: newVariants });
     // console.log(variants, 'after-useeffect')
-    const newColumns = createColumns(attributes);
-    setColumns(newColumns);
+    // const newColumns = createColumns(attributes);
+    // setColumns(newColumns);
   }, [attributes]);
 
 
@@ -463,7 +457,7 @@ const AddProduct: React.FC = () => {
     // console.log('Form values:', values);
     // console.log('attribute image', attributeImages);
     // console.log(attributeImages, 'attributeImages')
-    let convertVariant = [];
+    let convertVariant: any[] = [];
     if (variants) {
       // console.log(variants, 'variants')
       const convertDataToDesiredFormat = (data: any, attributes: any) => {

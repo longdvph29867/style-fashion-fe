@@ -1,21 +1,12 @@
 import { useEffect, useState } from "react";
 import {
-    formartCurrency,
     hiddenSpinner,
     showSpinner,
 } from "../../../util/util";
 import { Link, useParams } from "react-router-dom";
 import { Breadcrumb, Button, Modal, Table, message } from "antd";
-import { https } from "../../../config/axios";
-import { IUser } from "../../../types/userType";
-import { CiCircleAlert } from "react-icons/ci";
-import { IoIosCheckboxOutline } from "react-icons/io";
-import voucherService from "../../../services/voucherService";
 import { Voucher } from "../../../types/voucher";
-import { format, set } from 'date-fns';
-import PaginationPage from "../../../components/PaginationPage/PaginationPage";
 import commentService from "../../../services/commentService";
-import { render } from "react-dom";
 
 const ProductCommentDetail: React.FC = () => {
     // const params = new URLSearchParams(location.search);
@@ -33,7 +24,7 @@ const ProductCommentDetail: React.FC = () => {
         showSpinner()
         try {
             // const { data } = await voucherService.getVoucherAll(limitPerPage, currentPage);
-            const { data } = await commentService.getAllDetailComment(id);
+            const { data } = await commentService.getCommentByProduct(id);
             // setLoading(false);
             setCommentsList(data);
             // setTotalVoucher(data.totalResults);
@@ -49,10 +40,6 @@ const ProductCommentDetail: React.FC = () => {
     useEffect(() => {
         fetchComments();
     }, [location.search])
-
-    const formatDateString = (dateString: string) => {
-        return format(new Date(dateString), 'dd/MM/yyyy HH:mm');
-    };
 
     const showDeleteModal = (id: any) => {
         setIsDeleteModalOpen(true);
@@ -90,13 +77,13 @@ const ProductCommentDetail: React.FC = () => {
             title: 'STT',
             dataIndex: 'index',
             key: 'index',
-            render: (text: any, record: any, index: any) => <span>{index + 1}</span>,
+            render: (_: any, __: any, index: any) => <span>{index + 1}</span>,
         },
         {
             title: 'Người dùng',
             dataIndex: ['userId', 'name'],
             key: 'name',
-            render: (text: any, record: any) => <Link to={`/admin/users/${record.userId._id}`}>{record.userId.name}</Link>,
+            render: (_: any, record: any) => <Link to={`/admin/users/${record.userId._id}`}>{record.userId.name}</Link>,
         },
         {
             title: 'Nội dung',
@@ -114,7 +101,7 @@ const ProductCommentDetail: React.FC = () => {
         {
             title: 'Thao tác',
             key: 'actions',
-            render: (text: any, record: any) => (
+            render: (_: any, record: any) => (
                 <div className="space-x-2">
                     <Button
                         type="link"

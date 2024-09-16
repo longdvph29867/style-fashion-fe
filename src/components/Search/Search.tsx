@@ -1,5 +1,5 @@
 import { Form, Input } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 type Props = {
@@ -9,7 +9,6 @@ type Props = {
 const Search = ({ className }: Props) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [search, setSearch] = useState("");
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
@@ -28,7 +27,6 @@ const Search = ({ className }: Props) => {
       onFinish={(value) => {
         console.log(value);
         if (value.name) {
-          setSearch(value.name);
           navigate(`/products?search=${value.name}`);
         }
       }}

@@ -3,14 +3,11 @@ import { useEffect, useMemo, useState } from "react";
 import dashboardService from "../../../../services/admin/dashboard.service";
 import { ITopSellingProduct } from "../../../../types/admin/dashboard";
 import TitleDashboard from "../../../../components/Common/Admin/TitleDashboard/TitleDashboard";
-import { Skeleton } from "antd";
-import { formartCurrency } from "../../../../util/util";
 import Chart from "react-google-charts";
 import PickerWithType from "../PickerWithType/PickerWithType";
 
-type Props = {};
 
-const TopSellingProducts = (props: Props) => {
+const TopSellingProducts = () => {
   const [topSellingProduct, setTopSellingProduct] = useState<
     ITopSellingProduct[]
   >([]);

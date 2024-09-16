@@ -3,10 +3,10 @@ import imgLogo from "../../../assets/img/sf-logo2.png";
 import imgLogoIcon from "../../../assets/img/logo_icon_v2.png";
 import { MdDashboard, MdCategory } from "react-icons/md";
 import { FaBoxes } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { BiSolidCoupon } from "react-icons/bi";
 import { FaCartArrowDown } from "react-icons/fa";
-import { FaBlog, FaTruckRampBox } from "react-icons/fa6";
+import { FaBlog } from "react-icons/fa6";
 import { Menu } from "antd";
 import { CommentOutlined, StarOutlined, UserOutlined } from "@ant-design/icons";
 import { AuthContext } from "../../../contexts/AuthContext";
@@ -114,10 +114,6 @@ type Props = {
 };
 
 const AdminMenu: React.FC<Props> = ({ collapsed }): any => {
-  const location = useLocation();
-  const fullPath = location.pathname;
-  const pathSegments = fullPath.split("/").slice(1, 3); // Chỉ lấy 'admin' và 'products'
-  const pathAfterAdmin = "/" + pathSegments.join("/");
 
   const { userRole }: any = useContext(AuthContext);
 

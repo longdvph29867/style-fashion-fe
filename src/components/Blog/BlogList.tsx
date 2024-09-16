@@ -9,7 +9,8 @@ const BlogList = () => {
   const [blogList, setBlogList] = useState<Blog[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const pageSize = 10;
+
   const fetchData = async (page = 1) => {
     try {
       showSpinner();
@@ -32,12 +33,6 @@ const BlogList = () => {
   const handlePageChange = (page: any) => {
     setCurrentPage(page);
     fetchData(page);
-  };
-
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
   };
 
   const date = new Date();
