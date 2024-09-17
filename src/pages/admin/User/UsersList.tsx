@@ -16,7 +16,7 @@ const UsersList: React.FC = () => {
   const params = new URLSearchParams(location.search);
   const [totalUsers, setTotalUser] = useState(0);
 
-  const limitPerPage = 6;
+  const limitPerPage = 15;
   const currentPage = params.get("page") ? Number(params.get("page")) : 1;
   params.set("limit", limitPerPage.toString());
   params.set("page", currentPage.toString());
