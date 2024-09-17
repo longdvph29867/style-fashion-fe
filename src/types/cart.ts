@@ -6,9 +6,7 @@ export type AddCartType = {
 };
 
 export type UpdateVariant = {
-  userId: string;
-  productId: string;
-  variantId: string;
+  variant: string;
   quantity: number;
 };
 

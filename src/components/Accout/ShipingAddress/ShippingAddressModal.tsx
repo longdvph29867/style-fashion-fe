@@ -131,7 +131,10 @@ const ShippingAddressModal = ({
           <Form.Item<FieldTypeShipping>
             label="Họ và tên"
             name="name"
-            rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}
+            rules={[
+              { required: true, message: "Vui lòng nhập họ và tên!" },
+              { min: 6, message: "Tên người nhận phải có ít nhất 6 kí tự" },
+            ]}
           >
             <Input placeholder="Họ tên" />
           </Form.Item>

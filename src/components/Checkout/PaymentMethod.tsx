@@ -40,7 +40,7 @@ const PaymentMethod = ({ selectShippingMethod, shippingMethod }: Props) => {
         </div>
         {/* method */}
         <div className="px-6 pb-6">
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid sm:grid-cols-2 gap-5">
             <label
               onClick={() => selectShippingMethod("COD")}
               className={`cursor-pointer relative flex items-center justify-center p-3 border border-slate-700 rounded-xl overflow-hidden`}

@@ -12,11 +12,13 @@ import { UpdateVariant } from "../../types/cart";
 interface DropdownVarianContentProps {
   idProduct: string;
   keyReset: number;
+  cartId: string;
 }
 
 const DropdownVarianContent = ({
   idProduct,
   keyReset,
+  cartId,
 }: DropdownVarianContentProps) => {
   const [product, setProduct] = useState<IProduct | null>(null);
   const [variant, setVariant] = useState<IVariant | null>(null);
@@ -26,7 +28,8 @@ const DropdownVarianContent = ({
   const queryClient = useQueryClient();
 
   const mutationDelete = useMutation({
-    mutationFn: (body: UpdateVariant) => cartService.updateVariant(body),
+    mutationFn: (body: UpdateVariant) =>
+      cartService.updateVariant(body, cartId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["carts"] });
     },
@@ -84,9 +87,7 @@ const DropdownVarianContent = ({
     }
     if (userId) {
       const payload: UpdateVariant = {
-        userId: userId,
-        productId: idProduct,
-        variantId: variant?.id,
+        variant: variant?.id,
         quantity: quantity,
       };
       setLoading(true);
@@ -101,7 +102,7 @@ const DropdownVarianContent = ({
   };
 
   return (
-    <div className="bg-white shadow-[0px_3px_8px_3px_rgba(0,0,0,0.24)] px-4 pt-2 pb-3 rounded-md min-w-[300px] min-h-[200px]">
+    <div className="bg-white shadow-[0px_3px_8px_3px_rgba(0,0,0,0.24)] px-4 pt-2 pb-3 rounded-md w-56 sm:min-w-[300px] min-h-[200px]">
       {product ? (
         <>
           <Variant

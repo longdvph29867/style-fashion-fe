@@ -60,6 +60,10 @@
     height: 18px;
     width: 18px;
   }
-  .label-tick::after {
+  .checkbox > input:checked ~ .label-tick::after {
+    top: 2px;
+    left: 5px;
+    transform: rotate(45deg);
+    width: 6px;
   }
 }

@@ -51,13 +51,13 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
         <a className="absolute inset-0" href="/product-detail" />
       </div>
       <div className="flex flex-col justify-between ml-3 sm:ml-6 grow">
+        <h3 className="text-base font-semibold">
+          <a className="line-clamp-1" href="/product-detail">
+            {productCart.product.name}
+          </a>
+        </h3>
         <div className="flex justify-between items-center gap-3 sm:gap-10">
           <div className="">
-            <h3 className="text-base font-semibold">
-              <a className="line-clamp-1" href="/product-detail">
-                {productCart.product.name}
-              </a>
-            </h3>
             <div className="mt-1.5 sm:mt-2.5 text-sm text-[#334155]">
               {productCart.variant && productCart.variant.stock > 0 ? (
                 <div className="mt-2">
@@ -124,19 +124,20 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                     arrow={true}
                     dropdownRender={() => (
                       <DropdownVarianContent
+                        cartId={productCart._id}
                         keyReset={dropdownKey}
                         idProduct={productCart.product._id}
                       />
                     )}
                     trigger={["click"]}
                   >
-                    <Button type="primary" danger>
+                    <Button type="primary" danger className="text-sm">
                       Chọn phân Loại
                     </Button>
                   </Dropdown>
-                  <div className="text-red-400 mt-4 flex gap-1">
-                    <PiWarningCircleLight fontSize={20} /> Phân loại hàng này
-                    bán hết, vui lòng lựa chọn một phân loại khác.
+                  <div className="text-red-400 mt-4 flex gap-1 text-xs">
+                    <PiWarningCircleLight fontSize={20} /> Hết hàng! Vui lòng
+                    lựa chọn loại khác.
                   </div>
                 </div>
               )}
@@ -198,7 +199,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
             <div className="h-max justify-end sm:mt-0">
               <button
                 onClick={() => onDelete(productCart._id)}
-                className="relative z-10 flex items-center font-medium text-[#0284C7] hover:text-primary-500 text-sm"
+                className="relative z-10 flex items-center mt-2 sm:mt-0 font-medium text-[#0284C7] hover:text-primary-500 text-sm"
               >
                 <span>Remove</span>
               </button>

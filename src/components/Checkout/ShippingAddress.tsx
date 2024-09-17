@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, message } from "antd";
 import {
   BodyShippingAddress,
   ShippingActionModal,
@@ -95,7 +95,8 @@ const ShippingAddress = ({
           );
         }
       } catch (error) {
-        console.log(error);
+        message.error(error.response.data);
+        return;
       }
     },
     [formAction.shippingAddress, formAction.type, userId]
@@ -192,7 +193,6 @@ const ShippingAddress = ({
         onClose={setOpenModal}
         action={formAction}
         handleSubmit={handleSubmitModal}
-        loading
       />
     </div>
   );

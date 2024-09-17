@@ -1,5 +1,5 @@
 import { https } from "../config/axios";
-import { AddCartType, ICart } from "../types/cart";
+import { AddCartType, ICart, UpdateVariant } from "../types/cart";
 
 const cartService = {
   getCartByUserId(userId: string) {
@@ -13,8 +13,8 @@ const cartService = {
       quantity,
     });
   },
-  updateVariant(body: any) {
-    return https.put("carts/variant", body);
+  updateVariant(body: UpdateVariant, cartId: string) {
+    return https.put(`carts/variant/${cartId}`, body);
   },
   deleteCartItem(productCartId: string) {
     return https.delete(`/carts/${productCartId}`);
