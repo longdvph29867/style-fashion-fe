@@ -17,7 +17,7 @@ const orderService = {
     if (queryUrl) {
       return https.get(`/orders?${queryUrl}`);
     } else {
-      return https.get(`/orders`);
+      return https.get(`/orders?sortBy=createdAt:desc`);
     }
   },
   getAllOrderUser(id: string, limit: number, page: number, orderStatus: any) {

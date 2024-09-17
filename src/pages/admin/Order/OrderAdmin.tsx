@@ -19,14 +19,25 @@ const OrderAdmin = () => {
   const currentPage = params.get("page") ? Number(params.get("page")) : 1;
   params.set("limit", limitPerPage.toString());
   params.set("page", currentPage.toString());
+  params.set("sortBy", "createdAt:desc");
   // window.history.replaceState(null, '', location.pathname + "?" + params.toString());
 
   const [loading, setLoading] = useState(false);
 
+  const [sorterState, setSorterState] = useState<any>({
+    filteredInfo: null,
+    sortedInfo: null,
+  });
+
   const handleTableChange = (filters: any, sorter: any) => {
+    setSorterState({
+      filteredInfo: filters,
+      sortedInfo: sorter,
+    });  // Lưu trạng thái sorter vào state
+
     // setLoading(true);
-    console.log("filters", filters);
-    console.log("sorter", sorter);
+    // console.log("filters", filters);
+    // console.log("sorter", sorter);
 
     if (sorter.field) {
       let sortOrder = '';
@@ -76,7 +87,7 @@ const OrderAdmin = () => {
       // Gọi API với queryUrl
       const { data } = await orderService.getAllOrdersV2(queryUrl);
 
-      console.log("data.results", data.results);
+      // console.log("data.results", data.results);
       setOrdersList(data.results);
 
       setTotalOrders(data.totalResults);
@@ -153,6 +164,7 @@ const OrderAdmin = () => {
       key: 'totalPrice',
       render: (price: any) => formartCurrency(price),
       sorter: true,
+      sortOrder: sorterState.sortedInfo?.columnKey === 'totalPrice' && sorterState.sortedInfo?.order,
       // sorter: (a: any, b: any) => a.totalPrice - b.totalPrice,
     },
     {
@@ -206,6 +218,8 @@ const OrderAdmin = () => {
       key: 'createdAt',
       render: (text: any) => new Date(text).toLocaleString(),
       sorter: true,
+      defaultSortOrder: 'descend',
+      sortOrder: sorterState.sortedInfo?.columnKey === 'createdAt' && sorterState.sortedInfo?.order,
       // sorter: (a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
     },
     {

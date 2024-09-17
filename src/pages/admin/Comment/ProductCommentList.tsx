@@ -39,6 +39,11 @@ const ProductCommentList: React.FC = () => {
     const [categories, setCategories] = useState<any[]>([]);
     const searchInput = useRef<InputRef>(null);
 
+    const [sorterState, setSorterState] = useState<any>({
+        filteredInfo: null,
+        sortedInfo: null,
+    });
+
     const fetchCategories = async () => {
         const { data } = await https.get("/categories?limit=100&page=1");
         setCategories(data.results.map((category: any) => ({
@@ -52,9 +57,14 @@ const ProductCommentList: React.FC = () => {
     }, []);
 
     const handleTableChange = (filters: any, sorter: any) => {
+        setSorterState({
+            filteredInfo: filters,
+            sortedInfo: sorter,
+        });  // Lưu trạng thái sorter vào state
+
         // setLoading(true);
-        console.log("filters", filters);
-        console.log("sorter", sorter);
+        // console.log("filters", filters);
+        // console.log("sorter", sorter);
 
         if (sorter.field) {
             let sortOrder = '';
@@ -278,6 +288,7 @@ const ProductCommentList: React.FC = () => {
             width: "8%",
             // defaultSortOrder: "ascend",
             // sortDirections: ['ascend', 'descend'],
+            sortOrder: sorterState.sortedInfo?.columnKey === 'finalScoreReview' && sorterState.sortedInfo?.order,
         },
         {
             title: "Khoảng giá",
@@ -285,6 +296,7 @@ const ProductCommentList: React.FC = () => {
             dataIndex: ["defaultPrice"], // Mảng chứa cả minPrice và maxPrice
             // sorter: (a: Product, b: Product) => a.minPrice - b.minPrice,
             sorter: true,
+            sortOrder: sorterState.sortedInfo?.columnKey === 'defaultPrice' && sorterState.sortedInfo?.order,
             render: (_: any, record: any) => {
                 const { defaultPrice, maxPrice } = record;
                 return `${formartCurrency(defaultPrice)} - ${formartCurrency(maxPrice)}`;
