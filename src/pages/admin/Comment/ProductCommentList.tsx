@@ -276,7 +276,8 @@ const ProductCommentList: React.FC = () => {
             // sorter: (a: Product, b: Product) => a.finalScoreReview - b.finalScoreReview,
             sorter: true,
             width: "8%",
-            // defaultSortOrder: "descend",
+            // defaultSortOrder: "ascend",
+            // sortDirections: ['ascend', 'descend'],
         },
         {
             title: "Khoảng giá",

@@ -7,7 +7,7 @@ import { Breadcrumb } from "antd";
 
 const Dashboard: FC = () => {
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 min-w-[600px]">
       <Breadcrumb style={{ margin: '16px 0' }}>
         <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
       </Breadcrumb>
