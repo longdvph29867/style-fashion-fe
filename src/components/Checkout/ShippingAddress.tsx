@@ -95,7 +95,7 @@ const ShippingAddress = ({
           );
         }
       } catch (error) {
-        message.error(error.response.data);
+        message.error("Hệ thống lỗi vui lòng thử lại");
         return;
       }
     },

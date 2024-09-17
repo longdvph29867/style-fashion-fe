@@ -56,7 +56,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
             {productCart.product.name}
           </a>
         </h3>
-        <div className="flex justify-between items-center gap-3 sm:gap-10">
+        <div className="flex justify-between items-center gap-2 sm:gap-10">
           <div className="">
             <div className="mt-1.5 sm:mt-2.5 text-sm text-[#334155]">
               {productCart.variant && productCart.variant.stock > 0 ? (
@@ -112,7 +112,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                       {formartCurrency(productCart?.variant?.currentPrice)}
                     </span>
                   </div>
-                  <span className="text-sm italic">
+                  <span className="text-xs sm:text-sm italic">
                     Còn: {productCart?.variant?.stock} sản phẩm
                   </span>
                 </div>
@@ -145,11 +145,11 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-center sm:w-52 shrink-0">
             <div className="relative text-center">
-              <div className="relative z-10 flex items-center justify-center space-x-5 nc-NcInputNumber">
-                <div className="flex items-center justify-between w-[104px]">
+              <div className="relative z-10 flex items-center justify-center space-x-3 sm:space-x-5 nc-NcInputNumber">
+                <div className="flex items-center justify-between w-20 sm:w-[104px]">
                   <button
                     onClick={decreaseQuantity}
-                    className="flex items-center justify-center w-8 h-8 bg-white border rounded-full border-neutral-400 dark:border-neutral-500 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 dark:disabled:hover:border-neutral-500 disabled:opacity-50 disabled:cursor-no-drop"
+                    className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-white border rounded-full border-neutral-400 dark:border-neutral-500 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 dark:disabled:hover:border-neutral-500 disabled:opacity-50 disabled:cursor-no-drop"
                     type="button"
                     disabled={!productCart.variant || quantity === 1}
                   >
@@ -172,7 +172,7 @@ const CartListItem = ({ productCart, updateItem, onDelete }: Props) => {
                   </span>
                   <button
                     onClick={increaseQuantity}
-                    className="flex items-center justify-center w-8 h-8 bg-white border rounded-full border-neutral-400 dark:border-neutral-500 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 disabled:cursor-no-drop dark:disabled:hover:border-neutral-500 disabled:opacity-50"
+                    className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-white border rounded-full border-neutral-400 dark:border-neutral-500 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 disabled:cursor-no-drop dark:disabled:hover:border-neutral-500 disabled:opacity-50"
                     type="button"
                     disabled={
                       !productCart.variant ||
