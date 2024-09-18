@@ -291,6 +291,18 @@ const ProductDetail: React.FC = () => {
                             Xem đánh giá
                         </Button>
                     </Link>
+                    <Link
+                        to={`/admin/comments/${id}`}
+                        className=""
+                    >
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            className="text-white bg-orange-500"
+                        >
+                            Xem bình luận
+                        </Button>
+                    </Link>
                 </div>
                 <Form
                     form={form}

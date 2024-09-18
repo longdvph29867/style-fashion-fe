@@ -107,7 +107,7 @@ const SalesAnalysis: FC = () => {
           <PickerWithType onChange={onChangeTime} />
         </div>
       </div>
-      <div className="flex gap-10 mt-8">
+      <div className="2xl:flex gap-10 mt-8">
         <div className="flex-grow">
           <h2 className="font-semibold">
             Doanh số{" "}
@@ -129,7 +129,7 @@ const SalesAnalysis: FC = () => {
           </div>
         </div>
         <div className="border" />
-        <div className="w-1/3">
+        <div className="2xl:w-2/5">
           <h2 className="font-semibold text-xl">Doanh số</h2>
           <div className="grid grid-cols-2 gap-y-4 max-h-96 overflow-y-auto">
             {orderStatistic.map((item, index) => (

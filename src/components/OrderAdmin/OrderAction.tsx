@@ -237,7 +237,7 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList,
                         alignItems: "center",
                         fontWeight: 500,
                     }}
-                    disabled={record?.orderStatus.code !== 8 && (!isDelivered || !isMoreThan3Days || (record?.orderStatus.code !== 6))} // Disable nếu chưa đủ 3 ngày
+                    disabled={(!isDelivered || !isMoreThan3Days || (record?.orderStatus.code !== 6))} // Disable nếu chưa đủ 3 ngày
                     icon={
                         <MdDomainVerification
                             style={{

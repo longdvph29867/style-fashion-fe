@@ -40,7 +40,7 @@ const AddProduct: React.FC = () => {
         try {
             const { data } = await https.get(`/products/${id}`);
             setProduct(data);
-            console.log(data)
+            // console.log(data)
             const productDetail: any = data;
             // setOriginalVariants(data.variants);  // Lưu variants gốc
             form.setFieldValue('attributes', productDetail.attributes);
@@ -116,7 +116,7 @@ const AddProduct: React.FC = () => {
             imageAttribute: Object.values(mergedImageFields)
         });
 
-        console.log(form.getFieldValue('imageAttribute'), 'imageAttribute');
+        // console.log(form.getFieldValue('imageAttribute'), 'imageAttribute');
     };
 
     useEffect(() => {
@@ -129,7 +129,7 @@ const AddProduct: React.FC = () => {
             }));
             setOriginalVariants(addTierIndexToVariant(transformedVariants, product?.attributes));
             setVariants(addTierIndexToVariant(transformedVariants, product?.attributes));
-            console.log(transformedVariants, 'transformedVariants')
+            // console.log(transformedVariants, 'transformedVariants')
 
             setAttributeImages(product?.attributes?.[0].values.map((value: any) => value.image));
 
@@ -893,30 +893,32 @@ const AddProduct: React.FC = () => {
                                             <Form.List name={[field.name, "values"]}>
                                                 {(valueFields, { add: addValue, remove: removeValue }) => (
                                                     <div className="flex gap-4 mt-5">
-                                                        <div className="flex flex-col w-[130px]">
-                                                            <label className="text-[16px] font-normal" htmlFor="">Phân loại hàng</label>
-                                                            <Button
-                                                                className="mt-2"
-                                                                type="dashed"
-                                                                onClick={() => {
-                                                                    // console.log(variants, 'addValue')
-                                                                    if (isInputChanged === false) {
-                                                                        setIsInputChanged(true);
-                                                                    }
-                                                                    addValue()
-                                                                    // Thêm một object với name='' vào cuối mảng values
-                                                                    setAttributes(prevAttributes => {
-                                                                        const newAttributes: any = [...prevAttributes];
-                                                                        newAttributes[fieldIndex].values.push({ name: "" });
-                                                                        return newAttributes;
-                                                                    });
-                                                                }}
-                                                                icon={<PlusOutlined />}
+                                                        {valueFields.length < 20 &&
+                                                            <div className="flex flex-col w-[130px]">
+                                                                <label className="text-[16px] font-normal" htmlFor="">Phân loại hàng</label>
+                                                                <Button
+                                                                    className="mt-2"
+                                                                    type="dashed"
+                                                                    onClick={() => {
+                                                                        // console.log(variants, 'addValue')
+                                                                        if (isInputChanged === false) {
+                                                                            setIsInputChanged(true);
+                                                                        }
+                                                                        addValue()
+                                                                        // Thêm một object với name='' vào cuối mảng values
+                                                                        setAttributes(prevAttributes => {
+                                                                            const newAttributes: any = [...prevAttributes];
+                                                                            newAttributes[fieldIndex].values.push({ name: "" });
+                                                                            return newAttributes;
+                                                                        });
+                                                                    }}
+                                                                    icon={<PlusOutlined />}
 
-                                                            >
-                                                                Thêm
-                                                            </Button>
-                                                        </div>
+                                                                >
+                                                                    Thêm
+                                                                </Button>
+                                                            </div>
+                                                        }
                                                         <div className="grid grid-cols-4 gap-4">
                                                             {valueFields.map((valueField, valueIndex) => (
                                                                 <div key={valueField.key} className="">

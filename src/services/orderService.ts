@@ -17,14 +17,14 @@ const orderService = {
     if (queryUrl) {
       return https.get(`/orders?${queryUrl}`);
     } else {
-      return https.get(`/orders`);
+      return https.get(`/orders?sortBy=createdAt:desc`);
     }
   },
   getAllOrderUser(id: string, limit: number, page: number, orderStatus: any) {
     if (orderStatus) {
-      return https.get(`/orders/user/${id}?orderStatus=${orderStatus}&limit=${limit}&page=${page}`);
+      return https.get(`/orders/user/${id}?sortBy=createdAt:desc&orderStatus=${orderStatus}&limit=${limit}&page=${page}`);
     } else {
-      return https.get(`/orders/user/${id}?limit=${limit}&page=${page}`);
+      return https.get(`/orders/user/${id}?sortBy=createdAt:desc&limit=${limit}&page=${page}`);
     }
   },
   getAllOrderUserByStatusCode(id: string, statusCode: any) {

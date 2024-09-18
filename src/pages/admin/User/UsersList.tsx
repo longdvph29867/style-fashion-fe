@@ -23,10 +23,23 @@ const UsersList: React.FC = () => {
 
   const [usersList, setUsersList] = useState<IUser[]>([]);
 
+  const [sorterState, setSorterState] = useState<any>({
+    filteredInfo: null,
+    sortedInfo: null,
+  });
+
+  useEffect(() => {
+    console.log("sorterState", sorterState);
+  }, [sorterState]);
+
   const handleTableChange = (filters: any, sorter: any) => {
+    setSorterState({
+      filteredInfo: filters,
+      sortedInfo: sorter,
+    });  // Lưu trạng thái sorter vào state
     // setLoading(true);
-    console.log("filters", filters);
-    console.log("sorter", sorter);
+    // console.log("filters", filters);
+    // console.log("sorter", sorter);
 
     if (sorter.field) {
       let sortOrder = '';
@@ -59,7 +72,7 @@ const UsersList: React.FC = () => {
 
       }
     }
-
+    // console.log(location.pathname)
     // navigate(location.pathname + "?" + params.toString());
     window.history.replaceState(null, '', location.pathname + "?" + params.toString());
     fetchData();
@@ -70,7 +83,7 @@ const UsersList: React.FC = () => {
     try {
       // Biến queryUrl chứa tất cả các tham số
       const queryUrl = `${params.toString()}`;
-      console.log("queryUrl", queryUrl);
+      // console.log("queryUrl", queryUrl);
 
       const { data } = await userService.getAllUsersV2(queryUrl);
       setUsersList(data.results);
@@ -144,6 +157,7 @@ const UsersList: React.FC = () => {
       dataIndex: 'name',
       key: 'name',
       sorter: true,
+      sortOrder: sorterState.sortedInfo?.columnKey === 'name' && sorterState.sortedInfo?.order,
     },
     {
       title: 'Email',
@@ -316,11 +330,10 @@ const UsersList: React.FC = () => {
       />
 
       <PaginationPage
-        current={1}
+        current={currentPage}
         total={totalUsers}
         pageSize={limitPerPage}
         currentUrl={window.location.href} // Truyền URL hiện tại vào
-
       />
 
     </div>

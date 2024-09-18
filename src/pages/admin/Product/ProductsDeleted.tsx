@@ -41,6 +41,11 @@ const ProductsDeleted: React.FC = () => {
   const [categories, setCategories] = useState<any[]>([]);
   const searchInput = useRef<InputRef>(null);
 
+  const [sorterState, setSorterState] = useState<any>({
+    filteredInfo: null,
+    sortedInfo: null,
+  });
+
   const fetchCategories = async () => {
     const { data } = await https.get("/categories?limit=100&page=1");
     setCategories(data.results.map((category: any) => ({
@@ -55,8 +60,13 @@ const ProductsDeleted: React.FC = () => {
 
   const handleTableChange = (filters: any, sorter: any) => {
     // setLoading(true);
-    console.log("filters", filters);
-    console.log("sorter", sorter);
+    // console.log("filters", filters);
+    // console.log("sorter", sorter);
+
+    setSorterState({
+      filteredInfo: filters,
+      sortedInfo: sorter,
+    });  // Lưu trạng thái sorter vào state
 
     if (sorter.field) {
       let sortOrder = '';
@@ -122,14 +132,14 @@ const ProductsDeleted: React.FC = () => {
 
       // Biến queryUrl chứa tất cả các tham số
       const queryUrl = `${params.toString()}`;
-      console.log("queryUrl", queryUrl);
+      // console.log("queryUrl", queryUrl);
 
       // Gọi API với queryUrl
       const { data } = await productService.getAllProductsDeleted(queryUrl);
 
       console.log("data.results", data.results);
       setProductList(data.results);
-      console.log("productList after setState", productList);
+      // console.log("productList after setState", productList);
 
       setTotalProducts(data.totalResults);
       setLoading(false);
@@ -333,6 +343,7 @@ const ProductsDeleted: React.FC = () => {
       sorter: true,
       width: "8%",
       // defaultSortOrder: "descend",
+      sortOrder: sorterState.sortedInfo?.columnKey === 'finalScoreReview' && sorterState.sortedInfo?.order,
     },
     {
       title: "Khoảng giá",
@@ -340,6 +351,7 @@ const ProductsDeleted: React.FC = () => {
       dataIndex: ["defaultPrice"], // Mảng chứa cả minPrice và maxPrice
       // sorter: (a: Product, b: Product) => a.minPrice - b.minPrice,
       sorter: true,
+      sortOrder: sorterState.sortedInfo?.columnKey === 'defaultPrice' && sorterState.sortedInfo?.order,
       render: (_: any, record: any) => {
         const { defaultPrice, maxPrice } = record;
         return `${formartCurrency(defaultPrice)} - ${formartCurrency(maxPrice)}`;
