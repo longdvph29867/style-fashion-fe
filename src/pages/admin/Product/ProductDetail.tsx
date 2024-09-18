@@ -16,7 +16,7 @@ import TextArea from "antd/es/input/TextArea";
 import { BsDot } from "react-icons/bs";
 import { Attribute } from "../../../types/products";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import ModalVideo from 'react-modal-video';
+// import ModalVideo from 'react-modal-video';
 
 
 const ProductDetail: React.FC = () => {
