@@ -20,7 +20,7 @@ const dashboardService = {
     type: string,
     time: number,
     year: number,
-    orderStatus: number
+    orderStatus: string | number
   ) {
     return https.get(
       `/statistics/top-selling-product?type=${type}&time=${time}&year=${year}&orderStatus=${orderStatus}`

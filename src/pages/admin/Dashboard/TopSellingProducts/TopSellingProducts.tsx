@@ -6,7 +6,6 @@ import TitleDashboard from "../../../../components/Common/Admin/TitleDashboard/T
 import Chart from "react-google-charts";
 import PickerWithType from "../PickerWithType/PickerWithType";
 
-
 const TopSellingProducts = () => {
   const [topSellingProduct, setTopSellingProduct] = useState<
     ITopSellingProduct[]
@@ -17,7 +16,7 @@ const TopSellingProducts = () => {
         type,
         time,
         year,
-        3
+        "7,9"
       );
       if (res?.data) {
         setTopSellingProduct(res.data);

@@ -1,7 +1,7 @@
 import Banner from "../../components/HomeComponent/Banner/Banner";
 import HotProductList from "../../components/HomeComponent/HotProductList/HotProductsList";
 import SectionClientSay from "../../components/HomeComponent/SectionClientSay/SectionClientSay";
-import CategoryList from "../../components/HomeComponent/CategoryList/CategoryList";
+// import CategoryList from "../../components/HomeComponent/CategoryList/CategoryList";
 import BannerThird from "../../components/HomeComponent/BannerThird/BannerThird";
 import NewProductList from "../../components/HomeComponent/NewProductList/NewProductList";
 import BannerFourth from "../../components/HomeComponent/BannerFourth/BannerFourth";
@@ -14,7 +14,7 @@ const HomePage = () => {
         {/* <CategorySlider /> */}
         <HotProductList />
       </div>
-      <CategoryList />
+      {/* <CategoryList /> */}
       <div className="container mx-auto">
         <BannerThird />
         <NewProductList />

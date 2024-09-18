@@ -1,4 +1,4 @@
-import CategoryNavigation from "./CategoryNavigation/CategoryNavigation";
+// import CategoryNavigation from "./CategoryNavigation/CategoryNavigation";
 import { https } from "../../../config/axios";
 import ProductCard from "../../ProductCard/ProductCard";
 import { Product } from "../../../types/products";
@@ -6,10 +6,10 @@ import { useQuery } from "@tanstack/react-query";
 
 const TrendingProducts = () => {
   const { data } = useQuery<Product[]>({
-    queryKey: ["product-hot"],
+    queryKey: ["product-trending"],
     queryFn: () => {
       return https
-        .get("/products?limit=8")
+        .get("/products?sortBy=finalScoreReview:asc&limit=8")
         .then((response) => response.data.results);
     },
   });
@@ -25,7 +25,7 @@ const TrendingProducts = () => {
           </span>
         </div>
       </div>
-      <CategoryNavigation />
+      {/* <CategoryNavigation /> */}
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 sm:gap-16 xl:gap-8 md:mt-6 mt-4">
         {data?.map((product, index) => {
           return <ProductCard product={product} key={index} />;

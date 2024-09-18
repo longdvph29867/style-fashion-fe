@@ -13,14 +13,12 @@ type Props = {
   action: ShippingActionModal;
   open: boolean;
   handleSubmit: (value: BodyShippingAddress) => Promise<void>;
-  loading?: boolean;
   onClose: (value: boolean) => void;
 };
 const ShippingAddressModal = ({
   action,
   open,
   handleSubmit,
-  loading,
   onClose,
 }: Props) => {
   const [provinces, setProvinces] = useState<Province[]>([]);
@@ -107,7 +105,7 @@ const ShippingAddressModal = ({
   };
   return (
     <Modal
-      confirmLoading={loading}
+      // confirmLoading={loading}
       okType="default"
       maskClosable={true}
       title={

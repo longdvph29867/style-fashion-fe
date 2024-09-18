@@ -150,7 +150,7 @@ const MyShippingAddress = () => {
         </div>
       </div>
       <ShippingAddressModal
-        loading={confirmLoading}
+        // loading={confirmLoading}
         onClose={setOpen}
         open={open}
         action={formAction}

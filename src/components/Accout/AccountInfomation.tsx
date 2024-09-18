@@ -27,7 +27,7 @@ const AccountInfomation = () => {
 
     showSpinner();
     try {
-      const { data } = await https.get<User>(`/users/${userId}`);
+      const { data } = await https.get<User>(`/users/profile/${userId}`);
       setAvatar(data.image);
       const user: UpdateUserTypeWithoutPassword = data;
       form.setFieldsValue({
@@ -138,7 +138,7 @@ const AccountInfomation = () => {
                   name="email"
                 >
                   <Input
-                    disabled
+                    readOnly
                     className="block w-full border-neutral-200  bg-white disabled:bg-neutral-200 rounded-2xl text-sm font-normal h-11 px-4 py-3 mt-1.5"
                   />
                 </Form.Item>
