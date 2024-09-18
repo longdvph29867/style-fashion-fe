@@ -1,6 +1,5 @@
-type Props = {};
 
-const CategoryNavigation = (props: Props) => {
+const CategoryNavigation = () => {
   return (
     <nav className="relative flex w-full overflow-x-auto text-sm md:text-base scroll-m-0 scrollbar-hide">
       <ul className="flex sm:space-x-2">

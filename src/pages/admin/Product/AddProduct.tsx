@@ -5,10 +5,9 @@ import {
   Divider,
   Form,
   Input,
-  InputNumber,
-  Radio,
   Select,
   Space,
+  Switch,
   Table,
   Upload,
   message,
@@ -19,11 +18,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
 import TextArea from "antd/es/input/TextArea";
-import { Checkbox } from 'antd';
-import type { GetProp } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import axios from "axios";
-import { Attribute, AttributeValue, TieredVariant, Variant } from "../../../types/products";
+import { Attribute, AttributeValue, Variant } from "../../../types/products";
 
 const AddProduct: React.FC = () => {
   const navigate = useNavigate();
@@ -32,8 +28,8 @@ const AddProduct: React.FC = () => {
     { name: "", values: [{ name: "" }] }
   ]);
   const [variants, setVariants] = useState<Variant[]>([]);
-  const [columns, setColumns] = useState<any[]>([]);
   const [attributeImages, setAttributeImages] = useState([]);
+  const [featured, setFeatured] = useState(false);
 
   const [form] = Form.useForm();
 
@@ -96,7 +92,7 @@ const AddProduct: React.FC = () => {
         title: attributes[0].name,
         dataIndex: 'attribute_0',
         width: '20%',
-        render: (text: any, _: any, index: any) => {
+        render: (_: any, __: any, index: any) => {
           const attributeValue = variants[index]?.attributes ? variants[index].attributes[0] : null;
           const rowSpan = attributes[1]?.values.length || 1;
           // const attrValueIndex = index % rowSpan;
@@ -147,7 +143,7 @@ const AddProduct: React.FC = () => {
       columns.push({
         title: attributes[1].name,
         dataIndex: 'attribute_1',
-        render: (text: any, _: any, index: any) => {
+        render: (_: any, __: any, index: any) => {
           const attributeValue = variants[index]?.attributes ? variants[index].attributes[1] : null;
 
           return (
@@ -165,7 +161,7 @@ const AddProduct: React.FC = () => {
       {
         title: 'Giá gốc',
         dataIndex: 'originalPrice',
-        render: (text: any, _: any, index: any) => (
+        render: (_: any, __: any, index: any) => (
           <Form.Item
             name={['variants', index, 'originalPrice']}
             initialValue={variants[index]?.originalPrice}
@@ -173,6 +169,14 @@ const AddProduct: React.FC = () => {
             {
               pattern: /^[0-9]*$/,
               message: "Vui lòng nhập số dương!",
+            },
+            {
+              validator: (_, value) => {
+                if (value && Number(value) <= 0) {
+                  return Promise.reject(new Error("Giá phải lớn hơn 0!"));
+                }
+                return Promise.resolve();
+              }
             }
             ]}
           >
@@ -186,7 +190,7 @@ const AddProduct: React.FC = () => {
       {
         title: 'Giá khuyến mãi',
         dataIndex: 'currentPrice',
-        render: (text: any, _: any, index: any) => (
+        render: (_: any, __: any, index: any) => (
           <Form.Item
             name={['variants', index, 'currentPrice']}
             initialValue={variants[index]?.currentPrice}
@@ -194,6 +198,18 @@ const AddProduct: React.FC = () => {
             {
               pattern: /^[0-9]*$/,
               message: "Vui lòng nhập số dương!",
+            },
+            {
+              validator: (_, value) => {
+                if (value && Number(value) <= 0) {
+                  return Promise.reject(new Error("Giá phải lớn hơn 0!"));
+                }
+                const originalPrice = variants[index]?.originalPrice;
+                if (value && originalPrice && Number(value) > Number(originalPrice)) {
+                  return Promise.reject(new Error("Giá khuyến mãi không được lớn hơn giá gốc!"));
+                }
+                return Promise.resolve();
+              }
             }
             ]}
           >
@@ -207,7 +223,7 @@ const AddProduct: React.FC = () => {
       {
         title: 'Kho hàng',
         dataIndex: 'stock',
-        render: (text: any, _: any, index: any) => (
+        render: (_: any, __: any, index: any) => (
           <Form.Item
             name={['variants', index, 'stock']}
             initialValue={variants[index]?.stock}
@@ -286,14 +302,14 @@ const AddProduct: React.FC = () => {
 
   const handleInputChange = (value: any, index: any, field: any) => {
     // console.log(variants, 'handleInputChange')
-    let updatedVariants; // Tạo biến để lưu trữ giá trị của newVariants
+    // let updatedVariants; // Tạo biến để lưu trữ giá trị của newVariants
     // console.log(variants, 'variants')
 
     setVariants(prevVariants => {
       const newVariants: any = [...prevVariants];
       // console.log()
       newVariants[index][field] = value;
-      updatedVariants = newVariants; // Lưu giá trị của newVariants vào biến updatedVariants
+      // updatedVariants = newVariants; // Lưu giá trị của newVariants vào biến updatedVariants
       return newVariants;
     });
 
@@ -432,8 +448,8 @@ const AddProduct: React.FC = () => {
     form.setFieldsValue({ variants: mergedVariants });
     // form.setFieldsValue({ variants: newVariants });
     // console.log(variants, 'after-useeffect')
-    const newColumns = createColumns(attributes);
-    setColumns(newColumns);
+    // const newColumns = createColumns(attributes);
+    // setColumns(newColumns);
   }, [attributes]);
 
 
@@ -441,7 +457,7 @@ const AddProduct: React.FC = () => {
     // console.log('Form values:', values);
     // console.log('attribute image', attributeImages);
     // console.log(attributeImages, 'attributeImages')
-    let convertVariant = [];
+    let convertVariant: any[] = [];
     if (variants) {
       // console.log(variants, 'variants')
       const convertDataToDesiredFormat = (data: any, attributes: any) => {
@@ -494,6 +510,7 @@ const AddProduct: React.FC = () => {
       const formDataThumbnail = new FormData();
       formDataThumbnail.append("images", thumbnailFile);
 
+
       try {
         const { data: dataGallery } = await https.post("/images", formData);
         const urlGallery: { url: string; publicId: string }[] = dataGallery.data;
@@ -503,6 +520,8 @@ const AddProduct: React.FC = () => {
 
         const { data: dataThumbnail } = await https.post("/images", formDataThumbnail);
         const urlThumbnail: { url: string; publicId: string }[] = dataThumbnail.data;
+
+
 
         // console.log(urlGallery, 'urlGallery');
         // console.log(urlAttributeImage, 'urlAttributeImage');
@@ -517,9 +536,26 @@ const AddProduct: React.FC = () => {
           return value; // Trả về giá trị ban đầu nếu không có ảnh tương ứng
         });
 
+        console.log(values, 'values');
+        let urlVideo: any = null;
+
+        if (values.video && values.video.length > 0) {
+          const videoFile: any = values.video;
+          const newVideoFile = videoFile[0].originFileObj;
+
+          const formDataVideo = new FormData();
+          formDataVideo.append("videos", newVideoFile);
+
+          const { data: dataVideo } = await https.post("/videos", formDataVideo);
+          const url: { url: string; publicId: string }[] = dataVideo.data;
+          urlVideo = url;
+        }
+
         // console.log(attributeData, 'atrtibuteData');
 
         // return;
+
+        console.log(urlVideo, 'urlVideo')
 
         const data = {
           name: values.name,
@@ -528,13 +564,14 @@ const AddProduct: React.FC = () => {
           thumbnail: urlThumbnail[0].url,
           categories: values.categories,
           attributes: attributeData,
-          shortDescription: "product shortDescription",
-          video: "video.mp4",
-          featured: true,
-          variants: convertVariant
+          shortDescription: values.shortDescription,
+          // video: urlVideo[0].url,
+          featured: featured,
+          variants: convertVariant,
+          ...(urlVideo ? { video: urlVideo[0].url } : {}), // Chỉ thêm trường video nếu urlVideo tồn tại
         };
 
-        // console.log(data, 'dataFinal');
+        console.log(data, 'dataFinal');
 
         // return;
 
@@ -615,7 +652,14 @@ const AddProduct: React.FC = () => {
                 <Input />
               </Form.Item>
               <Form.Item
-                label="Mô tả"
+                label="Mô tả ngắn"
+                name="shortDescription"
+                rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
+              >
+                <TextArea rows={4} />
+              </Form.Item>
+              <Form.Item
+                label="Mô tả đầy đủ"
                 name="description"
                 rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
               >
@@ -633,6 +677,14 @@ const AddProduct: React.FC = () => {
                   options={checkboxCategoriesList}
                 />
               </Form.Item>
+              <div className="mb-1">
+                <h3 className="font-normal mb-1">Sản phẩm hot</h3>
+                <Switch onChange={(checked: boolean) => {
+                  setFeatured(checked);
+                  // console.log(checked, 'checked')
+                  // console.log(featured, 'featured')
+                }} />
+              </div>
             </div>
             <div>
               <Form.Item
@@ -649,8 +701,8 @@ const AddProduct: React.FC = () => {
                         if (file.size > 1024 * 1024) {
                           return Promise.reject("File tối đa 1MB");
                         }
-                        if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
-                          return Promise.reject("File phải có định dạng png, jpg, jpeg!");
+                        if (!["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(file.type)) {
+                          return Promise.reject("File phải có định dạng png, jpg, jpeg, webp!");
                         }
                         return Promise.resolve();
                       }
@@ -664,7 +716,7 @@ const AddProduct: React.FC = () => {
                   beforeUpload={() => false}
                   maxCount={1}
                 >
-                  <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
+                  <Button icon={<UploadOutlined />}>Tải lên</Button>
                 </Upload.Dragger>
               </Form.Item>
               <Form.Item
@@ -684,8 +736,8 @@ const AddProduct: React.FC = () => {
                           if (file.size > 1024 * 1024) {
                             return Promise.reject("File tối đa 1MB");
                           }
-                          if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
-                            return Promise.reject("File phải có định dạng png, jpg, jpeg!");
+                          if (!["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(file.type)) {
+                            return Promise.reject("File phải có định dạng png, jpg, jpeg, webp!");
                           }
                         }
                         return Promise.resolve();
@@ -700,7 +752,34 @@ const AddProduct: React.FC = () => {
                   listType="picture"
                   beforeUpload={() => false}
                 >
-                  <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
+                  <Button icon={<UploadOutlined />}>Tải lên</Button>
+                </Upload.Dragger>
+              </Form.Item>
+              <Form.Item
+                label="Thêm video"
+                name="video"
+                valuePropName="fileList"
+                getValueFromEvent={(e) => Array.isArray(e) ? e : e && e.fileList}
+                rules={[
+                  {
+                    validator(_, fileList) {
+                      if (fileList && fileList.length > 0) {
+                        const file = fileList[0];
+                        if (file.size > 1024 * 1024 * 10) { // Giới hạn kích thước file là 10MB
+                          return Promise.reject("File tối đa 10MB");
+                        }
+                        if (!["video/mp4", "video/avi", "video/mov"].includes(file.type)) { // Các định dạng video được phép
+                          return Promise.reject("File phải có định dạng mp4, avi, mov!");
+                        }
+                        return Promise.resolve();
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
+                <Upload.Dragger listType="picture" beforeUpload={() => false} maxCount={1}>
+                  <Button icon={<UploadOutlined />}>Tải lên</Button>
                 </Upload.Dragger>
               </Form.Item>
             </div>

@@ -163,9 +163,9 @@ header.show-mobile .menu-mobile {
   border-radius: 9999px;
 }
 
-.slider-product .swiper {
-  /* overflow: visible; */
-}
+/* .slider-product .swiper { */
+/* overflow: visible; */
+/* } */
 
 .slider-product .swiper-pagination-horizontal {
   opacity: 0;
@@ -185,10 +185,7 @@ header.show-mobile .menu-mobile {
   content: none !important;
 }
 
-.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper
-  .ant-upload-list
-  .ant-upload-list-item
-  .ant-upload-list-item-name {
+.css-dev-only-do-not-override-1rqnfsa.ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-name {
   white-space: normal !important;
 }
 
@@ -209,24 +206,20 @@ body .ant-modal-mask {
   background-color: #ff385c !important;
 }
 
-.ant-modal-content
-  .ant-modal-body
-  .ant-modal-confirm-body-wrapper
-  .ant-modal-confirm-btns
-  .ant-btn-primary {
+.ant-modal-content .ant-modal-body .ant-modal-confirm-body-wrapper .ant-modal-confirm-btns .ant-btn-primary {
   background-color: #ff4d4f !important;
 }
 
-.order-client {
-  /* min-width: 1248px; */
-}
+/* .order-client { */
+/* min-width: 1248px; */
+/* } */
 
-.order-client .ant-tabs-nav * {
-  /* display: flex !important; */
-  /* grid-template-columns: repeat(7, 1fr) !important; */
-  /* width: 100% !important; */
-  /* min-width: 1060px; */
-}
+/* .order-client .ant-tabs-nav * { */
+/* display: flex !important; */
+/* grid-template-columns: repeat(7, 1fr) !important; */
+/* width: 100% !important; */
+/* min-width: 1060px; */
+/* } */
 
 .order-client .ant-tabs-nav-list .ant-tabs-tab {
   display: flex !important;
@@ -335,4 +328,28 @@ body .ant-modal-mask {
 .ant-layout .ant-layout-sider-trigger {
   background-color: #f5f5f5;
   color: gray;
+}
+
+.btn-search-product {
+  background-color: #fe385c !important;
+}
+
+.ant-switch {
+  background-color: gray !important;
+}
+
+.ant-switch-checked {
+  background-color: #1677ff !important;
+}
+
+.css-dev-only-do-not-override-14i19y2.ant-steps .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title::after {
+  background-color: #fe385c !important;
+}
+
+.ant-steps-icon {
+  color: #fe385c !important;
+}
+
+.ant-steps .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title::after {
+  background-color: #fe385c !important;
 }

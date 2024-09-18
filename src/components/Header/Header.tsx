@@ -70,7 +70,9 @@ const Header = () => {
             </button>
           </div>
           <div className="lg:flex-1 flex items-center">
-            <img src={imgLogo} alt="logo" className="w-40" />
+            <Link to="/">
+              <img src={imgLogo} alt="logo" className="w-48" />
+            </Link>
           </div>
           <nav className="hidden lg:flex items-center">
             <Menu />

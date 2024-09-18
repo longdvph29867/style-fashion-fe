@@ -1,16 +1,13 @@
-import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, message, Modal, Select } from 'antd'
-import { formartCurrency, hiddenSpinner, showSpinner } from '../../../util/util'
-import { getNameByStatusCode, orderStatusValue } from '../../../util/constant'
-import orderService from '../../../services/orderService'
+import { formartCurrency } from '../../../util/util'
+import { getNameByStatusCode } from '../../../util/constant'
 
 type Props = {
     orderList: any,
     fetchOrdersList: any
 }
 
-const Item = ({ orderList, fetchOrdersList }: Props) => {
+const Item = ({ orderList }: Props) => {
     return (
         <div className=' mt-2'>
             {orderList?.map((order: any) => (

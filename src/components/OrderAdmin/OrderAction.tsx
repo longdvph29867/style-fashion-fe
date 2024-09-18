@@ -1,9 +1,8 @@
 // import { useTranslate, useUpdate } from "@refinedev/core";
-import { CheckCircleOutlined, CloseCircleOutlined, InfoCircleOutlined, DownOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, InfoCircleOutlined, DownOutlined } from "@ant-design/icons";
 import { Button, Dropdown, Menu, message, Modal, Space } from "antd";
 import { TableActionButton } from "./tableActionButton";
-import { actionAdminOrder, getNameByStatusCode, getNameByStatusCodeAdmin } from "../../util/constant";
-import { BikeWhiteIcon } from "../Icons/bike-white";
+import { getNameByStatusCodeAdmin } from "../../util/constant";
 import { MdDomainVerification } from "react-icons/md";
 import { TruckIcon } from "../Icons/truck";
 import { VerificationIcon } from "../Icons/verification";
@@ -11,6 +10,7 @@ import orderService from "../../services/orderService";
 import { useState } from "react";
 import { hiddenSpinner, showSpinner } from "../../util/util";
 import { PackageIcon } from "../Icons/package";
+import dayjs from "dayjs";
 // import { TableActionButton } from "../../tableActionButton";
 // import type { IOrder } from "../../../interfaces";
 
@@ -23,7 +23,7 @@ type OrderActionProps = {
 
 
 
-export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList, onPage, fetchOrder }) => {
+export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList, onPage }) => {
     //   const t = useTranslate();
     //   const { mutate } = useUpdate({ resource: "orders", id: record.id });
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,6 +82,18 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList,
         setSelectedStatusName(null);
         setIsModalOpen(false);
     };
+
+    // Tìm log cuối cùng
+    const lastLog = record?.logs[record.logs.length - 1];
+
+    // Kiểm tra xem log cuối cùng có phải là "Đã giao hàng" không
+    const isDelivered = lastLog?.action === "Đã giao hàng";
+
+    // Tính thời gian đã qua kể từ khi "Đã giao hàng"
+    const deliveredTimestamp = isDelivered ? dayjs(lastLog.timestamp) : null;
+    const now = dayjs();
+    const isMoreThan3Days = deliveredTimestamp ? now.diff(deliveredTimestamp, 'day') > 3 : false;
+
 
 
     const moreMenu = (record: any) => (
@@ -214,6 +226,30 @@ export const OrderActions: React.FC<OrderActionProps> = ({ record, setOrderList,
                     onClick={() => showUpdateStatusModal(record._id, 5, getNameByStatusCodeAdmin(5))}
                 >
                     Giao hàng không thành công
+                </Menu.Item>
+
+                <Menu.Item
+                    // Đã nhận hàng
+                    key="7"
+                    style={{
+                        fontSize: 15,
+                        display: "flex",
+                        alignItems: "center",
+                        fontWeight: 500,
+                    }}
+                    disabled={record?.orderStatus.code !== 8 && (!isDelivered || !isMoreThan3Days || (record?.orderStatus.code !== 6))} // Disable nếu chưa đủ 3 ngày
+                    icon={
+                        <MdDomainVerification
+                            style={{
+                                color: "#4CAF50",
+                                fontSize: 17,
+                                fontWeight: 500,
+                            }}
+                        />
+                    }
+                    onClick={() => showUpdateStatusModal(record._id, 7, getNameByStatusCodeAdmin(7))}
+                >
+                    Đã nhận hàng
                 </Menu.Item>
 
                 {/* <Menu.Item

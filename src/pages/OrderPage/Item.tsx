@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { formartCurrency, hiddenSpinner, showSpinner } from '../../util/util'
-import { Button, Image, message, Modal, Skeleton } from 'antd'
+import { formartCurrency } from '../../util/util'
+import { Image } from 'antd'
 import { getMessageByStatusCode } from '../../util/constant';
-import ReviewForm from './ReviewForm'
-import orderService from '../../services/orderService';
 import ButtonOption from './ButtonOption';
 
 type Props = {
@@ -15,104 +12,6 @@ type Props = {
 }
 
 const Item = ({ orderList, fetchOrdersList, setOrderList, userInfo }: Props) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    // const [selectedOrderId, setSelectedOrderId] = useState(null);
-    const [selectedReceivedOrderId, setSelectedReceivedOrderId] = useState(null);
-
-    const { confirm } = Modal;
-
-    const [reviewFormOpen, setReviewFormOpen] = useState(false);
-    const [formReviewValue, setFormReviewValues] = useState(null);
-
-    useEffect(() => {
-        console.log(formReviewValue)
-        if (formReviewValue) {
-            orderService.reviewProduct(formReviewValue).then((res) => {
-                if (res) {
-                    message.success('Đánh giá thành công')
-                    fetchOrdersList()
-                }
-            }).catch((error) => {
-                console.log(error)
-                message.error(error.response.data.message)
-            }).finally(() => {
-                setReviewFormOpen(false)
-            })
-        }
-    }, [formReviewValue])
-
-
-    const handleReceiveOrder = async () => {
-        setIsModalOpen(false);
-        try {
-            showSpinner();
-            if (selectedReceivedOrderId !== null) {
-                const data = await orderService.receivedOrder(selectedReceivedOrderId);
-                if (data) {
-                    message.success('Thao tác thành công');
-                    fetchOrdersList();
-                    hiddenSpinner();
-                }
-            }
-        } catch (error) {
-            hiddenSpinner();
-            console.log(error);
-            message.error(error.response.data.message);
-        }
-        setSelectedReceivedOrderId(null);
-    };
-
-    const showReceiveModal = (id: any) => {
-        setIsModalOpen(true);
-        setSelectedReceivedOrderId(id);
-    };
-
-    const handleCancelOrder = async (id: string) => {
-        setIsModalOpen(false);
-        try {
-            showSpinner();
-            if (id) {
-                const data = await orderService.cancelOrder(id);
-                if (data) {
-                    message.success('Hủy thành công');
-                    fetchOrdersList();
-                    hiddenSpinner();
-                }
-            }
-        } catch (error) {
-            hiddenSpinner();
-            console.log(error);
-            message.error(error.response.data.message);
-        }
-    };
-
-
-    const showCancelOrder = (id: string) => {
-        confirm({
-            title: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
-            onOk() {
-                handleCancelOrder(id);
-            },
-            onCancel() {
-                console.log('Cancel');
-            },
-            maskClosable: true,
-        });
-    };
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
-        setSelectedReceivedOrderId(null);
-    };
-    // const showDeleteModal = (id: any) => {
-    //     setIsModalOpen(true);
-    //     setSelectedOrderId(id);
-    // };
-
-    const handleReview = (id: string) => {
-        setReviewFormOpen(true)
-
-    }
 
     return (
         <div className='mt-2'>

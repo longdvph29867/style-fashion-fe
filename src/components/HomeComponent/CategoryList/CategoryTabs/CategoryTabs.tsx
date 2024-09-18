@@ -1,6 +1,5 @@
-type Props = {};
 
-const CategoryTabs = (props: Props) => {
+const CategoryTabs = () => {
   const menuCategory = [
     {
       icon: (

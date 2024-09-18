@@ -12,7 +12,6 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import voucherService from "../../../services/voucherService";
-import dayjs from "dayjs";
 
 const AddVoucher: React.FC = () => {
   const navigate = useNavigate();
@@ -51,15 +50,7 @@ const AddVoucher: React.FC = () => {
     console.log("Failed:", errorInfo);
   };
 
-  const validateDateRange = (values: any) => {
-    const validFrom = values.validFrom ? dayjs(values.validFrom) : null;
-    const validTo = values.validTo ? dayjs(values.validTo) : null;
 
-    if (validFrom && validTo && validTo.isBefore(validFrom)) {
-      return Promise.reject('Thời gian kết thúc phải lớn hơn thời gian bắt đầu.');
-    }
-    return Promise.resolve();
-  };
   return (
     <>
       <Breadcrumb style={{ margin: '16px 0' }}>
@@ -123,7 +114,16 @@ const AddVoucher: React.FC = () => {
             {
               pattern: /^[0-9]*$/,
               message: "Vui lòng nhập số dương!",
-            }
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                const type = getFieldValue('type');
+                if (type === 'percentage' && value > 100) {
+                  return Promise.reject(new Error("Giá trị giảm giá không được lớn hơn 100%"));
+                }
+                return Promise.resolve();
+              },
+            }),
             ]}
           >
             <Input placeholder="" />
@@ -196,16 +196,31 @@ const AddVoucher: React.FC = () => {
             <Form.Item
               name="validTo"
               rules={[{ required: true, message: 'Vui lòng nhập trường này!' },
-              { validator: (_, value) => validateDateRange({ validFrom: form.getFieldValue('validFrom'), validTo: value }) }
+              // { validator: (_, value) => validateDateRange({ validFrom: form.getFieldValue('validFrom'), validTo: value }) }
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  const validFrom = getFieldValue('validFrom');
+                  if (validFrom && value && value <= validFrom) {
+                    return Promise.reject(new Error('Thời gian kết thúc phải lớn hơn thời gian bắt đầu!'));
+                  }
+                  return Promise.resolve();
+                },
+              }),
               ]}
             >
               <div>
                 <label className="mb-1">Thời gian kết thúc</label>
                 <DatePicker
                   showTime
+                  // onChange={(value) => {
+                  //   // setTimeEnd(value);
+                  //   form.setFieldsValue({ validTo: value });
+                  // }}
                   onChange={(value) => {
-                    // setTimeEnd(value);
                     form.setFieldsValue({ validTo: value });
+
+                    // Trigger validation immediately
+                    form.validateFields(['validTo']);
                   }}
                 />
               </div>

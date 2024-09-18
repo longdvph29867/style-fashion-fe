@@ -13,7 +13,7 @@ const ProductsSame: React.FC<Props> = ({ productsSame }) => {
         Sản phẩm cùng loại
       </h2>
       <div className="grid grid-cols-1 -mx-2 lg:-mx-6 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
-        {productsSame.map((product, index) => (
+        {productsSame.map((_, index) => (
           <div key={index} className="px-2 py-6 lg:px-6">
             {/* <ItemProduct product={product} /> */}
           </div>

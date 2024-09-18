@@ -1,5 +1,5 @@
 import { https } from "../../config/axios";
-import { Button, Form, Input, message } from "antd";
+import { Form, Input, message } from "antd";
 import { hiddenSpinner, showSpinner } from "../../util/util";
 import { localUserService } from "../../services/localService";
 
@@ -8,7 +8,7 @@ const ChangePassword: React.FC = () => {
   const userId = storedUserInfo ? storedUserInfo.id : null;
   const useEmail = storedUserInfo ? storedUserInfo.email : null;
   const onFinish = async (values: any) => {
-    const { oldPassword, newPassword, confirmPassword } = values;
+    const { oldPassword, newPassword } = values;
     const onPassword = async () => {
       showSpinner();
       try {

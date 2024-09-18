@@ -7,7 +7,7 @@ type CategoryProps = {
 };
 
 const SubCategoryCart: React.FC<CategoryProps> = ({ category }) => {
-  const { name, productCount, thumbnail } = category;
+  const { name, productCount } = category;
   const defaultImageUrl =
     "https://ciseco-nextjs.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fexplore6.ab5c1b32.png&w=256&q=75"; // Đường dẫn đến hình ảnh mặc định của bạn
 

@@ -1,4 +1,3 @@
-import React from 'react';
 
 const UserListSkeleton = () => (
     <div className="relative grid lg:grid-cols-10 sm:grid-cols-5 grid-cols-3 gap-2 border-b lg:border-transparent border-slate-300 animate-pulse">

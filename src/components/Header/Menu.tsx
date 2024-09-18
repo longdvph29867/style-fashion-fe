@@ -48,7 +48,7 @@ const Menu = () => {
                 <li key={category.id} className="px-2">
                   <Link
                     className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
-                    to={`/products?categories=${category.slug}`}
+                    to={`/products?categories=${category.id}`}
                   >
                     {category.name}
                   </Link>
@@ -66,14 +66,14 @@ const Menu = () => {
           Sản phẩm
         </Link>
       </li>
-      <li>
+      {/* <li>
         <a
           className="py-2.5 px-5 font-medium rounded-full duration-300 text-content hover:text-title hover:bg-[#ebebeb]"
           href="#"
         >
           Khuyến mại
         </a>
-      </li>
+      </li> */}
       <li>
         <a
           className="py-2.5 px-5 font-medium rounded-full duration-300 text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb]"
