@@ -54,7 +54,7 @@ const CategoryList: React.FC = () => {
             title: 'STT',
             dataIndex: 'index',
             key: 'index',
-            render: (_: any, __: any, index: number) => <span>{index + 1}</span>,
+            render: (_: any, __: any, index: number) => ((currentPage - 1) * limitPerPage + (index + 1)),
         },
         {
             title: 'Tên danh mục',

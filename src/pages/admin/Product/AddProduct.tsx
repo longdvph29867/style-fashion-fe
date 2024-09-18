@@ -327,7 +327,7 @@ const AddProduct: React.FC = () => {
   };
 
   const fetchCategoryes = async () => {
-    const { data } = await https.get("/categories");
+    const { data } = await https.get("/categories?limit=100");
     setCheckboxCategoriesList(data.results.map((category: any) => ({
       label: category.name,
       value: category.id,
