@@ -536,7 +536,7 @@ const AddProduct: React.FC = () => {
           return value; // Trả về giá trị ban đầu nếu không có ảnh tương ứng
         });
 
-        console.log(values, 'values');
+        // console.log(values, 'values');
         let urlVideo: any = null;
 
         if (values.video && values.video.length > 0) {
@@ -555,7 +555,7 @@ const AddProduct: React.FC = () => {
 
         // return;
 
-        console.log(urlVideo, 'urlVideo')
+        // console.log(urlVideo, 'urlVideo')
 
         const data = {
           name: values.name,
@@ -571,7 +571,7 @@ const AddProduct: React.FC = () => {
           ...(urlVideo ? { video: urlVideo[0].url } : {}), // Chỉ thêm trường video nếu urlVideo tồn tại
         };
 
-        console.log(data, 'dataFinal');
+        // console.log(data, 'dataFinal');
 
         // return;
 
@@ -583,8 +583,8 @@ const AddProduct: React.FC = () => {
         }
       } catch (error) {
         hiddenSpinner();
-        // console.log(error);
-        message.error(error.response.data.message);
+        console.log(error);
+        message.error(error.response.data);
       }
     };
     postProduct();
@@ -859,24 +859,26 @@ const AddProduct: React.FC = () => {
                         <Form.List name={[field.name, "values"]}>
                           {(valueFields, { add: addValue, remove: removeValue }) => (
                             <div className="flex gap-4 mt-5">
-                              <div className="flex flex-col w-[130px]">
-                                <label className="text-[16px] font-normal" htmlFor="">Phân loại hàng</label>
-                                <Button className="mt-2" type="dashed" onClick={() => {
-                                  // console.log(variants, 'addValue')
+                              {valueFields.length < 20 &&
+                                <div className="flex flex-col w-[130px]">
+                                  <label className="text-[16px] font-normal" htmlFor="">Phân loại hàng</label>
+                                  <Button className="mt-2" type="dashed" onClick={() => {
+                                    // console.log(variants, 'addValue')
 
-                                  addValue()
-                                  // Thêm một object với name='' vào cuối mảng values
-                                  setAttributes(prevAttributes => {
-                                    const newAttributes = [...prevAttributes];
-                                    newAttributes[fieldIndex].values.push({ name: "" });
-                                    return newAttributes;
-                                  });
-                                }
-                                }
-                                  icon={<PlusOutlined />}>
-                                  Thêm
-                                </Button>
-                              </div>
+                                    addValue()
+                                    // Thêm một object với name='' vào cuối mảng values
+                                    setAttributes(prevAttributes => {
+                                      const newAttributes = [...prevAttributes];
+                                      newAttributes[fieldIndex].values.push({ name: "" });
+                                      return newAttributes;
+                                    });
+                                  }
+                                  }
+                                    icon={<PlusOutlined />}>
+                                    Thêm
+                                  </Button>
+                                </div>
+                              }
                               <div className="grid grid-cols-4 gap-4">
                                 {valueFields.map((valueField, valueIndex) => (
                                   <div key={valueField.key} className="">

@@ -57,8 +57,8 @@ const OrderAdmin = () => {
     // Thêm filters vào queryParams
     for (const key in filters) {
       if (filters[key]) {
-        console.log("key", key);
-        console.log("filters[key]", filters[key]);
+        // console.log("key", key);
+        // console.log("filters[key]", filters[key]);
         // Nếu filters[key] là một mảng, chuyển đổi nó thành chuỗi
         const filterValue = Array.isArray(filters[key])
           ? filters[key].join(",")
@@ -82,7 +82,7 @@ const OrderAdmin = () => {
 
       // Biến queryUrl chứa tất cả các tham số
       const queryUrl = `${params.toString()}`;
-      console.log("queryUrl", queryUrl);
+      // console.log("queryUrl", queryUrl);
 
       // Gọi API với queryUrl
       const { data } = await orderService.getAllOrdersV2(queryUrl);
