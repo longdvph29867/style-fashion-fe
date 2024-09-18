@@ -1,17 +1,21 @@
 // type Props = {};
 import {
+    Breadcrumb,
     Button,
     Divider,
     Form,
     Image,
     Input,
+    message,
+    Modal,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import { https } from "../../../config/axios";
 
 const UserDetail: React.FC = () => {
+    const navigate = useNavigate();
     const { id } = useParams();
     const [user, setUser] = useState<any>({}); // product detail
     const [form] = Form.useForm();
@@ -54,8 +58,44 @@ const UserDetail: React.FC = () => {
         fetchProductDetail();
     }, [id]);
 
+    const handleDelete = async (id: string) => {
+        showSpinner();
+        try {
+            const data = await https.delete(`/users/${id}`);
+            if (data) {
+                message.success("Thao tác thành công");
+                hiddenSpinner();
+                navigate('/admin/users');
+            }
+        } catch (error) {
+            hiddenSpinner();
+            console.log(error);
+            message.error(error.response.data.message);
+        }
+    };
+
+    const { confirm } = Modal;
+
+    const showConfirm = (id: string) => {
+        confirm({
+            title: 'Bạn có chắc chắn muốn xóa?',
+            onOk() {
+                handleDelete(id);
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+            maskClosable: true,
+        });
+    };
+
     return (
         <>
+            <Breadcrumb style={{ margin: '16px 0' }}>
+                <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
+                <Breadcrumb.Item><Link to="/admin/users">Người dùng</Link></Breadcrumb.Item>
+                <Breadcrumb.Item>Chi tiết người dùng</Breadcrumb.Item>
+            </Breadcrumb>
             <div className="w-full px-5 pb-2">
                 <h3 className="text-2xl text-slate-700 text-center mt-6 mb-3">
                     Chi tiết người dùng
@@ -112,7 +152,7 @@ const UserDetail: React.FC = () => {
                                     <Input readOnly />
                                 </Form.Item>
                                 <Form.Item
-                                    label="Role"
+                                    label="Vai trò"
                                     name="role"
                                 >
                                     <Input readOnly />
@@ -182,18 +222,31 @@ const UserDetail: React.FC = () => {
                         </div>
                     </div>
                     <Form.Item>
-                        <Link
-                            to={`/admin/users/update/${user.id}`}
-                            className=""
-                        >
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                className="text-white bg-green-500"
-                            >
-                                Cập nhật người dùng
-                            </Button>
-                        </Link>
+                        {user.role !== 'admin' && (
+                            <div className="flex gap-2">
+                                <Link
+                                    to={`/admin/users/update/${user.id}`}
+                                    className=""
+                                >
+                                    <Button
+                                        type="primary"
+                                        htmlType="submit"
+                                        className="text-white bg-green-500"
+                                    >
+                                        Cập nhật người dùng
+                                    </Button>
+                                </Link>
+                                <Button
+                                    type="link"
+                                    className="text-white bg-red-500"
+                                    onClick={() => showConfirm(user.id)}
+                                >
+                                    Xoá
+                                </Button>
+
+                            </div>
+                        )}
+
                     </Form.Item>
                 </Form>
             </div>

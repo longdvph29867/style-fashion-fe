@@ -7,7 +7,7 @@ type CategoryProps = {
 };
 
 const SubCategoryCart: React.FC<CategoryProps> = ({ category }) => {
-  const { name, productCount, thumbnail } = category;
+  const { name, productCount } = category;
   const defaultImageUrl =
     "https://ciseco-nextjs.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fexplore6.ab5c1b32.png&w=256&q=75"; // Đường dẫn đến hình ảnh mặc định của bạn
 
@@ -22,21 +22,21 @@ const SubCategoryCart: React.FC<CategoryProps> = ({ category }) => {
             alt={name}
           />
         </div>
-        <div className="text-xs font-medium text-slate-700">
+        <div className="text-xs font-medium text-content">
           {productCount} sản phẩm
         </div>
       </div>
       <div className="pt-10">
         <div className="">
-          <span className="block mb-2 text-sm text-slate-500 dark:text-slate-400">
+          <span className="block mb-2 text-sm text-content">
             Manufacturar
           </span>
-          <h2 className="text-2xl font-semibold sm:text-3xl my-line-1">
+          <h2 className="text-2xl font-semibold sm:text-3xl my-line-1 text-title">
             {name}
           </h2>
           <a
             href="/collection"
-            className="flex items-center pt-6 text-sm font-medium transition-colors text-slate-500 hover:text-blue-600"
+            className="flex items-center pt-6 text-sm font-medium transition-colors text-primary"
           >
             <span>Xem ngay</span>
             <svg

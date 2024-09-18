@@ -1,6 +1,6 @@
 import ChangeImage from "./ChangeImage";
 import { useParams } from "react-router-dom";
-import { Button, Form, Input, message } from "antd";
+import { Form, Input, message } from "antd";
 import { hiddenSpinner, showSpinner } from "../../util/util";
 import { https } from "../../config/axios";
 import { useEffect, useState } from "react";
@@ -111,9 +111,9 @@ const AccountInfomation = () => {
     >
       <div>
         <div className="space-y-10 sm:space-y-12">
-          <h2 className="text-2xl sm:text-3xl font-semibold sm:text-left text-center">
+          {/* <h2 className="text-2xl sm:text-3xl font-semibold sm:text-left text-center">
             Account infomation
-          </h2>
+          </h2> */}
           <div className="flex flex-col md:flex-row">
             {/* Change Image */}
             <ChangeImage handleUpload={handleUpload} image={avatar} />
@@ -133,7 +133,18 @@ const AccountInfomation = () => {
                 requiredMark={false}
               >
                 <Form.Item
-                  label="Full name"
+                  label="Email"
+                  className=" text-base font-medium text-neutral-900"
+                  name="email"
+                >
+                  <Input
+                    disabled
+                    className="block w-full border-neutral-200  bg-white disabled:bg-neutral-200 rounded-2xl text-sm font-normal h-11 px-4 py-3 mt-1.5"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  label="Tên người dùng"
                   className=" text-base font-medium text-neutral-900"
                   name="name"
                   rules={[
@@ -149,23 +160,7 @@ const AccountInfomation = () => {
                 </Form.Item>
 
                 <Form.Item
-                  label="Email"
-                  className=" text-base font-medium text-neutral-900"
-                  name="email"
-                  rules={[
-                    { required: true, message: "Please fill in this field!" },
-                    {
-                      pattern:
-                        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                      message: "Invalid email address!",
-                    },
-                  ]}
-                >
-                  <Input className="block w-full border-neutral-200  bg-white disabled:bg-neutral-200 rounded-2xl text-sm font-normal h-11 px-4 py-3 mt-1.5" />
-                </Form.Item>
-
-                <Form.Item
-                  label="Phone number"
+                  label="Số điện thoại"
                   className=" text-base font-medium text-neutral-900"
                   name="phoneNumber"
                   rules={[
@@ -180,13 +175,12 @@ const AccountInfomation = () => {
                 </Form.Item>
 
                 <Form.Item>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 disabled:bg-opacity-90 bg-slate-900 hover:bg-slate-800 text-slate-50 shadow-xl  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600"
+                  <button
+                    type="submit"
+                    className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 disabled:bg-opacity-90 bg-primary2  hover:bg-[#cf3350] text-slate-50 shadow-xl  focus:outline-none focus:ring-2 focus:ring-offset-2"
                   >
                     Cập nhật
-                  </Button>
+                  </button>
                 </Form.Item>
               </Form>
             </div>

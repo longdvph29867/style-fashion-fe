@@ -1,23 +1,30 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import categoryService from "../../services/categoryService";
+import { useQuery } from "@tanstack/react-query";
+import { CategoryTpype } from "../../types/categoryType";
 
 const Menu = () => {
-  const [categoriesList, setCategoriesList] = useState<any[]>([]);
+  const { data } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () =>
+      categoryService.getAllCategories().then((res) => res.data.results),
+    refetchInterval: 3 * 60 * 1000,
+  });
 
   return (
-    <ul className="flex items-center lg:justify-start justify-center lg:flex-nowrap flex-wrap overflow-hidden">
+    <ul className="flex items-center lg:justify-start justify-center lg:flex-nowrap flex-wrap">
       <li>
-        <a
-          className="py-2.5 px-5 font-medium rounded-full duration-300 hover:bg-slate-100"
-          href="#"
+        <Link
+          className="py-2.5 px-5 font-medium rounded-full duration-300 text-content hover:text-title hover:bg-[#ebebeb]"
+          to="/"
         >
           Trang chủ
-        </a>
+        </Link>
       </li>
       <li className="relative group">
         <a
           href="#"
-          className="flex items-center py-2.5 px-5 font-medium rounded-full duration-300 hover:bg-slate-100"
+          className="flex items-center py-2.5 px-5 font-medium rounded-full duration-300 text-content hover:text-title hover:bg-[#ebebeb]"
         >
           Danh mục
           <svg
@@ -36,14 +43,14 @@ const Menu = () => {
         </a>
         <div className="group-hover:visible group-hover:opacity-100 invisible duration-300 absolute transform z-10 w-56 top-full left-0 opacity-0 translate-y-0">
           <ul className="rounded-lg shadow-lg border border-neutral-100 text-sm relative bg-white py-4 grid gap-1">
-            {categoriesList.map((category, index) => {
+            {data?.map((category: CategoryTpype) => {
               return (
-                <li key={index} className="px-2">
+                <li key={category.id} className="px-2">
                   <Link
                     className="flex items-center font-normal text-neutral-600 py-2 px-4 rounded-md hover:bg-neutral-100"
-                    to={`/products?category=${category.categorySlug}`}
+                    to={`/products?categories=${category.id}`}
                   >
-                    {category.categoryName}
+                    {category.name}
                   </Link>
                 </li>
               );
@@ -53,26 +60,26 @@ const Menu = () => {
       </li>
       <li>
         <Link
-          className="py-2.5 px-5 font-medium rounded-full duration-300 hover:bg-slate-100"
+          className="py-2.5 px-5 font-medium rounded-full duration-300 text-content hover:text-title hover:bg-[#ebebeb]"
           to="/products"
         >
           Sản phẩm
         </Link>
       </li>
-      <li>
+      {/* <li>
         <a
-          className="py-2.5 px-5 font-medium rounded-full duration-300 hover:bg-slate-100"
+          className="py-2.5 px-5 font-medium rounded-full duration-300 text-content hover:text-title hover:bg-[#ebebeb]"
           href="#"
         >
           Khuyến mại
         </a>
-      </li>
+      </li> */}
       <li>
         <a
-          className="py-2.5 px-5 font-medium rounded-full duration-300 hover:bg-slate-100"
-          href="#"
+          className="py-2.5 px-5 font-medium rounded-full duration-300 text-[#6a6a6a] hover:text-[#222] hover:bg-[#ebebeb]"
+          href="/blog"
         >
-          Giới thiệu
+          Tin Tức
         </a>
       </li>
     </ul>

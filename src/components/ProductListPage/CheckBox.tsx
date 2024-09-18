@@ -1,8 +1,4 @@
-import React from "react";
-
-type Props = {};
-
-const CheckBox = (props: Props) => {
+const CheckBox = () => {
   return (
     <div className="flex items-center text-sm sm:text-base mb-4">
       <div className="inline-flex items-center">

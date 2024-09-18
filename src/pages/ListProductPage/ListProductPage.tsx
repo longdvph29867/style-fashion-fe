@@ -1,183 +1,272 @@
 import React, { useEffect, useState } from "react";
-import { https } from "../../services/config";
 import { useLocation, useNavigate } from "react-router-dom";
-// import ItemProduct from "../../components/ItemProduct";
-import { hiddenSpinner, showSpinner } from "../../util/util";
-import { Button, Checkbox, CheckboxProps, Divider, Form, Input, Select } from "antd";
+import ProductCard from "../../components/ProductCard/ProductCard";
+import { Product } from "../../types/products";
+import { Form, Input, Select } from "antd";
 import { GoDash } from "react-icons/go";
-import ItemProduct from "../../components/ProductCard/ProductCard";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import productService from "../../services/productService";
+import PaginationPage from "../../components/PaginationPage/PaginationPage";
+import categoryService from "../../services/categoryService";
+import "./listProduct.css";
+import { hiddenSpinner, showSpinner } from "../../util/util";
+import { FilterOutlined } from "@ant-design/icons";
+
 
 const ListProductPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const slugCategory = queryParams.get("category");
+  const [categoriesList, setCategoriesList] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [form] = Form.useForm();
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const [productsList, setProductsList] = useState<Product[]>([]);
-  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
-  const [filteredCategory, setFilteredCategory] = useState<any>([]);
+  const [openFilter, setOpenFilter] = useState(false);
+
+  const limit = 12;
+  const currentPage = queryParams.get("page")
+    ? Number(queryParams.get("page"))
+    : 1;
+  queryParams.set("limit", limit.toString());
+  queryParams.set("page", currentPage.toString());
+
+  // const { data } = useQuery({
+  //   queryKey: ["products", location.search],
+  //   queryFn: () =>
+  //     productService
+  //       .getFilterProducts(limit, currentPage, queryParams.get("categories"))
+  //       .then((res) => res.data),
+  // });
+
+  // const { data: categoriesData } = useQuery({
+  //   queryKey: ["categories"],
+  //   queryFn: () =>
+  //     categoryService.getAllCategories().then((res) => res.data.results),
+  //   refetchInterval: 3 * 60 * 1000,
+  // });
 
   const fetchData = async () => {
+    // console.log('location.search', location.search);
+    // console.log('queryParams', queryParams.toString());
+    // return
     showSpinner();
     try {
-      // const API = slugCategory
-      //   ? `/products?category=${slugCategory}`
-      //   : "/products";
-      const { data } = await https.get('/products');
-      console.log(data)
-      setProductsList(data.results);
+      const { data } = await productService.getFilterProducts(queryParams.toString());
+      setProducts(data.results);
+      setTotalProducts(data.totalResults);
+      window.scrollTo(0, 0);
       hiddenSpinner();
     } catch (error) {
       console.log(error);
       hiddenSpinner();
     }
-  };
+  }
 
   const fetchCategories = async () => {
-    showSpinner();
-    try {
-      const { data } = await https.get("/categories");
-      setCategoriesList(data.results);
-      hiddenSpinner();
-    } catch (error) {
-      console.log(error);
-      hiddenSpinner();
-    }
+    const { data } = await categoryService.getAllCategories();
+    setCategoriesList(data.results.map((category: any) => ({
+      label: category.name,
+      value: category.id,
+    })));
+  };
 
-  }
   useEffect(() => {
     fetchData();
+    if (!queryParams.get("categories")) {
+      setSelectedCategory(null);
+    }
+    if (!queryParams.get("fromPrice")) {
+      form.resetFields();
+    }
+    if (!queryParams.get("toPrice")) {
+      form.resetFields();
+    }
+    // console.log(location.search, 'location.search');
+  }, [location.search]);
+
+  useEffect(() => {
     fetchCategories();
   }, []);
 
-  const callFilterApi = async () => {
-    const paramCategory = queryParams.get("categories");
-    let newUrl = `/products?sortBy=createdAt:asc&limit=18&page=1`;
-    if (paramCategory) {
-      newUrl += `&categories=${paramCategory}`;
-    }
-    return https.get(newUrl);
-  }
-
-  const onChange: CheckboxProps['onChange'] = (e) => {
-    console.log(`checked = ${e.target.value} ${e.target.checked}`);
-    if (e.target.checked) {
-      setFilteredCategory([...filteredCategory, e.target.value])
-    } else {
-      setFilteredCategory(filteredCategory.filter((slug: string) => slug !== e.target.value))
-    }
-  };
-
-  const onFilter = async () => {
-    showSpinner();
-    try {
-      if (filteredCategory.length !== 0) {
-        queryParams.set("categories", filteredCategory.join(','));
-      }
-      navigate(location.pathname + "?" + queryParams.toString());
-      // const { data } = await https.get(`/products?categories=${filteredCategory.join(',')}`);
-      const { data } = await callFilterApi();
-      setProductsList(data.results);
-      hiddenSpinner();
-    } catch (error) {
-      console.log(error);
-      hiddenSpinner();
-    }
-  }
-
-  useEffect(() => {
-    console.log(filteredCategory, 'filteredCategory')
-    if (filteredCategory.length === 0) {
-      queryParams.delete("categories");
-      onFilter()
-    } else {
-      onFilter()
-    }
-  }, [filteredCategory])
+  // const onChange: CheckboxProps["onChange"] = (e) => {
+  //   const newCategory = e.target.value;
+  //   let updatedCategories = slugCategory ? [...slugCategory] : [];
+  //   if (updatedCategories.includes(newCategory)) {
+  //     updatedCategories = updatedCategories.filter((c) => c !== newCategory);
+  //   } else {
+  //     updatedCategories.push(newCategory);
+  //   }
+  //   if (updatedCategories.length === 0) {
+  //     queryParams.delete("categories");
+  //   } else {
+  //     queryParams.set("categories", updatedCategories.join(","));
+  //   }
+  //   navigate(location.pathname + "?" + queryParams.toString());
+  // };
 
   const onSubmitPriceRangeFilter = (values: any) => {
-
-  }
-  const onFinishFailed = (errorInfo: unknown) => {
-    console.log("Failed:", errorInfo);
+    // console.log(values, 'values');
+    queryParams.set("fromPrice", values.fromPrice);
+    queryParams.set("toPrice", values.toPrice);
+    navigate(location.pathname + "?" + queryParams.toString());
   };
+
+  const listBreadcrumb = [
+    {
+      label: "Danh sách sản phẩm",
+    },
+  ];
+
 
   return (
     <div className="py-20">
-      <div className="container mx-auto">
-        <h2 className="text-2xl font-semibold sm:text-3xl lg:text-4xl">
-          Bộ sưu tập quần áo
-        </h2>
-        <span className="block mt-4 text-sm text-neutral-500 sm:text-base lg:w-1/2">
-          Các bộ sưu tập quần áo thời trang mới nhất trong năm 2023 Dạo Phố cực
-          đẹp, cao cấp dành cho nam nữ
-        </span>
-        <hr className="border-slate-200 my-14" />
-        <div className="grid gap-10 lg:grid-cols-4 md:grid-cols-3">
+      <Breadcrumb list={listBreadcrumb} />
+      <div className="container mx-auto mt-10">
+        <div
+          className="flex lg:hidden mb-5 justify-end">
+          <button
+            onClick={() => {
+              setOpenFilter(!openFilter);
+            }}
+            className="flex gap-1 items-center px-4 py-2 text-sm font-medium rounded-md border bg-orange-400 hover:bg-orange-500 text-white">
+            <FilterOutlined />
+            Bộ lọc
+          </button>
+        </div>
+        <div className="grid gap-10 lg:grid-cols-4 md:grid-cols-3 relative">
           {/*  */}
 
-          <div className="col-span-1 pr-4">
-            <div>
-              <div className="relative flex flex-col py-8 space-y-4 border-b border-slate-300">
-                <h3 className="font-semibold ">Danh mục</h3>
-                <div className="grid grid-flow-row gap-1">
-                  {
-                    categoriesList.map((category: Category, index) => (
-                      <Checkbox value={category.slug} onChange={onChange}>{category.name}</Checkbox>
-                    ))
-                  }
+          <div className={`col-span-1 pr-4 ${openFilter ? 'block absolute right-0 top-[-20px] w-[300px] z-50 bg-[#FAFAFA] p-10 rounded-md' : 'hidden'} lg:block`}>
+
+            <div className="relative flex flex-col py-8 space-y-4 border-b border-slate-300">
+              <h3 className="font-semibold ">Danh mục</h3>
+              <div className="grid grid-flow-row gap-1 filter-product">
+                <Select
+                  // mode="multiple"
+                  style={{ height: '36px' }}
+                  placeholder="Chọn danh mục"
+                  options={categoriesList}
+                  loading={!categoriesList.length}
+                  value={selectedCategory}
+                  onChange={(value: any) => {
+                    console.log(value, 'value');
+                    setSelectedCategory(value);
+                    queryParams.set("categories", value);
+                    navigate(location.pathname + "?" + queryParams.toString());
+                  }}
+                />
+              </div>
+            </div>
+            <div className="border-b border-slate-300 py-8">
+              <h3 className="font-semibold mb-4">Khoảng Giá</h3>
+              <Form
+                form={form}
+                layout="vertical"
+                name="basic"
+                labelCol={{ span: 12 }}
+                wrapperCol={{ span: 24 }}
+                initialValues={{ remember: true }}
+                onFinish={onSubmitPriceRangeFilter}
+                autoComplete="off"
+                requiredMark={false}
+              >
+                <div className="flex gap-2">
+                  <Form.Item
+                    label=""
+                    name="fromPrice"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng nhập trường này!",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="₫ Từ" />
+                  </Form.Item>
+                  <GoDash className="text-3xl text-slate-500 col-span-1" />
+                  <Form.Item
+                    label=""
+                    name="toPrice"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng nhập trường này!",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="₫ Đến" />
+                  </Form.Item>
                 </div>
-              </div>
-              <div>
-                <h3 className="font-semibold my-4">Khoảng Giá</h3>
-                <Form
-                  layout="vertical"
-                  name="basic"
-                  labelCol={{ span: 12 }}
-                  wrapperCol={{ span: 24 }}
-                  style={{}}
-                  initialValues={{ remember: true }}
-                  onFinish={onSubmitPriceRangeFilter}
-                  onFinishFailed={onFinishFailed}
-                  autoComplete="off"
-                  requiredMark={false}
+                <button className="relative inline-flex items-center justify-center h-auto w-full px-6 py-3 mt-2 text-sm font-medium transition-colors rounded-full shadow-xl bg-primary hover:bg-[#dc2c4c] text-white">
+                  Áp dụng
+                </button>
+              </Form>
+            </div>
+            <div className="mb-5 h-[62px] w-full gap-4 mt-4 ">
+              <h3 className="font-semibold ">Sắp xếp theo</h3>
+              <div className="flex gap-2 mt-2 justify-between">
+                <button
+                  className="px-4 py-2 text-sm font-medium rounded-md border border-primary hover:bg-primary hover:text-white text-primary"
+                  onClick={() => {
+                    queryParams.set("sortBy", "defaultPrice:asc");
+                    navigate(location.pathname + "?" + queryParams.toString());
+                  }}
                 >
-                  <div className="flex gap-2">
-                    <Form.Item
-                      label=""
-                      name="minPrice"
-                      rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
-                    >
-                      <Input placeholder="₫ Từ" />
-                    </Form.Item>
-                    <GoDash className="text-3xl text-slate-500 col-span-1" />
-                    <Form.Item
-                      label=""
-                      name="maxPrice"
-                      rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
-                    >
-                      <Input placeholder="₫ Đến" />
-                    </Form.Item>
-                  </div>
-                </Form>
+                  Giá tăng dần
+                </button>
+                <button
+                  className="px-4 py-2 text-sm font-medium rounded-md border border-primary hover:bg-primary hover:text-white text-primary"
+                  onClick={() => {
+                    queryParams.set("sortBy", "defaultPrice:desc");
+                    navigate(location.pathname + "?" + queryParams.toString());
+                  }}
+                >
+                  Giá giảm dần
+                </button>
+
               </div>
+            </div>
+            <div className="mb-5 h-[62px] w-full flex items-center gap-4 mt-4">
+              <button
+                className="px-6 py-2 text-sm font-medium rounded-md border bg-orange-400 hover:bg-orange-500 text-white"
+                onClick={() => {
+                  // Reset Select
+                  setSelectedCategory(null);
+
+                  // Reset Form fields
+                  form.resetFields();
+
+                  queryParams.delete("categories");
+                  queryParams.delete("fromPrice");
+                  queryParams.delete("toPrice");
+                  queryParams.delete("sortBy");
+                  navigate(location.pathname + "?" + queryParams.toString());
+                }}
+              >
+                Đặt lại
+              </button>
             </div>
           </div>
           <div className="col-span-3">
-            <div className="mb-2 h-[62px] w-full bg-slate-50 flex items-center gap-4 pl-10">
-              <span className="font-normal">Sắp xếp theo
-              </span>
-              <Button className="w-[90px] h-[34px]" type="primary" danger>Phổ biến</Button>
-              <Button className="bg-white w-[90px] h-[34px]">Mới nhất</Button>
-              <Button className="bg-white w-[90px] h-[34px]">Bán chạy</Button>
-
-            </div>
             {/* list */}
-            <div className="lg:col-span-3 md:col-span-2 grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10 ">
+            <div className="lg:col-span-3 md:col-span-2 grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10">
               {/* item */}
-              {productsList.map((product, index) => (
-                <ItemProduct key={index} product={product} />
+              {products.map((product: Product) => (
+                <ProductCard key={product.id} product={product} />
               ))}
+            </div>
+            <div className="mt-10">
+              <PaginationPage
+                current={currentPage}
+                total={totalProducts}
+                pageSize={limit}
+                theme="dark"
+                currentUrl={window.location.href} // Truyền URL hiện tại vào
+
+              // currentUrl={null} // Page không có filter, sort nên truyền nullx
+              />
             </div>
           </div>
         </div>

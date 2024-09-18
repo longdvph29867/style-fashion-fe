@@ -1,6 +1,6 @@
 // type Props = {};
 
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Button, Form, Input, message } from "antd";
 import { LoginType } from "../../types/login";
@@ -10,8 +10,11 @@ import {
   localTokenService,
   localUserService,
 } from "../../services/localService";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const Login: React.FC = () => {
+  const { setUserRole }: any = useContext(AuthContext);
+
   const onFinish = (values: LoginType) => {
     const data = {
       email: values.email,
@@ -27,13 +30,19 @@ const Login: React.FC = () => {
           };
           localUserService.set(res.data.user);
           localTokenService.set(res.data.tokens);
+          setUserRole(infoUser.role); // Cập nhật userRole trong AuthContext
           hiddenSpinner();
           message.success("Đăng nhập thành công!");
           if (infoUser.role === "admin") {
             setTimeout(() => {
-              window.location.href = "/admin/products";
+              window.location.href = "/admin";
             }, 1200);
-          } else {
+          } else if (infoUser.role === "staff") {
+            setTimeout(() => {
+              window.location.href = "/admin/order";
+            }, 1200);
+          }
+          else {
             setTimeout(() => {
               window.location.href = "/";
             }, 1200);
@@ -54,7 +63,7 @@ const Login: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center h-full">
-      <h3 className=" text-2xl text-slate-700 mb-1">Login</h3>
+      <h3 className=" text-2xl text-primary mb-1">Đăng nhập</h3>
       <Form
         layout="vertical"
         name="basic"
@@ -70,12 +79,13 @@ const Login: React.FC = () => {
         <Form.Item
           label="Email"
           name="email"
+          className=""
           rules={[
-            { required: true, message: "Please fill in this field!" },
+            { required: true, message: "Vui lòng nhập trường này!" },
             {
               pattern:
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-              message: "Invalid email address!",
+              message: "Email không đúng định dạng!",
             },
           ]}
         >
@@ -83,9 +93,9 @@ const Login: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          label="Password"
+          label="Mật khẩu"
           name="password"
-          rules={[{ required: true, message: "Please fill in this field!" }]}
+          rules={[{ required: true, message: "Vui lòng nhập trường này!" }]}
         >
           <Input.Password />
         </Form.Item>
@@ -95,23 +105,23 @@ const Login: React.FC = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="text-white bg-slate-800"
+              className="text-white shadow-none bg-primary hover:!bg-white hover:!text-primary border border-primary"
             >
-              Login
+              Đăng nhập
             </Button>
           </Form.Item>
           <div className="flex justify-between sm:flex-row flex-col">
             <Link
               to="/auth/forgot-password"
-              className="text-xs text-slate-800 hover:text-slate-500 mb-3"
+              className="text-xs text-content hover:text-title mb-3"
             >
-              Forgot password
+              Quên mật khẩu
             </Link>
             <Link
               to="/auth/register"
-              className="text-xs text-slate-800 hover:text-slate-500 mb-3"
+              className="text-xs text-content hover:text-title mb-3"
             >
-              You don't have an account?
+              Bạn chưa có tài khoản?
             </Link>
           </div>
         </div>

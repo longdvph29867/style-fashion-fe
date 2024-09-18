@@ -1,18 +1,23 @@
 import { https } from "../config/axios";
+import { AddCartType, ICart } from "../types/cart";
 
 const cartService = {
   getCartByUserId(userId: string) {
-    return https.get(`/carts?userId=${userId}`);
+    return https.get<ICart[]>(`/carts?userId=${userId}`);
   },
-  updateCart(userId: string, productCartId: string, quantity: number) {
-    return https.put(`/carts?userId=${userId}&cartItemId=${productCartId}`, {
+  addToCart(data: AddCartType) {
+    return https.post("/carts", data);
+  },
+  updateCart(productCartId: string, quantity: number) {
+    return https.put(`/carts/quantity/${productCartId}`, {
       quantity,
     });
   },
-  deleteCartItem(userId: string, productCartId: string) {
-    return https.delete(`/carts?userId=${userId}`, {
-      data: { productCartId },
-    });
+  updateVariant(body: any) {
+    return https.put("carts/variant", body);
+  },
+  deleteCartItem(productCartId: string) {
+    return https.delete(`/carts/${productCartId}`);
   },
 };
 

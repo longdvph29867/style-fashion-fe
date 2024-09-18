@@ -4,18 +4,26 @@ import {
     showSpinner,
 } from "../../../util/util";
 import { Link } from "react-router-dom";
-import { message } from "antd";
+import { Breadcrumb, Button, message, Table } from "antd";
 import { https } from "../../../config/axios";
 import { CategoryTpype } from "../../../types/categoryType";
+import PaginationPage from "../../../components/PaginationPage/PaginationPage";
+import categoryService from "../../../services/categoryService";
 
 const CategoryList: React.FC = () => {
+    const params = new URLSearchParams(location.search);
+    const [totalCategory, setTotalCategory] = useState(0);
+    const limitPerPage = 10;
+    const currentPage = params.get("page") ? Number(params.get("page")) : 1;
     const [categoriesList, setCategoriesList] = useState<CategoryTpype[]>([]);
 
     const fetchData = async () => {
         showSpinner();
         try {
-            const { data } = await https.get("/categories?limit=10");
+            const { data } = await categoryService.getCategoryByPage(limitPerPage, currentPage);
             setCategoriesList(data.results);
+            setTotalCategory(data.totalResults);
+            window.scrollTo(0, 0);
             hiddenSpinner();
         } catch (error) {
             hiddenSpinner();
@@ -24,7 +32,7 @@ const CategoryList: React.FC = () => {
     };
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [location.search]);
 
     const handleDelete = async (id: string) => {
         if (confirm("Bạn có chắc chắn xoá không!")) {
@@ -41,20 +49,49 @@ const CategoryList: React.FC = () => {
         }
     };
 
+    const columns = [
+        {
+            title: 'STT',
+            dataIndex: 'index',
+            key: 'index',
+            render: (_: any, __: any, index: number) => ((currentPage - 1) * limitPerPage + (index + 1)),
+        },
+        {
+            title: 'Tên danh mục',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Thao tác',
+            key: 'actions',
+            render: (_: any, record: any) => (
+                <div>
+                    <Link to={`/admin/categories/update/${record.id}`} className="text-yellow-500">
+                        Sửa
+                    </Link>
+                    <Button
+                        type="link"
+                        className="text-red-500"
+                        onClick={() => handleDelete(record.id)}
+                    >
+                        Xoá
+                    </Button>
+                </div>
+            ),
+        },
+    ];
+
     return (
         <div className="">
-            <div className="p-4 pb-0 mb-0 bg-white rounded-t-2xl">
-                <Link
-                    to="/admin/categories/add"
-                    className="text-white text-base font-semibold bg-green-500 py-2 px-2 rounded my-5"
-                >
-                    <span>Thêm mới</span>
-                </Link>
-            </div>
-            <div className="h-full overflow-x-auto">
+            <Breadcrumb style={{ margin: '16px 0' }}>
+                <Breadcrumb.Item><Link to="/admin">Trang chủ</Link></Breadcrumb.Item>
+                <Breadcrumb.Item>Danh mục</Breadcrumb.Item>
+            </Breadcrumb>
+            <Table columns={columns} dataSource={categoriesList} pagination={false} />
+            {/* <div className="h-full overflow-x-auto">
                 <div className="w-full border-gray-200 text-slate-500">
                     <div className="w-full grid lg:grid-cols-6 sm:grid-cols-5 grid-cols-2 gap-2">
-                        <div className="pr-6 pl-4 py-3  text-left font-bold uppercase text-slate-800">
+                        <div className="pr-6 pl-4 py-3  text-center font-bold uppercase text-slate-800">
                             STT
                         </div>
                         <div className="sm:col-span-2 pr-6 pl-4 py-3  text-left font-bold uppercase text-slate-800">
@@ -65,6 +102,13 @@ const CategoryList: React.FC = () => {
                         </div>
                     </div>
                     <div>
+                        {
+                            loading && <div>
+                                {Array.from({ length: 10 }).map((_, index) => (
+                                    <CategoriesListSkeleton key={index} />
+                                ))}
+                            </div>
+                        }
                         {[...categoriesList].reverse().map((category, index) => {
                             return (
                                 <div
@@ -74,7 +118,7 @@ const CategoryList: React.FC = () => {
                                     <div className="p-2">
                                         <div className="px-2 py-1 min-w-[110px]">
                                             <div className="flex flex-col justify-center">
-                                                <h6 className="text-base">{index + 1}</h6>
+                                                <h6 className="text-base text-center">{index + 1}</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -102,8 +146,14 @@ const CategoryList: React.FC = () => {
                             );
                         })}
                     </div>
-                </div>
-            </div>
+                    </div>
+                    </div> */}
+            <PaginationPage
+                current={1}
+                total={totalCategory}
+                pageSize={limitPerPage}
+                currentUrl={null} // Page không có filter, sort nên truyền null
+            />
         </div>
     );
 };

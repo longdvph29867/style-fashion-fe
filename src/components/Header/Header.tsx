@@ -1,48 +1,43 @@
-import { useEffect, useState } from "react";
-import imgLogo from "../../assets/img/sf-logo.png";
+import { useState } from "react";
+import imgLogo from "../../assets/img/sf-logo2.png";
 import Menu from "./Menu";
 import User from "../User/User";
 import Search from "../Search/Search";
-import { useDispatch, useSelector } from "react-redux";
-import { setCartAll } from "../../Toolkits/cartSlice";
-import { RootState } from "../../Toolkits/store";
 import { Link } from "react-router-dom";
 import cartService from "../../services/cartService";
+import { useQuery } from "@tanstack/react-query";
+import { localUserService } from "../../services/localService";
+import { useDispatch } from "react-redux";
+import { setCart } from "../../Toolkits/cartSlice";
 
 const Header = () => {
-  const dispatch = useDispatch();
   const [showMenuMobile, setShowMenuMobile] = useState<boolean>(false);
-  const carts = useSelector((state: RootState) => state.cartSlice.carts);
-  const userId = useSelector(
-    (state: RootState) => state.userSlice.userInfo?.id
-  );
-
+  const userId = localUserService.get()?.id;
   const handleShowMenu = () => {
     setShowMenuMobile(!showMenuMobile);
   };
-
-  useEffect(() => {
-    if (userId) {
-      cartService.getCartByUserId(userId).then((response) => {
-        if (response.data !== "") {
-          dispatch(setCartAll(response.data.products_cart));
-        }
-      });
-    }
-  }, [userId]);
+  const dispatch = useDispatch();
+  const { data } = useQuery({
+    queryKey: ["carts"],
+    queryFn: () =>
+      cartService.getCartByUserId(userId!).then((res) => {
+        dispatch(setCart(res.data));
+        return res.data.length;
+      }),
+    enabled: !!userId,
+  });
 
   return (
     <header
-      className={`${
-        showMenuMobile ? "show-mobile" : ""
-      } border-b border-slate-100`}
+      className={`${showMenuMobile ? "show-mobile" : ""
+        } border-b border-slate-100`}
     >
       <div className="container mx-auto duration-300">
         <div className="flex justify-between h-20">
           <div className="flex items-center lg:hidden flex-1">
             <button
               onClick={handleShowMenu}
-              className="btn-show-menu p-2.5 pl-0 rounded-lg text-neutral-700 flex items-center justify-center"
+              className="btn-show-menu p-2.5 pl-0 rounded-lg text-content flex items-center justify-center"
             >
               {showMenuMobile ? (
                 <>
@@ -74,7 +69,10 @@ const Header = () => {
             </button>
           </div>
           <div className="lg:flex-1 flex items-center">
-            <img src={imgLogo} alt="logo" className="w-48" />
+            <Link to="/">
+              <img src={imgLogo} alt="logo" className="w-48" />
+
+            </Link>
           </div>
           <nav className="hidden lg:flex items-center">
             <Menu />
@@ -126,8 +124,8 @@ const Header = () => {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  <span className="absolute w-3.5 h-3.5 flex items-center justify-center bg-[#12a5e8] top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
-                    {carts.length}
+                  <span className="absolute w-3.5 h-3.5 flex items-center justify-center bg-primary top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
+                    {data ?? 0}
                   </span>
                 </button>
               </Link>

@@ -1,10 +1,7 @@
-import React from "react";
 import ItemProductList from "./ItemProductList";
 import CheckBox from "./CheckBox";
 
-type Props = {};
-
-const ProductListPage = (props: Props) => {
+const ProductListPage = () => {
   return (
     <div className="py-20 px-10 shrink-0">
       <div className="">

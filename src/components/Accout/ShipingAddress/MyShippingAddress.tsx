@@ -5,15 +5,18 @@ import { localUserService } from "../../../services/localService";
 import shippingService from "../../../services/shippingService";
 import ShippingItem from "./ShippingItem";
 import {
+  BodyShippingAddress,
   ShippingActionModal,
-  ShippingAddress,
+  ShippingAddressType,
 } from "../../../types/shippingAddress";
 import { hiddenSpinner, showSpinner } from "../../../util/util";
 import ShippingAddressModal from "./ShippingAddressModal";
 
 const MyShippingAddress = () => {
   const [open, setOpen] = useState(false);
-  const [shippingAddress, setShippingAddress] = useState<ShippingAddress[]>([]);
+  const [shippingAddress, setShippingAddress] = useState<ShippingAddressType[]>(
+    []
+  );
   const [formAction, setFormAction] = useState<ShippingActionModal>({
     type: "create",
   });
@@ -78,7 +81,7 @@ const MyShippingAddress = () => {
     [user]
   );
   const onFinish = useCallback(
-    async (values: ShippingAddress) => {
+    async (values: BodyShippingAddress) => {
       if (!user) {
         return;
       }
@@ -125,7 +128,7 @@ const MyShippingAddress = () => {
       <div className="space-y-10 sm:space-y-12">
         <div className="flex justify-between items-center flex-wrap">
           <h2 className="text-2xl sm:text-3xl font-semibold">
-            Shipping Address
+            Địa chỉ của tôi
           </h2>
           <div
             className=""
