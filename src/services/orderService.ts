@@ -1,11 +1,11 @@
-import { https } from "../config/axios";
+import { https, httpsVercel } from "../config/axios";
 
 const orderService = {
   createCOD(data: any) {
     return https.post(`orders`, data);
   },
   createVNPAY(data: any) {
-    return https.post(`orders/vnpay`, data);
+    return httpsVercel.post(`orders/vnpay`, data);
   },
   createVnpayV2(orderId: string) {
     return https.post(`orders/vnpay-order-payment/${orderId}`);

@@ -12,7 +12,7 @@ const DetailPage = () => {
   const { slug } = useParams<string>();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["product-detail"],
+    queryKey: ["product-detail", slug],
     queryFn: () =>
       productService.getProductDetail(slug!).then((res) => res.data),
     staleTime: 3 * 60 * 1000, // quá 3 phút sẽ gọi lại api
