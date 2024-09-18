@@ -5,6 +5,7 @@ import {
     Divider,
     Form,
     Image,
+    Modal,
     Table,
 } from "antd";
 import React, { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ import TextArea from "antd/es/input/TextArea";
 import { BsDot } from "react-icons/bs";
 import { Attribute } from "../../../types/products";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+// import ModalVideo from 'react-modal-video';
 
 
 const ProductDetail: React.FC = () => {
@@ -23,6 +25,8 @@ const ProductDetail: React.FC = () => {
     const [galleryList, setGalleryList] = useState<string[]>([]);
     const [product, setProduct] = useState<any>({}); // product detail
     const [form] = Form.useForm();
+
+    const [isOpen, setOpen] = useState(false);
 
     const attribute = product.attributes;
     const variants = product.variants;
@@ -390,13 +394,40 @@ const ProductDetail: React.FC = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <div className="mb-2">
+                                    {/* <div className="mb-2">
                                         <label htmlFor="">Video</label>
-                                    </div>
-                                    <video width="320" height="240" controls>
+                                    </div> */}
+                                    <button className="font-medium" onClick={() => setOpen(true)}>
+                                        Xem video
+                                    </button>
+
+                                    <Modal
+                                        title="Video Demo"
+                                        centered
+                                        open={isOpen}
+                                        onCancel={() => setOpen(false)}
+                                        footer={null}
+                                        width={800}
+                                    >
+                                        <video width="100%" controls>
+                                            <source src={product.video} type="video/mp4" />
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </Modal>
+                                    {/* <ModalVideo
+                                        channel="youtube"
+                                        youtube={{ mute: 0, autoplay: 0 }}
+                                        isOpen={isOpen}
+                                        videoId="L61p2uyiMSo"
+                                        onClose={() => setOpen(false)}
+                                    />
+                                    <button className="btn-primary" onClick={() => setOpen(true)}>
+                                        VIEW DEMO
+                                    </button> */}
+                                    {/* <video width="320" height="240" controls>
                                         <source src={product.video} type="video/mp4" />
                                         Your browser does not support the video tag.
-                                    </video>
+                                    </video> */}
                                     {/* <ReactPlayer url={product.video} /> */}
                                 </div>
                             </div>
