@@ -56,7 +56,7 @@ const AccountInfomation = () => {
     const postUser = async () => {
       showSpinner();
       try {
-        await https.put(`/users/${userId}`, data);
+        await https.put(`/users/profile/${userId}`, data);
         message.success("Cập nhật thành công!");
         hiddenSpinner();
       } catch (error) {
@@ -91,7 +91,7 @@ const AccountInfomation = () => {
         setAvatar(imageUrl);
 
         // Gửi yêu cầu PUT để cập nhật thông tin người dùng với khóa "image"
-        await https.put(`/users/${userId}`, { image: imageUrl });
+        await https.put(`/users/profile/${userId}`, { image: imageUrl });
         message.success("Cập nhật thành công!");
       } catch (error) {
         message.error(error.response.data.message || "Có lỗi xảy ra.");

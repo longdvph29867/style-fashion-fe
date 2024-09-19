@@ -8,6 +8,8 @@ const ChangePassword: React.FC = () => {
   const userId = storedUserInfo ? storedUserInfo.id : null;
   const useEmail = storedUserInfo ? storedUserInfo.email : null;
   const onFinish = async (values: any) => {
+    console.log("change password");
+
     const { oldPassword, newPassword } = values;
     const onPassword = async () => {
       showSpinner();
@@ -17,7 +19,9 @@ const ChangePassword: React.FC = () => {
           email: `${useEmail}`,
         });
         if (checkPassword?.name !== "Error") {
-          await https.put(`/users/${userId}`, { password: newPassword });
+          await https.put(`/users/profile/${userId}`, {
+            password: newPassword,
+          });
           message.success("Password updated successfully");
           hiddenSpinner();
         }
@@ -35,9 +39,7 @@ const ChangePassword: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto pt-14 sm:pt-26 pb-24 lg:pb-32">
       <div className="space-y-10 sm:space-y-12">
-        <h2 className="text-xl sm:text-3xl font-semibold">
-          Thay đổi mật khẩu
-        </h2>
+        <h2 className="text-xl sm:text-3xl font-semibold">Thay đổi mật khẩu</h2>
         <div className="max-w-xl space-y-6">
           <Form
             name="change_password"
