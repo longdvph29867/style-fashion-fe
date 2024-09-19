@@ -19,6 +19,7 @@ import infoShipping from "../../services/infoShippingService";
 import { localUserService } from "../../services/localService";
 import voucherService from "../../services/voucherService";
 import { useSelectedCarts } from "../../hooks";
+import { hiddenSpinner, showSpinner } from "../../util/util";
 interface SelectedVoucher {
   code: string;
   name: string;
@@ -99,8 +100,10 @@ const CheckoutPage = () => {
         totalPrice: subTotal + shippingFee - discountAmount,
         paymentMethod: paymentMethod,
       };
+      showSpinner();
       if (paymentMethod === "VNPAY") {
         orderService.createVNPAY(newOrder).then(async (response) => {
+          hiddenSpinner();
           window.location.href = response.data.url;
         });
       } else {
@@ -109,6 +112,7 @@ const CheckoutPage = () => {
             queryKey: ["carts"],
             type: "active",
           });
+          hiddenSpinner();
           navigate("/order");
           message.success("Đặt hàng thành công");
         });
